@@ -1,0 +1,2135 @@
+[
+  {
+    "Name": "Tutorial_01",
+    "AllowedEntrances": [ "top1", "top2" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Cliffs_01",
+    "AllowedEntrances": [ "right2", "right1", "right3" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Cliffs_02",
+    "AllowedEntrances": [ "bot1", "left1", "door1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Cliffs_04",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 258,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_28",
+    "AllowedEntrances": [ "left1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [ 8, 4 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_20_v02",
+    "AllowedEntrances": [ "right1", "bot2", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_32",
+    "AllowedEntrances": [ "top1", "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_21",
+    "AllowedEntrances": [ "top1", "right1", "bot1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_22",
+    "AllowedEntrances": [ "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_09",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 163,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_31",
+    "AllowedEntrances": [ "top1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_10",
+    "AllowedEntrances": [ "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 1, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_05",
+    "AllowedEntrances": [ "right1", "bot1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_19",
+    "AllowedEntrances": [ "bot1", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_11",
+    "AllowedEntrances": [ "left1", "bot1", "top1", "right2", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_34",
+    "AllowedEntrances": [ "left1", "door1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_29",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 1, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_12",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_13",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_07",
+    "AllowedEntrances": [ "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_06",
+    "AllowedEntrances": [ "bot1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_02",
+    "AllowedEntrances": [ "right1", "right2", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_17",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_03",
+    "AllowedEntrances": [ "bot1", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_25",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 3,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_01",
+    "AllowedEntrances": [ "door1", "top1", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_07",
+    "AllowedEntrances": [ "right2", "left2", "bot1", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_11_alt",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 4,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus1_01",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_05",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_40",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_16",
+    "AllowedEntrances": [ "left1", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_48",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 5,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_03",
+    "AllowedEntrances": [ "left1", "right2", "bot1", "left2", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_33",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 256,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_21",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_22",
+    "AllowedEntrances": [ "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 1, 2 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_ShamanTemple",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 4,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_35",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_08",
+    "AllowedEntrances": [ "left2", "right2", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_13",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_42",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_19",
+    "AllowedEntrances": [ "right1", "top1", "left2", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_04",
+    "AllowedEntrances": [ "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_27",
+    "AllowedEntrances": [ "right1", "bot1", "left1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_15",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_37",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_06",
+    "AllowedEntrances": [ "top1", "left1", "right1", "right2" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_05",
+    "AllowedEntrances": [ "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_07",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_08",
+    "AllowedEntrances": [ "left1", "right1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_10",
+    "AllowedEntrances": [ "right2", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_21",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_11",
+    "AllowedEntrances": [ "top1", "left1", "left2", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_18",
+    "AllowedEntrances": [ "top1", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_19",
+    "AllowedEntrances": [ "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_12",
+    "AllowedEntrances": [ "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_13",
+    "AllowedEntrances": [ "left2", "top1", "left3" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_23",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [ 1, 32 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_14",
+    "AllowedEntrances": [ "bot3", "top1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_15",
+    "AllowedEntrances": [ "top2", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_17",
+    "AllowedEntrances": [ "bot1", "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_29",
+    "AllowedEntrances": [ "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_30",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_03",
+    "AllowedEntrances": [ "left1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_04",
+    "AllowedEntrances": [ "right2", "top1", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_28",
+    "AllowedEntrances": [ "left2", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_01",
+    "AllowedEntrances": [ "top1", "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 2, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_17",
+    "AllowedEntrances": [ "top1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [ 1, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_28",
+    "AllowedEntrances": [ "right1", "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 2, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_23",
+    "AllowedEntrances": [ "left1", "right2", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_02",
+    "AllowedEntrances": [ "top1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_03",
+    "AllowedEntrances": [ "right1", "right2", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_04",
+    "AllowedEntrances": [ "bot1", "door1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_05c",
+    "AllowedEntrances": [ "top3", "top1", "left2", "top2", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_05",
+    "AllowedEntrances": [ "right2", "bot3", "right1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_09",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_25",
+    "AllowedEntrances": [ "left1", "left2", "left3" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_30",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins1_27",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_01_b",
+    "AllowedEntrances": [ "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_01",
+    "AllowedEntrances": [ "bot1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_03b",
+    "AllowedEntrances": [ "top1", "top2", "bot1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_03",
+    "AllowedEntrances": [ "bot2" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_04",
+    "AllowedEntrances": [ "left2", "right1", "right2", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins_House_02",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins_House_01",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_06",
+    "AllowedEntrances": [ "right2", "right1", "left2", "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_07",
+    "AllowedEntrances": [ "right1", "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_05",
+    "AllowedEntrances": [ "top1", "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Ruins2_09",
+    "AllowedEntrances": [ "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 8, 4 ]
+  },
+  {
+    "Name": "Abyss_01",
+    "AllowedEntrances": [ "right1", "left3" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_07",
+    "AllowedEntrances": [ "top1", "left1", "door1" ],
+    "BossRoom": false,
+    "NeededProgress": 66,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_13",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_06",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_02",
+    "AllowedEntrances": [ "top2", "top1", "bot2", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_01",
+    "AllowedEntrances": [ "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_04",
+    "AllowedEntrances": [ "left1", "right1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_04b",
+    "AllowedEntrances": [ "left1", "right1", "right2" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_09",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_08",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Pipeway",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Room_GG_Shortcut",
+    "AllowedEntrances": [ "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_02",
+    "AllowedEntrances": [ "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Abyss_17",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 10,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_04",
+    "AllowedEntrances": [ "top1", "right1", "bot1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_19",
+    "AllowedEntrances": [ "bot2", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 128,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_06_Core",
+    "AllowedEntrances": [ "right2", "top1", "left3" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_15",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 16,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_20",
+    "AllowedEntrances": [ "top1", "top2" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_09",
+    "AllowedEntrances": [ "right2", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 128,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_01",
+    "AllowedEntrances": [ "right2", "left1", "right1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_44",
+    "AllowedEntrances": [ "door1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_25",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 18,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_25b",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_26",
+    "AllowedEntrances": [ "left3", "right1", "left1", "top1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_28",
+    "AllowedEntrances": [ "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 66,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 4,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus2_33",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_27",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_26",
+    "AllowedEntrances": [ "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_26b",
+    "AllowedEntrances": [ "right2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_35",
+    "AllowedEntrances": [ "top1", "left1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 258,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_34",
+    "AllowedEntrances": [ "top1", "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 258,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_03",
+    "AllowedEntrances": [ "top1", "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_39",
+    "AllowedEntrances": [ "door1", "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 4,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_45_v02",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 32,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_42",
+    "AllowedEntrances": [ "bot1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 5,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_43",
+    "AllowedEntrances": [ "bot1", "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_41",
+    "AllowedEntrances": [ "left2", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Deepnest_Spider_Town",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 5,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_33",
+    "AllowedEntrances": [ "bot1", "top1", "top2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 4, 8 ]
+  },
+  {
+    "Name": "Deepnest_17",
+    "AllowedEntrances": [ "top1", "left1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_01b",
+    "AllowedEntrances": [ "bot1", "top1", "right1", "right2", "top2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [ 1, 128 ],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_02",
+    "AllowedEntrances": [ "left1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_36",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_16",
+    "AllowedEntrances": [ "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_38",
+    "AllowedEntrances": [ "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 129,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Abyss_03_c",
+    "AllowedEntrances": [ "door_tram_arrive", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_01",
+    "AllowedEntrances": [ "top1", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Hive_01",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Hive_02",
+    "AllowedEntrances": [ "left2", "left3", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 128,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Hive_03_c",
+    "AllowedEntrances": [ "left1", "top1", "right2", "right3" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 128,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Hive_03",
+    "AllowedEntrances": [ "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 128,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Hive_04",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_02",
+    "AllowedEntrances": [ "top1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 66,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Waterways_14",
+    "AllowedEntrances": [ "bot1", "bot2" ],
+    "BossRoom": false,
+    "NeededProgress": 162,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 64,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_03",
+    "AllowedEntrances": [ "right2", "top2", "right1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 128,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_06",
+    "AllowedEntrances": [ "right1", "door1", "bot1", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 128,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_14b",
+    "AllowedEntrances": [ "top1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_14",
+    "AllowedEntrances": [ "left1", "top2" ],
+    "BossRoom": false,
+    "NeededProgress": 138,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_18",
+    "AllowedEntrances": [ "top1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_11",
+    "AllowedEntrances": [ "left1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_04",
+    "AllowedEntrances": [ "right1", "right2", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_07",
+    "AllowedEntrances": [ "left1", "right1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_08",
+    "AllowedEntrances": [ "right1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 5,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_02",
+    "AllowedEntrances": [ "top2", "left1", "top1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_03",
+    "AllowedEntrances": [ "bot1", "top1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_17",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_05",
+    "AllowedEntrances": [ "bot1", "left1", "right1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 6,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_30",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 34,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_11",
+    "AllowedEntrances": [ "top1", "bot1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_23",
+    "AllowedEntrances": [ "right1", "top1", "left1", "right2" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_24",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_25",
+    "AllowedEntrances": [ "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 10,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_34",
+    "AllowedEntrances": [ "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_37",
+    "AllowedEntrances": [ "top1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 7,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_04",
+    "AllowedEntrances": [ "left2", "right1", "left3", "top1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 258,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_35",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 10,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "RestingGrounds_10",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "RestingGrounds_06",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [ 2, 128 ],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_50",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 32,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Fungus3_34",
+    "AllowedEntrances": [ "top1", "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Room_Fungus_Shaman",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 2 ]
+  },
+  {
+    "Name": "Fungus3_04",
+    "AllowedEntrances": [ "left2", "right2", "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Fungus3_05",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 3,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 4,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_11",
+    "AllowedEntrances": [ "right1", "left1", "left2" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_39",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 66,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_08",
+    "AllowedEntrances": [ "right1", "left1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Fungus3_10",
+    "AllowedEntrances": [ "bot1", "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 4, 8 ]
+  },
+  {
+    "Name": "Fungus3_13",
+    "AllowedEntrances": [ "left3", "left1", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_22",
+    "AllowedEntrances": [ "left1", "right1", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 34,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": [ 1, 128 ]
+  },
+  {
+    "Name": "Fungus1_23",
+    "AllowedEntrances": [ "right1", "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 1,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_48",
+    "AllowedEntrances": [ "right2", "bot1" ],
+    "BossRoom": false,
+    "NeededProgress": 130,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Fungus3_40",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Mines_16",
+    "AllowedEntrances": [ "top1" ],
+    "BossRoom": false,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Crossroads_39",
+    "AllowedEntrances": [ "left1", "right1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Broken_Vessel",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Brooding_Mawlek",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Collector",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Crystal_Guardian",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Crystal_Guardian_2",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Dung_Defender",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Failed_Champion",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_False_Knight",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Flukemarm",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Galien",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Gorb",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Hu",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Markoth",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Marmu",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_No_Eyes",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Xero",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_God_Tamer",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Grey_Prince_Zote",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Grimm",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Grimm_Nightmare",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 512,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Gruz_Mother",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Hive_Knight",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Hollow_Knight",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 512,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Hornet_1",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Hornet_2",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Lost_Kin",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Mantis_Lord",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Mega_Moss_Charger",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Nosk",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Oblobbles",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Radiance",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 512,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Soul_Master",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Soul_Tyrant",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Traitor_Lord",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Uumuu",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Vengefly",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 0,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Watcher_Knights",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_White_Defender",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Nosk_Hornet",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Vengefly_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Gruz_Mother_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Brooding_Mawlek_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Mantis_Lords_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Uumuu_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Gorb_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Markoth_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Marmu_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_No_Eyes_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Ghost_Xero_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Collector_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Nosk_V",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  }
+]

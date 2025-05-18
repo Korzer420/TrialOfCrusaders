@@ -1,0 +1,3559 @@
+[
+    {
+        "Name": "Tutorial_01",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "top2"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Cliffs_02",
+        "AllowedEntrances": [
+            "bot1",
+            "left1",
+            "door1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Cliffs_01",
+        "AllowedEntrances": [
+            "right2",
+            "right1",
+            "right4"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Cliffs_04",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasLantern",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_28",
+        "AllowedEntrances": [
+            "left1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+            "HasQuake",
+            "HasFireball"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_20_v02",
+        "AllowedEntrances": [
+            "right1",
+            "bot2",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_32",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_21",
+        "AllowedEntrances": [
+            "top1",
+            "right1",
+            "bot1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_22",
+        "AllowedEntrances": [
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_09",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump",
+            "HasDash",
+            "HasSuperDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_31",
+        "AllowedEntrances": [
+            "top1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_10",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_05",
+        "AllowedEntrances": [
+            "right1",
+            "bot1",
+            "top1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_19",
+        "AllowedEntrances": [
+            "bot1",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_11",
+        "AllowedEntrances": [
+            "left1",
+            "bot1",
+            "top1",
+            "right2",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_34",
+        "AllowedEntrances": [
+            "left1",
+            "door1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_29",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_12",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_13",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_07",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_06",
+        "AllowedEntrances": [
+            "bot1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_02",
+        "AllowedEntrances": [
+            "right1",
+            "right2",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_17",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_03",
+        "AllowedEntrances": [
+            "bot1",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_25",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_01",
+        "AllowedEntrances": [
+            "door1",
+            "top1",
+            "top2",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_07",
+        "AllowedEntrances": [
+            "left3",
+            "right2",
+            "left2",
+            "bot1",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_11_alt",
+        "AllowedEntrances": [
+            "right1"
+        ],
+        "NeededItems": [
+            "HasFireball"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus1_01",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_05",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_40",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_16",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_48",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash",
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_03",
+        "AllowedEntrances": [
+            "left1",
+            "right2",
+            "bot1",
+            "left2",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_33",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasLantern"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_21",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_22",
+        "AllowedEntrances": [
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_ShamanTemple",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasFireball"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_35",
+        "AllowedEntrances": [
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_08",
+        "AllowedEntrances": [
+            "left2",
+            "right2",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_13",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_42",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_19",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "left2",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_04",
+        "AllowedEntrances": [
+            "right1",
+            "door1",
+            "top1",
+            "door_charmshop",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_27",
+        "AllowedEntrances": [
+            "right1",
+            "bot1",
+            "left1",
+            "left2"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_15",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_37",
+        "AllowedEntrances": [
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_06",
+        "AllowedEntrances": [
+            "top1",
+            "left2",
+            "right1",
+            "right2"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_05",
+        "AllowedEntrances": [
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_07",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_08",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "left2"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_10",
+        "AllowedEntrances": [
+            "right2",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_21",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_11",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "left2",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_18",
+        "AllowedEntrances": [
+            "top1",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_19",
+        "AllowedEntrances": [
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_12",
+        "AllowedEntrances": [
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_13",
+        "AllowedEntrances": [
+            "left2",
+            "top1",
+            "left3"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_23",
+        "AllowedEntrances": [
+            "right1",
+            "right2"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_14",
+        "AllowedEntrances": [
+            "bot3",
+            "top1",
+            "bot2",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_15",
+        "AllowedEntrances": [
+            "left1",
+            "top2",
+            "right1",
+            "top3",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_17",
+        "AllowedEntrances": [
+            "bot1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_29",
+        "AllowedEntrances": [
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasDoubleJump",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_30",
+        "AllowedEntrances": [
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_03",
+        "AllowedEntrances": [
+            "left1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_04",
+        "AllowedEntrances": [
+            "right2",
+            "top1",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_28",
+        "AllowedEntrances": [
+            "left2",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_01",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_17",
+        "AllowedEntrances": [
+            "top1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_28",
+        "AllowedEntrances": [
+            "right1",
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_02",
+        "AllowedEntrances": [
+            "top1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_03",
+        "AllowedEntrances": [
+            "right1",
+            "right2",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_04",
+        "AllowedEntrances": [
+            "bot1",
+            "door1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_05c",
+        "AllowedEntrances": [
+            "top3",
+            "top1",
+            "left2",
+            "top2",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_05",
+        "AllowedEntrances": [
+            "right2",
+            "bot3",
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_09",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_25",
+        "AllowedEntrances": [
+            "bot1",
+            "right1",
+            "top1",
+            "right2",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_30",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins1_27",
+        "AllowedEntrances": [
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_01_b",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_01",
+        "AllowedEntrances": [
+            "top1",
+            "bot1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_03b",
+        "AllowedEntrances": [
+            "top1",
+            "top2",
+            "bot1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_03",
+        "AllowedEntrances": [
+            "bot1",
+            "top1",
+            "bot2"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_04",
+        "AllowedEntrances": [
+            "left2",
+            "right1",
+            "right2",
+            "door_Ruin_Elevator",
+            "left1",
+            "door_Ruin_House_01",
+            "door_Ruin_House_02"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins_House_02",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins_House_01",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_06",
+        "AllowedEntrances": [
+            "right2",
+            "right1",
+            "left2",
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_07",
+        "AllowedEntrances": [
+            "right1",
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_05",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Ruins2_09",
+        "AllowedEntrances": [
+            "bot1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasQuake",
+            "HasFireball"
+        ]
+    },
+    {
+        "Name": "Abyss_01",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "right2",
+            "left3",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_07",
+        "AllowedEntrances": [
+            "top1",
+            "right2",
+            "left1",
+            "door1"
+        ],
+        "NeededItems": [
+            "HasAcidArmour",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_13",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_06",
+        "AllowedEntrances": [
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_02",
+        "AllowedEntrances": [
+            "top3",
+            "top2",
+            "top1",
+            "bot2",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_01",
+        "AllowedEntrances": [
+            "left1",
+            "bot1",
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_04",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "left2",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_04b",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "right2"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_09",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_08",
+        "AllowedEntrances": [
+            "left1",
+            "top1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "GG_Pipeway",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Room_GG_Shortcut",
+        "AllowedEntrances": [
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_02",
+        "AllowedEntrances": [
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Abyss_17",
+        "AllowedEntrances": [
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasQuake"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_04",
+        "AllowedEntrances": [
+            "top1",
+            "right1",
+            "bot1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_19",
+        "AllowedEntrances": [
+            "bot2",
+            "door_dreamReturn",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_06_Core",
+        "AllowedEntrances": [
+            "left1 extra",
+            "right2",
+            "top1",
+            "bot1",
+            "left1",
+            "door_dreamReturn",
+            "left3"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_15",
+        "AllowedEntrances": [
+            "top1",
+            "door_dreamReturn"
+        ],
+        "NeededItems": [
+            "HasShadowDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_20",
+        "AllowedEntrances": [
+            "top1",
+            "top2"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_09",
+        "AllowedEntrances": [
+            "right3",
+            "right2",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_47",
+        "AllowedEntrances": [
+            "door1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_01",
+        "AllowedEntrances": [
+            "right2",
+            "left1",
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_44",
+        "AllowedEntrances": [
+            "door1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_25",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasShadowDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_25b",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_26",
+        "AllowedEntrances": [
+            "left3",
+            "right1",
+            "left1",
+            "top1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_28",
+        "AllowedEntrances": [
+            "right1"
+        ],
+        "NeededItems": [
+            "HasAcidArmour",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus2_33",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_27",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_26",
+        "AllowedEntrances": [
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_26b",
+        "AllowedEntrances": [
+            "right2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_35",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasLantern",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_34",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasLantern",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_03",
+        "AllowedEntrances": [
+            "left2",
+            "top1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_39",
+        "AllowedEntrances": [
+            "door1",
+            "right1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_45_v02",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasSuperDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_42",
+        "AllowedEntrances": [
+            "bot1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash",
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_43",
+        "AllowedEntrances": [
+            "bot1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_41",
+        "AllowedEntrances": [
+            "left2",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Deepnest_Spider_Town",
+        "AllowedEntrances": [
+            "left1",
+            "door_dreamReturn"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash",
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_33",
+        "AllowedEntrances": [
+            "bot1",
+            "top1",
+            "top2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasFireball",
+            "HasQuake"
+        ]
+    },
+    {
+        "Name": "Deepnest_17",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_01b",
+        "AllowedEntrances": [
+            "bot1",
+            "top1",
+            "right1",
+            "right2",
+            "top2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_02",
+        "AllowedEntrances": [
+            "left1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_36",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_16",
+        "AllowedEntrances": [
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_38",
+        "AllowedEntrances": [
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Abyss_03_c",
+        "AllowedEntrances": [
+            "door_tram_arrive",
+            "top1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_01",
+        "AllowedEntrances": [
+            "top1",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Hive_01",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Hive_02",
+        "AllowedEntrances": [
+            "left2",
+            "left3",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Hive_03_c",
+        "AllowedEntrances": [
+            "left1",
+            "top1",
+            "right2",
+            "right3"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Hive_03",
+        "AllowedEntrances": [
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Hive_04",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_02",
+        "AllowedEntrances": [
+            "bot2",
+            "top1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDive",
+            "HasAcidArmour"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Waterways_14",
+        "AllowedEntrances": [
+            "bot1",
+            "bot2"
+        ],
+        "NeededItems": [
+            "HasSuperDash",
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasAcidArmour"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_03",
+        "AllowedEntrances": [
+            "right2",
+            "top2",
+            "right1",
+            "top1",
+            "left2",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_06",
+        "AllowedEntrances": [
+            "right1",
+            "door1",
+            "bot1",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDoubleJump"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_14b",
+        "AllowedEntrances": [
+            "top1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_14",
+        "AllowedEntrances": [
+            "left1",
+            "top2",
+            "door1"
+        ],
+        "NeededItems": [
+            "HasQuake",
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_18",
+        "AllowedEntrances": [
+            "right2",
+            "top1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_11",
+        "AllowedEntrances": [
+            "left1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_04",
+        "AllowedEntrances": [
+            "right1",
+            "right2",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_07",
+        "AllowedEntrances": [
+            "left1",
+            "bot2",
+            "right1",
+            "bot1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_08",
+        "AllowedEntrances": [
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash",
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Deepnest_East_09",
+        "AllowedEntrances": [
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasSuperDash"
+        ]
+    },
+    {
+        "Name": "Mines_02",
+        "AllowedEntrances": [
+            "top2",
+            "left1",
+            "top1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_03",
+        "AllowedEntrances": [
+            "bot1",
+            "top1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_17",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_05",
+        "AllowedEntrances": [
+            "bot1",
+            "left1",
+            "left2",
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasFireball",
+            "HasDreamNail",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_30",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasSuperDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_11",
+        "AllowedEntrances": [
+            "top1",
+            "bot1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_23",
+        "AllowedEntrances": [
+            "right1",
+            "top1",
+            "left1",
+            "right2"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_24",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_25",
+        "AllowedEntrances": [
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasQuake"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_34",
+        "AllowedEntrances": [
+            "left1",
+            "bot2",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_37",
+        "AllowedEntrances": [
+            "top1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasDash",
+            "HasWalljump",
+            "HasDreamNail",
+            "HasFireball"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_04",
+        "AllowedEntrances": [
+            "left2",
+            "right1",
+            "left3",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasLantern"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_35",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasQuake"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "RestingGrounds_10",
+        "AllowedEntrances": [
+            "top2",
+            "top1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "RestingGrounds_06",
+        "AllowedEntrances": [
+            "right1",
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Crossroads_50",
+        "AllowedEntrances": [
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasSuperDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Fungus3_34",
+        "AllowedEntrances": [
+            "top1",
+            "left1",
+            "right1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Room_Fungus_Shaman",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasWalljump"
+        ]
+    },
+    {
+        "Name": "Fungus3_04",
+        "AllowedEntrances": [
+            "left2",
+            "right2",
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Fungus3_05",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasFireball"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_11",
+        "AllowedEntrances": [
+            "right1",
+            "left1",
+            "left2"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_39",
+        "AllowedEntrances": [
+            "left1"
+        ],
+        "NeededItems": [
+            "HasAcidArmour",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_08",
+        "AllowedEntrances": [
+            "right1",
+            "left1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Fungus3_10",
+        "AllowedEntrances": [
+            "bot1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasDash"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasFireball",
+            "HasQuake"
+        ]
+    },
+    {
+        "Name": "Fungus3_13",
+        "AllowedEntrances": [
+            "left3",
+            "left1",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_22",
+        "AllowedEntrances": [
+            "left1",
+            "right1",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasSuperDash",
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+            "HasDash",
+            "HasDoubleJump"
+        ]
+    },
+    {
+        "Name": "Fungus1_23",
+        "AllowedEntrances": [
+            "right1",
+            "left1"
+        ],
+        "NeededItems": [
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+            "HasDash"
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_48",
+        "AllowedEntrances": [
+            "door1",
+            "right2",
+            "bot1"
+        ],
+        "NeededItems": [
+            "HasWalljump",
+            "HasDoubleJump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Fungus3_40",
+        "AllowedEntrances": [
+            "door_stagExit",
+            "right1",
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "Mines_16",
+        "AllowedEntrances": [
+            "top1"
+        ],
+        "NeededItems": [
+            "HasWalljump"
+        ],
+        "ConditionalItems": [
+        ],
+        "EasyNeededItems": [
+        ],
+        "EasyConditionalItems": [
+        ]
+    },
+    {
+        "Name": "GG_Broken_Vessel",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Brooding_Mawlek",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Collector",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Crystal_Guardian",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Crystal_Guardian_2",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Dung_Defender",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Failed_Champion",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_False_Knight",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Flukemarm",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Galien",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Gorb",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Hu",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Markoth",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Marmu",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_No_Eyes",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Xero",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_God_Tamer",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Grey_Prince_Zote",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Grimm",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Grimm_Nightmare",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Gruz_Mother",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Hive_Knight",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Hollow_Knight",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Hornet_1",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Hornet_2",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Lost_Kin",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Mantis_Lord",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Mega_Moss_Charger",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Nosk",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Oblobbles",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Radiance",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Soul_Master",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Soul_Tyrant",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Traitor_Lord",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Uumuu",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Vengefly",
+        "NeededItems": [
+            "Easy"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Watcher_Knights",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_White_Defender",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Nosk_Hornet",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Vengefly_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Gruz_Mother_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Brooding_Mawlek_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Mantis_Lords_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Uumuu_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Gorb_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Markoth_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Marmu_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_No_Eyes_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Ghost_Xero_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Collector_V",
+        "NeededItems": [
+            "Hard"
+        ],
+        "BossScene": true
+    },
+    {
+        "Name": "GG_Nosk_V",
+        "NeededItems": [
+            "Normal"
+        ],
+        "BossScene": true
+    }
+]

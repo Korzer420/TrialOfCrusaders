@@ -1,0 +1,65 @@
+﻿using HutongGames.PlayMaker;
+using KorzUtils.Helper;
+using System;
+using TrialOfCrusaders.Enums;
+using UnityEngine;
+
+namespace TrialOfCrusaders.Powers.Uncommon;
+
+public class ImprovedWeaversong : Power
+{
+    public override string Name => "Improved Weaversong";
+
+    public override string Description => "Increases weaver size. Damage now scales.";
+
+    public override (float, float, float) BonusRates => new(35f, 0f, 5f);
+
+    public override Rarity Tier => Rarity.Uncommon;
+
+    internal override void Enable()
+    {
+        CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Weaversong);
+        On.HutongGames.PlayMaker.Actions.SetScale.OnEnter += SetScale_OnEnter;
+        On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimation.OnEnter += Tk2dPlayAnimation_OnEnter;
+        On.SetHP.OnEnter += SetHP_OnEnter;
+    }
+
+    internal override void Disable()
+    {
+        On.HutongGames.PlayMaker.Actions.SetScale.OnEnter -= SetScale_OnEnter;
+        On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimation.OnEnter -= Tk2dPlayAnimation_OnEnter;
+        On.SetHP.OnEnter -= SetHP_OnEnter;
+    }
+
+    private void ModifyWeaverSize(FsmStateAction self)
+    {
+        float weaverScale = 1.1f + (Math.Min(0.9f, CombatController.CombatLevel * 0.05f));
+
+        self.Fsm.Variables.FindFsmFloat("Scale").Value = weaverScale;
+        self.Fsm.Variables.FindFsmFloat("Neg Scale").Value = weaverScale * -1f;
+
+        self.Fsm.FsmComponent.transform.localScale = new Vector3(weaverScale, weaverScale);
+        self.Fsm.FsmComponent.transform.SetScaleMatching(weaverScale);
+    }
+
+    private void Tk2dPlayAnimation_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimation.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayAnimation self)
+    {
+        orig(self);
+        if (self.IsCorrectContext("Control", null, "Run Dir") && self.Fsm.FsmComponent.gameObject.name.Contains("Weaverling"))
+            ModifyWeaverSize(self);
+    }
+
+    private void SetScale_OnEnter(On.HutongGames.PlayMaker.Actions.SetScale.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SetScale self)
+    {
+        orig(self);
+        if (self.IsCorrectContext("Control", null, null) && self.Fsm.FsmComponent.gameObject.name.Contains("Weaverling"))
+            ModifyWeaverSize(self);
+    }
+
+    private void SetHP_OnEnter(On.SetHP.orig_OnEnter orig, SetHP self)
+    {
+        if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GameObject.transform.parent?.name?.StartsWith("Weaverling") == true)
+            self.hp.Value -= 2 + Mathf.FloorToInt(CombatController.CombatLevel * 2.5f);
+        orig(self);
+    }
+}

@@ -1,0 +1,25 @@
+﻿using TrialOfCrusaders.Enums;
+
+namespace TrialOfCrusaders.Powers.Uncommon;
+
+internal class ImprovedSharpShadow : Power
+{
+    public override string Name => "Improved Sharp Shadow";
+
+    public override string Description => "Kills restore health.";
+
+    public override (float, float, float) BonusRates => new(20f, 0f, 20f);
+
+    public override Rarity Tier => Rarity.Uncommon;
+
+    internal override void Enable() => On.HealthManager.Die += HealthManager_Die;
+
+    internal override void Disable() => On.HealthManager.Die -= HealthManager_Die;
+
+    private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
+    {
+        orig(self, attackDirection, attackType, ignoreEvasion);
+        if (attackType == AttackTypes.SharpShadow)
+            HeroController.instance.AddHealth(1 + (CombatController.EnduranceLevel + (CombatController.CombatLevel / 2)) / 4);
+    }
+}

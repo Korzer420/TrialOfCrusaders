@@ -1,0 +1,44 @@
+﻿using KorzUtils.Helper;
+using Modding.Utils;
+using System;
+using TrialOfCrusaders.UnityComponents;
+using UnityEngine;
+
+namespace TrialOfCrusaders.Powers.Common;
+
+internal class WeakenedHusk : Power
+{
+    public override string Name => "Weakened Hush";
+
+    public override string Description => "Enemies hit by spells are sometimes inflicted with shattered mind permanently increasing all damage taken.";
+
+    public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+
+    internal override void Enable()
+    {
+        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
+    }
+
+    internal override void Disable()
+    {
+        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
+    }
+
+    private void TakeDamage_OnEnter(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.TakeDamage self)
+    {
+        if (self.IsCorrectContext("damages_enemy", null, "Send Event"))
+        {
+            string gameObjectName = self.Fsm.GameObjectName;
+            string parentName = self.Fsm.GameObject.transform.parent?.name;
+            if (gameObjectName.Contains("Fireball")
+                || gameObjectName == "Q Fall Damage"
+                || (gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2"))
+                || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
+            {
+                if (UnityEngine.Random.Range(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
+                    self.Fsm.GameObject.GetOrAddComponent<MindblastEffect>().ExtraDamage += CombatController.SpiritLevel;
+            }
+        }
+        orig(self);
+    }
+}
