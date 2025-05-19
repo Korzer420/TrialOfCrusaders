@@ -1,6 +1,5 @@
 ﻿using KorzUtils.Helper;
 using System.Collections;
-using TrialOfCrusaders.Data;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -8,10 +7,6 @@ namespace TrialOfCrusaders.Powers.Common;
 internal class Acrobat : Power
 {
     public bool Buff { get; set; }
-
-    public override string Name => "Acrobat";
-
-    public override string Description => "A nail hit right after dashing does increased damage and ignores armor.";
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 

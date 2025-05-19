@@ -6,11 +6,9 @@ internal class BurstingSoul : Power
 {
     public int SpellCount { get; set; } = 0;
 
-    public override string Name => "Bursting Soul";
-
-    public override string Description => "Spells deal increased damage, but each cast lowers spell damage for the rest of the room.";
-
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
+
+    public override bool CanAppear => CombatController.HasSpell();
 
     protected override void Enable()
     {

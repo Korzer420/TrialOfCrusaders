@@ -6,10 +6,6 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class BindingCircle : Power
 {
-    public override string Name => "Binding Circle";
-
-    public override string Description => "Dreamnailing an enemy can root them shortly.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
     public override bool CanAppear => PDHelper.HasDreamNail;

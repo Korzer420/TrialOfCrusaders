@@ -13,7 +13,6 @@ public abstract class Power : IEquatable<Power>
 
     private bool _enabled;
 
-
     #endregion
 
     #region Properties

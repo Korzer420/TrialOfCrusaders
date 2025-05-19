@@ -61,6 +61,10 @@ public static class CombatController
         return false;
     }
 
+    public static bool HasNailArt() => PDHelper.HasDashSlash || PDHelper.HasUpwardSlash || PDHelper.HasCyclone;
+
+    public static bool HasSpell() => PDHelper.FireballLevel + PDHelper.QuakeLevel + PDHelper.ScreamLevel > 0;
+
     public static void Initialize()
     {
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;

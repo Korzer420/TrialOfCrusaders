@@ -63,9 +63,72 @@ namespace TrialOfCrusaders.Resources.Text {
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Enemies deal less damage. Hazards now kill you instantly. ähnelt.
         /// </summary>
-        internal static string AchillesVerseDesc {
+        internal static string AchillesVerse {
             get {
-                return ResourceManager.GetString("AchillesVerseDesc", resourceCulture);
+                return ResourceManager.GetString("AchillesVerse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die A nail hit right after dashing does increased damage and ignores armor. ähnelt.
+        /// </summary>
+        internal static string Acrobat {
+            get {
+                return ResourceManager.GetString("Acrobat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Grants a shield while focusing. ähnelt.
+        /// </summary>
+        internal static string BaldurShell {
+            get {
+                return ResourceManager.GetString("BaldurShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hitting an enemy with the dream nail can root them shortly. ähnelt.
+        /// </summary>
+        internal static string BindingCircle {
+            get {
+                return ResourceManager.GetString("BindingCircle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Nail arts ignore armor. ähnelt.
+        /// </summary>
+        internal static string BrutalStrikes {
+            get {
+                return ResourceManager.GetString("BrutalStrikes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spells deal increased damage, but each cast lowers spell damage for the rest of the room. ähnelt.
+        /// </summary>
+        internal static string BurstingSoul {
+            get {
+                return ResourceManager.GetString("BurstingSoul", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Excessive soul may manifest in a soul sphere. Only one sphere can be active at a time. ähnelt.
+        /// </summary>
+        internal static string Caching {
+            get {
+                return ResourceManager.GetString("Caching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hazards deal less damage. ähnelt.
+        /// </summary>
+        internal static string CaringShell {
+            get {
+                return ResourceManager.GetString("CaringShell", resourceCulture);
             }
         }
     }
