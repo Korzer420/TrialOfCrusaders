@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using KorzUtils.Helper;
+using System.Collections;
+using TrialOfCrusaders.Data;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class Acrobat : Power
 {
-    private bool _buff;
+    public bool Buff { get; set; }
 
     public override string Name => "Acrobat";
 
@@ -13,36 +15,27 @@ internal class Acrobat : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable()
-    { 
-        On.HealthManager.TakeDamage += HealthManager_TakeDamage;
-        On.HeroController.FinishedDashing += HeroController_FinishedDashing;
+    public override bool CanAppear => PDHelper.HasDash;
+
+    protected override void Enable() => On.HeroController.FinishedDashing += HeroController_FinishedDashing;
+
+    protected override void Disable() => On.HeroController.FinishedDashing -= HeroController_FinishedDashing;
+
+    private IEnumerator BuffTime()
+    {
+        Buff = true;
+        float passedTime = 0f;
+        while (passedTime <= 0.25f)
+        {
+            yield return null;
+            passedTime += Time.deltaTime;
+        }
+        Buff = false;
     }
 
     private void HeroController_FinishedDashing(On.HeroController.orig_FinishedDashing orig, HeroController self)
     {
         StartRoutine(BuffTime());
         orig(self);
-    }
-
-    private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
-    {
-        if (_buff && hitInstance.AttackType == AttackTypes.Nail)
-            hitInstance.DamageDealt += 50 /*Mathf.FloorToInt(CombatController.CombatPower * 1.5f)*/;
-        orig(self, hitInstance);
-    }
-
-    internal override void Disable() => On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
-
-    private IEnumerator BuffTime()
-    {
-        _buff = true;
-        float passedTime = 0f;
-        while(passedTime <= 0.25f)
-        {
-            yield return null;
-            passedTime += Time.deltaTime;
-        }
-        _buff = false;
     }
 }

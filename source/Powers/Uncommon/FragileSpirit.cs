@@ -18,14 +18,14 @@ public class FragileSpirit : Power
 
     public bool SpiritActive { get; set; } = true;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         BurnEffect.PoweredUp = SpiritActive;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         BurnEffect.PoweredUp = false;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;

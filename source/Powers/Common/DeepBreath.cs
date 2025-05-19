@@ -11,7 +11,7 @@ internal class DeepBreath : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
@@ -24,6 +24,6 @@ internal class DeepBreath : Power
         HeroController.instance.AddMPCharge(Mathf.CeilToInt(soulToRestore));
     }
 
-    internal override void Disable() 
+    protected override void Disable() 
         => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 }

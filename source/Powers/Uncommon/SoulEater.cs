@@ -14,15 +14,15 @@ internal class SoulEater : Power
 
     public override (float, float, float) BonusRates => new(0f, 40, 0f);
 
-    public override bool CanAppear() => false;
+    public override bool CanAppear => false;
 
-    internal override void Enable() 
+    protected override void Enable() 
     { 
         CharmHelper.EnsureEquipCharm(CharmRef.SoulEater); 
         CharmHelper.UnequipCharm(CharmRef.SoulCatcher);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         CharmHelper.UnequipCharm(CharmRef.SoulEater);
         // TODO: Check for Soul Catcher

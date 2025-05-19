@@ -8,11 +8,11 @@ internal class Cocoon : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         for (int i = 0; i < 6; i++)
             EventRegister.SendEvent("ADD BLUE HEALTH");
     }
 
-    internal override void Disable() { }
+    protected override void Disable() { }
 }

@@ -18,7 +18,7 @@ internal class CarefreeMelody : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         // Carefree Melody should not block insta death damage.
         IL.HeroController.TakeDamage += HeroController_TakeDamage_IL;
@@ -26,7 +26,7 @@ internal class CarefreeMelody : Power
         CharmHelper.EnsureEquipCharm(CharmRef.CarefreeMelody); 
     }
 
-    internal override void Disable() 
+    protected override void Disable() 
     {
         IL.HeroController.TakeDamage -= HeroController_TakeDamage_IL;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;

@@ -14,7 +14,7 @@ internal class DeepFocus : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DeepFocus);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DeepFocus);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.DeepFocus);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.DeepFocus);
 }

@@ -13,13 +13,13 @@ internal class DreamWalker : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.CanDreamNail += HeroController_CanDreamNail;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HeroController.CanDreamNail -= HeroController_CanDreamNail;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;

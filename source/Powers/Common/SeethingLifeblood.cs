@@ -15,13 +15,13 @@ internal class SeethingLifeblood : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HealthManager.TakeDamage += HealthManager_TakeDamage;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HealthManager.TakeDamage -= HealthManager_TakeDamage;

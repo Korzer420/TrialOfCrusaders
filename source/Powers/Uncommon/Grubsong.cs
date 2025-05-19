@@ -14,7 +14,7 @@ internal class Grubsong : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Grubsong);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Grubsong);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Grubsong);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Grubsong);
 }

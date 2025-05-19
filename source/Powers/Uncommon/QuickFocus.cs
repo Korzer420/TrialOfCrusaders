@@ -14,7 +14,7 @@ internal class QuickFocus : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickFocus);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickFocus);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.QuickFocus);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.QuickFocus);
 }

@@ -2,7 +2,7 @@
 
 namespace TrialOfCrusaders.UnityComponents;
 
-public class MindblastEffect : MonoBehaviour
+public class ShatteredMindEffect : MonoBehaviour
 {
     public int ExtraDamage { get; set; }
 

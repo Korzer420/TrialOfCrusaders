@@ -12,7 +12,7 @@ internal class ImprovedStalwartShell : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => HeroController.instance.INVUL_TIME_STAL = 3f;
+    protected override void Enable() => HeroController.instance.INVUL_TIME_STAL = 3f;
 
-    internal override void Disable() => HeroController.instance.INVUL_TIME_STAL = 1.75f;
+    protected override void Disable() => HeroController.instance.INVUL_TIME_STAL = 1.75f;
 }

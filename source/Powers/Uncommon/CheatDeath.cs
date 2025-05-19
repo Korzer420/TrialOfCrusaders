@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
-internal class EscapeDeath : Power
+internal class CheatDeath : Power
 {
     private int _cooldown = 0;
 
-    public override string Name => "Escape Death";
+    public override string Name => "Cheat Death";
 
     public override string Description => "Prevents lethal hits... sometimes. Can only occur once per 10 cleared rooms. Does not work on instant kill effects.";
 
@@ -17,13 +17,13 @@ internal class EscapeDeath : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.Die += HeroController_Die;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HeroController.Die -= HeroController_Die;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;

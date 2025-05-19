@@ -10,7 +10,7 @@ internal class DreamNail : Power
 
     public override (float, float, float) BonusRates => new(2f, 5f, 3f);
 
-    internal override void Enable() => PDHelper.HasDreamNail = true;
+    protected override void Enable() => PDHelper.HasDreamNail = true;
 
-    internal override void Disable() => PDHelper.HasDreamNail = false;
+    protected override void Disable() => PDHelper.HasDreamNail = false;
 }

@@ -10,7 +10,7 @@ internal class ImprovedFuryOfTheFallen : Power
 {
     public override string Name => "Improved Fury of the Fallen";
 
-    public override string Description => "The fury effect is already active while being severed injured instead.";
+    public override string Description => "The fury effect is already active while being only severed injured instead.";
 
     public override (float, float, float) BonusRates => new(100f, 0f, 0f);
 
@@ -18,13 +18,13 @@ internal class ImprovedFuryOfTheFallen : Power
 
     public bool FuryActive => PDHelper.Health <= Math.Max(1, Math.Ceiling((float)PDHelper.MaxHealth / 4));
 
-    internal override void Enable()
+    protected override void Enable()
     {
         IL.HeroController.Attack += HeroController_Attack;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += OnIntCompareAction;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         IL.HeroController.Attack -= HeroController_Attack;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= OnIntCompareAction;

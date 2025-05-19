@@ -1,4 +1,5 @@
 ﻿using KorzUtils.Helper;
+using System;
 using System.Collections;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents;
@@ -22,7 +23,7 @@ internal class ImprovedSporeshroom : Power
 
     public GameObject Cloud => _cloud ??= GameObject.Find("_GameManager")?.transform.Find("GlobalPool/Knight Spore Cloud(Clone)")?.gameObject;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Sporeshroom);
         _holder = new("Sporecloud holder");
@@ -30,7 +31,7 @@ internal class ImprovedSporeshroom : Power
         _holder.AddComponent<Dummy>().StartCoroutine(EmitCloud());
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         _holder.GetComponent<Dummy>().StopAllCoroutines();
         GameObject.Destroy(_holder);
@@ -45,7 +46,7 @@ internal class ImprovedSporeshroom : Power
         {
             if (Cloud == null)
                 yield break;
-            //yield return new WaitForSeconds(UnityEngine.Random.Range(Math.Max(8, 75 - (CombatController.SurvivalPower * 3 + CombatController.CombatPower)), 91));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(Math.Max(8, 75 - (CombatController.EnduranceLevel * 3 + CombatController.CombatLevel)), 91));
             GameObject newCloud = GameObject.Instantiate(Cloud, HeroController.instance.transform.position,
             Quaternion.identity);
             newCloud.SetActive(true);
@@ -54,5 +55,4 @@ internal class ImprovedSporeshroom : Power
             GameObject.Destroy(newCloud);
         }
     }
-
 }

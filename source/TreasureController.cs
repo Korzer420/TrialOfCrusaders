@@ -87,7 +87,7 @@ public static class TreasureController
         new BindingCircle(),
         new Interest(),
         new RoyalDecree(),
-        new CalmMind(),
+        new SoulCharge(),
         new DreamPortal(),
         new SoulMaster(),
         new NailMaster(),
@@ -128,7 +128,7 @@ public static class TreasureController
         new ImprovedCrystalDash(),
         new ScorchingGround(),
         new ImprovedCaringShell(),
-        new EscapeDeath(),
+        new CheatDeath(),
         new Pyroblast(),
         new DeepCuts(),
         new FragileGreed(),
@@ -308,14 +308,14 @@ public static class TreasureController
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_FIREBALL";
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
                     CombatController.ObtainedPowers.Add(fireball);
-                    fireball.Enable();
+                    fireball.EnablePower();
                     break;
                 case TreasureType.Quake:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Desolate_Dive_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_QUAKE";
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
                     CombatController.ObtainedPowers.Add(quake);
-                    quake.Enable();
+                    quake.EnablePower();
                     break;
                 default:
                     int amount = RollSelection(fsm, treasure);
@@ -648,7 +648,7 @@ public static class TreasureController
         if (pickedPower != null)
         {
             CombatController.ObtainedPowers.Add(pickedPower);
-            pickedPower.Enable();
+            pickedPower.EnablePower();
         }
         shinyFsm.SendEvent("CHARM");
     }

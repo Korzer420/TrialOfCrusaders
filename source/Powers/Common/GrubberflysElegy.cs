@@ -11,7 +11,7 @@ internal class GrubberflysElegy : Power
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GrubberflyElegy);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GrubberflyElegy);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.GrubberflyElegy);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.GrubberflyElegy);
 }

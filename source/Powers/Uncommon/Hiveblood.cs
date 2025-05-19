@@ -14,7 +14,7 @@ internal class Hiveblood : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(CharmRef.Hiveblood);
         // To not deal with the UI, we just toggle it.
@@ -22,5 +22,5 @@ internal class Hiveblood : Power
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
     }
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Hiveblood);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Hiveblood);
 }

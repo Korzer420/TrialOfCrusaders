@@ -14,7 +14,7 @@ internal class Dashmaster : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Dashmaster);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Dashmaster);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Dashmaster);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Dashmaster);
 }

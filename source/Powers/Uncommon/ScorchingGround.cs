@@ -10,6 +10,7 @@ internal class ScorchingGround : Power
     private GameObject _diveObject;
 
     public GameObject DiveObject => _diveObject ??= HeroController.instance.transform.Find("Spells/Q Flash Slam").gameObject;
+
     public override string Name => "Scorching Ground";
 
     public override string Description => "Desolate Dive ignites the ground. Enemies within it take burn damage.";
@@ -18,9 +19,9 @@ internal class ScorchingGround : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
+    protected override void Enable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;
 
     private void SendMessage_OnEnter(On.HutongGames.PlayMaker.Actions.SendMessage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SendMessage self)
     {

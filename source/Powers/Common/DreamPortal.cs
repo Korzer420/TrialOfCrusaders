@@ -17,7 +17,7 @@ internal class DreamPortal : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         _coroutine = StartRoutine(CheckForInput());
         _dreamGatePrefab = HeroController.instance.gameObject.LocateMyFSM("Dream Nail")
@@ -25,7 +25,7 @@ internal class DreamPortal : Power
             .GetFirstAction<SpawnObjectFromGlobalPool>().gameObject.Value;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         if (_coroutine != null)
             StopRoutine(_coroutine);

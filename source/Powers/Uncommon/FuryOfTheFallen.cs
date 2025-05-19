@@ -14,7 +14,7 @@ internal class FuryOfTheFallen : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.FuryOfTheFallen);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.FuryOfTheFallen);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.FuryOfTheFallen);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.FuryOfTheFallen);
 }

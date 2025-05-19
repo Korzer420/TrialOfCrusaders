@@ -11,4 +11,10 @@ internal class VoidHeart : Power
     public override (float, float, float) BonusRates => new(33f, 33f, 34f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => false;
+
+    protected override void Enable() { }
+
+    protected override void Disable() { }
 }

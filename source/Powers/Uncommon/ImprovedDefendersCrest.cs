@@ -16,7 +16,7 @@ internal class ImprovedDefendersCrest : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.DefendersCrest);
         On.ExtraDamageable.RecieveExtraDamage += ExtraDamageable_RecieveExtraDamage;
@@ -38,6 +38,6 @@ internal class ImprovedDefendersCrest : Power
         orig(self, extraDamageType);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     { }
 }

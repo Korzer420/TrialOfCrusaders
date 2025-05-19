@@ -11,7 +11,7 @@ internal class Dreamshield : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DreamShield);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DreamShield);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.DreamShield);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.DreamShield);
 }

@@ -10,13 +10,13 @@ internal class CycloneSlash : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.HasCyclone = true;
         PDHelper.HasNailArt = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.HasCyclone = false;
         PDHelper.HasNailArt = false;

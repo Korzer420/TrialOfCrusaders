@@ -11,7 +11,7 @@ internal class GlowingWomb : Power
 
     public override (float, float, float) BonusRates => new(2f, 8f, 0f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GlowingWomb);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GlowingWomb);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.GlowingWomb);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.GlowingWomb);
 }

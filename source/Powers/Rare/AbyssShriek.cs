@@ -13,13 +13,13 @@ internal class AbyssShriek : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.ScreamLevel = 2;
         PDHelper.HasSpell = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.ScreamLevel = 0;
         PDHelper.HasSpell = false;

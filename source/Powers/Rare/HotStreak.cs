@@ -29,13 +29,13 @@ internal class HotStreak : Power
 
     #region Private Methods
 
-    internal override void Enable()
+    protected override void Enable()
     {
         ModHooks.SlashHitHook += NailSlash;
         ModHooks.GetPlayerIntHook += EmpowerNail;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         ModHooks.SlashHitHook -= NailSlash;
         ModHooks.GetPlayerIntHook -= EmpowerNail;

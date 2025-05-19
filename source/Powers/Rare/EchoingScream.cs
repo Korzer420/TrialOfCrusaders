@@ -47,9 +47,9 @@ internal class EchoingScream : Power
         }
     }
 
-    internal override void Enable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter += Tk2dPlayAnimationWithEvents_OnEnter;
+    protected override void Enable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter += Tk2dPlayAnimationWithEvents_OnEnter;
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter -= Tk2dPlayAnimationWithEvents_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimationWithEvents.OnEnter -= Tk2dPlayAnimationWithEvents_OnEnter;
 
     private IEnumerator EchoScream(GameObject holder, Vector3 position)
     {

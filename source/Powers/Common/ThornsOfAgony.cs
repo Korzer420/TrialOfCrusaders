@@ -11,7 +11,7 @@ internal class ThornsOfAgony : Power
 
     public override (float, float, float) BonusRates => new(2f, 0f, 8f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ThornsOfAgony);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ThornsOfAgony);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.ThornsOfAgony);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.ThornsOfAgony);
 }

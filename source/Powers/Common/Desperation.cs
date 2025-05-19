@@ -10,7 +10,7 @@ internal class Desperation : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.OnEnter += PlayerDataBoolTest_OnEnter;
     }
@@ -23,7 +23,7 @@ internal class Desperation : Power
         orig(self);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
 
     }

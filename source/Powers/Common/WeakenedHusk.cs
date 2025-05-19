@@ -1,6 +1,5 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
-using System;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
@@ -14,12 +13,12 @@ internal class WeakenedHusk : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
     }
@@ -36,7 +35,7 @@ internal class WeakenedHusk : Power
                 || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
             {
                 if (UnityEngine.Random.Range(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
-                    self.Fsm.GameObject.GetOrAddComponent<MindblastEffect>().ExtraDamage += CombatController.SpiritLevel;
+                    self.Fsm.GameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatController.SpiritLevel;
             }
         }
         orig(self);

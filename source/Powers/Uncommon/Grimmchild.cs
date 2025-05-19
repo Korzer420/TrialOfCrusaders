@@ -14,7 +14,7 @@ internal class Grimmchild : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Grimmchild3);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Grimmchild3);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Grimmchild3);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Grimmchild3);
 }

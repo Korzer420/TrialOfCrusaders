@@ -13,7 +13,7 @@ internal class ImprovedSpellTwister : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter += SetFsmInt_OnEnter;
         CoroutineHelper.WaitForHero(() =>
@@ -22,7 +22,7 @@ internal class ImprovedSpellTwister : Power
         }, true);
     }
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= SetFsmInt_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= SetFsmInt_OnEnter;
 
     private void SetFsmInt_OnEnter(On.HutongGames.PlayMaker.Actions.SetFsmInt.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SetFsmInt self)
     {

@@ -13,13 +13,13 @@ internal class ShadeSoul : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.FireballLevel = 2;
         PDHelper.HasSpell = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.FireballLevel = 0;
         PDHelper.HasSpell = false;

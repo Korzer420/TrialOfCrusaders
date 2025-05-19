@@ -11,13 +11,13 @@ internal class SoulConserver : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     { 
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter -= SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
@@ -39,9 +39,7 @@ internal class SoulConserver : Power
     private void SetVelocity2d_OnEnter(On.HutongGames.PlayMaker.Actions.SetVelocity2d.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SetVelocity2d self)
     {
         if (self.IsCorrectContext("Spell Control", "Knight", "Spell End") && UnityEngine.Random.Range(0, 80) < CombatController.SpiritLevel)
-        {
             HeroController.instance.AddMPCharge(self.Fsm.Variables.FindFsmInt("MP Cost").Value);
-        }
         orig(self);
     }
 }

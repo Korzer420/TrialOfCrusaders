@@ -15,9 +15,9 @@ internal class ImprovedFocus : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
+    protected override void Enable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
     
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
     {
@@ -25,7 +25,7 @@ internal class ImprovedFocus : Power
         {
             int leftoverSoul = PDHelper.MPCharge + PDHelper.MPReserve;
             int healAmount = (int)Math.Floor((float)leftoverSoul / 33);
-            HeroController.instance.AddMPCharge(-(healAmount * 33));
+            HeroController.instance.TakeMP(healAmount * 33);
             if (CharmHelper.EquippedCharm(CharmRef.DeepFocus))
                 healAmount *= 2;
             self.Fsm.Variables.FindFsmInt("Health Increase").Value += healAmount;

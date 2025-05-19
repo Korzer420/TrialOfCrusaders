@@ -6,13 +6,10 @@ using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace TrialOfCrusaders;
 
@@ -20,6 +17,8 @@ internal static class StageController
 {
     private static List<TransitionPoint> _transitionPoints = [];
     private static List<SpecialTransition> _specialTransitions = [];
+
+    public static bool InCombat { get; set; }
 
     public static bool QuietRoom { get; set; } = true;
 
@@ -228,7 +227,10 @@ internal static class StageController
             if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
                 newEnemies.Add(item);
         if (!QuietRoom)
+        { 
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
+            InCombat = true;
+        }
         Enemies = newEnemies;
     }
 
@@ -347,6 +349,7 @@ internal static class StageController
         orig(self, attackDirection, attackType, ignoreEvasion);
         if (Enemies.Count == 0 && !QuietRoom && contained)
         {
+            InCombat = false;
             if (CurrentRoomData[CurrentRoomIndex].BossRoom && contained)
                 TrialOfCrusaders.Holder.StartCoroutine(WaitForTransition());
             else

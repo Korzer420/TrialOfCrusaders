@@ -14,13 +14,13 @@ internal class Supreme : Power
 
     public override (float, float, float) BonusRates => new(6f, 0f, 4f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HealthManager.Die += HealthManager_Die;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HealthManager.Die -= HealthManager_Die;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;

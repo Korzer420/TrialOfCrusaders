@@ -15,9 +15,9 @@ internal class Untouchable : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable() => _coroutine = StartRoutine(CheckForHealth());
+    protected override void Enable() => _coroutine = StartRoutine(CheckForHealth());
 
-    internal override void Disable()
+    protected override void Disable()
     {
         if (_coroutine != null)
             StopRoutine(_coroutine);

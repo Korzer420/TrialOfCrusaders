@@ -10,7 +10,7 @@ internal class PolarityShift : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
+    protected override void Enable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
 
     private void IntCompare_OnEnter(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, HutongGames.PlayMaker.Actions.IntCompare self)
     {
@@ -22,7 +22,9 @@ internal class PolarityShift : Power
                 self.integer1.Value = 1;
         }
         orig(self);
+        self.integer1.Value = 1;
+        self.integer2.Value = 2;
     }
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
 }

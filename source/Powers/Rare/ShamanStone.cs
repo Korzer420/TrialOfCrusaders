@@ -14,7 +14,7 @@ internal class ShamanStone : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShamanStone);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShamanStone);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.ShamanStone);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.ShamanStone);
 }

@@ -83,8 +83,8 @@ public class TrialOfCrusaders : Mod
             .GetFirstAction<SpawnObjectFromGlobalPool>()
             .gameObject.Value;
 
-        CalmMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
-        GameObject.DontDestroyOnLoad(CalmMind.Orb);
+        SoulCharge.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
+        GameObject.DontDestroyOnLoad(SoulCharge.Orb);
         StageController.TransitionObject = preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"];
         GameObject.DontDestroyOnLoad(StageController.TransitionObject);
 

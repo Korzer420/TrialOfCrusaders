@@ -11,7 +11,7 @@ internal class StalwartShell : Power
 
     public override (float, float, float) BonusRates => new(0,0, 10f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.StalwartShell);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.StalwartShell);
 
-    internal override void Disable() => CharmHelper.LockCharm(CharmRef.StalwartShell);
+    protected override void Disable() => CharmHelper.LockCharm(CharmRef.StalwartShell);
 }

@@ -15,13 +15,13 @@ internal class Fade : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         StartRoutine(WaitForFade());
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
     }

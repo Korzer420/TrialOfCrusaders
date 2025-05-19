@@ -13,13 +13,13 @@ internal class DesolateDive : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.QuakeLevel = 1;
         PDHelper.HasSpell = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.QuakeLevel = 0;
         PDHelper.HasSpell = false;

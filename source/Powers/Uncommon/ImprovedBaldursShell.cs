@@ -21,7 +21,7 @@ internal class ImprovedBaldursShell : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         _currentHitPoints = 10;
         On.PlayerData.IntAdd += PlayerData_IntAdd;
@@ -30,7 +30,7 @@ internal class ImprovedBaldursShell : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.PlayerData.IntAdd -= PlayerData_IntAdd;
         ModHooks.GetPlayerIntHook -= ModHooks_GetPlayerIntHook;

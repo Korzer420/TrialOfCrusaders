@@ -13,18 +13,27 @@ internal class ImprovedHiveblood : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() { CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Hiveblood); // To not deal with the UI, we just toggle it.
+    protected override void Enable() 
+    { 
+        CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Hiveblood); 
+        // To not deal with the UI, we just toggle it.
         GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true); On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter += FloatAdd_OnEnter;}
+        GameCameras.instance.hudCanvas.gameObject.SetActive(true); 
+        On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter += FloatAdd_OnEnter;
+    }
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter -= FloatAdd_OnEnter;
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter -= FloatAdd_OnEnter;
 
     private void FloatAdd_OnEnter(On.HutongGames.PlayMaker.Actions.FloatAdd.orig_OnEnter orig, HutongGames.PlayMaker.Actions.FloatAdd self)
     {
-        if (self.IsCorrectContext("Hive Health Regen", "Health", "Recover 1"))
+        if (self.IsCorrectContext("Hive Health Regen", "Health", "Recover 1") || self.IsCorrectContext("Hive Health Regen", "Health", "Recover 2"))
+        {
+            float vanillaValue = self.floatVariable.Value;
             self.floatVariable.Value = 2f;
-        else if (self.IsCorrectContext("Hive Health Regen", "Health", "Recover 2"))
-            self.floatVariable.Value = 2f;
-        orig(self);
+            orig(self);
+            self.floatVariable.Value = vanillaValue;
+        }
+        else
+            orig(self);
     }
 }

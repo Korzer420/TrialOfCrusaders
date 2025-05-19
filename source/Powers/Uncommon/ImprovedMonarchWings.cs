@@ -1,9 +1,5 @@
 ﻿using KorzUtils.Helper;
-using Modding;
-using MonoMod.Cil;
-using System;
 using System.Collections;
-using System.Reflection;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 
@@ -25,7 +21,7 @@ internal class ImprovedMonarchWings : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         _wings = HeroController.instance.transform.Find("Effects/Double J Wings").gameObject;
         if (_leftHitbox != null)
@@ -74,7 +70,7 @@ internal class ImprovedMonarchWings : Power
         On.HeroController.DoDoubleJump += HeroController_DoDoubleJump;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         GameObject.Destroy(_leftHitbox);
         GameObject.Destroy(_rightHitbox);

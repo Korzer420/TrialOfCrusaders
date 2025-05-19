@@ -10,12 +10,12 @@ internal class CaringShell : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         ModHooks.AfterTakeDamageHook += ModHooks_TakeDamageHook;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         ModHooks.AfterTakeDamageHook -= ModHooks_TakeDamageHook;
     }

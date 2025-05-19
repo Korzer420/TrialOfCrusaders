@@ -13,13 +13,13 @@ internal class VengefulSpirit : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.FireballLevel = 1;
         PDHelper.HasSpell = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.FireballLevel = 0;
         PDHelper.HasSpell = false;

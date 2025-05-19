@@ -13,7 +13,7 @@ internal class SoulMaster : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.Attack += HeroController_Attack;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
@@ -25,7 +25,7 @@ internal class SoulMaster : Power
         orig(self, attackDir);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HeroController.Attack -= HeroController_Attack;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;

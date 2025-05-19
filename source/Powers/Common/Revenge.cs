@@ -1,7 +1,7 @@
 ﻿using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
-namespace TrialOfCrusaders.Powers;
+namespace TrialOfCrusaders.Powers.Common;
 
 internal class Revenge : Power
 {
@@ -11,7 +11,7 @@ internal class Revenge : Power
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         On.HealthManager.Die += HealthManager_Die;
@@ -21,13 +21,13 @@ internal class Revenge : Power
     {
         if (self.GetComponent<RevengeEffect>() is RevengeEffect revengeEffect)
         {
-            Component.Destroy(revengeEffect);
+            Object.Destroy(revengeEffect);
             HeroController.instance.AddHealth(1 + (CombatController.CombatLevel + CombatController.EnduranceLevel) / 8);
         }
         orig(self, attackDirection, attackType, ignoreEvasion);
     }
 
-    private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, UnityEngine.GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+    private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
         orig(self, go, damageSide, damageAmount, hazardType);
         if (damageAmount > 0 && (go.GetComponent<HealthManager>() is not null || go.GetComponentInParent<HealthManager>() is not null))
@@ -37,7 +37,7 @@ internal class Revenge : Power
         }
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
 
     }

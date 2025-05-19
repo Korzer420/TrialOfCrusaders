@@ -11,7 +11,7 @@ internal class Longnail : Power
 
     public override (float, float, float) BonusRates => new(7.5f, 0f, 2.5f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Longnail);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Longnail);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Longnail);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Longnail);
 }

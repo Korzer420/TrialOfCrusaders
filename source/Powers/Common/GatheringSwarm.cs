@@ -11,7 +11,7 @@ internal class GatheringSwarm : Power
 
     public override (float, float, float) BonusRates => new(0f, 0, 0f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GatheringSwarm);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.GatheringSwarm);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.GatheringSwarm);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.GatheringSwarm);
 }

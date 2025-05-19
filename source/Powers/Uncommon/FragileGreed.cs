@@ -19,13 +19,13 @@ internal class FragileGreed : Power
 
     public bool GreedActive { get; set; } = true;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.AddGeo += HeroController_AddGeo;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HeroController.AddGeo -= HeroController_AddGeo;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;

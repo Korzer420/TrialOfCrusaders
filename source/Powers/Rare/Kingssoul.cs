@@ -14,7 +14,7 @@ internal class Kingssoul : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Kingssoul);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Kingssoul);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Kingssoul);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Kingssoul);
 }

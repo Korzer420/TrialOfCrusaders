@@ -11,7 +11,7 @@ internal class HeavyBlow : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.HeavyBlow);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.HeavyBlow);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.HeavyBlow);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.HeavyBlow);
 }

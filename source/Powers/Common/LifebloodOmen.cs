@@ -15,12 +15,12 @@ internal class LifebloodOmen : Power
 
     public static List<GameObject> Ghosts { get; set; } = [];
 
-    internal override void Enable()
+    protected override void Enable()
     {
         StartRoutine(Haunt());
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.HasUpwardSlash = false;
         PDHelper.HasNailArt = false;
@@ -31,7 +31,6 @@ internal class LifebloodOmen : Power
         GameObject ghost;
         while (true)
         {
-            float passedTime = 0f;
             // If a player sits a bench herocontroller doesn't accept input, which makes the first part redundant... I think. I still keep it, just in case.
             if (PDHelper.AtBench || !HeroController.instance.acceptingInput)
                 yield return new WaitUntil(() => !PDHelper.AtBench && HeroController.instance.acceptingInput);
@@ -64,7 +63,8 @@ internal class LifebloodOmen : Power
             fsm.SendEvent("START");
 
             float activeTime = 0f;
-            while (activeTime < 90f && ghost != null)
+            float cooldown = RngProvider.GetRandom(90f, 300f);
+            while (activeTime < cooldown && ghost != null)
             {
                 activeTime += Time.deltaTime;
                 yield return null;
@@ -91,12 +91,10 @@ internal class LifebloodOmen : Power
                 // 50 % chance for medium, 35 % for small and 15 % for large ghost.
                 int result = Random.Range(1, 21);
                 return result <= 10 ? 1 : (result <= 17 ? 0 : 2);
-            case 3:
+            default:
                 // 55 % for medium, 35% chance for large and 10% for small ghost.
                 int highRoll = Random.Range(1, 21);
                 return highRoll <= 7 ? 2 : (highRoll <= 18 ? 1 : 0);
-            default:
-                return 0;
         }
     }
 }

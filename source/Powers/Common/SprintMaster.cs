@@ -11,7 +11,7 @@ internal class SprintMaster : Power
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Sprintmaster);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Sprintmaster);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Sprintmaster);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Sprintmaster);
 }

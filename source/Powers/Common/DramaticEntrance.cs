@@ -13,7 +13,7 @@ internal class DramaticEntrance : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         _takeDamage = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.Instance | BindingFlags.NonPublic);
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
@@ -33,5 +33,5 @@ internal class DramaticEntrance : Power
             _takeDamage.Invoke(enemy, [hitInstance]);
     }
 
-    internal override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 }

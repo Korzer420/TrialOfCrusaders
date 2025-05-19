@@ -11,19 +11,12 @@ internal class EscapeArtist : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable() => IL.HeroController.Move += HeroController_Move;
+    protected override void Enable() => IL.HeroController.Move += HeroController_Move;
     
-    internal override void Disable() => IL.HeroController.Move -= HeroController_Move;
+    protected override void Disable() => IL.HeroController.Move -= HeroController_Move;
 
     private void HeroController_Move(ILContext il)
     {
-        ILCursor cursor = new(il);
-        cursor.Goto(0);
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED_CH_COMBO)));
-        cursor.EmitDelegate<Func<float, float>>(x => x + (HeroController.instance.cState.invulnerable ? 6f : 0f));
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED_CH)));
-        cursor.EmitDelegate<Func<float, float>>(x => x + (HeroController.instance.cState.invulnerable ? 6f : 0f));
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED)));
-        cursor.EmitDelegate<Func<float, float>>(x => x + (HeroController.instance.cState.invulnerable ? 6f : 0f));
+        
     }
 }

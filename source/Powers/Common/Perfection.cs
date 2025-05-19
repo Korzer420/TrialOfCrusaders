@@ -21,7 +21,7 @@ internal class Perfection : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         IL.HealthManager.Die += HealthManager_Die;
@@ -29,7 +29,7 @@ internal class Perfection : Power
         _hit = false;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     { 
         IL.HealthManager.Die -= HealthManager_Die;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;
@@ -80,7 +80,6 @@ internal class Perfection : Power
     private int CalculateSmallGeo(int smallGeo, int mediumGeo, int largeGeo)
     {
         int totalAmount = smallGeo + mediumGeo * 5 + largeGeo * 25;
-        LogHelper.Write("Total amount");
         int bonusAmount = Mathf.CeilToInt(totalAmount * (1 + _clearedRoom * 0.05f)) - totalAmount;
         if (bonusAmount <= 0f)
             return smallGeo;
@@ -107,8 +106,7 @@ internal class Perfection : Power
             return mediumGeo + bonusAmount - smallGeoAmount;
         bonusAmount -= smallGeoAmount;
         mediumGeo += (bonusAmount % 25) / 5;
-        return mediumGeo ;
-
+        return mediumGeo;
     }
 
     private int CalculateLargeGeo(int smallGeo, int mediumGeo, int largeGeo)

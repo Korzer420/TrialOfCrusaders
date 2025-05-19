@@ -11,14 +11,14 @@ internal class FocusedEnergy : Power
 
     public override (float, float, float) BonusRates => new(3f, 3f, 4f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         int highestStat = Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel);
         for (int i = 0; i < highestStat; i++)
             EventRegister.SendEvent("ADD BLUE HEALTH");
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.HasUpwardSlash = false;
         PDHelper.HasNailArt = false;

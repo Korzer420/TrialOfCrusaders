@@ -18,38 +18,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Data\RoomData.json" />
-	  <None Remove="Resources\SoundEffects\Room_Clear.wav" />
-	  <None Remove="Resources\SoundEffects\Run_Finished.wav" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Crystal_Dash.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Cyclone_Slash.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Desolate_Dive.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Great_Slash.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Howling_Wraiths.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Ismas_Tear.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Mantis_Claw.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Monarch_Wings.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Mothwing_Cloak.png" />
-	  <None Remove="Resources\Sprites\AbilitySprites\Vengeful_Spirit.png" />
-	  <None Remove="Resources\Sprites\Crossroads.png" />
-	  <None Remove="Resources\Sprites\Icons\Claw_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Combat_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Crystal_Dash_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Dash_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Desolate_Dive_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Endurance_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Lantern_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Shade_Dash_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Spirit_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Tear_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Vengeful_Spirit_Icon.png" />
-	  <None Remove="Resources\Sprites\Icons\Wings_Icon.png" />
-	  <None Remove="Resources\Sprites\KingsBrand.png" />
-	  <None Remove="Resources\Sprites\Pedestal.png" />
-	  <None Remove="Resources\Sprites\Tablet.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <EmbeddedResource Include="Resources\Data\Backup_RoomData.json" />
 	  <EmbeddedResource Include="Resources\Data\RoomData.json" />
 	  <EmbeddedResource Include="Resources\SoundEffects\Room_Clear.wav" />
@@ -124,10 +92,10 @@
 			<HintPath>$(HollowKnightRefs)\UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.ParticleSystemModule">
-		  <HintPath>..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)\UnityEngine.ParticleSystemModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.Physics2DModule">
-		  <HintPath>..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)\UnityEngine.Physics2DModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.UI">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>
@@ -140,12 +108,21 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>LittleFoolDialog.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Resources\Text\PowerDescriptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Update="Resources\Text\LittleFoolDialog.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>LittleFoolDialog.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>PowerDescriptions.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 

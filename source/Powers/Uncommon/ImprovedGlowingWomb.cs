@@ -20,7 +20,7 @@ internal class ImprovedGlowingWomb : Power
 
     public FsmVariables HatchlingVariables => _hatchlingVariables ??= GameObject.Find("Charm Effects").LocateMyFSM("Hatchling Spawn").FsmVariables;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.GlowingWomb);
         On.KnightHatchling.OnEnable += HatchlingSpawn;
@@ -29,7 +29,7 @@ internal class ImprovedGlowingWomb : Power
         HatchlingVariables.FindFsmFloat("Hatch Time").Value = 3f;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         HatchlingVariables.FindFsmInt("Hatchling Max").Value = 4;
         HatchlingVariables.FindFsmInt("Soul Cost").Value = 8;

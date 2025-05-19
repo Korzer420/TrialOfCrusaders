@@ -23,14 +23,14 @@ internal class Damocles : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         if (Triggered)
             _coroutine = StartRoutine(Tick());
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HeroController.TakeDamage -= HeroController_TakeDamage;
         if (_coroutine != null)

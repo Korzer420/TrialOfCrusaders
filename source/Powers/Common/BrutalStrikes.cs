@@ -8,12 +8,12 @@ internal class BrutalStrikes : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         // ToDo after implementing armor.
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
 
     }

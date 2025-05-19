@@ -16,13 +16,13 @@ internal class FragileStrength : Power
 
     public bool StrengthActive { get; set; } = true;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HealthManager.TakeDamage += HealthManager_TakeDamage;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;

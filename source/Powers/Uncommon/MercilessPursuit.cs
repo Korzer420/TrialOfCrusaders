@@ -15,10 +15,11 @@ internal class MercilessPursuit : Power
 {
     private ILHook _attackMethod;
     private Coroutine _coroutine;
-    private int _stacks;
     // 1 up, 2 down, 3 left, 4 right
     private int _attackDirection;
     private float _duration = 0.5f;
+
+    public int Stacks { get; set; }
 
     public override string Name => "Merciless Pursuit";
 
@@ -28,15 +29,15 @@ internal class MercilessPursuit : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         _duration = 0.5f;
-        _stacks = 0;
+        Stacks = 0;
         ModHooks.AttackHook += ModHooks_AttackHook;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         ModHooks.AttackHook += ModHooks_AttackHook;
         _attackMethod?.Dispose();
@@ -51,7 +52,7 @@ internal class MercilessPursuit : Power
             struckDirection = (int)direction;
         if (_attackDirection == struckDirection)
         {
-            _stacks++;
+            Stacks++;
             if (_coroutine == null)
                 _coroutine = HeroController.instance.StartCoroutine(Cooldown());
             else
@@ -59,7 +60,7 @@ internal class MercilessPursuit : Power
         }
         else
         {
-            _stacks = 0;
+            Stacks = 0;
             if (_coroutine != null)
                 HeroController.instance.StopCoroutine(_coroutine);
         }
@@ -71,11 +72,11 @@ internal class MercilessPursuit : Power
         ILCursor cursor = new(context);
         cursor.Goto(0);
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.ATTACK_COOLDOWN_TIME_CH)));
-        cursor.EmitDelegate<Func<float, float>>(x => x - Math.Min(_stacks, 10) * 0.015f);
+        cursor.EmitDelegate<Func<float, float>>(x => x - Math.Min(Stacks, 10) * 0.015f);
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.ATTACK_COOLDOWN_TIME)));
         // 10 stacks should match quick slash.
         cursor.EmitDelegate<Func<float, float>>(x => 
-            x - Math.Min(_stacks, 10) * 0.0151f);
+            x - Math.Min(Stacks, 10) * 0.0151f);
     }
 
     private IEnumerator Cooldown()
@@ -86,6 +87,6 @@ internal class MercilessPursuit : Power
             yield return null;
             _duration -= Time.deltaTime;
         }
-        _stacks = 0;
+        Stacks = 0;
     }
 }

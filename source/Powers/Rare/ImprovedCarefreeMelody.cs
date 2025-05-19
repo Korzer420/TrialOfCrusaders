@@ -14,9 +14,9 @@ internal class ImprovedCarefreeMelody : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => IL.HeroController.TakeDamage += HeroController_TakeDamage;
+    protected override void Enable() => IL.HeroController.TakeDamage += HeroController_TakeDamage;
     
-    internal override void Disable() => IL.HeroController.TakeDamage -= HeroController_TakeDamage;
+    protected override void Disable() => IL.HeroController.TakeDamage -= HeroController_TakeDamage;
 
     private void HeroController_TakeDamage(MonoMod.Cil.ILContext il)
     {

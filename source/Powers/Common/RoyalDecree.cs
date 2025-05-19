@@ -1,5 +1,4 @@
-﻿using Modding.Utils;
-using TrialOfCrusaders.UnityComponents;
+﻿using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -12,7 +11,7 @@ internal class RoyalDecree : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
@@ -25,7 +24,7 @@ internal class RoyalDecree : Power
         royalMark.SetActive(true);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
     }

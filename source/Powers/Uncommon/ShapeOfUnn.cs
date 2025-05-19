@@ -14,7 +14,7 @@ internal class ShapeOfUnn : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShapeOfUnn);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShapeOfUnn);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.ShapeOfUnn);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.ShapeOfUnn);
 }

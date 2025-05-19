@@ -14,7 +14,7 @@ internal class SpellTwister : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.SpellTwister);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.SpellTwister);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.SpellTwister);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.SpellTwister);
 }

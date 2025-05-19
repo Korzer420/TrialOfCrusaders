@@ -13,13 +13,13 @@ internal class HowlingWraiths : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         PDHelper.ScreamLevel = 1;
         PDHelper.HasSpell = true;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         PDHelper.ScreamLevel = 0;
         PDHelper.HasSpell = false;

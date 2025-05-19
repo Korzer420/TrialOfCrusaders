@@ -14,13 +14,13 @@ internal class MarkOfPride : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(CharmRef.MarkOfPride);
         CharmHelper.UnequipCharm(CharmRef.Longnail);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         CharmHelper.UnequipCharm(CharmRef.MarkOfPride);
         // TODO: Check for Longnail

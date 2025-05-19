@@ -14,9 +14,9 @@ internal class ShiningBound : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
+    protected override void Enable() => ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
 
-    internal override void Disable() => ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
+    protected override void Disable() => ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
 
     private int ModHooks_AfterTakeDamageHook(int hazardType, int damageAmount)
     {

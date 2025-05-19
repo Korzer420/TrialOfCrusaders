@@ -16,7 +16,7 @@ public class ImprovedWeaversong : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Weaversong);
         On.HutongGames.PlayMaker.Actions.SetScale.OnEnter += SetScale_OnEnter;
@@ -24,7 +24,7 @@ public class ImprovedWeaversong : Power
         On.SetHP.OnEnter += SetHP_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HutongGames.PlayMaker.Actions.SetScale.OnEnter -= SetScale_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayAnimation.OnEnter -= Tk2dPlayAnimation_OnEnter;

@@ -21,22 +21,10 @@ internal class ImprovedCrystalDash : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetBoolValue.OnEnter += SetBoolValue_OnEnter;
-        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
         _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
-    }
-
-    private void TakeDamage_OnEnter(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.TakeDamage self)
-    {
-        bool isSuperDash = self.IsCorrectContext("damages_enemy", "SuperDash Damage", "Send Event");
-        int damageApplier = 20 + CombatController.CombatLevel * 5;
-        if (isSuperDash)
-            self.DamageDealt.Value += damageApplier;
-        orig(self);
-        if (isSuperDash)
-            self.DamageDealt.Value -= damageApplier;
     }
 
     private void SetBoolValue_OnEnter(On.HutongGames.PlayMaker.Actions.SetBoolValue.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SetBoolValue self)
@@ -51,7 +39,7 @@ internal class ImprovedCrystalDash : Power
         orig(self);
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HutongGames.PlayMaker.Actions.SetBoolValue.OnEnter -= SetBoolValue_OnEnter;
     }

@@ -12,9 +12,9 @@ internal class ImprovedSharpShadow : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => On.HealthManager.Die += HealthManager_Die;
+    protected override void Enable() => On.HealthManager.Die += HealthManager_Die;
 
-    internal override void Disable() => On.HealthManager.Die -= HealthManager_Die;
+    protected override void Disable() => On.HealthManager.Die -= HealthManager_Die;
 
     private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
     {

@@ -14,7 +14,7 @@ internal class QuickSlash : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickSlash);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickSlash);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.QuickSlash);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.QuickSlash);
 }

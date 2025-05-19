@@ -1,5 +1,4 @@
-﻿using HutongGames.PlayMaker;
-using KorzUtils.Helper;
+﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
@@ -14,14 +13,14 @@ internal class ImprovedThornsOfAgony : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.ThornsOfAgony);
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += SetPosition_OnEnter;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += SetPosition_OnEnter;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;

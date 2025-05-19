@@ -14,11 +14,11 @@ internal class ImprovedCaringShell : Power
     public override Rarity Tier => Rarity.Uncommon;
 
     /// <inheritdoc/>
-    internal override void Enable()
+    protected override void Enable()
            => ModHooks.AfterTakeDamageHook += ModHooks_TakeDamageHook;
 
     /// <inheritdoc/>
-    internal override void Disable()
+    protected override void Disable()
        => ModHooks.AfterTakeDamageHook -= ModHooks_TakeDamageHook;
 
     private int ModHooks_TakeDamageHook(int hazardType, int damageAmount)

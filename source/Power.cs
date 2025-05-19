@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KorzUtils.Helper;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TrialOfCrusaders.Enums;
@@ -8,49 +9,114 @@ namespace TrialOfCrusaders;
 
 public abstract class Power : IEquatable<Power>
 {
+    #region Members
+
+    private bool _enabled;
+
+
+    #endregion
+
     #region Properties
 
+    /// <summary>
+    /// Gets the rarity of the power.
+    /// <para/>Default is <see cref="Rarity.Common"/>.
+    /// </summary>
     public virtual Rarity Tier => Rarity.Common;
 
+    /// <summary>
+    /// Gets the rates for bonus stats on this power.
+    /// </summary>
     public virtual (float, float, float) BonusRates => new(10, 10, 10);
 
-    public abstract string Name { get; }
+    /// <summary>
+    /// Gets whether this power can appear in a selection.
+    /// </summary>
+    public virtual bool CanAppear => true;
 
-    public abstract string Description { get; }
+    /// <summary>
+    /// Gets the name of the power.
+    /// </summary>
+    public virtual string Name
+    {
+        get
+        {
+            string name = string.Empty;
+            foreach (var letter in GetType().Name)
+            {
+                if (char.IsUpper(letter) && !string.IsNullOrEmpty(name))
+                    name += $" {letter}";
+                else
+                    name += letter;
+            }
+            return name;
+        }
+    }
+
+    /// <summary>
+    /// Gets the description of the power.
+    /// </summary>
+    public virtual string Description
+    {
+        get
+        {
+            string description = Resources.Text.PowerDescriptions.ResourceManager.GetString(GetType().Name);
+            // ToDo: Farben implementieren.
+            return description;
+        }
+    }
 
     #endregion
 
     #region Methods
 
-    internal virtual void Enable()
+    internal void EnablePower()
     {
-
+        if(_enabled)
+        {
+            LogHelper.Write("Power " + Name + " is already enabled.", KorzUtils.Enums.LogType.Warning);
+            return;
+        }
+        Enable();
+        _enabled = true;
     }
 
-    internal virtual void Disable()
+    internal void DisablePower()
     {
-
+        if (!_enabled)
+        {
+            LogHelper.Write("Power " + Name + " is already disabled.", KorzUtils.Enums.LogType.Warning);
+            return;
+        }
+        Disable();
+        _enabled = false;
     }
 
-    public virtual bool CanAppear() => true;
+    /// <summary>
+    /// Enables the power.
+    /// </summary>
+    protected virtual void Enable() { }
 
-    internal Coroutine StartRoutine(IEnumerator coroutine) => CombatController.ExecuteRoutine(coroutine);
+    /// <summary>
+    /// Disables the power and resets all flags.
+    /// </summary>
+    protected virtual void Disable() { }
 
-    internal void StopRoutine(Coroutine coroutine) => CombatController.StopRoutine(coroutine);
+    /// <summary>
+    /// Starts a coroutine on the mod dummy object.
+    /// </summary>
+    protected Coroutine StartRoutine(IEnumerator coroutine) => TrialOfCrusaders.Holder.StartCoroutine(coroutine);
 
-    public bool Equals(Power x, Power y)
-    {
-        if (x is not null && y is null)
-            return false;
-        if (y is not null && x is null)
-            return false;
-        if (x is null)
-            return true;
-        return x.GetType() == y.GetType();
-    }
+    /// <summary>
+    /// Stops the coroutine on the mod dummy object.
+    /// </summary>
+    protected void StopRoutine(Coroutine coroutine) => TrialOfCrusaders.Holder.StopCoroutine(coroutine);
 
-    public int GetHashCode(Power obj) => obj.GetType().GetHashCode();
+    #endregion
 
+    #region Interface
+
+    /// <inheritdoc/>
     public bool Equals(Power other)
     {
         if (other == null)

@@ -15,7 +15,7 @@ internal class DeepCuts : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => On.HealthManager.TakeDamage += HealthManager_TakeDamage;
+    protected override void Enable() => On.HealthManager.TakeDamage += HealthManager_TakeDamage;
 
     private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
@@ -24,13 +24,5 @@ internal class DeepCuts : Power
         orig(self, hitInstance);
     }
 
-    internal override void Disable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
-
-    private void TakeDamage_OnEnter(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.TakeDamage self)
-    {
-        orig(self);
-        if (self.IsCorrectContext("damages_enemy", null, "Send Event") && (self.Fsm.GameObject.name.Contains("Fireball")))
-            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false)
-                self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatController.SpiritLevel);
-    }
+    protected override void Disable() => On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
 }

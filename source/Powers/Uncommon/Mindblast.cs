@@ -14,14 +14,14 @@ internal class Mindblast : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => On.EnemyDreamnailReaction.RecieveDreamImpact += Apply_Mindblast;
+    protected override void Enable() => On.EnemyDreamnailReaction.RecieveDreamImpact += Apply_Mindblast;
 
-    internal override void Disable() => On.EnemyDreamnailReaction.RecieveDreamImpact -= Apply_Mindblast;
+    protected override void Disable() => On.EnemyDreamnailReaction.RecieveDreamImpact -= Apply_Mindblast;
 
     private void Apply_Mindblast(On.EnemyDreamnailReaction.orig_RecieveDreamImpact orig, EnemyDreamnailReaction self)
     {
         orig(self);
-        MindblastEffect mindBlast = self.gameObject.GetOrAddComponent<MindblastEffect>();
+        ShatteredMindEffect mindBlast = self.gameObject.GetOrAddComponent<ShatteredMindEffect>();
         mindBlast.ExtraDamage += 10 + CombatController.SpiritLevel * 5;
     }
 }

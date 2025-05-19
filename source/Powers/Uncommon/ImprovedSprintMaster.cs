@@ -13,17 +13,13 @@ internal class ImprovedSprintMaster : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable()
+    protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Sprintmaster);
-        HeroController.instance.WALK_SPEED += 3f;
-        HeroController.instance.RUN_SPEED += 3f;
-        HeroController.instance.RUN_SPEED_CH += 3f;
-        HeroController.instance.RUN_SPEED_CH_COMBO += 3f;
-        HeroController.instance.JUMP_SPEED += 1f;
+        
     }
 
-    internal override void Disable()
+    protected override void Disable()
     {
         HeroController.instance.WALK_SPEED -= 3f;
         HeroController.instance.RUN_SPEED -= 3f;

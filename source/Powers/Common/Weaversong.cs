@@ -11,7 +11,7 @@ internal class Weaversong : Power
 
     public override (float, float, float) BonusRates => new(7f, 0f, 3f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Weaversong);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Weaversong);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.Weaversong);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Weaversong);
 }

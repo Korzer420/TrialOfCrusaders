@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class CalmMind : Power
+internal class SoulCharge : Power
 {
     private int _spendSoul = 0;
     public int SpendThreshold => 160 - CombatController.SpiritLevel * 2;
@@ -19,13 +19,13 @@ internal class CalmMind : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable()
+    protected override void Enable()
     {
         On.PlayerData.TakeMP += PlayerData_TakeMP;
         _spendSoul = 0;
     }
 
-    internal override void Disable() => On.PlayerData.TakeMP -= PlayerData_TakeMP;
+    protected override void Disable() => On.PlayerData.TakeMP -= PlayerData_TakeMP;
 
     private void PlayerData_TakeMP(On.PlayerData.orig_TakeMP orig, PlayerData self, int amount)
     {

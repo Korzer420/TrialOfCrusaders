@@ -11,7 +11,7 @@ internal class BaldurShell : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.BaldurShell);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.BaldurShell);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.BaldurShell);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.BaldurShell);
 }

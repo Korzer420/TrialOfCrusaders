@@ -10,9 +10,9 @@ internal class Sturdy : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    internal override void Enable() => ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
+    protected override void Enable() => ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
 
-    internal override void Disable() => ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
+    protected override void Disable() => ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
 
     private int ModHooks_AfterTakeDamageHook(int hazardType, int damageAmount)
     {

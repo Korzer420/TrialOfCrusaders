@@ -11,7 +11,7 @@ internal class SoulCatcher : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    internal override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.SoulCatcher);
+    protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.SoulCatcher);
 
-    internal override void Disable() => CharmHelper.UnequipCharm(CharmRef.SoulCatcher);
+    protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.SoulCatcher);
 }

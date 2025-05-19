@@ -14,9 +14,9 @@ internal class ImprovedGatheringSwarm : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    internal override void Enable() => IL.GeoControl.FixedUpdate += GeoControl_FixedUpdate;
+    protected override void Enable() => IL.GeoControl.FixedUpdate += GeoControl_FixedUpdate;
 
-    internal override void Disable() => IL.GeoControl.FixedUpdate -= GeoControl_FixedUpdate;
+    protected override void Disable() => IL.GeoControl.FixedUpdate -= GeoControl_FixedUpdate;
 
     private void GeoControl_FixedUpdate(MonoMod.Cil.ILContext il)
     {
