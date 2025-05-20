@@ -103,7 +103,6 @@ public class TrialOfCrusaders : Mod
             GameObject.Destroy(_coroutineHolder.gameObject);
         _coroutineHolder = new GameObject("TrialCoroutineHelper").AddComponent<Dummy>();
         GameObject.DontDestroyOnLoad(_coroutineHolder.gameObject);
-        HubController.Initialize();
     }
 
     private void PlayerDataBoolTest_OnEnter(On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.orig_OnEnter orig, PlayerDataBoolTest self)
@@ -134,7 +133,6 @@ public class TrialOfCrusaders : Mod
         PDHelper.FountainVesselSummoned = true;
         PDHelper.HasKingsBrand = true;
         PDHelper.DuskKnightDefeated = true;
-        CombatController.Initialize();
         // ToDo: Call OnHook (like IC to allow mods to modify).
     }
 

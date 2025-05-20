@@ -3,6 +3,7 @@ using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using System;
@@ -43,6 +44,8 @@ public static class CombatController
     /// </summary>
     public static int EnduranceLevel { get; set; }
 
+    public static bool CharmUpdate { get; set; }
+
     public static List<HealthManager> Enemies => StageController.Enemies;
 
     public static List<Power> ObtainedPowers { get; set; } = [];
@@ -78,6 +81,8 @@ public static class CombatController
         ModHooks.SoulGainHook += ModHooks_SoulGainHook;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         On.HeroController.AddGeo += HeroController_AddGeo;
+        IL.HeroController.MaxHealth += HeroController_MaxHealth;
+        On.HeroController.CharmUpdate += HeroController_CharmUpdate;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         CreateExtraHealth();
         CoroutineHelper.WaitUntil(() =>
@@ -103,6 +108,26 @@ public static class CombatController
             GameCameras.instance.hudCanvas.gameObject.SetActive(false);
             GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         }, () => HeroController.instance?.acceptingInput == true, true);
+    }
+
+    private static void HeroController_CharmUpdate(On.HeroController.orig_CharmUpdate orig, HeroController self)
+    {
+        CharmUpdate = true;
+        orig(self);
+        CharmUpdate = false;
+    }
+
+    private static void HeroController_MaxHealth(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        cursor.Goto(0);
+
+        ILLabel label;
+        cursor.GotoNext(x => x.MatchRet());
+        label = cursor.MarkLabel();
+        cursor.Goto(0);
+        cursor.EmitDelegate(() => CharmUpdate);
+        cursor.Emit(OpCodes.Brtrue, label);
     }
 
     public static void Unload()
