@@ -2,7 +2,7 @@
 using Modding.Utils;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 

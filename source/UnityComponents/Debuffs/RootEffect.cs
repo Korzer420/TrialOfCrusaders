@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Debuffs;
 
 internal class RootEffect : MonoBehaviour
 {
@@ -24,7 +24,7 @@ internal class RootEffect : MonoBehaviour
     {
         _cooldown += Time.deltaTime;
         if (_cooldown >= 15f)
-            Component.Destroy(this);
+            Destroy(this);
     }
 
     private IEnumerator PullBack()

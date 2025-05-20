@@ -14,6 +14,7 @@ using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
 namespace TrialOfCrusaders;

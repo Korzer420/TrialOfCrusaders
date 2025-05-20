@@ -4,6 +4,7 @@ using System.Linq;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
 namespace TrialOfCrusaders;

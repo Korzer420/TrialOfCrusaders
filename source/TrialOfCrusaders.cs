@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
+using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
@@ -35,6 +37,7 @@ public class TrialOfCrusaders : Mod
         ("Ruins1_23", "Ruins Vial Empty (2)/Active/soul_cache (1)"),
         ("GG_Workshop", "GG_Statue_Vengefly/Inspect"),
         ("Deepnest_East_10", "Dream Gate"),
+        ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring")
     ];
 
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -92,7 +95,10 @@ public class TrialOfCrusaders : Mod
         GameObject.DontDestroyOnLoad(Caching.SoulCache);
         Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         GameObject.DontDestroyOnLoad(Gate.Prefab);
-        
+
+        VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
+        GameObject.DontDestroyOnLoad(VoidZone.Ring);
+
         On.UIManager.StartNewGame += UIManager_StartNewGame;
         On.UIManager.ContinueGame += UIManager_ContinueGame;
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
@@ -107,7 +113,7 @@ public class TrialOfCrusaders : Mod
 
     private void PlayerDataBoolTest_OnEnter(On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.orig_OnEnter orig, PlayerDataBoolTest self)
     {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Set HP Amount"))
+        if (self.IsCorrectContext("Spell Control", "Knight", "Set HP Amount*"))
             TreasureController.SpawnShiny(TreasureType.EnduranceOrb, HeroController.instance.transform.position);
         orig(self);
     }
@@ -133,6 +139,8 @@ public class TrialOfCrusaders : Mod
         PDHelper.FountainVesselSummoned = true;
         PDHelper.HasKingsBrand = true;
         PDHelper.DuskKnightDefeated = true;
+        new InUtterDarkness().EnablePower();
+        StageController.Initialize();
         // ToDo: Call OnHook (like IC to allow mods to modify).
     }
 

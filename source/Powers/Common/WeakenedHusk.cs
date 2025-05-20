@@ -1,6 +1,6 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

@@ -340,7 +340,7 @@
     <value>Geo value is slightly increased.</value>
   </data>
   <data name="InUtterDarkness" xml:space="preserve">
-    <value>Fully heals you. You can no longer heal. Focus now spawns a sibling that attacks enemies.</value>
+    <value>Fully heals you. You can no longer heal. Focus now spawns a void zone.</value>
   </data>
   <data name="Kingssoul" xml:space="preserve">
     <value>Slowly generates soul.</value>

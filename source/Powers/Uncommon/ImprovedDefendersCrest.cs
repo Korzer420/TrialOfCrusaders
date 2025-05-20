@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
+using Modding.Utils;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -25,10 +26,10 @@ internal class ImprovedDefendersCrest : Power
             bool afflictWeakness = UnityEngine.Random.Range(1, 101) == 1;
             if (afflictWeakness)
             {
-                if (self.GetComponent<HealthManager>() != null && self.GetComponent<WeakendEffect>() == null)
-                    self.gameObject.AddComponent<WeakendEffect>();
-                else if (self.transform.parent?.GetComponent<HealthManager>() != null && self.transform.parent?.GetComponent<WeakendEffect>() == null)
-                    self.transform.parent.gameObject.AddComponent<WeakendEffect>();
+                if (self.GetComponent<HealthManager>() != null)
+                    self.gameObject.GetOrAddComponent<WeakenedEffect>();
+                else if (self.transform.parent != null && self.transform.parent.GetComponent<HealthManager>() != null)
+                    self.transform.parent.gameObject.GetOrAddComponent<WeakenedEffect>();
             }
         }
         orig(self, extraDamageType);

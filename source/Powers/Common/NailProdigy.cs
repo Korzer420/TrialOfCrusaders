@@ -26,7 +26,7 @@ internal class NailProdigy : Power
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
     {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal"))
+        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*"))
             _spellUsed = true;
         orig(self);
     }

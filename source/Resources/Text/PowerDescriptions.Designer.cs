@@ -727,7 +727,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Fully heals you. You can no longer heal. Focus now spawns a sibling that attacks enemies. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Fully heals you. You can no longer heal. Focus now spawns a void zone. ähnelt.
         /// </summary>
         internal static string InUtterDarkness {
             get {

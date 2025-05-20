@@ -21,7 +21,7 @@ internal class SoulConserver : Power
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
     {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal") && UnityEngine.Random.Range(0, 80) < CombatController.SpiritLevel)
+        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*") && UnityEngine.Random.Range(0, 80) < CombatController.SpiritLevel)
         {
             // Check to make it work with ImprovedFocus
             int amount = self.Fsm.Variables.FindFsmInt("Health Increase").Value;

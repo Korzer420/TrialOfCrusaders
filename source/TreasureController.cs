@@ -161,6 +161,8 @@ public static class TreasureController
 
     public static int BadLuckProtection { get; set; } = 0;
 
+    public static bool EnduranceHealthGrant { get; set; }
+
     internal static void SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
     {
         GameObject shiny = GameObject.Instantiate(Shiny);
@@ -246,7 +248,9 @@ public static class TreasureController
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_ENDURANCE";
                     GameHelper.OneTimeMessage("INV_NAME_ENDURANCE", "Endurance Up", "UI");
                     CombatController.EnduranceLevel++;
+                    EnduranceHealthGrant = true;
                     HeroController.instance.AddHealth(1);
+                    EnduranceHealthGrant = false;
                     PlayMakerFSM.BroadcastEvent("MAX HP UP");
                     fsm.SendEvent("TRINKET");
                     break;
@@ -337,7 +341,8 @@ public static class TreasureController
             bool rare = false;
             List<Power> selectedPowers = [];
             List<string> statBoni = [];
-            List<Power> availablePowers = [.. Powers.Except(CombatController.ObtainedPowers)];
+            List<Power> availablePowers = [.. Powers.Except(CombatController.ObtainedPowers)
+                .Where(x => x.CanAppear)];
             for (int i = 0; i < 3; i++)
             {
                 if (availablePowers.Count == 0)
@@ -638,7 +643,9 @@ public static class TreasureController
                     break;
                 case "Endurance":
                     CombatController.EnduranceLevel++;
+                    EnduranceHealthGrant = true;
                     HeroController.instance.AddHealth(1);
+                    EnduranceHealthGrant = false;
                     PlayMakerFSM.BroadcastEvent("MAX HP UP");
                     break;
                 default:

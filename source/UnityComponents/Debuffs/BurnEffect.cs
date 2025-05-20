@@ -2,7 +2,7 @@
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Debuffs;
 
 /// <summary>
 /// A dot that deals all damage over the course of 10 seconds (10% per seconds).
@@ -26,11 +26,11 @@ internal class BurnEffect : MonoBehaviour
 
     void Start()
     {
-        _flameParticle = GameObject.Instantiate(Burn, transform);
-        _flameParticle.transform.localPosition = new(0f,0f,-1f);
+        _flameParticle = Instantiate(Burn, transform);
+        _flameParticle.transform.localPosition = new(0f, 0f, -1f);
         _enemy = GetComponent<HealthManager>();
         ParticleSystem particle = _flameParticle.GetComponent<ParticleSystem>();
-        ParticleSystem.MainModule mainModule = particle.main;
+        MainModule mainModule = particle.main;
         mainModule.duration = 10;
         mainModule.loop = true;
         mainModule.maxParticles *= 3;
@@ -59,7 +59,7 @@ internal class BurnEffect : MonoBehaviour
         _leftDuration -= Time.deltaTime;
         if (_leftDuration <= 0 || _enemy.isDead || LeftDamage <= 0)
         {
-            GameObject.Destroy(_flameParticle);
+            Destroy(_flameParticle);
             Destroy(this);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 

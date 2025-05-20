@@ -17,7 +17,7 @@ internal class ImprovedFocus : Power
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
     {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal"))
+        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*"))
         {
             int leftoverSoul = PDHelper.MPCharge + PDHelper.MPReserve;
             int healAmount = (int)Math.Floor((float)leftoverSoul / 33);

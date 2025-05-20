@@ -1,6 +1,6 @@
 ﻿using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -22,7 +22,7 @@ internal class ImprovedHeavyBlow : Power
         {
             bool buffedHit = UnityEngine.Random.Range(1, 26) == 1;
             if (self.GetComponent<ConcussionEffect>() is ConcussionEffect concussionComponent)
-                concussionComponent.ConcussiveTime += buffedHit ? 3 : 0.5f;
+                concussionComponent.Timer += buffedHit ? 3 : 0.5f;
             else if (buffedHit)
                 self.gameObject.AddComponent<ConcussionEffect>();
         }

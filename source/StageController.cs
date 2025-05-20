@@ -46,23 +46,23 @@ internal static class StageController
 
     internal static void Initialize()
     {
-        QuietRoom = true;
-        On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
-        On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
-        // "Remove" all benches.
-        On.RestBench.Start += RestBench_Start;
-        On.SceneData.FindMyState_PersistentBoolData += SceneData_FindMyState_PersistentBoolData;
-        // These hooks ensure that nothing is saved within a scene so it can repeated indefinetly.
-        On.SceneData.SaveMyState_GeoRockData += SceneData_SaveMyState_GeoRockData;
-        On.SceneData.SaveMyState_PersistentBoolData += SceneData_SaveMyState_PersistentBoolData;
-        On.SceneData.SaveMyState_PersistentIntData += SceneData_SaveMyState_PersistentIntData;
-        ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
+        //QuietRoom = true;
+        //On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
+        //On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
+        //// "Remove" all benches.
+        //On.RestBench.Start += RestBench_Start;
+        //On.SceneData.FindMyState_PersistentBoolData += SceneData_FindMyState_PersistentBoolData;
+        //// These hooks ensure that nothing is saved within a scene so it can repeated indefinetly.
+        //On.SceneData.SaveMyState_GeoRockData += SceneData_SaveMyState_GeoRockData;
+        //On.SceneData.SaveMyState_PersistentBoolData += SceneData_SaveMyState_PersistentBoolData;
+        //On.SceneData.SaveMyState_PersistentIntData += SceneData_SaveMyState_PersistentIntData;
+        //ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
         On.HealthManager.OnEnable += HealthManager_OnEnable;
-        On.HealthManager.Die += HealthManager_Die;
-        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
-        On.TransitionPoint.Start += TransitionPoint_Start;
-        On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += BoolTest_OnEnter;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        //On.HealthManager.Die += HealthManager_Die;
+        //On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
+        //On.TransitionPoint.Start += TransitionPoint_Start;
+        //On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += BoolTest_OnEnter;
+        //UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
 
     private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
@@ -369,7 +369,8 @@ internal static class StageController
     private static void HealthManager_OnEnable(On.HealthManager.orig_OnEnable orig, HealthManager self)
     {
         // Prevent "immortal" enemies.
-        if (self.hp != 9999 && self.gameObject.name != "Mender Bug" && !self.gameObject.name.Contains("Pigeon") && !self.gameObject.name.Contains("Hatcher Baby Spawner"))
+        if (self.hp != 9999 && self.gameObject.name != "Mender Bug" && !self.gameObject.name.Contains("Pigeon") && !self.gameObject.name.Contains("Hatcher Baby Spawner")
+            && self.gameObject.name != "Hollow Shade(Clone)")
         {
             Enemies.Add(self);
             LogHelper.Write("Added enemy: " + Enemies.Last().gameObject.name);

@@ -1,7 +1,7 @@
 ﻿using KorzUtils.Helper;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Debuffs;
 
 internal class BleedEffect : MonoBehaviour
 {
@@ -21,7 +21,7 @@ internal class BleedEffect : MonoBehaviour
         if (_leftDuration != 5f && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f))
         {
             // This does recycle itself
-            GameObject bleedEffect = GameObject.Instantiate(Bleed, transform.position - new Vector3(0f,0f, 1f), Quaternion.identity);
+            GameObject bleedEffect = Instantiate(Bleed, transform.position - new Vector3(0f, 0f, 1f), Quaternion.identity);
             bleedEffect.GetComponent<SpriteRenderer>().color = Color.red;
             bleedEffect.SetActive(true);
             if (!_enemy.IsInvincible)
