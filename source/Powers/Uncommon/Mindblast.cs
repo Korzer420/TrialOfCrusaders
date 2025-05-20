@@ -1,18 +1,18 @@
-﻿using Modding.Utils;
+﻿using KorzUtils.Helper;
+using Modding.Utils;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.UnityComponents;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class Mindblast : Power
 {
-    public override string Name => "Mindblast";
-
-    public override string Description => "Dreamnail permanently causes enemies to take increased damage.";
-
     public override (float, float, float) BonusRates => new(20f, 20f, 0f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<DreamNail>();
 
     protected override void Enable() => On.EnemyDreamnailReaction.RecieveDreamImpact += Apply_Mindblast;
 

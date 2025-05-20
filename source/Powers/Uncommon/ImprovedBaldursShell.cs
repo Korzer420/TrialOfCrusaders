@@ -3,6 +3,7 @@ using KorzUtils.Helper;
 using Modding;
 using System;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
@@ -13,13 +14,11 @@ internal class ImprovedBaldursShell : Power
 
     private int _passedScenes = 0;
 
-    public override string Name => "Improved Baldur's Shell";
-
-    public override string Description => "Increases hitpoints and regenerates over time.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<BaldurShell>();
 
     protected override void Enable()
     {

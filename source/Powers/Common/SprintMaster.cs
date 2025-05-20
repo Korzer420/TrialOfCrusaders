@@ -4,7 +4,7 @@ using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class SprintMaster : Power
+internal class Sprintmaster : Power
 {
     public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 

@@ -1,17 +1,16 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ImprovedHiveblood : Power
 {
-    public override string Name => "Improved Hiveblood";
-
-    public override string Description => "Regeneration Speed is increased.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 100f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => HasPower<Hiveblood>() && !HasPower<InUtterDarkness>();
 
     protected override void Enable() 
     { 

@@ -13,6 +13,8 @@ internal class ImprovedGrimmchild : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override bool CanAppear => HasPower<ImprovedGrimmchild>();
+
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Grimmchild4);

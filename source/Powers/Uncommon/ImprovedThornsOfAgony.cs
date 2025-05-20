@@ -1,17 +1,16 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class ImprovedThornsOfAgony : Power
 {
-    public override string Name => "Improved Thorns of Agony";
-
-    public override string Description => "Leeches soul from enemies hit. Improves agility.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<ThornsOfAgony>();
 
     protected override void Enable()
     {
@@ -22,8 +21,8 @@ internal class ImprovedThornsOfAgony : Power
 
     protected override void Disable()
     {
-        On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += SetPosition_OnEnter;
-        On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
+        On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= SetPosition_OnEnter;
+        On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;
     }
 
     private void SendMessage_OnEnter(On.HutongGames.PlayMaker.Actions.SendMessage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SendMessage self)

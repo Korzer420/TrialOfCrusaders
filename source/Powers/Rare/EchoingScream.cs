@@ -1,7 +1,7 @@
-﻿using KorzUtils.Enums;
-using KorzUtils.Helper;
+﻿using KorzUtils.Helper;
 using System.Collections;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
@@ -13,13 +13,11 @@ internal class EchoingScream : Power
 
     private GameObject _shriek;
 
-    public override string Name => "Echoing Scream";
-
-    public override string Description => "Howling Wraiths/Abyss Shriek may trigger multiple times.";
-
     public override (float, float, float) BonusRates => new(0f, 100f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
 
     public GameObject Scream
     {

@@ -7,10 +7,6 @@ namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ImprovedFocus : Power
 {
-    public override string Name => "Improved Focus";
-
-    public override string Description => "Focus now consumes all soul energy.";
-
     public override (float, float, float) BonusRates => new(0f, 20f, 80f);
 
     public override Rarity Tier => Rarity.Rare;

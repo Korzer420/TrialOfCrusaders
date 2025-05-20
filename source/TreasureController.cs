@@ -41,7 +41,7 @@ public static class TreasureController
         // Common
         new StalwartShell(),
         new SoulCatcher(),
-        new SprintMaster(),
+        new Sprintmaster(),
         new SteadyBody(),
         new HeavyBlow(),
         new Longnail(),
@@ -114,7 +114,7 @@ public static class TreasureController
         new HowlingWraiths(),
         new Greed(),
         new ImprovedStalwartShell(),
-        new ImprovedSprintMaster(),
+        new ImprovedSprintmaster(),
         new ImprovedGatheringSwarm(),
         new ImprovedHeavyBlow(),
         new ImprovedThornsOfAgony(),

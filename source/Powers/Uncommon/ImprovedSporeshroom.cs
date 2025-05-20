@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
@@ -13,13 +14,11 @@ internal class ImprovedSporeshroom : Power
 
     private GameObject _holder;
 
-    public override string Name => "Improved Sporeshroom";
-
-    public override string Description => "Creates spore clouds on its own.";
-
     public override (float, float, float) BonusRates => new(5f, 0f, 35f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<Sporeshroom>();
 
     public GameObject Cloud => _cloud ??= GameObject.Find("_GameManager")?.transform.Find("GlobalPool/Knight Spore Cloud(Clone)")?.gameObject;
 

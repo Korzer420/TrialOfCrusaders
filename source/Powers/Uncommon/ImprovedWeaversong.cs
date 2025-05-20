@@ -2,19 +2,18 @@
 using KorzUtils.Helper;
 using System;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 public class ImprovedWeaversong : Power
 {
-    public override string Name => "Improved Weaversong";
-
-    public override string Description => "Increases weaver size. Damage now scales.";
-
     public override (float, float, float) BonusRates => new(35f, 0f, 5f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<Weaversong>();
 
     protected override void Enable()
     {
@@ -37,7 +36,6 @@ public class ImprovedWeaversong : Power
 
         self.Fsm.Variables.FindFsmFloat("Scale").Value = weaverScale;
         self.Fsm.Variables.FindFsmFloat("Neg Scale").Value = weaverScale * -1f;
-
         self.Fsm.FsmComponent.transform.localScale = new Vector3(weaverScale, weaverScale);
         self.Fsm.FsmComponent.transform.SetScaleMatching(weaverScale);
     }

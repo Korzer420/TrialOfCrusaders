@@ -1,5 +1,4 @@
-﻿using KorzUtils.Helper;
-using Modding.Utils;
+﻿using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -21,7 +20,7 @@ internal class BurnEffect : MonoBehaviour
 
     public static GameObject Burn { get; set; }
 
-    public static bool PoweredUp { get; set; }
+    internal static bool PoweredUp => CombatController.HasPower(out FragileSpirit spirit) && spirit.SpiritActive;
 
     public const string TextColor = "#e6a100";
 

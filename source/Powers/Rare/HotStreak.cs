@@ -16,10 +16,6 @@ internal class HotStreak : Power
     #endregion
 
     #region Properties
-    
-    public override string Name => "Hot Streak";
-
-    public override string Description => "Increases nail damage for each consecutive nail hit. Failing to hit an enemy resets the counter.";
 
     public override Rarity Tier => Rarity.Rare;
 

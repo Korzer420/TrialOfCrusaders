@@ -6,13 +6,11 @@ namespace TrialOfCrusaders.Powers.Rare;
 
 internal class QuickSlash : Power
 {
-    public override string Name => "Quick Slash";
-
-    public override string Description => "Increases attack speed.";
-
     public override (float, float, float) BonusRates => new(100f, 0f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => !HasPower<ShiningBound>();
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickSlash);
 

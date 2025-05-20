@@ -1,17 +1,16 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class AbyssShriek : Power
 {
-    public override string Name => "Abyss Shriek";
-
-    public override string Description => "Unlocks Abyss Shriek";
-
     public override (float, float, float) BonusRates => new(0f, 100f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
 
     protected override void Enable()
     {

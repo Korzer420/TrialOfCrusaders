@@ -1,18 +1,17 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class Hiveblood : Power
 {
-    public override string Name => "Hiveblood";
-
-    public override string Description => "Taking damage regenerates the last mask lost.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => !HasPower<InUtterDarkness>() && !HasPower<ShiningBound>();
 
     protected override void Enable()
     {

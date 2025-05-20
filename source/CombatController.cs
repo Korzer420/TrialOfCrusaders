@@ -314,7 +314,7 @@ public static class CombatController
                 x *= 2f;
             if (HasPower<EscapeArtist>(out _) && PDHelper.IsInvincible)
                 x += EnduranceLevel / 4f;
-            if (HasPower<ImprovedSprintMaster>(out _))
+            if (HasPower<ImprovedSprintmaster>(out _))
                 x += 3f;
             return x;
         });
@@ -325,7 +325,7 @@ public static class CombatController
                 x *= 2f;
             if (HasPower<EscapeArtist>(out _) && PDHelper.IsInvincible)
                 x += EnduranceLevel / 4f;
-            if (HasPower<ImprovedSprintMaster>(out _))
+            if (HasPower<ImprovedSprintmaster>(out _))
                 x += 3f;
             return x;
         });
@@ -451,7 +451,15 @@ public static class CombatController
         int currentHealth = PDHelper.Health;
         orig(self, go, damageSide, damageAmount, hazardType);
         if (currentHealth != PDHelper.Health)
+        {
+            if ((HasPower(out FragileGreed greed) && greed.GreedActive) || (HasPower(out FragileSpirit spirit) && spirit.SpiritActive)
+                || (HasPower(out FragileStrength strength) && strength.StrengthActive))
+            { 
+                HeroController.instance.proxyFSM.GetState("Flower?").GetFirstAction<ActivateGameObject>().gameObject.GameObject.Value.SetActive(true);
+                GameManager.instance.SaveGame();
+            }
             TookDamage?.Invoke();
+        }
     }
 
     private static void HeroController_AddGeo(On.HeroController.orig_AddGeo orig, HeroController self, int amount)

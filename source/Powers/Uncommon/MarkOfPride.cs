@@ -1,18 +1,18 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class MarkOfPride : Power
 {
-    public override string Name => "Mark of Pride";
-
-    public override string Description => "Increases the nail range significantly. Overwrites Longnail.";
-
     public override (float, float, float) BonusRates => new(30f, 0f, 10f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<Longnail>() && !HasPower<ShiningBound>();
 
     protected override void Enable()
     {

@@ -3,18 +3,17 @@ using KorzUtils.Helper;
 using MonoMod.Cil;
 using System;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ImprovedFuryOfTheFallen : Power
 {
-    public override string Name => "Improved Fury of the Fallen";
-
-    public override string Description => "The fury effect is already active while being only severed injured instead.";
-
     public override (float, float, float) BonusRates => new(100f, 0f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => CombatController.HasPower<FuryOfTheFallen>(out _);
 
     public bool FuryActive => PDHelper.Health <= Math.Max(1, Math.Ceiling((float)PDHelper.MaxHealth / 4));
 

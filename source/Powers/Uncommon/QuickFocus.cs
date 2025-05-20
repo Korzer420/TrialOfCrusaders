@@ -6,10 +6,6 @@ namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class QuickFocus : Power
 {
-    public override string Name => "Quick Focus";
-
-    public override string Description => "Increase focus speed.";
-
     public override (float, float, float) BonusRates => new(0f, 10f, 30f);
 
     public override Rarity Tier => Rarity.Uncommon;

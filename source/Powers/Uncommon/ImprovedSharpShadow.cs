@@ -1,12 +1,11 @@
 ﻿using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class ImprovedSharpShadow : Power
 {
-    public override string Name => "Improved Sharp Shadow";
-
-    public override string Description => "Kills restore health.";
+    public override bool CanAppear => !HasPower<InUtterDarkness>() && HasPower<SharpShadow>();
 
     public override (float, float, float) BonusRates => new(20f, 0f, 20f);
 

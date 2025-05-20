@@ -1,18 +1,17 @@
 ﻿using MonoMod.Cil;
 using System;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ImprovedCarefreeMelody : Power
 {
-    public override string Name => "Improved Carefree Melody";
-
-    public override string Description => "Avoids damage more often.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 100f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => CombatController.HasPower<CarefreeMelody>(out _);
 
     protected override void Enable() => IL.HeroController.TakeDamage += HeroController_TakeDamage;
     

@@ -1,5 +1,5 @@
-﻿using KorzUtils.Helper;
-using System.Collections;
+﻿using System.Collections;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 
@@ -9,37 +9,34 @@ internal class CheatDeath : Power
 {
     private int _cooldown = 0;
 
-    public override string Name => "Cheat Death";
-
-    public override string Description => "Prevents lethal hits... sometimes. Can only occur once per 10 cleared rooms. Does not work on instant kill effects.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override bool CanAppear => !HasPower<InUtterDarkness>();
+
     protected override void Enable()
     {
         On.HeroController.Die += HeroController_Die;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        StageController.RoomCleared += StageController_RoomCleared;
     }
+
+    private void StageController_RoomCleared() => _cooldown = _cooldown.Lower(1);
 
     protected override void Disable()
     {
         On.HeroController.Die -= HeroController_Die;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        StageController.RoomCleared -= StageController_RoomCleared;
     }
-
-    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
-        => _cooldown = Mathf.Max(0, _cooldown--);
 
     private IEnumerator HeroController_Die(On.HeroController.orig_Die orig, HeroController self)
     {
-        if (_cooldown != 0 || Random.Range(0, 21) >= CombatController.EnduranceLevel + 20)
+        if (_cooldown != 0 || RngProvider.GetRandom(1, 21) >= CombatController.EnduranceLevel + 1)
             yield return orig(self);
         else
         {
             _cooldown = 10;
-            // This only restores 2 without survival points. I have no clue.
+            // This only restores 2 without endurance points. I have no clue.
             HeroController.instance.AddHealth(3 + CombatController.EnduranceLevel / 2);
             HeroController.instance.StartCoroutine(UpdateUI());
         }

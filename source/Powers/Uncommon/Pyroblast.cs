@@ -7,10 +7,6 @@ namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class Pyroblast : Power
 {
-    public override string Name => "Pyroblast";
-
-    public override string Description => $"Vengeful Spirit ignites hit enemies causing <color={BurnEffect.TextColor}>burn</color>.";
-
     public override (float, float, float) BonusRates => new(0f, 40f, 0f);
 
     public override Rarity Tier => Rarity.Uncommon;
@@ -23,7 +19,7 @@ internal class Pyroblast : Power
     {
         orig(self);
         if (self.IsCorrectContext("damages_enemy", null, "Send Event") && (self.Fsm.GameObject.name.Contains("Fireball")))
-            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false)
+            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false && RngProvider.GetRandom(0, 20) <= CombatController.SpiritLevel)
                 self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatController.SpiritLevel);
     }
 }

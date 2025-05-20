@@ -1,17 +1,16 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ShadeSoul : Power
 {
-    public override string Name => "Shade Soul";
-
-    public override string Description => "Unlocks Shade Soul";
-
     public override (float, float, float) BonusRates => new(0f, 100f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override bool CanAppear => HasPower<VengefulSpirit>();
 
     protected override void Enable()
     {

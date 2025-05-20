@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AbyssShriek" xml:space="preserve">
+    <value>Unlocks Abyss Shriek.</value>
+  </data>
   <data name="AchillesVerse" xml:space="preserve">
     <value>Enemies deal less damage. Hazards now kill you instantly.</value>
   </data>
@@ -141,11 +144,17 @@
   <data name="CalmMind" xml:space="preserve">
     <value>While at full health, slowing regenerates soul.</value>
   </data>
+  <data name="CarefreeMelody" xml:space="preserve">
+    <value>Occusionally blocks damage.</value>
+  </data>
   <data name="CaringShell" xml:space="preserve">
     <value>Hazards deal less damage.</value>
   </data>
   <data name="Charge" xml:space="preserve">
     <value>You move and attack faster shortly after entering the room.</value>
+  </data>
+  <data name="CheatDeath" xml:space="preserve">
+    <value>Prevents lethal hits... sometimes. Can only occur once per 10 cleared rooms. Does not work on instant kill effects.</value>
   </data>
   <data name="Cocoon" xml:space="preserve">
     <value>Grants 6 lifeblood.</value>
@@ -159,14 +168,29 @@
   <data name="Damocles" xml:space="preserve">
     <value>Increases the chance of treasure room significantly. After taking damage the first time, each second could be your last...</value>
   </data>
+  <data name="Dashmaster" xml:space="preserve">
+    <value>Decreases the dash cooldown. Allows dashing downwards.</value>
+  </data>
   <data name="DashSlash" xml:space="preserve">
     <value>Unlocks Dash Slash.</value>
   </data>
   <data name="DeepBreath" xml:space="preserve">
     <value>Entering a new room restores a bit of soul. Gained amount decreases with missing health.</value>
   </data>
+  <data name="DeepCuts" xml:space="preserve">
+    <value>Nail hits may apply bleed.</value>
+  </data>
+  <data name="DeepFocus" xml:space="preserve">
+    <value>Focus is slower, but restores two health.</value>
+  </data>
   <data name="DefendersCrest" xml:space="preserve">
     <value>Emits a poison cloud.</value>
+  </data>
+  <data name="DescendingDark" xml:space="preserve">
+    <value>Unlocks Descending Dark.</value>
+  </data>
+  <data name="DesolateDive" xml:space="preserve">
+    <value>Unlocks Desolate Dive.</value>
   </data>
   <data name="Desperation" xml:space="preserve">
     <value>Focus speed increases with missing health.</value>
@@ -183,11 +207,32 @@
   <data name="DreamShield" xml:space="preserve">
     <value>Spawns a rotating shield around you.</value>
   </data>
+  <data name="DreamWalker" xml:space="preserve">
+    <value>Dream Nail can be casted while moving.</value>
+  </data>
+  <data name="DreamWielder" xml:space="preserve">
+    <value>Increases dream nail power and speed.</value>
+  </data>
+  <data name="EchoingScream" xml:space="preserve">
+    <value>Howling Wraiths/Abyss Shriek may trigger multiple times.</value>
+  </data>
   <data name="EscapeArtist" xml:space="preserve">
     <value>Increases your movement speed while recovering from a hit.</value>
   </data>
   <data name="Fade" xml:space="preserve">
     <value>After standing still for 5 second you no longer take damage. Breaks on any action.</value>
+  </data>
+  <data name="FragileGreed" xml:space="preserve">
+    <value>Geo is 200% more worth. No longer works upon taking damage.</value>
+  </data>
+  <data name="FragileSpirit" xml:space="preserve">
+    <value>All spells cause burn. No longer works upon taking damage.</value>
+  </data>
+  <data name="FragileStrength" xml:space="preserve">
+    <value>Nail damage is increased by 300%. No longer works upon taking damage.</value>
+  </data>
+  <data name="FuryOfTheFallen" xml:space="preserve">
+    <value>While at 1 health, increase nail damage significantly.</value>
   </data>
   <data name="GatheringSwarm" xml:space="preserve">
     <value>Pulls nearby geo towards you.</value>
@@ -201,20 +246,104 @@
   <data name="GreatSlash" xml:space="preserve">
     <value>Unlocks Great Slash.</value>
   </data>
+  <data name="Greed" xml:space="preserve">
+    <value>Increases the geo dropped from enemies.</value>
+  </data>
+  <data name="Grimmchild" xml:space="preserve">
+    <value>Summons a companion that attacks enemies.</value>
+  </data>
   <data name="GroundSlam" xml:space="preserve">
     <value>A hardfall emits shockwaves that damage enemies hit.</value>
   </data>
   <data name="GrubberflysElegy" xml:space="preserve">
     <value>While at full health fire waves with your nail.</value>
   </data>
+  <data name="Grubsong" xml:space="preserve">
+    <value>Taking a hit restores soul.</value>
+  </data>
   <data name="HeavyBlow" xml:space="preserve">
     <value>Increases knockback from hitting enemies.</value>
+  </data>
+  <data name="Hiveblood" xml:space="preserve">
+    <value>Taking damage regenerates the last mask lost.</value>
+  </data>
+  <data name="HotStreak" xml:space="preserve">
+    <value>Increases nail damage for each consecutive nail hit. Failing to hit an enemy resets the counter.</value>
+  </data>
+  <data name="HowlingWraiths" xml:space="preserve">
+    <value>Unlocks Howling Wraiths.</value>
+  </data>
+  <data name="ImprovedBaldursShell" xml:space="preserve">
+    <value>Increases hitpoints and regenerates over time.</value>
+  </data>
+  <data name="ImprovedCarefreeMelody" xml:space="preserve">
+    <value>Avoids damage more often.</value>
+  </data>
+  <data name="ImprovedCaringShell" xml:space="preserve">
+    <value>Decreases hazard damage even further. Hazards do not deal damage in calm rooms anymore.</value>
+  </data>
+  <data name="ImprovedCrystalDash" xml:space="preserve">
+    <value>Damage is increased. Grants invincibility upon start. Invinciblity has a cooldown.</value>
+  </data>
+  <data name="ImprovedDefendersCrest" xml:space="preserve">
+    <value>Enemies hit by the cloud become weakened.</value>
+  </data>
+  <data name="ImprovedFocus" xml:space="preserve">
+    <value>Focus now consumes all soul energy.</value>
+  </data>
+  <data name="ImprovedFuryOfTheFallen" xml:space="preserve">
+    <value>The fury threshold is increased.</value>
+  </data>
+  <data name="ImprovedGatheringSwarm" xml:space="preserve">
+    <value>Gathers geo more efficient.</value>
+  </data>
+  <data name="ImprovedGlowingWomb" xml:space="preserve">
+    <value>Hatchlings cost way less soul. Damage and spawn rate is increased.</value>
+  </data>
+  <data name="ImprovedGrimmchild" xml:space="preserve">
+    <value>Scarlet energy flows through the Grimmchild increasing its power.</value>
+  </data>
+  <data name="ImprovedHeavyBlow" xml:space="preserve">
+    <value>Adds a chance to cause a concussion on enemies.</value>
+  </data>
+  <data name="ImprovedHiveblood" xml:space="preserve">
+    <value>Regeneration speed is increased.</value>
+  </data>
+  <data name="ImprovedMonarchWings" xml:space="preserve">
+    <value>Enemies hit by the wings are damaged. Has a chance to apply bleed or concussion.</value>
+  </data>
+  <data name="ImprovedSharpShadow" xml:space="preserve">
+    <value>Kills restore health.</value>
+  </data>
+  <data name="ImprovedSpellTwister" xml:space="preserve">
+    <value>Reduces spell cost even further.</value>
+  </data>
+  <data name="ImprovedSporeshroom" xml:space="preserve">
+    <value>Creates spore clouds on its own.</value>
+  </data>
+  <data name="ImprovedSprintmaster" xml:space="preserve">
+    <value>Grants a significant speed boost.</value>
+  </data>
+  <data name="ImprovedStalwartShell" xml:space="preserve">
+    <value>Extends the invincibility after getting hit.</value>
+  </data>
+  <data name="ImprovedThornsOfAgony" xml:space="preserve">
+    <value>Leeches soul from enemies hit. Improves agility.</value>
+  </data>
+  <data name="ImprovedWeaversong" xml:space="preserve">
+    <value>Increases weaver size. Damage now scales.</value>
   </data>
   <data name="Initiative" xml:space="preserve">
     <value>The first hit on enemies deals bonus damage and grants extra soul.</value>
   </data>
   <data name="Interest" xml:space="preserve">
     <value>Geo value is slightly increased.</value>
+  </data>
+  <data name="InUtterDarkness" xml:space="preserve">
+    <value>Fully heals you. You can no longer heal. Focus now spawns a sibling that attacks enemies.</value>
+  </data>
+  <data name="Kingssoul" xml:space="preserve">
+    <value>Slowly generates soul.</value>
   </data>
   <data name="LifebloodOmen" xml:space="preserve">
     <value>While in combat occusionally spawns a Grimm ghost temporarly. Killing it grants lifeblood.</value>
@@ -225,14 +354,38 @@
   <data name="MantisStyle" xml:space="preserve">
     <value>An attack after a parry does increased damage.</value>
   </data>
+  <data name="MarkOfPride" xml:space="preserve">
+    <value>Increases the nail range significantly. Overwrites Longnail.</value>
+  </data>
+  <data name="MercilessPursuit" xml:space="preserve">
+    <value>Attacks in the same direction within half a second second grant stacking attack speed.</value>
+  </data>
+  <data name="Mindblast" xml:space="preserve">
+    <value>Dream nail applies shattered mind, permanently causes enemies to take increased damage.</value>
+  </data>
+  <data name="NailMastersGlory" xml:space="preserve">
+    <value>Decreases the charge time of nail arts.</value>
+  </data>
   <data name="NailProdigy" xml:space="preserve">
     <value>Clearing a room without casting a spell/using focus has a small chance to spawn a combat orb.</value>
+  </data>
+  <data name="PaleShell" xml:space="preserve">
+    <value>The first hit in each room is ignored. Doesn't block instant death effects.</value>
   </data>
   <data name="Perfection" xml:space="preserve">
     <value>For each room you succeeded hitless the amount of geo enemies drop increases.</value>
   </data>
   <data name="PolarityShift" xml:space="preserve">
     <value>Cast spells are sometimes the opposite level.</value>
+  </data>
+  <data name="Pyroblast" xml:space="preserve">
+    <value>Vengeful Spirit has a chance to ignite hit enemies causing burn.</value>
+  </data>
+  <data name="QuickFocus" xml:space="preserve">
+    <value>Increase focus speed.</value>
+  </data>
+  <data name="QuickSlash" xml:space="preserve">
+    <value>Increases attack speed.</value>
   </data>
   <data name="Recklessness" xml:space="preserve">
     <value>Great Slash and Dash Slash deal 400% increased damage, but you take damage if this doesn't kill the enemy.</value>
@@ -243,8 +396,20 @@
   <data name="RoyalDecree" xml:space="preserve">
     <value>Killing all enemies in the marked order will award bonus geo and sometimes power orbs.</value>
   </data>
+  <data name="ScorchingGround" xml:space="preserve">
+    <value>Desolate Dive ignites the ground. Enemies within it take burn damage.</value>
+  </data>
   <data name="SeethingLifeblood" xml:space="preserve">
     <value>Clearing a room without taking damage sometimes grants lifeblood.</value>
+  </data>
+  <data name="ShadeSoul" xml:space="preserve">
+    <value>Unlocks Shade Soul.</value>
+  </data>
+  <data name="ShamanStone" xml:space="preserve">
+    <value>Empowers all spells.</value>
+  </data>
+  <data name="ShapeOfUnn" xml:space="preserve">
+    <value>Focus can be casted while moving on the ground.</value>
   </data>
   <data name="SharpShadow" xml:space="preserve">
     <value>Your shade dash is extended and deals damage.</value>
@@ -252,14 +417,23 @@
   <data name="Shatter" xml:space="preserve">
     <value>Consecutive hits onto the same target reduce the armor.</value>
   </data>
+  <data name="ShiningBound" xml:space="preserve">
+    <value>Halves all damage taken. You can no longer obtain charms.</value>
+  </data>
   <data name="SoulCatcher" xml:space="preserve">
     <value>Slightly increases the soul gained from enemies.</value>
   </data>
   <data name="SoulConserver" xml:space="preserve">
     <value>Focus and spells sometimes refund soul spend.</value>
   </data>
+  <data name="SoulEater" xml:space="preserve">
+    <value>Increases soul gain by hitting enemies significantly. Overwrites Soul Catcher.</value>
+  </data>
   <data name="SpellProdigy" xml:space="preserve">
     <value>Clearing a room without the nail has a chance to grant a spirit orb.</value>
+  </data>
+  <data name="SpellTwister" xml:space="preserve">
+    <value>Decreases the cost of spells.</value>
   </data>
   <data name="Sporeshroom" xml:space="preserve">
     <value>Focus emits a spore cloud.</value>
@@ -284,6 +458,9 @@
   </data>
   <data name="Vanish" xml:space="preserve">
     <value>Killing an enemy grants short invincibility.</value>
+  </data>
+  <data name="VengefulSpirit" xml:space="preserve">
+    <value>Unlocks Vengeful Spirit.</value>
   </data>
   <data name="Versatility" xml:space="preserve">
     <value>The first nail hit after casting a spell grants bonus soul.</value>

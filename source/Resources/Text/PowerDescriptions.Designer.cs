@@ -61,6 +61,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Abyss Shriek. ähnelt.
+        /// </summary>
+        internal static string AbyssShriek {
+            get {
+                return ResourceManager.GetString("AbyssShriek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Enemies deal less damage. Hazards now kill you instantly. ähnelt.
         /// </summary>
         internal static string AchillesVerse {
@@ -133,6 +142,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Occusionally blocks damage. ähnelt.
+        /// </summary>
+        internal static string CarefreeMelody {
+            get {
+                return ResourceManager.GetString("CarefreeMelody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Hazards deal less damage. ähnelt.
         /// </summary>
         internal static string CaringShell {
@@ -147,6 +165,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Charge {
             get {
                 return ResourceManager.GetString("Charge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Prevents lethal hits... sometimes. Can only occur once per 10 cleared rooms. Does not work on instant kill effects. ähnelt.
+        /// </summary>
+        internal static string CheatDeath {
+            get {
+                return ResourceManager.GetString("CheatDeath", resourceCulture);
             }
         }
         
@@ -187,6 +214,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Decreases the dash cooldown. Allows dashing downwards. ähnelt.
+        /// </summary>
+        internal static string Dashmaster {
+            get {
+                return ResourceManager.GetString("Dashmaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Dash Slash. ähnelt.
         /// </summary>
         internal static string DashSlash {
@@ -205,11 +241,47 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Nail hits may apply bleed. ähnelt.
+        /// </summary>
+        internal static string DeepCuts {
+            get {
+                return ResourceManager.GetString("DeepCuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus is slower, but restores two health. ähnelt.
+        /// </summary>
+        internal static string DeepFocus {
+            get {
+                return ResourceManager.GetString("DeepFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Emits a poison cloud. ähnelt.
         /// </summary>
         internal static string DefendersCrest {
             get {
                 return ResourceManager.GetString("DefendersCrest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Descending Dark. ähnelt.
+        /// </summary>
+        internal static string DescendingDark {
+            get {
+                return ResourceManager.GetString("DescendingDark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Desolate Dive. ähnelt.
+        /// </summary>
+        internal static string DesolateDive {
+            get {
+                return ResourceManager.GetString("DesolateDive", resourceCulture);
             }
         }
         
@@ -259,6 +331,33 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Dream Nail can be casted while moving. ähnelt.
+        /// </summary>
+        internal static string DreamWalker {
+            get {
+                return ResourceManager.GetString("DreamWalker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases dream nail power and speed. ähnelt.
+        /// </summary>
+        internal static string DreamWielder {
+            get {
+                return ResourceManager.GetString("DreamWielder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Howling Wraiths/Abyss Shriek may trigger multiple times. ähnelt.
+        /// </summary>
+        internal static string EchoingScream {
+            get {
+                return ResourceManager.GetString("EchoingScream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Increases your movement speed while recovering from a hit. ähnelt.
         /// </summary>
         internal static string EscapeArtist {
@@ -273,6 +372,42 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Fade {
             get {
                 return ResourceManager.GetString("Fade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Geo is 200% more worth. No longer works upon taking damage. ähnelt.
+        /// </summary>
+        internal static string FragileGreed {
+            get {
+                return ResourceManager.GetString("FragileGreed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die All spells cause burn. No longer works upon taking damage. ähnelt.
+        /// </summary>
+        internal static string FragileSpirit {
+            get {
+                return ResourceManager.GetString("FragileSpirit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Nail damage is increased by 300%. No longer works upon taking damage. ähnelt.
+        /// </summary>
+        internal static string FragileStrength {
+            get {
+                return ResourceManager.GetString("FragileStrength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die While at 1 health, increase nail damage significantly. ähnelt.
+        /// </summary>
+        internal static string FuryOfTheFallen {
+            get {
+                return ResourceManager.GetString("FuryOfTheFallen", resourceCulture);
             }
         }
         
@@ -313,6 +448,24 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases the geo dropped from enemies. ähnelt.
+        /// </summary>
+        internal static string Greed {
+            get {
+                return ResourceManager.GetString("Greed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Summons a companion that attacks enemies. ähnelt.
+        /// </summary>
+        internal static string Grimmchild {
+            get {
+                return ResourceManager.GetString("Grimmchild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die A hardfall emits shockwaves that damage enemies hit. ähnelt.
         /// </summary>
         internal static string GroundSlam {
@@ -331,11 +484,227 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Taking a hit restores soul. ähnelt.
+        /// </summary>
+        internal static string Grubsong {
+            get {
+                return ResourceManager.GetString("Grubsong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Increases knockback from hitting enemies. ähnelt.
         /// </summary>
         internal static string HeavyBlow {
             get {
                 return ResourceManager.GetString("HeavyBlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Taking damage regenerates the last mask lost. ähnelt.
+        /// </summary>
+        internal static string Hiveblood {
+            get {
+                return ResourceManager.GetString("Hiveblood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases nail damage for each consecutive nail hit. Failing to hit an enemy resets the counter. ähnelt.
+        /// </summary>
+        internal static string HotStreak {
+            get {
+                return ResourceManager.GetString("HotStreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Howling Wraiths. ähnelt.
+        /// </summary>
+        internal static string HowlingWraiths {
+            get {
+                return ResourceManager.GetString("HowlingWraiths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases hitpoints and regenerates over time. ähnelt.
+        /// </summary>
+        internal static string ImprovedBaldursShell {
+            get {
+                return ResourceManager.GetString("ImprovedBaldursShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Avoids damage more often. ähnelt.
+        /// </summary>
+        internal static string ImprovedCarefreeMelody {
+            get {
+                return ResourceManager.GetString("ImprovedCarefreeMelody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Decreases hazard damage even further. Hazards do not deal damage in calm rooms anymore. ähnelt.
+        /// </summary>
+        internal static string ImprovedCaringShell {
+            get {
+                return ResourceManager.GetString("ImprovedCaringShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Damage is increased. Grants invincibility upon start. Invinciblity has a cooldown. ähnelt.
+        /// </summary>
+        internal static string ImprovedCrystalDash {
+            get {
+                return ResourceManager.GetString("ImprovedCrystalDash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enemies hit by the cloud become weakened. ähnelt.
+        /// </summary>
+        internal static string ImprovedDefendersCrest {
+            get {
+                return ResourceManager.GetString("ImprovedDefendersCrest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus now consumes all soul energy. ähnelt.
+        /// </summary>
+        internal static string ImprovedFocus {
+            get {
+                return ResourceManager.GetString("ImprovedFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The fury threshold is increased. ähnelt.
+        /// </summary>
+        internal static string ImprovedFuryOfTheFallen {
+            get {
+                return ResourceManager.GetString("ImprovedFuryOfTheFallen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Gathers geo more efficient. ähnelt.
+        /// </summary>
+        internal static string ImprovedGatheringSwarm {
+            get {
+                return ResourceManager.GetString("ImprovedGatheringSwarm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hatchlings cost way less soul. Damage and spawn rate is increased. ähnelt.
+        /// </summary>
+        internal static string ImprovedGlowingWomb {
+            get {
+                return ResourceManager.GetString("ImprovedGlowingWomb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Scarlet energy flows through the Grimmchild increasing its power. ähnelt.
+        /// </summary>
+        internal static string ImprovedGrimmchild {
+            get {
+                return ResourceManager.GetString("ImprovedGrimmchild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Adds a chance to cause a concussion on enemies. ähnelt.
+        /// </summary>
+        internal static string ImprovedHeavyBlow {
+            get {
+                return ResourceManager.GetString("ImprovedHeavyBlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Regeneration speed is increased. ähnelt.
+        /// </summary>
+        internal static string ImprovedHiveblood {
+            get {
+                return ResourceManager.GetString("ImprovedHiveblood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enemies hit by the wings are damaged. Has a chance to apply bleed or concussion. ähnelt.
+        /// </summary>
+        internal static string ImprovedMonarchWings {
+            get {
+                return ResourceManager.GetString("ImprovedMonarchWings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Kills restore health. ähnelt.
+        /// </summary>
+        internal static string ImprovedSharpShadow {
+            get {
+                return ResourceManager.GetString("ImprovedSharpShadow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Reduces spell cost even further. ähnelt.
+        /// </summary>
+        internal static string ImprovedSpellTwister {
+            get {
+                return ResourceManager.GetString("ImprovedSpellTwister", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Creates spore clouds on its own. ähnelt.
+        /// </summary>
+        internal static string ImprovedSporeshroom {
+            get {
+                return ResourceManager.GetString("ImprovedSporeshroom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Grants a significant speed boost. ähnelt.
+        /// </summary>
+        internal static string ImprovedSprintmaster {
+            get {
+                return ResourceManager.GetString("ImprovedSprintmaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Extends the invincibility after getting hit. ähnelt.
+        /// </summary>
+        internal static string ImprovedStalwartShell {
+            get {
+                return ResourceManager.GetString("ImprovedStalwartShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Leeches soul from enemies hit. Improves agility. ähnelt.
+        /// </summary>
+        internal static string ImprovedThornsOfAgony {
+            get {
+                return ResourceManager.GetString("ImprovedThornsOfAgony", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases weaver size. Damage now scales. ähnelt.
+        /// </summary>
+        internal static string ImprovedWeaversong {
+            get {
+                return ResourceManager.GetString("ImprovedWeaversong", resourceCulture);
             }
         }
         
@@ -354,6 +723,24 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Interest {
             get {
                 return ResourceManager.GetString("Interest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Fully heals you. You can no longer heal. Focus now spawns a sibling that attacks enemies. ähnelt.
+        /// </summary>
+        internal static string InUtterDarkness {
+            get {
+                return ResourceManager.GetString("InUtterDarkness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Slowly generates soul. ähnelt.
+        /// </summary>
+        internal static string Kingssoul {
+            get {
+                return ResourceManager.GetString("Kingssoul", resourceCulture);
             }
         }
         
@@ -385,11 +772,56 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases the nail range significantly. Overwrites Longnail. ähnelt.
+        /// </summary>
+        internal static string MarkOfPride {
+            get {
+                return ResourceManager.GetString("MarkOfPride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Attacks in the same direction within half a second second grant stacking attack speed. ähnelt.
+        /// </summary>
+        internal static string MercilessPursuit {
+            get {
+                return ResourceManager.GetString("MercilessPursuit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Dream nail applies shattered mind, permanently causes enemies to take increased damage. ähnelt.
+        /// </summary>
+        internal static string Mindblast {
+            get {
+                return ResourceManager.GetString("Mindblast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Decreases the charge time of nail arts. ähnelt.
+        /// </summary>
+        internal static string NailMastersGlory {
+            get {
+                return ResourceManager.GetString("NailMastersGlory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without casting a spell/using focus has a small chance to spawn a combat orb. ähnelt.
         /// </summary>
         internal static string NailProdigy {
             get {
                 return ResourceManager.GetString("NailProdigy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The first hit in each room is ignored. Doesn&apos;t block instant death effects. ähnelt.
+        /// </summary>
+        internal static string PaleShell {
+            get {
+                return ResourceManager.GetString("PaleShell", resourceCulture);
             }
         }
         
@@ -408,6 +840,33 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string PolarityShift {
             get {
                 return ResourceManager.GetString("PolarityShift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Vengeful Spirit has a chance to ignite hit enemies causing burn. ähnelt.
+        /// </summary>
+        internal static string Pyroblast {
+            get {
+                return ResourceManager.GetString("Pyroblast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increase focus speed. ähnelt.
+        /// </summary>
+        internal static string QuickFocus {
+            get {
+                return ResourceManager.GetString("QuickFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases attack speed. ähnelt.
+        /// </summary>
+        internal static string QuickSlash {
+            get {
+                return ResourceManager.GetString("QuickSlash", resourceCulture);
             }
         }
         
@@ -439,11 +898,47 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Desolate Dive ignites the ground. Enemies within it take burn damage. ähnelt.
+        /// </summary>
+        internal static string ScorchingGround {
+            get {
+                return ResourceManager.GetString("ScorchingGround", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without taking damage sometimes grants lifeblood. ähnelt.
         /// </summary>
         internal static string SeethingLifeblood {
             get {
                 return ResourceManager.GetString("SeethingLifeblood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Shade Soul. ähnelt.
+        /// </summary>
+        internal static string ShadeSoul {
+            get {
+                return ResourceManager.GetString("ShadeSoul", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Empowers all spells. ähnelt.
+        /// </summary>
+        internal static string ShamanStone {
+            get {
+                return ResourceManager.GetString("ShamanStone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus can be casted while moving on the ground. ähnelt.
+        /// </summary>
+        internal static string ShapeOfUnn {
+            get {
+                return ResourceManager.GetString("ShapeOfUnn", resourceCulture);
             }
         }
         
@@ -466,6 +961,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Halves all damage taken. You can no longer obtain charms. ähnelt.
+        /// </summary>
+        internal static string ShiningBound {
+            get {
+                return ResourceManager.GetString("ShiningBound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Slightly increases the soul gained from enemies. ähnelt.
         /// </summary>
         internal static string SoulCatcher {
@@ -484,11 +988,29 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases soul gain by hitting enemies significantly. Overwrites Soul Catcher. ähnelt.
+        /// </summary>
+        internal static string SoulEater {
+            get {
+                return ResourceManager.GetString("SoulEater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without the nail has a chance to grant a spirit orb. ähnelt.
         /// </summary>
         internal static string SpellProdigy {
             get {
                 return ResourceManager.GetString("SpellProdigy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Decreases the cost of spells. ähnelt.
+        /// </summary>
+        internal static string SpellTwister {
+            get {
+                return ResourceManager.GetString("SpellTwister", resourceCulture);
             }
         }
         
@@ -561,6 +1083,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Vanish {
             get {
                 return ResourceManager.GetString("Vanish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Vengeful Spirit. ähnelt.
+        /// </summary>
+        internal static string VengefulSpirit {
+            get {
+                return ResourceManager.GetString("VengefulSpirit", resourceCulture);
             }
         }
         

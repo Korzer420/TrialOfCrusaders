@@ -10,17 +10,14 @@ internal class CarefreeMelody : Power
 {
     private bool _isInstaKill = false;
 
-    public override string Name => "Carefree Melody";
-
-    public override string Description => "Occusionally blocks damage.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override bool CanAppear => !HasPower<Grimmchild>() && !HasPower<CarefreeMelody>();
+
     protected override void Enable()
     {
-        // Carefree Melody should not block insta death damage.
         IL.HeroController.TakeDamage += HeroController_TakeDamage_IL;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         CharmHelper.EnsureEquipCharm(CharmRef.CarefreeMelody); 
@@ -35,7 +32,7 @@ internal class CarefreeMelody : Power
 
     private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, UnityEngine.GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
-        _isInstaKill = damageAmount == 500;
+        _isInstaKill = damageAmount == CombatController.InstaKillDamage;
         orig(self, go, damageSide, damageAmount, hazardType);
     }
 

@@ -111,6 +111,8 @@ public abstract class Power : IEquatable<Power>
     /// </summary>
     protected void StopRoutine(Coroutine coroutine) => TrialOfCrusaders.Holder.StopCoroutine(coroutine);
 
+    protected bool HasPower<T>() where T : Power => CombatController.HasPower<T>(out _);
+
     #endregion
 
     #region Interface

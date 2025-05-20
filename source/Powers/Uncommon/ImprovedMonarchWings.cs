@@ -13,13 +13,11 @@ internal class ImprovedMonarchWings : Power
 
     private GameObject _rightHitbox;
 
-    public override string Name => "Improved Monarch Wings";
-
-    public override string Description => $"Enemies hit by the wings are damaged. Has a chance to apply bleed or concussion.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => PDHelper.HasDoubleJump;
 
     protected override void Enable()
     {

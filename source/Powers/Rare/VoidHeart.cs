@@ -13,8 +13,4 @@ internal class VoidHeart : Power
     public override Rarity Tier => Rarity.Rare;
 
     public override bool CanAppear => false;
-
-    protected override void Enable() { }
-
-    protected override void Disable() { }
 }
