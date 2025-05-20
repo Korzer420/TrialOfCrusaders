@@ -7,7 +7,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ internal static class StageController
 {
     private static List<TransitionPoint> _transitionPoints = [];
     private static List<SpecialTransition> _specialTransitions = [];
+    private static int _treasureRoomCooldown = 0;
 
     public static bool InCombat { get; set; }
 
@@ -35,8 +38,6 @@ internal static class StageController
     public static List<RoomData> RoomList { get; set; } = [];
 
     public static GameObject TransitionObject { get; set; }
-
-    public static List<Func<float, float>> CalculateTreasureRoom = [];
 
     private static (string, string) _intendedDestination = new();
 
@@ -198,13 +199,17 @@ internal static class StageController
                 // Not earlier than 10.
                 // Not after/before a quiet room.
                 // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                if (!UpcomingTreasureRoom && (CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && (CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
                     && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
                 {
                     float chance = 0.5f;
-                    foreach (Func<float, float> handler in CalculateTreasureRoom)
-                        chance = handler.Invoke(chance);
+                    if (CombatController.HasPower<Damocles>(out _))
+                        chance += 4.5f;
                     UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
+                    if (UpcomingTreasureRoom)
+                        _treasureRoomCooldown = 6;
+                    else
+                        _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
                 }
                 else
                     UpcomingTreasureRoom = false;

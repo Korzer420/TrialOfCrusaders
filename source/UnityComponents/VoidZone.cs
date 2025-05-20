@@ -49,9 +49,9 @@ internal class VoidZone : MonoBehaviour
                         DamageDealt = 5 + CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel,
                         Multiplier = 1f
                     }]);
-                    if (UnityEngine.Random.Range(0, 10) < 10)
+                    if (UnityEngine.Random.Range(0, 10) < 1)
                     {
-                        int rolled = UnityEngine.Random.Range(1, 6);
+                        int rolled = UnityEngine.Random.Range(0, 6);
                         switch (rolled)
                         {
                             // Weakened
