@@ -1,14 +1,8 @@
-﻿using KorzUtils.Helper;
-
-namespace TrialOfCrusaders.Powers.Common;
+﻿namespace TrialOfCrusaders.Powers.Common;
 
 internal class MantisStyle : Power
 {
     internal bool Parried { get; set; }
-
-    public override string Name => "Mantis Style";
-
-    public override string Description => "An attack after a parry does increased damage.";
 
     public override (float, float, float) BonusRates => new(9f, 0f, 1f);
 

@@ -6,10 +6,6 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class GroundSlam : Power
 {
-    public override string Name => "Ground Slam";
-
-    public override string Description => "A hardfall emits shockwaves that damage enemies hit.";
-
     public override (float, float, float) BonusRates => new(8f, 0f, 2f);
 
     public static GameObject Shockwave { get; set; }
@@ -64,5 +60,9 @@ internal class GroundSlam : Power
         shockWaveRight.SetActive(true);
     }
 
-    protected override void Disable() => On.HeroController.DoHardLanding -= HeroController_DoHardLanding;
+    protected override void Disable()
+    {
+        On.HeroController.DoHardLanding -= HeroController_DoHardLanding;
+        On.SetDamageHeroAmount.OnEnter -= SetDamageHeroAmount_OnEnter;
+    }
 }

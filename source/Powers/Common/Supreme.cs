@@ -1,6 +1,4 @@
-﻿using KorzUtils.Helper;
-
-namespace TrialOfCrusaders.Powers.Common;
+﻿namespace TrialOfCrusaders.Powers.Common;
 
 internal class Supreme : Power
 {
@@ -8,31 +6,22 @@ internal class Supreme : Power
 
     public int NeededEnemies => 50 - CombatController.CombatLevel - CombatController.EnduranceLevel;
 
-    public override string Name => "Supreme";
-
-    public override string Description => "Killing multiple enemies in a row without taking damage restores health. Can only occur once per room.";
-
     public override (float, float, float) BonusRates => new(6f, 0f, 4f);
 
     protected override void Enable()
     {
+        _killedEnemies = 0;
         On.HealthManager.Die += HealthManager_Die;
-        On.HeroController.TakeDamage += HeroController_TakeDamage;
+        CombatController.TookDamage += CombatController_TookDamage;
     }
 
     protected override void Disable()
     {
         On.HealthManager.Die -= HealthManager_Die;
-        On.HeroController.TakeDamage -= HeroController_TakeDamage;
+        CombatController.TookDamage -= CombatController_TookDamage;
     }
 
-    private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, UnityEngine.GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
-    {
-        int currentHealth = PDHelper.Health;
-        orig(self, go, damageSide, damageAmount, hazardType);
-        if (currentHealth != PDHelper.Health)
-            _killedEnemies = 0;
-    }
+    private void CombatController_TookDamage() => _killedEnemies = 0;
 
     private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
     {

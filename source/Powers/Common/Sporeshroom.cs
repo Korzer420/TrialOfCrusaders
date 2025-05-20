@@ -1,13 +1,12 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class Sporeshroom : Power
 {
-    public override string Name => "Sporeshroom";
-
-    public override string Description => "Focus emits a spore cloud.";
+    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(0f, 6f, 4f);
 

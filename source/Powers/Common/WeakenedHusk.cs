@@ -7,21 +7,13 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class WeakenedHusk : Power
 {
-    public override string Name => "Weakened Hush";
+    public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    public override string Description => "Enemies hit by spells are sometimes inflicted with shattered mind permanently increasing all damage taken.";
+    public override bool CanAppear => CombatController.HasSpell();
 
-    public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+    protected override void Enable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
 
-    protected override void Enable()
-    {
-        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
-    }
-
-    protected override void Disable()
-    {
-        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
-    }
+    protected override void Disable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
 
     private void TakeDamage_OnEnter(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.TakeDamage self)
     {
@@ -34,7 +26,7 @@ internal class WeakenedHusk : Power
                 || (gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2"))
                 || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
             {
-                if (UnityEngine.Random.Range(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
+                if (RngProvider.GetRandom(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
                     self.Fsm.GameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatController.SpiritLevel;
             }
         }

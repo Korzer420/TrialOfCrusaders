@@ -7,10 +7,6 @@ internal class DramaticEntrance : Power
 {
     private MethodInfo _takeDamage;
 
-    public override string Name => "Dramatic Entrance";
-
-    public override string Description => "Entering a room deals a bit of damage to all enemies.";
-
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
     protected override void Enable()

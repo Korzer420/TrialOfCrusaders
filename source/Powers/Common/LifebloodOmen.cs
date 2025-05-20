@@ -7,23 +7,18 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class LifebloodOmen : Power
 {
-    public override string Name => "Lifeblood Omen";
-
-    public override string Description => "While in combat occusionally spawns a Grimm ghost temporarly. Killing it grants lifeblood.";
+    private Coroutine _coroutine;
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 
     public static List<GameObject> Ghosts { get; set; } = [];
 
-    protected override void Enable()
-    {
-        StartRoutine(Haunt());
-    }
+    protected override void Enable() => _coroutine = StartRoutine(Haunt());
 
     protected override void Disable()
     {
-        PDHelper.HasUpwardSlash = false;
-        PDHelper.HasNailArt = false;
+        if (_coroutine != null)
+            StopRoutine(_coroutine);
     }
 
     private IEnumerator Haunt()
@@ -32,8 +27,8 @@ internal class LifebloodOmen : Power
         while (true)
         {
             // If a player sits a bench herocontroller doesn't accept input, which makes the first part redundant... I think. I still keep it, just in case.
-            if (PDHelper.AtBench || !HeroController.instance.acceptingInput)
-                yield return new WaitUntil(() => !PDHelper.AtBench && HeroController.instance.acceptingInput);
+            if (PDHelper.AtBench || !HeroController.instance.acceptingInput || StageController.QuietRoom || !StageController.InCombat)
+                yield return new WaitUntil(() => !PDHelper.AtBench && HeroController.instance.acceptingInput && !StageController.QuietRoom || StageController.InCombat);
             int index = DetermineGhost();
             ghost = GameObject.Instantiate(Ghosts[index]);
             ghost.transform.localPosition = HeroController.instance.transform.localPosition + new Vector3(0f, 3f, 0f);

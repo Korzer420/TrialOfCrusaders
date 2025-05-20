@@ -1,8 +1,5 @@
-﻿using KorzUtils.Enums;
-using KorzUtils.Helper;
-using Modding;
+﻿using KorzUtils.Helper;
 using System.Collections;
-using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -11,40 +8,31 @@ internal class Damocles : Power
 {
     private Coroutine _coroutine;
 
-    private GameObject _activeSoulCache;
-
-    public static GameObject SoulCache { get; set; }
-
     public bool Triggered { get; set; }
 
-    public override string Name => "Damocles";
-
-    public override string Description => "Increases the chance of treasure room significantly. After taking damage the first time, each second could be your last...";
-
-    public override (float, float, float) BonusRates => new(0f, 10f, 0f);
+    public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
     protected override void Enable()
     {
-        On.HeroController.TakeDamage += HeroController_TakeDamage;
         if (Triggered)
             _coroutine = StartRoutine(Tick());
+        CombatController.TookDamage += CombatController_TookDamage;
     }
 
     protected override void Disable()
     {
-        On.HeroController.TakeDamage -= HeroController_TakeDamage;
         if (_coroutine != null)
             StopRoutine(_coroutine);
+        CombatController.TookDamage -= CombatController_TookDamage;
     }
 
-    private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+    private void CombatController_TookDamage()
     {
-        int currentHealth = PDHelper.Health;
-        orig(self, go, damageSide, damageAmount, hazardType);
-        if (currentHealth != PDHelper.Health && _coroutine == null)
+        if (_coroutine == null)
         {
-            _coroutine = StartRoutine(Tick());
             Triggered = true;
+            GameManager.instance.SaveGame();
+            _coroutine = StartRoutine(Tick());
         }
     }
 
@@ -60,6 +48,7 @@ internal class Damocles : Power
                 yield break;
             triggered = Random.Range(1, 1201) == 1;
         }
+        yield return new WaitUntil(() => !PDHelper.IsInvincible);
         HeroController.instance.TakeDamage(HeroController.instance.gameObject, GlobalEnums.CollisionSide.bottom, 500, 1);
     }
 }

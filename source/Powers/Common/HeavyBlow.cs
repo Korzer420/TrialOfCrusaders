@@ -1,15 +1,14 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class HeavyBlow : Power
 {
-    public override string Name => "Heavy Blow";
+    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
-    public override string Description => "Increases knockback from hitting enemies.";
-
-    public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+    public override (float, float, float) BonusRates => new(7f, 0f, 3f);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.HeavyBlow);
 

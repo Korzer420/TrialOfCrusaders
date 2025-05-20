@@ -1,23 +1,27 @@
-﻿using KorzUtils.Enums;
-using KorzUtils.Helper;
+﻿using KorzUtils.Helper;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class NailMaster : Power
+internal class NailProdigy : Power
 {
     private bool _spellUsed;
 
-    public override string Name => "Nail Master";
+    public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    public override string Description => "Clearing a room without casting a spell/using focus has a small chance to spawn a combat orb.";
-
-    public override (float, float, float) BonusRates => new(0f, 0f, 10f);
+    public override bool CanAppear => CombatController.CombatLevel < 20;
 
     protected override void Enable()
     {
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
+        StageController.RoomCleared += StageController_RoomCleared;
+    }
+
+    private void StageController_RoomCleared()
+    {
+        if (!_spellUsed && CombatController.CombatLevel < 20 && RngProvider.GetStageRandom(1, 10) == 1)
+            TreasureController.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
     }
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
@@ -39,6 +43,7 @@ internal class NailMaster : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter -= SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
+        StageController.RoomCleared -= StageController_RoomCleared;
     }
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)

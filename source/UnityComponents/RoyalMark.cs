@@ -22,7 +22,19 @@ internal class RoyalMark : MonoBehaviour
         if (self == AttachedEnemy)
         {
             if (CombatController.Enemies.Count == 0)
+            {
+                int rolled = RngProvider.GetStageRandom(1, 100);
+                if (rolled <= 2)
+                    TreasureController.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
+                else if (rolled <= 10)
+                    TreasureController.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
+                else if (rolled <= 35)
+                    TreasureController.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
+                else
+                    HeroController.instance.AddGeo(100);
                 HeroController.instance.AddGeo(100);
+                
+            }
             else
             {
                 AttachedEnemy = CombatController.Enemies[Random.Range(0, CombatController.Enemies.Count)];

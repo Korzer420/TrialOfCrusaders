@@ -1,13 +1,12 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class GlowingWomb : Power
 {
-    public override string Name => "Glowing Womb";
-
-    public override string Description => "Periodically spawns a hatchling that attacks enemies. Consumes Soul.";
+    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(2f, 8f, 0f);
 

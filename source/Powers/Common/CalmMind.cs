@@ -5,15 +5,11 @@ using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class Untouchable : Power
+internal class CalmMind : Power
 {
     private Coroutine _coroutine;
 
-    public override string Name => "Untouchable";
-
-    public override string Description => "While at full health, slowing regenerates soul.";
-
-    public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+    public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
     protected override void Enable() => _coroutine = StartRoutine(CheckForHealth());
 

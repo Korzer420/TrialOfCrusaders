@@ -4,11 +4,9 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class DashSlash : Power
 {
-    public override string Name => "Dash Slash";
-
-    public override string Description => "Unlocks Dash Slash";
-
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+
+    public override bool CanAppear => PDHelper.HasDash;
 
     protected override void Enable()
     {

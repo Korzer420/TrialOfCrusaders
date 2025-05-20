@@ -15,25 +15,21 @@ internal class Perfection : Power
     private readonly FieldInfo _mediumGeo = typeof(HealthManager).GetField("mediumGeoDrops", BindingFlags.Instance | BindingFlags.NonPublic);
     private readonly FieldInfo _largeGeo = typeof(HealthManager).GetField("largeGeoDrops", BindingFlags.Instance | BindingFlags.NonPublic);
 
-    public override string Name => "Perfection";
-
-    public override string Description => "For each room you succeed hitless the amount of geo you get increases.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
     protected override void Enable()
     {
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         IL.HealthManager.Die += HealthManager_Die;
-        On.HeroController.TakeDamage += HeroController_TakeDamage;
+        StageController.RoomCleared += StageController_RoomCleared;
+        CombatController.TookDamage += CombatController_TookDamage;
         _hit = false;
     }
 
     protected override void Disable()
     { 
         IL.HealthManager.Die -= HealthManager_Die;
-        On.HeroController.TakeDamage -= HeroController_TakeDamage;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        StageController.RoomCleared -= StageController_RoomCleared;
+        CombatController.TookDamage -= CombatController_TookDamage;
     }
 
     private void HealthManager_Die(ILContext il)
@@ -48,6 +44,14 @@ internal class Perfection : Power
         // Activate geo flashing like from fragile greed.
         cursor.EmitDelegate<Func<bool, bool>>(x => true);
     }
+    private void StageController_RoomCleared()
+    {
+        if (!_hit)
+            _clearedRoom = Math.Min(60, _clearedRoom++);
+        _hit = false;
+    }
+
+    private void CombatController_TookDamage() => _hit = true;
 
     private void ModifyGeo(ILCursor cursor, int level)
     {
@@ -121,23 +125,5 @@ internal class Perfection : Power
         bonusAmount -= (bonusAmount % 5) + 5;
         largeGeo += bonusAmount / 25;
         return largeGeo;
-    }
-
-    private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
-    {
-        int currentHealth = PDHelper.Health;
-        orig(self, go, damageSide, damageAmount, hazardType);
-        if (currentHealth != PDHelper.Health)
-        { 
-            _hit = true;
-            _clearedRoom = 0;
-        }
-    }
-
-    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
-    {
-        if (!_hit)
-            _clearedRoom = Math.Min(60, _clearedRoom++);
-        _hit = false;
     }
 }

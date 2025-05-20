@@ -1,13 +1,12 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class StalwartShell : Power
 {
-    public override string Name => "Stalwart Shell";
-
-    public override string Description => "Increases invicibilty after being hit.";
+    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(0,0, 10f);
 

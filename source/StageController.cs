@@ -40,6 +40,8 @@ internal static class StageController
 
     private static (string, string) _intendedDestination = new();
 
+    public static event Action RoomCleared;
+
     static StageController() => RoomList = ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
 
     internal static void Initialize()
@@ -350,6 +352,7 @@ internal static class StageController
         if (Enemies.Count == 0 && !QuietRoom && contained)
         {
             InCombat = false;
+            RoomCleared?.Invoke();
             if (CurrentRoomData[CurrentRoomIndex].BossRoom && contained)
                 TrialOfCrusaders.Holder.StartCoroutine(WaitForTransition());
             else

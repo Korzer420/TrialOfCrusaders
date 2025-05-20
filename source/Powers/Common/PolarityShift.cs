@@ -8,7 +8,9 @@ internal class PolarityShift : Power
 
     public override string Description => "Cast spells are sometimes the opposite level.";
 
-    public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+    public override (float, float, float) BonusRates => new(0f, 10f, 0f);
+
+    public override bool CanAppear => CombatController.HasSpell();
 
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
 

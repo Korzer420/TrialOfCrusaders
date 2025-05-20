@@ -9,10 +9,6 @@ internal class Fade : Power
 {
     private bool _fading;
 
-    public override string Name => "Fade";
-
-    public override string Description => "After standing still for 5 second you no longer take damage. Breaks on any action.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
     protected override void Enable()

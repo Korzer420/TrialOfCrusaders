@@ -1,8 +1,4 @@
-﻿using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using System;
-using System.Collections;
-using System.Reflection;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -11,25 +7,15 @@ internal class Charge : Power
 {
     private Coroutine _coroutine;
     
-
     public override string Name => "CHAAARGE!!!";
-
-    public override string Description => "You move and attack faster shortly after entering the room.";
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
     public bool Active { get; set; }
 
-    protected override void Enable()
-    {
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-        
-    }
+    protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
-    protected override void Disable()
-    {
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
-    }
+    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 
     private IEnumerator ChargeBuff()
     {

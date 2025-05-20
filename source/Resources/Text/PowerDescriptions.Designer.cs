@@ -124,11 +124,470 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die While at full health, slowing regenerates soul. ähnelt.
+        /// </summary>
+        internal static string CalmMind {
+            get {
+                return ResourceManager.GetString("CalmMind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Hazards deal less damage. ähnelt.
         /// </summary>
         internal static string CaringShell {
             get {
                 return ResourceManager.GetString("CaringShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die You move and attack faster shortly after entering the room. ähnelt.
+        /// </summary>
+        internal static string Charge {
+            get {
+                return ResourceManager.GetString("Charge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Grants 6 lifeblood. ähnelt.
+        /// </summary>
+        internal static string Cocoon {
+            get {
+                return ResourceManager.GetString("Cocoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Status effects are stronger. Doesn&apos;t apply to shattered mind. ähnelt.
+        /// </summary>
+        internal static string CullTheWeak {
+            get {
+                return ResourceManager.GetString("CullTheWeak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Cyclone Slash. ähnelt.
+        /// </summary>
+        internal static string CycloneSlash {
+            get {
+                return ResourceManager.GetString("CycloneSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases the chance of treasure room significantly. After taking damage the first time, each second could be your last... ähnelt.
+        /// </summary>
+        internal static string Damocles {
+            get {
+                return ResourceManager.GetString("Damocles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Dash Slash. ähnelt.
+        /// </summary>
+        internal static string DashSlash {
+            get {
+                return ResourceManager.GetString("DashSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Entering a new room restores a bit of soul. Gained amount decreases with missing health. ähnelt.
+        /// </summary>
+        internal static string DeepBreath {
+            get {
+                return ResourceManager.GetString("DeepBreath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Emits a poison cloud. ähnelt.
+        /// </summary>
+        internal static string DefendersCrest {
+            get {
+                return ResourceManager.GetString("DefendersCrest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus speed increases with missing health. ähnelt.
+        /// </summary>
+        internal static string Desperation {
+            get {
+                return ResourceManager.GetString("Desperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Entering a room deals a bit of damage to all enemies. ähnelt.
+        /// </summary>
+        internal static string DramaticEntrance {
+            get {
+                return ResourceManager.GetString("DramaticEntrance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks the dream nail to gather soul from hit foes. ähnelt.
+        /// </summary>
+        internal static string DreamNail {
+            get {
+                return ResourceManager.GetString("DreamNail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Holding the quick map button spawns a portal. Quickly pressing same button teleports you the location. 15 seconds cooldown. ähnelt.
+        /// </summary>
+        internal static string DreamPortal {
+            get {
+                return ResourceManager.GetString("DreamPortal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spawns a rotating shield around you. ähnelt.
+        /// </summary>
+        internal static string DreamShield {
+            get {
+                return ResourceManager.GetString("DreamShield", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases your movement speed while recovering from a hit. ähnelt.
+        /// </summary>
+        internal static string EscapeArtist {
+            get {
+                return ResourceManager.GetString("EscapeArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die After standing still for 5 second you no longer take damage. Breaks on any action. ähnelt.
+        /// </summary>
+        internal static string Fade {
+            get {
+                return ResourceManager.GetString("Fade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Pulls nearby geo towards you. ähnelt.
+        /// </summary>
+        internal static string GatheringSwarm {
+            get {
+                return ResourceManager.GetString("GatheringSwarm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Periodically spawns a hatchling that attacks enemies. Consumes Soul. ähnelt.
+        /// </summary>
+        internal static string GlowingWomb {
+            get {
+                return ResourceManager.GetString("GlowingWomb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spending soul has a chance to spawn an temporary rotating orb at your location that deals damage. ähnelt.
+        /// </summary>
+        internal static string GreaterMind {
+            get {
+                return ResourceManager.GetString("GreaterMind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlocks Great Slash. ähnelt.
+        /// </summary>
+        internal static string GreatSlash {
+            get {
+                return ResourceManager.GetString("GreatSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die A hardfall emits shockwaves that damage enemies hit. ähnelt.
+        /// </summary>
+        internal static string GroundSlam {
+            get {
+                return ResourceManager.GetString("GroundSlam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die While at full health fire waves with your nail. ähnelt.
+        /// </summary>
+        internal static string GrubberflysElegy {
+            get {
+                return ResourceManager.GetString("GrubberflysElegy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases knockback from hitting enemies. ähnelt.
+        /// </summary>
+        internal static string HeavyBlow {
+            get {
+                return ResourceManager.GetString("HeavyBlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The first hit on enemies deals bonus damage and grants extra soul. ähnelt.
+        /// </summary>
+        internal static string Initiative {
+            get {
+                return ResourceManager.GetString("Initiative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Geo value is slightly increased. ähnelt.
+        /// </summary>
+        internal static string Interest {
+            get {
+                return ResourceManager.GetString("Interest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die While in combat occusionally spawns a Grimm ghost temporarly. Killing it grants lifeblood. ähnelt.
+        /// </summary>
+        internal static string LifebloodOmen {
+            get {
+                return ResourceManager.GetString("LifebloodOmen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases the range of your nail. ähnelt.
+        /// </summary>
+        internal static string Longnail {
+            get {
+                return ResourceManager.GetString("Longnail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die An attack after a parry does increased damage. ähnelt.
+        /// </summary>
+        internal static string MantisStyle {
+            get {
+                return ResourceManager.GetString("MantisStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without casting a spell/using focus has a small chance to spawn a combat orb. ähnelt.
+        /// </summary>
+        internal static string NailProdigy {
+            get {
+                return ResourceManager.GetString("NailProdigy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die For each room you succeeded hitless the amount of geo enemies drop increases. ähnelt.
+        /// </summary>
+        internal static string Perfection {
+            get {
+                return ResourceManager.GetString("Perfection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cast spells are sometimes the opposite level. ähnelt.
+        /// </summary>
+        internal static string PolarityShift {
+            get {
+                return ResourceManager.GetString("PolarityShift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Great Slash and Dash Slash deal 400% increased damage, but you take damage if this doesn&apos;t kill the enemy. ähnelt.
+        /// </summary>
+        internal static string Recklessness {
+            get {
+                return ResourceManager.GetString("Recklessness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Killing an enemy that dealt damage to you recently restores a bit of health. ähnelt.
+        /// </summary>
+        internal static string Revenge {
+            get {
+                return ResourceManager.GetString("Revenge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Killing all enemies in the marked order will award bonus geo and sometimes power orbs. ähnelt.
+        /// </summary>
+        internal static string RoyalDecree {
+            get {
+                return ResourceManager.GetString("RoyalDecree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without taking damage sometimes grants lifeblood. ähnelt.
+        /// </summary>
+        internal static string SeethingLifeblood {
+            get {
+                return ResourceManager.GetString("SeethingLifeblood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Your shade dash is extended and deals damage. ähnelt.
+        /// </summary>
+        internal static string SharpShadow {
+            get {
+                return ResourceManager.GetString("SharpShadow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Consecutive hits onto the same target reduce the armor. ähnelt.
+        /// </summary>
+        internal static string Shatter {
+            get {
+                return ResourceManager.GetString("Shatter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Slightly increases the soul gained from enemies. ähnelt.
+        /// </summary>
+        internal static string SoulCatcher {
+            get {
+                return ResourceManager.GetString("SoulCatcher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus and spells sometimes refund soul spend. ähnelt.
+        /// </summary>
+        internal static string SoulConserver {
+            get {
+                return ResourceManager.GetString("SoulConserver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Clearing a room without the nail has a chance to grant a spirit orb. ähnelt.
+        /// </summary>
+        internal static string SpellProdigy {
+            get {
+                return ResourceManager.GetString("SpellProdigy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus emits a spore cloud. ähnelt.
+        /// </summary>
+        internal static string Sporeshroom {
+            get {
+                return ResourceManager.GetString("Sporeshroom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases movement speed on the ground. ähnelt.
+        /// </summary>
+        internal static string Sprintmaster {
+            get {
+                return ResourceManager.GetString("Sprintmaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increases invicibilty after being hit. ähnelt.
+        /// </summary>
+        internal static string StalwartShell {
+            get {
+                return ResourceManager.GetString("StalwartShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Removes the nail knockback. ähnelt.
+        /// </summary>
+        internal static string SteadyBody {
+            get {
+                return ResourceManager.GetString("SteadyBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Decreases damage taken slightly. ähnelt.
+        /// </summary>
+        internal static string Sturdy {
+            get {
+                return ResourceManager.GetString("Sturdy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Killing multiple enemies in a row without taking damage restores health. Can only occur once per room. ähnelt.
+        /// </summary>
+        internal static string Supreme {
+            get {
+                return ResourceManager.GetString("Supreme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Getting hit let thorns attack nearby enemies. ähnelt.
+        /// </summary>
+        internal static string ThornsOfAgony {
+            get {
+                return ResourceManager.GetString("ThornsOfAgony", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Killing an enemy grants short invincibility. ähnelt.
+        /// </summary>
+        internal static string Vanish {
+            get {
+                return ResourceManager.GetString("Vanish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The first nail hit after casting a spell grants bonus soul. ähnelt.
+        /// </summary>
+        internal static string Versatility {
+            get {
+                return ResourceManager.GetString("Versatility", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enemies hit by spells are sometimes inflicted with shattered mind permanently increasing all damage taken. ähnelt.
+        /// </summary>
+        internal static string WeakenedHusk {
+            get {
+                return ResourceManager.GetString("WeakenedHusk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spawns weavers that assist you in battle. ähnelt.
+        /// </summary>
+        internal static string Weaversong {
+            get {
+                return ResourceManager.GetString("Weaversong", resourceCulture);
             }
         }
     }

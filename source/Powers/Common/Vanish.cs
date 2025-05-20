@@ -7,10 +7,6 @@ internal class Vanish : Power
 {
     private readonly static MethodInfo _invincibilityCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
-    public override string Name => "Vanish";
-
-    public override string Description => "Killing an enemy grants short invincibility.";
-
     public override (float, float, float) BonusRates => new(8f, 0f, 2f);
 
     protected override void Enable() => On.HealthManager.Die += HealthManager_Die;

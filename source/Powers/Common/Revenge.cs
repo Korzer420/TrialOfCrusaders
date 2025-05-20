@@ -5,10 +5,6 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class Revenge : Power
 {
-    public override string Name => "Revenge";
-
-    public override string Description => "Killing an enemy that dealt damage to you recently restores a bit of health.";
-
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 
     protected override void Enable()
@@ -39,6 +35,7 @@ internal class Revenge : Power
 
     protected override void Disable()
     {
-
+        On.HeroController.TakeDamage -= HeroController_TakeDamage;
+        On.HealthManager.Die -= HealthManager_Die;
     }
 }

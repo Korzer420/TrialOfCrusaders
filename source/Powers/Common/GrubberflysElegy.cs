@@ -1,13 +1,14 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class GrubberflysElegy : Power
 {
-    public override string Name => "Grubberfly's Elegy";
+    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
-    public override string Description => "While at full health fire waves with your nail.";
+    public override string Name => "Grubberfly's Elegy";
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 

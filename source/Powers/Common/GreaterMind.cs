@@ -1,21 +1,16 @@
-﻿using KorzUtils.Helper;
-using Modding.Utils;
-using System.Collections;
+﻿using System.Collections;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class SoulCharge : Power
+internal class GreaterMind : Power
 {
     private int _spendSoul = 0;
-    public int SpendThreshold => 160 - CombatController.SpiritLevel * 2;
+
+    public int SpendThreshold => 160 - CombatController.SpiritLevel * 3;
 
     public static GameObject Orb { get; set; }
-
-    public override string Name => "Soul Charge";
-
-    public override string Description => "Spending soul has a chance to spawn an temporary rotating orb at your location that deals damage.";
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 

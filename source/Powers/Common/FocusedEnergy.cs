@@ -1,11 +1,13 @@
-﻿using KorzUtils.Helper;
-using System;
+﻿using System;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class FocusedEnergy : Power
 {
-    public override string Name => "Focused energy.";
+    public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _);
+
+    public bool Activated { get; set; }
 
     public override string Description => $"Grant {Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel)} lifeblood.";
 
@@ -13,14 +15,12 @@ internal class FocusedEnergy : Power
 
     protected override void Enable()
     {
-        int highestStat = Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel);
-        for (int i = 0; i < highestStat; i++)
-            EventRegister.SendEvent("ADD BLUE HEALTH");
-    }
-
-    protected override void Disable()
-    {
-        PDHelper.HasUpwardSlash = false;
-        PDHelper.HasNailArt = false;
+        if (!Activated)
+        {
+            int highestStat = Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel);
+            for (int i = 0; i < highestStat; i++)
+                EventRegister.SendEvent("ADD BLUE HEALTH");
+        }
+        Activated = true;
     }
 }

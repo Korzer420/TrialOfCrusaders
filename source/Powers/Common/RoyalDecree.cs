@@ -5,16 +5,11 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class RoyalDecree : Power
 {
-    public override string Name => "Royal decree";
-
-    public override string Description => "Killing all enemies in the marked order will award bonus geo and sometimes power orbs.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    protected override void Enable()
-    {
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-    }
+    protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+ 
+    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
@@ -24,8 +19,4 @@ internal class RoyalDecree : Power
         royalMark.SetActive(true);
     }
 
-    protected override void Disable()
-    {
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
-    }
 }

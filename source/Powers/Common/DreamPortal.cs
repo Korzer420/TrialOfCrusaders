@@ -11,10 +11,6 @@ internal class DreamPortal : Power
     private GameObject _dreamGatePrefab;
     private GameObject _activeDreamGate;
 
-    public override string Name => "Dream Portal";
-
-    public override string Description => "Holding the map button spawns a portal. Quickly pressing same button teleports you the location. 15 seconds cooldown.";
-
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
     protected override void Enable()
