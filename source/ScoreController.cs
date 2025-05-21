@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,7 @@ public static class ScoreController
     private static int _currentHitlessRoomStreak;
     private static int _currentKillStreak;
     private static Coroutine _timer;
+    private static int _finishedScores = 0;
 
     #region Properties
 
@@ -118,9 +118,9 @@ public static class ScoreController
             new("Time bonus:", Math.Max(0, 3600 - Mathf.CeilToInt(PassedTime))),
             new("Killstreak bonus:", HighestKillStreak * 5),
             new("Flawless stage bonus:", TotalHitlessRooms * 20),
-            new("Flawless bonus:", HighestHitlessRoomStreak * 20),
-            new("Flawless boss bonus:", HitlessBosses * 200),
-            new("Flawless final bonus:", HitlessFinalBoss ? 1000 : 0),
+            new("Perfect streak bonus:", HighestHitlessRoomStreak * 20),
+            new("Perfect boss bonus:", HitlessBosses * 200),
+            new("Perfect final bonus:", HitlessFinalBoss ? 1000 : 0),
         ];
         values.Add(new("Final score:", values.Select(x => x.Item2).Sum()));
         int position = 225;
@@ -133,14 +133,26 @@ public static class ScoreController
         currentText.GetComponent<Text>().fontStyle = FontStyle.Bold;
         currentText.GetComponent<Text>().fontSize++;
         currentText.SetActive(true);
-        for (int i = 0; i < 9; i++)
+        _finishedScores = 0;
+        for (int i = 0; i < 8; i++)
         {
             currentText = GameObject.Instantiate(textObject, textObject.transform.parent);
             currentText.transform.localPosition = new(0f, position);
             position -= 50;
-            yield return FadeInText(currentText, values[i]);
+            if (i == 0)
+                yield return FadeInText(currentText, values[i]);
+            else
+            {
+                TrialOfCrusaders.Holder.StartCoroutine(FadeInText(currentText, values[i]));
+                yield return new WaitForSeconds(1f);
+            }
         }
-        yield return new WaitForSeconds(3f);
+        // For final score wait a bit
+        yield return new WaitUntil(() => _finishedScores == 8);
+        currentText = GameObject.Instantiate(textObject, textObject.transform.parent);
+        currentText.transform.localPosition = new(0f, position);
+        position -= 50;
+        yield return FadeInText(currentText, values[8]);
 
         confirmButton.SetActive(true);
         bool pressed = false;
@@ -156,7 +168,8 @@ public static class ScoreController
             pressed = InputHandler.Instance.inputActions.jump.IsPressed;
             yield return null;
         }
-        GameObject.Destroy(textObject.transform.parent.gameObject);
+        GameObject.Destroy(textObject.transform.parent.parent.gameObject);
+        PlayMakerFSM.BroadcastEvent("GG TRANSITION END");
     }
 
     private static IEnumerator FadeInText(GameObject textObject, (string,int) value)
@@ -188,7 +201,7 @@ public static class ScoreController
         float colorAlpha = 0f;
         while(colorAlpha < 1f)
         {
-            colorAlpha += Time.deltaTime * 2;
+            colorAlpha += Time.deltaTime;
             label.color = new(1f,1f,1f, colorAlpha);
             pointValue.color = new(1f, 1f, 1f, colorAlpha);
             yield return null;
@@ -200,12 +213,14 @@ public static class ScoreController
         while (currentDisplayValue < value.Item2)
         {
             yield return null;
-            currentDisplayValue += 5;
+            currentDisplayValue += value.Item1 == "Final score:" ? 10 : 5;
             pointValue.text = $"{currentDisplayValue}";
         }
         pointValue.text = $"{value.Item2}";
-        yield return new WaitForSeconds(1f);
+        _finishedScores++;
     }
+
+    #region Timer Handling
 
     public static void StartTimer()
     {
@@ -230,5 +245,7 @@ public static class ScoreController
                 yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
             // ToDo: Update timer object.
         }
-    }
+    } 
+
+    #endregion
 }

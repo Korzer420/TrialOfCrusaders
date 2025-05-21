@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
@@ -50,7 +51,7 @@ internal static class StageController
     {
         //QuietRoom = true;
         //On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
-        //On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
+        On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
         //// "Remove" all benches.
         //On.RestBench.Start += RestBench_Start;
         //On.SceneData.FindMyState_PersistentBoolData += SceneData_FindMyState_PersistentBoolData;
@@ -59,14 +60,29 @@ internal static class StageController
         //On.SceneData.SaveMyState_PersistentBoolData += SceneData_SaveMyState_PersistentBoolData;
         //On.SceneData.SaveMyState_PersistentIntData += SceneData_SaveMyState_PersistentIntData;
         //ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-        On.HealthManager.OnEnable += HealthManager_OnEnable;
+        //On.HealthManager.OnEnable += HealthManager_OnEnable;
         //On.HealthManager.Die += HealthManager_Die;
-        //On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
+        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
         //On.TransitionPoint.Start += TransitionPoint_Start;
         //On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += BoolTest_OnEnter;
         //UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-        CombatController.TookDamage += CombatController_TookDamage;
-        ScoreController.StartTimer();
+        //CombatController.TookDamage += CombatController_TookDamage;
+        //ScoreController.StartTimer();
+        ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
+    }
+
+    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    {
+        if (key == "TRIALPOSE")
+            return "Complete";
+        else if (key.Contains("TRIALPOSE"))
+        {
+            LogHelper.Write("True key is: " + key);
+            return "Complete";
+        }
+        else
+            LogHelper.Write("Key is: " + key);
+        return orig;
     }
 
     private static void CombatController_TookDamage()
@@ -88,7 +104,7 @@ internal static class StageController
         _specialTransitions.First().WaitForItem = false;
     }
 
-    public static void PlayClearSound()
+    public static void PlayClearSound(bool room = true)
     {
         GameObject audioObject = new("Trial Room Clear");
         audioObject.SetActive(false);
@@ -101,7 +117,7 @@ internal static class StageController
         source.outputAudioMixerGroup = HeroController.instance.transform.Find("Attacks/Slash").GetComponent<AudioSource>().outputAudioMixerGroup;
         audioObject.SetActive(true);
         // Play as one shot so we can increase the volume
-        source.PlayOneShot(SoundHelper.CreateSound(ResourceHelper.LoadResource<TrialOfCrusaders>("SoundEffects.Room_Clear.wav"), "Room_Clear"), 2f);
+        source.PlayOneShot(SoundHelper.CreateSound(ResourceHelper.LoadResource<TrialOfCrusaders>(room ? "SoundEffects.Room_Clear.wav" : "SoundEffects.Run_Finished.wav"), "Room_Clear"), 2f);
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => GameObject.Destroy(audioObject), () => !source.isPlaying));
     }
 
@@ -187,51 +203,65 @@ internal static class StageController
                         ScoreController.HitlessBosses++;
 
                 }
-                if (UpcomingTreasureRoom)
-                {
-                    info.SceneName = "GG_Engine";
-                    QuietRoom = true;
-                }
-                else
+                if (CurrentRoomIndex == 119)
                 {
                     CurrentRoomIndex++;
-                    QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
-                    if (QuietRoom)
-                        info.SceneName = "GG_Engine";
-                    else
-                        info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-                    //Block Mage Knight at 16.32f, 74.4f
+                    QuietRoom = true;
+                    info.EntryGateName = "left1";
+                    info.SceneName = "Room_Colosseum_Gold";
+                    info.Visualization = GameManager.SceneLoadVisualizations.Colosseum;
+                    info.PreventCameraFadeOut = QuietRoom;
+                    GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
                 }
-
-                if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
-                    info.EntryGateName = "door_dreamEnter";
                 else
-                    info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
-                info.Visualization = GameManager.SceneLoadVisualizations.Dream;
-                info.PreventCameraFadeOut = QuietRoom;
-                GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
-
-                // Treasure rooms can only appear under these conditions:
-                // Not later than 115.
-                // Not earlier than 10.
-                // Not after/before a quiet room.
-                // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && (CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
-                    && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
                 {
-                    float chance = 0.5f;
-                    if (CombatController.HasPower<Damocles>(out _))
-                        chance += 4.5f;
-                    UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
                     if (UpcomingTreasureRoom)
-                        _treasureRoomCooldown = 6;
+                    {
+                        info.SceneName = "GG_Engine";
+                        QuietRoom = true;
+                    }
                     else
-                        _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
+                    {
+                        CurrentRoomIndex++;
+                        QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
+                        if (QuietRoom)
+                            info.SceneName = "GG_Engine";
+                        else
+                            info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
+                        //Block Mage Knight at 16.32f, 74.4f
+                    }
+
+                    if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
+                        info.EntryGateName = "door_dreamEnter";
+                    else
+                        info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
+
+                    info.Visualization = GameManager.SceneLoadVisualizations.Dream;
+                    info.PreventCameraFadeOut = QuietRoom;
+                    GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
+
+                    // Treasure rooms can only appear under these conditions:
+                    // Not later than 115.
+                    // Not earlier than 10.
+                    // Not after/before a quiet room.
+                    // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
+                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && (CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                        && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
+                    {
+                        float chance = 0.5f;
+                        if (CombatController.HasPower<Damocles>(out _))
+                            chance += 4.5f;
+                        UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
+                        if (UpcomingTreasureRoom)
+                            _treasureRoomCooldown = 6;
+                        else
+                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
+                    }
+                    else
+                        UpcomingTreasureRoom = false;
+                    _tookDamage = false;
                 }
-                else
-                    UpcomingTreasureRoom = false;
                 _intendedDestination = new(info.SceneName, info.EntryGateName);
-                _tookDamage = false;
             }
         }
         else
@@ -257,6 +287,18 @@ internal static class StageController
         { 
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
             InCombat = true;
+        }
+        
+        if (/*CurrentRoomNumber == 121*/ GameManager.instance.sceneName.Contains("Bronze"))
+        {
+            // 102.41, 6.4
+            GameObject pedestal = new("Pedestal");
+            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
+            pedestal.transform.position = new(102.41f, 6.2f, -0.1f);
+            pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.4f);
+            pedestal.transform.localScale = new(2f, 2f);
+            pedestal.layer = 8; // Terrain layer
+            pedestal.SetActive(true);
         }
         Enemies = newEnemies;
     }
@@ -355,6 +397,62 @@ internal static class StageController
             self.GetState("Init").AdjustTransitions("Broken");
         else if (self.FsmName == "Get Scream" && self.gameObject.name == "Scream Item")
             self.GetState("Check").AdjustTransitions("Destroy");
+        else if (self.gameObject.name == "Colosseum Manager")
+        {
+            if (self.FsmName == "Manager")
+            {
+                // Skip unnecessary states.
+                self.GetState("Init").AdjustTransitions("Idle");
+                self.GetState("Init Cheer").RemoveFirstAction<ActivateGameObject>();
+                self.GetState("Init Cheer").AdjustTransitions("Extra Title Pause");
+                self.AddState("Wait", [new Wait() { time = 1f, finishEvent = self.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") }], FsmTransitionData.FromTargetState("Start Pause").WithEventName("FINISHED"));
+                self.GetState("Extra Title Pause").AdjustTransitions("Wait");
+                self.GetState("Start Pause").AddActions(() => self.gameObject.LocateMyFSM("Geo Pool").SendEvent("GIVE GEO"));
+                
+                // Prevent vanilla trial from starting.
+                self.GetState("Waves Start").RemoveFirstAction<SendEventByName>();
+            }
+            else if (self.FsmName == "Geo Pool")
+            {
+                PDHelper.ColosseumGoldCompleted = true;
+                // Each power decreases the final value. 2 are ignored as spells are forced by room 40 and 80.
+                self.FsmVariables.FindFsmInt("Starting Pool").Value = Math.Max(100, 5000 - (CombatController.ObtainedPowers.Count - 2) * 100);
+                self.AddState("Wait for Result", () => 
+                { 
+                    PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+                    GameObject inspect = GameObject.Instantiate(StageController.TransitionObject);
+                    inspect.SetActive(true);
+                    inspect.transform.position = new(102.41f, 10.8f);
+                    inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
+                    PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
+                    HutongGames.PlayMaker.FsmState state = fsm.GetState("Open UI");
+                    state.RemoveAllActions();
+                    state.AdjustTransition("FINISHED", "Take Control");
+                    fsm.AddState("Return Control", () => { HeroController.instance.RegainControl(); HeroController.instance.StartAnimationControl(); PlayMakerFSM.BroadcastEvent("SHINY PICKED UP"); GameObject.Destroy(inspect); });
+                    fsm.AddState("Display Score", () =>
+                    {
+                        PlayMakerFSM.BroadcastEvent("CROWD CHEER");
+                        PlayClearSound(false);
+                        ScoreController.DisplayScore();
+                        PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+                    }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
+                    fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
+                    fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
+                    fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
+
+                    fsm = inspect.LocateMyFSM("npc_control");
+                    fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
+
+                    fsm.GetState("In Range").AddActions(() =>
+                    {
+                        Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
+                        Component.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
+                        promptObject.GetComponent<TextMeshPro>().text = "Finish";
+                    });
+                }, FsmTransitionData.FromTargetState("Open Gates").WithEventName("SHINY PICKED UP"));
+                self.GetState("Achieve Check").AdjustTransitions("Wait for Result");
+            }
+        }
         orig(self);
         if (self.gameObject.name == "Shaman Meeting")
             GameObject.Destroy(self.gameObject);
@@ -400,7 +498,14 @@ internal static class StageController
             && self.gameObject.name != "Hollow Shade(Clone)")
         {
             Enemies.Add(self);
-            LogHelper.Write("Added enemy: " + Enemies.Last().gameObject.name);
+            if (CurrentRoomNumber >= 20 && self.hp != 1)
+            {
+                float scaling = 0.1f;
+                // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
+                if ((CurrentRoomNumber != 120 || CurrentRoomData[CurrentRoomIndex].Name == "GG_Radiance") && CurrentRoomData[CurrentRoomIndex].BossRoom)
+                    scaling = 0.05f;
+                self.hp = Mathf.CeilToInt(self.hp * (1 + (CurrentRoomNumber - 20) * scaling));
+            }
         }
         orig(self);
     }

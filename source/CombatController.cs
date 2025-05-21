@@ -175,6 +175,22 @@ public static class CombatController
                 self.GetState("Max Up Flash").AdjustTransitions("Check for fill");
             }
         }
+        // Trigger the hall of god version of radiance also adjust phase health to balance the phase duration (the other end bosses calculate the phases themselves).
+        else if (self.gameObject.name == "Absolute Radiance")
+        {
+            if (self.FsmName == "Control")
+            {
+                self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().trueEvent = self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().falseEvent;
+                self.GetState("Statue Death 2").AdjustTransitions("Return to workshop");
+            }
+            else if (self.FsmName == "Phase Control" && StageController.CurrentRoomNumber >= 20)
+            {
+                self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                self.FsmVariables.FindFsmInt("P5 Ascent").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+            }
+        }    
         orig(self);
     }
 

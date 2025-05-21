@@ -148,6 +148,7 @@ public class TrialOfCrusaders : Mod
         PDHelper.FountainVesselSummoned = true;
         PDHelper.HasKingsBrand = true;
         PDHelper.DuskKnightDefeated = true;
+        StageController.Initialize();
         // ToDo: Call OnHook (like IC to allow mods to modify).
     }
 
