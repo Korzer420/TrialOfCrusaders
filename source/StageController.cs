@@ -20,6 +20,7 @@ internal static class StageController
     private static List<TransitionPoint> _transitionPoints = [];
     private static List<SpecialTransition> _specialTransitions = [];
     private static int _treasureRoomCooldown = 0;
+    private static bool _tookDamage = false;
 
     public static bool InCombat { get; set; }
 
@@ -64,6 +65,15 @@ internal static class StageController
         //On.TransitionPoint.Start += TransitionPoint_Start;
         //On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += BoolTest_OnEnter;
         //UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        CombatController.TookDamage += CombatController_TookDamage;
+        ScoreController.StartTimer();
+    }
+
+    private static void CombatController_TookDamage()
+    { 
+        _tookDamage = true;
+        ScoreController.CurrentKillStreak = 0;
+        ScoreController.CurrentHitlessRoomStreak = 0;
     }
 
     private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
@@ -156,8 +166,6 @@ internal static class StageController
 
     private static void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
-        // Knight/Effect/NA Charged
-        // GG_Engine 93f, 15.4f
         _transitionPoints.Clear();
         _specialTransitions.Clear();
         if (self.IsGameplayScene())
@@ -170,6 +178,15 @@ internal static class StageController
             }
             else
             {
+                if (!QuietRoom && !_tookDamage)
+                { 
+                    ScoreController.CurrentHitlessRoomStreak++;
+                    if (CurrentRoomNumber == 120)
+                        ScoreController.HitlessFinalBoss = true;
+                    else if (CurrentRoomData[CurrentRoomIndex].BossRoom)
+                        ScoreController.HitlessBosses++;
+
+                }
                 if (UpcomingTreasureRoom)
                 {
                     info.SceneName = "GG_Engine";
@@ -214,6 +231,7 @@ internal static class StageController
                 else
                     UpcomingTreasureRoom = false;
                 _intendedDestination = new(info.SceneName, info.EntryGateName);
+                _tookDamage = false;
             }
         }
         else
@@ -229,10 +247,12 @@ internal static class StageController
         _intendedDestination.Item1 = null;
         Enemies ??= [];
         List<HealthManager> newEnemies = [];
-        // To do: Mark initial enemies (for reward effects)
         foreach (HealthManager item in Enemies)
             if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
+            {
+                item.gameObject.AddComponent<BaseEnemy>();
                 newEnemies.Add(item);
+            }
         if (!QuietRoom)
         { 
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
@@ -353,6 +373,8 @@ internal static class StageController
                 Enemies.RemoveAt(i);
                 i--;
             }
+        if (contained && self.GetComponent<BaseEnemy>())
+            ScoreController.CurrentKillStreak++;
         orig(self, attackDirection, attackType, ignoreEvasion);
         if (Enemies.Count == 0 && !QuietRoom && contained)
         {

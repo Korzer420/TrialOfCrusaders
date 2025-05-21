@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,17 +12,43 @@ namespace TrialOfCrusaders;
 
 public static class ScoreController
 {
-    public static GameObject Prefab { get; set; }
+    private static int _currentHitlessRoomStreak;
+    private static int _currentKillStreak;
+    private static Coroutine _timer;
 
     #region Properties
+
+    public static GameObject Prefab { get; set; }
+
+    public static int CurrentHitlessRoomStreak
+    {
+        get => _currentHitlessRoomStreak;
+        set
+        {
+            _currentHitlessRoomStreak = value;
+            if (value > HighestHitlessRoomStreak)
+                HighestHitlessRoomStreak = value;
+        }
+    }
+
+    public static int CurrentKillStreak
+    {
+        get => _currentKillStreak;
+        set
+        {
+            _currentKillStreak = value;
+            if (value > _currentKillStreak)
+                HighestKillStreak = value;
+        }
+    }
 
     public static int HitlessBosses { get; set; }
 
     public static bool HitlessFinalBoss { get; set; }
 
-    public static int HitlessRooms { get; set; }
+    public static int TotalHitlessRooms { get; set; }
 
-    public static int HitlessHighestStreak { get; set; }
+    public static int HighestHitlessRoomStreak { get; set; }
 
     public static int HighestKillStreak { get; set; }
 
@@ -68,8 +95,8 @@ public static class ScoreController
         PDHelper.DreamOrbs = 120;
         PassedTime = 1400f;
         HighestKillStreak = 65;
-        HitlessRooms = 34;
-        HitlessHighestStreak = 20;
+        TotalHitlessRooms = 34;
+        HighestHitlessRoomStreak = 20;
         HitlessBosses = 4;
         HitlessFinalBoss = true;
 #endif
@@ -90,8 +117,8 @@ public static class ScoreController
             new("Essence bonus:", PDHelper.DreamOrbs * 10),
             new("Time bonus:", Math.Max(0, 3600 - Mathf.CeilToInt(PassedTime))),
             new("Killstreak bonus:", HighestKillStreak * 5),
-            new("Flawless stage bonus:", HitlessRooms * 20),
-            new("Flawless bonus:", HitlessHighestStreak * 20),
+            new("Flawless stage bonus:", TotalHitlessRooms * 20),
+            new("Flawless bonus:", HighestHitlessRoomStreak * 20),
             new("Flawless boss bonus:", HitlessBosses * 200),
             new("Flawless final bonus:", HitlessFinalBoss ? 1000 : 0),
         ];
@@ -178,5 +205,30 @@ public static class ScoreController
         }
         pointValue.text = $"{value.Item2}";
         yield return new WaitForSeconds(1f);
+    }
+
+    public static void StartTimer()
+    {
+        if (_timer != null)
+            TrialOfCrusaders.Holder.StopCoroutine(_timer);
+        _timer = TrialOfCrusaders.Holder.StartCoroutine(Timer());
+    }
+
+    public static void StopTimer()
+    {
+        if (_timer != null)
+            TrialOfCrusaders.Holder.StopCoroutine(_timer);
+    }
+
+    private static IEnumerator Timer()
+    {
+        while (true)
+        {
+            yield return null;
+            PassedTime += Time.deltaTime;
+            if (GameManager.instance.IsGamePaused())
+                yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
+            // ToDo: Update timer object.
+        }
     }
 }

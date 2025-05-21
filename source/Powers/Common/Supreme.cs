@@ -1,4 +1,6 @@
-﻿namespace TrialOfCrusaders.Powers.Common;
+﻿using TrialOfCrusaders.UnityComponents;
+
+namespace TrialOfCrusaders.Powers.Common;
 
 internal class Supreme : Power
 {
@@ -26,11 +28,14 @@ internal class Supreme : Power
     private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
     {
         orig(self, attackDirection, attackType, ignoreEvasion);
-        _killedEnemies++;
-        if (_killedEnemies >= NeededEnemies)
-        { 
-            _killedEnemies = 0;
-            HeroController.instance.AddHealth(1);
+        if (self.GetComponent<BaseEnemy>() != null)
+        {
+            _killedEnemies++;
+            if (_killedEnemies >= NeededEnemies)
+            {
+                _killedEnemies = 0;
+                HeroController.instance.AddHealth(1);
+            }
         }
     }
 }
