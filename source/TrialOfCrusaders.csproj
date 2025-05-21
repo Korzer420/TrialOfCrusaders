@@ -18,6 +18,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Sprites\Border\Score_Lower.png" />
+	  <None Remove="Resources\Sprites\Border\Score_Upper.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <EmbeddedResource Include="Resources\Data\Backup_RoomData.json" />
 	  <EmbeddedResource Include="Resources\Data\RoomData.json" />
 	  <EmbeddedResource Include="Resources\SoundEffects\Room_Clear.wav" />
@@ -33,6 +38,8 @@
 	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Mothwing_Cloak.png" />
 	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Vengeful_Spirit.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Arrow.png" />
+	  <EmbeddedResource Include="Resources\Sprites\Border\Score_Lower.png" />
+	  <EmbeddedResource Include="Resources\Sprites\Border\Score_Upper.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Crossroads.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Icons\Claw_Icon.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Icons\Combat_Icon.png" />
@@ -85,6 +92,9 @@
 		<Reference Include="UnityEngine">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.dll</HintPath>
 		</Reference>
+		<Reference Include="UnityEngine.AnimationModule">
+		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+		</Reference>
 		<Reference Include="UnityEngine.AudioModule">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.AudioModule.dll</HintPath>
 		</Reference>
@@ -96,6 +106,9 @@
 		</Reference>
 		<Reference Include="UnityEngine.Physics2DModule">
 		  <HintPath>$(HollowKnightRefs)\UnityEngine.Physics2DModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.TextRenderingModule">
+		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.UI">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>

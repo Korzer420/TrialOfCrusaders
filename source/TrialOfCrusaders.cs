@@ -37,7 +37,8 @@ public class TrialOfCrusaders : Mod
         ("Ruins1_23", "Ruins Vial Empty (2)/Active/soul_cache (1)"),
         ("GG_Workshop", "GG_Statue_Vengefly/Inspect"),
         ("Deepnest_East_10", "Dream Gate"),
-        ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring")
+        ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring"),
+        ("GG_Atrium", "GG_Challenge_Door (1)/Door/Unlocked Set/Inspect")
     ];
 
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -88,6 +89,7 @@ public class TrialOfCrusaders : Mod
 
         GreaterMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
         GameObject.DontDestroyOnLoad(GreaterMind.Orb);
+
         StageController.TransitionObject = preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"];
         GameObject.DontDestroyOnLoad(StageController.TransitionObject);
 
@@ -98,6 +100,10 @@ public class TrialOfCrusaders : Mod
 
         VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
         GameObject.DontDestroyOnLoad(VoidZone.Ring);
+
+        ScoreController.Prefab = preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]
+            .LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
+        GameObject.DontDestroyOnLoad(ScoreController.Prefab);
 
         On.UIManager.StartNewGame += UIManager_StartNewGame;
         On.UIManager.ContinueGame += UIManager_ContinueGame;
@@ -114,7 +120,10 @@ public class TrialOfCrusaders : Mod
     private void PlayerDataBoolTest_OnEnter(On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.orig_OnEnter orig, PlayerDataBoolTest self)
     {
         if (self.IsCorrectContext("Spell Control", "Knight", "Set HP Amount*"))
+        { 
             TreasureController.SpawnShiny(TreasureType.EnduranceOrb, HeroController.instance.transform.position);
+            ScoreController.DisplayScore();
+        }
         orig(self);
     }
 
@@ -139,8 +148,6 @@ public class TrialOfCrusaders : Mod
         PDHelper.FountainVesselSummoned = true;
         PDHelper.HasKingsBrand = true;
         PDHelper.DuskKnightDefeated = true;
-        new InUtterDarkness().EnablePower();
-        StageController.Initialize();
         // ToDo: Call OnHook (like IC to allow mods to modify).
     }
 
