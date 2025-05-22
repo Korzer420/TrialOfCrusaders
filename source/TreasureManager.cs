@@ -362,17 +362,6 @@ public static class TreasureManager
             {
                 if (availablePowers.Count == 0)
                     break;
-                // If no spell has been taken by floor 40 we guarantee one to appear.
-                else if (i == 0 && StageController.CurrentRoomIndex == 40 && PDHelper.FireballLevel + PDHelper.QuakeLevel + PDHelper.ScreamLevel == 0)
-                {
-                    int rolledSpell = RngProvider.GetStageRandom(1, 3);
-                    if (rolledSpell == 1)
-                        selectedPowers.Add(availablePowers.First(x => x.GetType() == typeof(VengefulSpirit)));
-                    else if (rolledSpell == 2)
-                        selectedPowers.Add(availablePowers.First(x => x.GetType() == typeof(DesolateDive)));
-                    else
-                        selectedPowers.Add(availablePowers.First(x => x.GetType() == typeof(HowlingWraiths)));
-                }
                 else
                 {
                     List<Power> powerPool = [.. availablePowers];
@@ -402,7 +391,7 @@ public static class TreasureManager
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
                 int rolledBonus = RngProvider.GetStageRandom(1, 100);
-                if (rolledBonus <= selectedPower.BonusRates.Item1)
+                if (/*rolledBonus <= selectedPower.BonusRates.Item1*/true)
                     statBoni.Add("Combat");
                 else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2)
                     statBoni.Add("Spirit");
@@ -469,24 +458,95 @@ public static class TreasureManager
         int layer = 0;
 
         GameObject prefab = GameObject.Find("_GameCameras").transform.Find("HudCamera/Inventory/Inv/Inv_Items/Geo").gameObject;
+        SpawnStatBox(prefab, powerOverlay.transform);
         for (int i = 0; i < optionAmount; i++)
             layer = CreateOption(i, powerOverlay.transform, prefab, fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value);
         CreateArrows(powerOverlay.transform, layer);
+
+        GameObject titleText = UnityEngine.Object.Instantiate(prefab, powerOverlay.transform, true);
+        titleText.name = "Title";
+        titleText.transform.position = new(0f, 6.8f, 0f);
+        titleText.transform.localScale = new(2f, 2f);
+        TextMeshPro text = titleText.GetComponent<DisplayItemAmount>().textObject;
+        UnityEngine.Object.Destroy(titleText.GetComponent<DisplayItemAmount>());
+        UnityEngine.Object.Destroy(titleText.GetComponent<SpriteRenderer>());
+        text.fontSize = 3f;
+        text.enableWordWrapping = true;
+        text.textContainer.size = new(3f, 1f);
+        text.text = $"Select an upgrade!";
+        text.alignment = TextAlignmentOptions.Center;
+        text.textContainer.size = new(5f, 1f);
         powerOverlay.SetActive(true);
         return powerOverlay;
+    }
+
+    private static void SpawnStatBox(GameObject prefab, Transform parent)
+    {
+        GameObject statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
+        statInfo.name = "Stat";
+        statInfo.transform.position = new(-13.5f, 2f, 0f);
+        statInfo.transform.localScale = new(2f, 2f);
+        TextMeshPro text = statInfo.GetComponent<DisplayItemAmount>().textObject;
+        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
+        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        text.fontSize = 2f;
+        text.enableWordWrapping = true;
+        text.textContainer.size = new(3f, 1f);
+        text.text = $"<color=#fa0000>Combat: {CombatController.CombatLevel}</color>";
+        text.alignment = TextAlignmentOptions.Left;
+
+        statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
+        statInfo.name = "Stat";
+        statInfo.transform.position = new(-13.5f, 1.3f, 0f);
+        statInfo.transform.localScale = new(2f, 2f);
+        text = statInfo.GetComponent<DisplayItemAmount>().textObject;
+        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
+        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        text.fontSize = 2f;
+        text.enableWordWrapping = true;
+        text.textContainer.size = new(3f, 1f);
+        text.text = $"<color=#a700fa>Spirit: {CombatController.SpiritLevel}</color>";
+        text.alignment = TextAlignmentOptions.Left;
+
+        statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
+        statInfo.name = "Stat";
+        statInfo.transform.position = new(-13.5f, 0.6f, 0f);
+        statInfo.transform.localScale = new(2f, 2f);
+        text = statInfo.GetComponent<DisplayItemAmount>().textObject;
+        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
+        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        text.fontSize = 2f;
+        text.enableWordWrapping = true;
+        text.textContainer.size = new(3f, 1f);
+        text.text = $"<color=#4fff61>Endurance: {CombatController.EnduranceLevel}</color>";
+        text.alignment = TextAlignmentOptions.Left;
+
+        statInfo = new("Upper stat boarder");
+        statInfo.layer = 5; // UI
+        statInfo.transform.SetParent(parent);
+        statInfo.transform.position = new(-14.3f, 1.8f);
+        statInfo.transform.localScale = new(0.5f, 0.5f);
+        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Upper");
+
+        statInfo = new("Lower stat boarder");
+        statInfo.layer = 5; // UI
+        statInfo.transform.SetParent(parent);
+        statInfo.transform.position = new(-14.3f, -0.8f);
+        statInfo.transform.localScale = new(0.5f, 0.5f);
+        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Lower");
     }
 
     private static int CreateOption(int count, Transform parent, GameObject prefab, string optionName)
     {
         GameObject option = UnityEngine.Object.Instantiate(prefab, parent, true);
         option.name = "Option " + (count + 1);
-        option.transform.position = new(-7.5f + count * 7.5f, 2f, 0f);
+        option.transform.position = new(-6.2f + count * 8.5f, 2f, 0f);
         option.transform.localScale = new(2f, 2f);
         TextMeshPro titleText = option.GetComponent<DisplayItemAmount>().textObject;
         UnityEngine.Object.Destroy(option.GetComponent<DisplayItemAmount>());
         titleText.fontSize = 2.5f;
         titleText.enableWordWrapping = true;
-        titleText.gameObject.name = "Counter";
+        titleText.gameObject.name = "Power Name";
         titleText.textContainer.size = new(3f, 2f);
         titleText.alignment = TextAlignmentOptions.Center;
         option.transform.GetChild(0).localPosition = new(0f, -2f);
@@ -494,7 +554,7 @@ public static class TreasureManager
         TextMeshPro description = text.GetComponent<TextMeshPro>();
         description.textContainer.size = new(2f, 5f);
         description.alignment = TextAlignmentOptions.Center;
-        description.fontSize = 1.5f;
+        description.fontSize = 2f;
         description.enableWordWrapping = true;
         description.transform.localPosition = new(0f, -3.5f);
 
@@ -521,7 +581,7 @@ public static class TreasureManager
             rarityText.textContainer.size = new(2f, 2f);
             rarityText.alignment = TextAlignmentOptions.Center;
             rarityText.fontSize = 1.5f;
-            rarityText.transform.localPosition = new(0f, 1.5f);
+            rarityText.transform.localPosition = new(0f, -1.45f);
 
             if (optionName.Contains("_"))
             {
@@ -543,7 +603,7 @@ public static class TreasureManager
                 bonusText.textContainer.size = new(2f, 2f);
                 bonusText.alignment = TextAlignmentOptions.Center;
                 bonusText.fontSize = 2;
-                bonusText.transform.localPosition = new(0f, -4f);
+                bonusText.transform.localPosition = new(0f, -4.8f);
             }
         }
         else
@@ -571,6 +631,20 @@ public static class TreasureManager
             };
         }
 
+        GameObject statInfo = new("Ability Border");
+        statInfo.layer = 5; // UI
+        statInfo.transform.SetParent(option.transform);
+        statInfo.transform.position = new(-6.2f + count * 8.5f, 4.7f);
+        statInfo.transform.localScale = new(0.8f, 0.8f);
+        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Power_Border");
+
+        statInfo = new("Ability Border");
+        statInfo.layer = 5; // UI
+        statInfo.transform.SetParent(option.transform);
+        statInfo.transform.position = new(-6.2f + count * 8.5f, -8.2f);
+        statInfo.transform.localScale = new(0.8f, 0.8f);
+        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Power_Border");
+
         option.SetActive(true);
         return prefab.layer;
     }
@@ -579,7 +653,7 @@ public static class TreasureManager
     {
         GameObject rotateLeftArrow = new("MoveLeft");
         rotateLeftArrow.transform.SetParent(parent);
-        rotateLeftArrow.transform.localPosition = new(-10.3f, 1.7f);
+        rotateLeftArrow.transform.localPosition = new(-9f, 1.7f);
         rotateLeftArrow.transform.localScale = new(3f, 3f);
         rotateLeftArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Arrow");
         rotateLeftArrow.GetComponent<SpriteRenderer>().flipX = true;
@@ -588,7 +662,7 @@ public static class TreasureManager
 
         GameObject rotateRightArrow = new("MoveRight");
         rotateRightArrow.transform.SetParent(parent);
-        rotateRightArrow.transform.localPosition = new(-4.7f, 1.7f);
+        rotateRightArrow.transform.localPosition = new(-3.4f, 1.7f);
         rotateRightArrow.transform.localScale = new(3f, 3f);
         rotateRightArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Arrow");
         rotateRightArrow.GetComponent<SpriteRenderer>().sortingLayerID = 629535577;
@@ -624,8 +698,8 @@ public static class TreasureManager
                     powerSlot = 0;
                 inputPause = true;
             }
-            leftArrow.transform.localPosition = new(-10.3f + powerSlot * 7.5f, 1.7f);
-            rightArrow.transform.localPosition = new(-4.7f + powerSlot * 7.5f, 1.7f);
+            leftArrow.transform.localPosition = new(-9f + powerSlot * 8.5f, 1.7f);
+            rightArrow.transform.localPosition = new(-3.4f + powerSlot * 8.5f, 1.7f);
             if (inputPause)
             {
                 yield return new WaitForSeconds(0.3f);

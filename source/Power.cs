@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
 namespace TrialOfCrusaders;
@@ -61,7 +62,13 @@ public abstract class Power : IEquatable<Power>
         get
         {
             string description = Resources.Text.PowerDescriptions.ResourceManager.GetString(GetType().Name);
-            // ToDo: Farben implementieren.
+            // Apply debuff colors
+            description.Replace(" bleed", $"<color={BleedEffect.TextColor}> bleed</color>");
+            description.Replace(" concussion", $"<color={ConcussionEffect.TextColor}> concussion</color>");
+            description.Replace(" burn", $"<color={BurnEffect.TextColor}> burn</color>");
+            description.Replace(" weakenend", $"<color={WeakenedEffect.TextColor}> weakenend</color>");
+            description.Replace(" root", $"<color={RootEffect.TextColor}> root</color>");
+            description.Replace(" shattered mind", $"<color={ShatteredMindEffect.TextColor}> shattered mind</color>");
             return description;
         }
     }

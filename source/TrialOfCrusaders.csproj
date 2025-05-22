@@ -18,8 +18,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Sprites\Border\Score_Lower.png" />
-	  <None Remove="Resources\Sprites\Border\Score_Upper.png" />
+	  <None Remove="Resources\Sprites\Border\Power_Border.png" />
+	  <None Remove="Resources\Sprites\Border\Stat_Border_Lower.png" />
+	  <None Remove="Resources\Sprites\Border\Stat_Border_Upper.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -38,8 +39,9 @@
 	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Mothwing_Cloak.png" />
 	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Vengeful_Spirit.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Arrow.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Border\Score_Lower.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Border\Score_Upper.png" />
+	  <EmbeddedResource Include="Resources\Sprites\Border\Power_Border.png" />
+	  <EmbeddedResource Include="Resources\Sprites\Border\Stat_Border_Lower.png" />
+	  <EmbeddedResource Include="Resources\Sprites\Border\Stat_Border_Upper.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Crossroads.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Icons\Claw_Icon.png" />
 	  <EmbeddedResource Include="Resources\Sprites\Icons\Combat_Icon.png" />

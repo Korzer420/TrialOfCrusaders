@@ -6,6 +6,8 @@ internal class WeakenedEffect : MonoBehaviour
 {
     private float _passedTime = 0f;
 
+    public const string TextColor = "#02e9ed";
+
     public float Timer { get; set; }
 
     void Start()

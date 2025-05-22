@@ -111,6 +111,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
         On.GameManager.StartNewGame += GameManager_StartNewGame;
+        On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.OnEnter += SpawnShiny;
         if (_coroutineHolder != null)
             GameObject.Destroy(_coroutineHolder.gameObject);
         _coroutineHolder = new GameObject("TrialCoroutineHelper").AddComponent<Dummy>();
@@ -123,8 +124,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     {
         if (self.IsCorrectContext("Spell Control", "Knight", "Set HP Amount*"))
         {
-            TreasureManager.SpawnShiny(TreasureType.EnduranceOrb, HeroController.instance.transform.position);
-            ScoreController.DisplayScore();
+            TreasureManager.SpawnShiny(TreasureType.NormalOrb, HeroController.instance.transform.position);
         }
         orig(self);
     } 

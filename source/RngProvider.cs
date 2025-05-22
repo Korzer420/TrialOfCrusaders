@@ -5,9 +5,9 @@ namespace TrialOfCrusaders;
 
 public static class RngProvider
 {
-    private static int _seed;
+    private static int _seed = 120;
     private static Random _mainGenerator;
-    private static (int, Random) _stageGenerator;
+    private static (int, Random) _stageGenerator = new(-5000, new());
 
     public static int Seed
     {

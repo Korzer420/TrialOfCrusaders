@@ -12,6 +12,8 @@ public class ConcussionEffect : MonoBehaviour
 
     private GameObject _visualIndicator;
 
+    public const string TextColor = "#8f8c8e";
+
     #endregion
 
     public static GameObject ConcussionObject { get; set; }

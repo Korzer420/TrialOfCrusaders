@@ -11,6 +11,8 @@ internal class RootEffect : MonoBehaviour
 
     private Vector3 _positionToHold;
 
+    public const string TextColor = "#ff21cf";
+
     #endregion
 
     void Start()
