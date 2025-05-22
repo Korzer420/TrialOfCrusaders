@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 

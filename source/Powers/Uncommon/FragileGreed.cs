@@ -1,5 +1,6 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 

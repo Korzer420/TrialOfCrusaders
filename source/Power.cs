@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 

@@ -1,4 +1,5 @@
 ﻿using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -15,13 +16,13 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
-        StageController.RoomCleared += StageController_RoomCleared;
+        StageController.RoomEnded += StageController_RoomCleared;
     }
 
-    private void StageController_RoomCleared()
+    private void StageController_RoomCleared(bool quietRoom)
     {
-        if (!_spellUsed && CombatController.CombatLevel < 20 && RngProvider.GetStageRandom(1, 10) == 1)
-            TreasureController.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
+        if (!quietRoom && !_spellUsed && CombatController.CombatLevel < 20 && RngProvider.GetStageRandom(1, 10) == 1)
+            TreasureManager.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
     }
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
@@ -43,7 +44,7 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter -= SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
-        StageController.RoomCleared -= StageController_RoomCleared;
+        StageController.RoomEnded -= StageController_RoomCleared;
     }
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)

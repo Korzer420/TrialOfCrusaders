@@ -7,21 +7,91 @@ using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Controls everything outside the actual runs inside the lobby.
 /// </summary>
 internal static class HubController
 {
+    private static bool _enabled;
     private static int _rolledSeed;
     private static List<SeedTablet> _seedTablets = [];
 
+    #region Setup
+
     internal static void Initialize()
     {
+        if (_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Enable Hub Controller", KorzUtils.Enums.LogType.Debug);
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
+
+        // Reset data
+        PDHelper.HasDash = false;
+        PDHelper.HasShadowDash = false;
+        PDHelper.HasWalljump = false;
+        PDHelper.HasDoubleJump = false;
+        PDHelper.HasLantern = false;
+        PDHelper.HasSuperDash = false;
+        PDHelper.HasAcidArmour = false;
+        PDHelper.FireballLevel = 0;
+        PDHelper.QuakeLevel = 0;
+        PDHelper.Geo = 0;
+        PDHelper.DreamOrbs = 0;
+
+        _enabled = true;
+    }
+
+    internal static void Unload()
+    {
+        if (!_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Disable Hub Controller", KorzUtils.Enums.LogType.Debug);
+        On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
+        _enabled = false;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private static void SetupTransitions()
+    {
+        List<TransitionPoint> transitions = [.. Object.FindObjectsOfType<TransitionPoint>()];
+        TransitionPoint left = transitions.First(x => x.name == "left1");
+        GameObject block = new("Block");
+        block.SetActive(true);
+        block.AddComponent<BoxCollider2D>().size = left.GetComponent<BoxCollider2D>().size;
+        transitions.Remove(left);
+        Object.Destroy(left);
+        transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
+        CoroutineHelper.WaitForHero(() => GameManager.instance.SaveGame(), true);
+    } 
+
+    #endregion
+
+    #region Event Handler
+
+    /// <summary>
+    /// Controls all FSM related modifications.
+    /// </summary>
+    private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    {
+        if (self.gameObject.name == "Little Fool NPC" && self.FsmName == "Conversation Control")
+        {
+            self.GetState("Opened?").AdjustTransition("FINISHED", "Gate Opened");
+            self.GetState("Gate Opened").InsertActions(0, () =>
+            {
+                // Select dialog.
+                GameHelper.OneTimeMessage("LITTLE_FOOL_CHALLENGE", LittleFoolDialog.Greeting, "Minor NPC");
+            });
+        }
+        orig(self);
     }
 
     private static void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
@@ -42,10 +112,15 @@ internal static class HubController
             {
                 // ToDo: Flag for seeded run.
             }
-            StageController.CurrentRoomData = SetupController.GenerateRun(finalSeed);
+            StageController.CurrentRoomData = SetupManager.GenerateNormalRun(finalSeed);
             StageController.CurrentRoomIndex = -1;
+
+            // Switch controller set
             StageController.Initialize();
-            CoroutineHelper.WaitUntil(() => 
+            ScoreController.Initialize();
+            CombatController.Initialize();
+
+            CoroutineHelper.WaitUntil(() =>
             {
                 GameObject pedestal = new("Pedestal");
                 pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
@@ -61,10 +136,15 @@ internal static class HubController
                 pedestal.layer = 8; // Terrain layer
                 pedestal.SetActive(true);
                 // Spawn two orbs at the start.
-                TreasureController.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
-                TreasureController.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+                TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
+                TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
                 Unload();
-            },() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+            }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+        }
+        else if (info.SceneName == "Room_Colosseum_Bronze")
+        {
+            info.SceneName = "Deepnest_East_10";
+            info.EntryGateName = "left1";
         }
         orig(self, info);
     }
@@ -75,10 +155,10 @@ internal static class HubController
             SetupTransitions();
         else if (arg1.name == "Deepnest_East_10")
         {
-            GameObject.Destroy(GameObject.Find("plat_float_05 (1)"));
-            GameObject.Destroy(GameObject.Find("plat_float_05"));
-            GameObject.Destroy(GameObject.Find("white_ash_scenery_0004_5 (3)"));
-            GameObject.Destroy(GameObject.Find("Inspect Region Ghost"));
+            Object.Destroy(GameObject.Find("plat_float_05 (1)"));
+            Object.Destroy(GameObject.Find("plat_float_05"));
+            Object.Destroy(GameObject.Find("white_ash_scenery_0004_5 (3)"));
+            Object.Destroy(GameObject.Find("Inspect Region Ghost"));
             _rolledSeed = Random.Range(100000000, 1000000000);
             float xPosition = 18.2f;
             float yPosition = 9.5f;
@@ -100,7 +180,7 @@ internal static class HubController
                 SeedTablet tablet = obstacleGameObject.AddComponent<SeedTablet>();
                 _seedTablets.Add(tablet);
                 tablet.Index = i;
-                tablet.Number = int.Parse(""+_rolledSeed.ToString()[i]);
+                tablet.Number = int.Parse("" + _rolledSeed.ToString()[i]);
 
                 GameObject abilitySprite = new("Ability Sprite");
                 abilitySprite.transform.SetParent(obstacleGameObject.transform);
@@ -113,7 +193,7 @@ internal static class HubController
                 if (xPosition == 25.2f && yPosition == 4.9f)
                     xPosition += 3.5f;
                 else if (xPosition > 32.5)
-                { 
+                {
                     yPosition -= 4.6f;
                     xPosition = 18.2f;
                 }
@@ -136,41 +216,7 @@ internal static class HubController
                 transition.LoadIntoDream = false;
             }, true);
         }
-    }
+    } 
 
-    internal static void Unload()
-    {
-        On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
-        On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
-    }
-
-    private static void SetupTransitions()
-    {
-        List<TransitionPoint> transitions = [.. GameObject.FindObjectsOfType<TransitionPoint>()];
-        TransitionPoint left = transitions.First(x => x.name == "left1");
-        GameObject block = new("Block");
-        block.SetActive(true);
-        block.AddComponent<BoxCollider2D>().size = left.GetComponent<BoxCollider2D>().size;
-        transitions.Remove(left);
-        Component.Destroy(left);
-        transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
-    }
-
-    /// <summary>
-    /// Controls all FSM related modifications.
-    /// </summary>
-    private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
-    {
-        if (self.gameObject.name == "Little Fool NPC" && self.FsmName == "Conversation Control")
-        {
-            self.GetState("Opened?").AdjustTransition("FINISHED", "Gate Opened");
-            self.GetState("Gate Opened").InsertActions(0, () =>
-            {
-                // Select dialog.
-                GameHelper.OneTimeMessage("LITTLE_FOOL_CHALLENGE", LittleFoolDialog.Greeting, "Minor NPC");
-            });
-        }
-        orig(self);
-    }
+    #endregion
 }

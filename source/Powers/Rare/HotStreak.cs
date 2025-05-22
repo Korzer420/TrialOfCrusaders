@@ -1,5 +1,6 @@
 ﻿using Modding;
 using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 

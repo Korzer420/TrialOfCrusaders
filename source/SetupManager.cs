@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders;
 
-internal static class SetupController
+internal static class SetupManager
 {
-    internal static List<RoomData> GenerateRun(int seed)
+    internal static List<RoomData> GenerateNormalRun(int seed)
     {
         //return StageController.RoomList.Where(x => !x.BossRoom)
         //    .Select(x => new RoomData()
@@ -31,7 +32,7 @@ internal static class SetupController
         //roomList[0].SelectedTransition = "left1";
         // Add each normal room 5 times so each one has the same probability regardless of available entrances.
         // For bosses we only take one though.
-        List<RoomData> availableRooms = [..StageController.RoomList.SelectMany(x =>
+        List<RoomData> availableRooms = [..StageController.RoomPool.SelectMany(x =>
         {
             if (x.BossRoom)
                 return [x];

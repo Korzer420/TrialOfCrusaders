@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using MonoMod.Cil;
 using System;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Uncommon;

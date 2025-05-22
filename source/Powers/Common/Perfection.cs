@@ -3,6 +3,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
+using TrialOfCrusaders.Controller;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -20,7 +21,7 @@ internal class Perfection : Power
     protected override void Enable()
     {
         IL.HealthManager.Die += HealthManager_Die;
-        StageController.RoomCleared += StageController_RoomCleared;
+        StageController.RoomEnded += StageController_RoomCleared;
         CombatController.TookDamage += CombatController_TookDamage;
         _hit = false;
     }
@@ -28,7 +29,7 @@ internal class Perfection : Power
     protected override void Disable()
     { 
         IL.HealthManager.Die -= HealthManager_Die;
-        StageController.RoomCleared -= StageController_RoomCleared;
+        StageController.RoomEnded -= StageController_RoomCleared;
         CombatController.TookDamage -= CombatController_TookDamage;
     }
 
@@ -44,9 +45,9 @@ internal class Perfection : Power
         // Activate geo flashing like from fragile greed.
         cursor.EmitDelegate<Func<bool, bool>>(x => true);
     }
-    private void StageController_RoomCleared()
+    private void StageController_RoomCleared(bool quietRoom)
     {
-        if (!_hit)
+        if (!quietRoom && !_hit)
             _clearedRoom = Math.Min(60, _clearedRoom++);
         _hit = false;
     }

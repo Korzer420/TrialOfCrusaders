@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.UnityComponents;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

@@ -1,6 +1,7 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
 using Modding.Utils;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.UnityComponents.Debuffs;

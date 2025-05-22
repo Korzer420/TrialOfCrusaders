@@ -1,13 +1,15 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TMPro;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.Powers;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
@@ -17,8 +19,11 @@ using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
 namespace TrialOfCrusaders;
 
-public static class TreasureController
+public static class TreasureManager
 {
+
+    private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
+
     private static Sprite _backgroundSprite;
 
     private static GameObject _glow;
@@ -163,15 +168,17 @@ public static class TreasureController
 
     public static bool EnduranceHealthGrant { get; set; }
 
+    public static bool SelectionActive { get; set; }
+
     internal static void SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
     {
-        GameObject shiny = GameObject.Instantiate(Shiny);
+        GameObject shiny = UnityEngine.Object.Instantiate(Shiny);
         GameObject glow = null;
         if ((int)treasure > 6 || (int)treasure < 2)
         {
             if (_glow == null)
                 _glow = HeroController.instance.transform.Find("Effects/NA Charged").gameObject;
-            glow = GameObject.Instantiate(_glow, shiny.transform);
+            glow = UnityEngine.Object.Instantiate(_glow, shiny.transform);
             glow.name = "Glow";
             glow.transform.localPosition = new(0f, 0f);
             glow.transform.localScale = new(1, 1f);
@@ -224,7 +231,7 @@ public static class TreasureController
         {
             Transform glow = fsm.transform.Find("Glow");
             if (glow != null)
-                GameObject.Destroy(glow.gameObject);
+                UnityEngine.Object.Destroy(glow.gameObject);
             TreasureType treasure = (TreasureType)fsm.FsmVariables.FindFsmInt("Item Select").Value;
             switch (treasure)
             {
@@ -331,7 +338,15 @@ public static class TreasureController
         fsm.GetState("Charm?").AdjustTransitions("Check Choice");
         fsm.GetState("Trink Flash").AdjustTransitions("Trink 1");
         shiny.transform.position = position;
-        shiny.LocateMyFSM("Shiny Control").FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
+        fsm.FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
+        fsm.GetState("Hero Down").InsertActions(0, () => SelectionActive = true);
+        fsm.GetState("Finish").AddActions(() =>
+        {
+            SelectionActive = false;
+            // To prevent situation where the player takes unavoidable damage, we grant 2 seconds of invincibility.
+            if (!StageController.QuietRoom)
+                HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
+        });
     }
 
     private static int RollSelection(PlayMakerFSM fsm, TreasureType treasureType)
@@ -463,19 +478,19 @@ public static class TreasureController
 
     private static int CreateOption(int count, Transform parent, GameObject prefab, string optionName)
     {
-        GameObject option = GameObject.Instantiate(prefab, parent, true);
+        GameObject option = UnityEngine.Object.Instantiate(prefab, parent, true);
         option.name = "Option " + (count + 1);
-        option.transform.position = new(-7.5f + (count * 7.5f), 2f, 0f);
+        option.transform.position = new(-7.5f + count * 7.5f, 2f, 0f);
         option.transform.localScale = new(2f, 2f);
         TextMeshPro titleText = option.GetComponent<DisplayItemAmount>().textObject;
-        Component.Destroy(option.GetComponent<DisplayItemAmount>());
+        UnityEngine.Object.Destroy(option.GetComponent<DisplayItemAmount>());
         titleText.fontSize = 2.5f;
         titleText.enableWordWrapping = true;
         titleText.gameObject.name = "Counter";
         titleText.textContainer.size = new(3f, 2f);
         titleText.alignment = TextAlignmentOptions.Center;
         option.transform.GetChild(0).localPosition = new(0f, -2f);
-        GameObject text = GameObject.Instantiate(titleText.gameObject, option.transform);
+        GameObject text = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
         TextMeshPro description = text.GetComponent<TextMeshPro>();
         description.textContainer.size = new(2f, 5f);
         description.alignment = TextAlignmentOptions.Center;
@@ -494,7 +509,7 @@ public static class TreasureController
             // ToDo: Implement proper sprites.
             option.GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Crossroads");
 
-            GameObject rarity = GameObject.Instantiate(titleText.gameObject, option.transform);
+            GameObject rarity = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
             TextMeshPro rarityText = rarity.GetComponent<TextMeshPro>();
             rarityText.text = $"({selectedPower.Tier})";
             rarityText.color = selectedPower.Tier switch
@@ -511,7 +526,7 @@ public static class TreasureController
             if (optionName.Contains("_"))
             {
                 string bonusStat = optionName.Split('_')[1];
-                GameObject bonus = GameObject.Instantiate(titleText.gameObject, option.transform);
+                GameObject bonus = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
                 TextMeshPro bonusText = bonus.GetComponent<TextMeshPro>();
                 bonusText.text = bonusStat switch
                 {
@@ -609,15 +624,15 @@ public static class TreasureController
                     powerSlot = 0;
                 inputPause = true;
             }
-            leftArrow.transform.localPosition = new(-10.3f + (powerSlot * 7.5f), 1.7f);
-            rightArrow.transform.localPosition = new(-4.7f + (powerSlot * 7.5f), 1.7f);
+            leftArrow.transform.localPosition = new(-10.3f + powerSlot * 7.5f, 1.7f);
+            rightArrow.transform.localPosition = new(-4.7f + powerSlot * 7.5f, 1.7f);
             if (inputPause)
             {
                 yield return new WaitForSeconds(0.3f);
                 inputPause = false;
             }
         }
-        GameObject.Destroy(leftArrow.transform.parent.gameObject);
+        UnityEngine.Object.Destroy(leftArrow.transform.parent.gameObject);
         string pickedValue = shinyFsm.FsmVariables.FindFsmString("Option " + (powerSlot + 1)).Value;
         Power pickedPower = null;
         string pickedStat = null;

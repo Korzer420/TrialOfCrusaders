@@ -17,15 +17,14 @@ using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Controller;
 
 public static class CombatController
 {
+    private static bool _enabled;
     private static ILHook _attackMethod;
 
     public const int InstaKillDamage = 500;
-
-    public static string UpcomingPowerSelection { get; set; }
 
     /// <summary>
     /// Gets or sets the combat level.
@@ -47,11 +46,17 @@ public static class CombatController
 
     public static bool CharmUpdate { get; set; }
 
-    public static List<HealthManager> Enemies => StageController.Enemies;
+    public static List<HealthManager> Enemies { get; set; } = [];
 
     public static List<Power> ObtainedPowers { get; set; } = [];
 
+    public static bool InCombat { get; set; }
+
     public static event Action TookDamage;
+
+    public static event Action EnemiesCleared;
+
+    public static event Action<HealthManager> EnemyKilled;
 
     public static bool HasPower<T>(out T selectedPower) where T : Power
     {
@@ -69,21 +74,37 @@ public static class CombatController
 
     public static bool HasSpell() => PDHelper.FireballLevel + PDHelper.QuakeLevel + PDHelper.ScreamLevel > 0;
 
+    #region Setup
+    
     public static void Initialize()
     {
+        if (_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Enable Combat Controller", KorzUtils.Enums.LogType.Debug);
+
+        // Reset data
+        ObtainedPowers.Clear();
+        CombatLevel = 0;
+        SpiritLevel = 0;
+        EnduranceLevel = 0;
+
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
         ModHooks.GetPlayerIntHook += ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
         On.HealthManager.TakeDamage += HealthManager_TakeDamage;
+        On.HealthManager.OnEnable += HealthManager_OnEnable;
+        On.HealthManager.Die += HealthManager_Die;
         IL.HeroController.Move += HeroController_Move;
         IL.HeroController.Attack += HeroController_Attack;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
         ModHooks.SoulGainHook += ModHooks_SoulGainHook;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         On.HeroController.AddGeo += HeroController_AddGeo;
-        IL.HeroController.MaxHealth += HeroController_MaxHealth;
+        IL.HeroController.MaxHealth += BlockFullHeal;
         On.HeroController.CharmUpdate += HeroController_CharmUpdate;
+        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
+        ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         CreateExtraHealth();
         CoroutineHelper.WaitUntil(() =>
@@ -96,7 +117,7 @@ public static class CombatController
                 HeroController.instance.MaxHealth();
             }
 
-            int maxMP = 33 + (Math.Min(SpiritLevel, 18) * 8) + (SpiritLevel == 19 ? 10 : 0);
+            int maxMP = 33 + Math.Min(SpiritLevel, 18) * 8 + (SpiritLevel == 19 ? 10 : 0);
             int soulVessel = 0;
             if (maxMP >= 165)
                 soulVessel = 3;
@@ -109,33 +130,39 @@ public static class CombatController
             GameCameras.instance.hudCanvas.gameObject.SetActive(false);
             GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         }, () => HeroController.instance?.acceptingInput == true, true);
-    }
-
-    private static void HeroController_CharmUpdate(On.HeroController.orig_CharmUpdate orig, HeroController self)
-    {
-        CharmUpdate = true;
-        orig(self);
-        CharmUpdate = false;
-    }
-
-    private static void HeroController_MaxHealth(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        cursor.Goto(0);
-
-        ILLabel label;
-        cursor.GotoNext(x => x.MatchRet());
-        label = cursor.MarkLabel();
-        cursor.Goto(0);
-        cursor.EmitDelegate(() => CharmUpdate);
-        cursor.Emit(OpCodes.Brtrue, label);
+        _enabled = true;
     }
 
     public static void Unload()
     {
+        if (!_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Disable Combat Controller", KorzUtils.Enums.LogType.Debug);
+        On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
         ModHooks.GetPlayerIntHook -= ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
-    }
+        ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
+        On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
+        On.HealthManager.OnEnable -= HealthManager_OnEnable;
+        On.HealthManager.Die -= HealthManager_Die;
+        IL.HeroController.Move -= HeroController_Move;
+        IL.HeroController.Attack -= HeroController_Attack;
+        On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
+        ModHooks.SoulGainHook -= ModHooks_SoulGainHook;
+        On.HeroController.TakeDamage -= HeroController_TakeDamage;
+        On.HeroController.AddGeo -= HeroController_AddGeo;
+        IL.HeroController.MaxHealth -= BlockFullHeal;
+        On.HeroController.CharmUpdate -= HeroController_CharmUpdate;
+        On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
+        ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
+        _attackMethod?.Dispose();
+        _enabled = false;
+        // ToDo: Evaluate score before removing powers.
+        foreach (Power power in ObtainedPowers)
+            power.DisablePower();
+    } 
+
+    #endregion
 
     #region Health Setup
 
@@ -149,7 +176,7 @@ public static class CombatController
 
         for (int i = 1; i <= 14; i++)
         {
-            GameObject gameObject = GameObject.Instantiate(healthPrefab, cameraObject.Find("HudCamera/Hud Canvas/Health"));
+            GameObject gameObject = UnityEngine.Object.Instantiate(healthPrefab, cameraObject.Find("HudCamera/Hud Canvas/Health"));
             gameObject.name = "Health " + (i + 11);
             gameObject.LocateMyFSM("health_display").FsmVariables.FindFsmInt("Health Number").Value = i + 11;
             gameObject.transform.localPosition = new Vector3(healthPrefab.transform.localPosition.x + space * i, healthPrefab.transform.localPosition.y, healthPrefab.transform.localPosition.z);
@@ -190,9 +217,91 @@ public static class CombatController
                 self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
                 self.FsmVariables.FindFsmInt("P5 Ascent").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
             }
-        }    
+        }
         orig(self);
     }
+
+    private static void HeroController_CharmUpdate(On.HeroController.orig_CharmUpdate orig, HeroController self)
+    {
+        CharmUpdate = true;
+        orig(self);
+        CharmUpdate = false;
+    }
+
+    private static void BlockFullHeal(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        cursor.Goto(0);
+
+        ILLabel label;
+        cursor.GotoNext(x => x.MatchRet());
+        label = cursor.MarkLabel();
+        cursor.Goto(0);
+        cursor.EmitDelegate(() => CharmUpdate);
+        cursor.Emit(OpCodes.Brtrue, label);
+    }
+
+    #endregion
+
+    #region Enemy Control
+
+    private static void HealthManager_OnEnable(On.HealthManager.orig_OnEnable orig, HealthManager self)
+    {
+        // Prevent "immortal" enemies.
+        if (self.hp != 9999 && self.gameObject.name != "Mender Bug" && !self.gameObject.name.Contains("Pigeon") && !self.gameObject.name.Contains("Hatcher Baby Spawner")
+            && self.gameObject.name != "Hollow Shade(Clone)")
+        {
+            Enemies.Add(self);
+            if (StageController.CurrentRoomNumber >= 20 && self.hp != 1)
+            {
+                float scaling = 0.1f;
+                // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
+                if ((StageController.CurrentRoomNumber != 120 || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance") 
+                    && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
+                    scaling = 0.05f;
+                self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
+            }
+        }
+        orig(self);
+    }
+
+    private static void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
+    {
+        bool contained = Enemies.Contains(self);
+        Enemies.Remove(self);
+        // Unity doesn't like the "?" operator.
+        for (int i = 0; i < Enemies.Count; i++)
+            if (Enemies[i] == null || Enemies[i].gameObject == null || !Enemies[i].gameObject.activeSelf)
+            {
+                Enemies.RemoveAt(i);
+                i--;
+            }
+        if (contained && self.GetComponent<BaseEnemy>())
+            EnemyKilled?.Invoke(self);
+        orig(self, attackDirection, attackType, ignoreEvasion);
+        if (Enemies.Count == 0 && !StageController.QuietRoom && contained && !StageController.FinishedEnemies)
+        {
+            InCombat = false;
+            EnemiesCleared?.Invoke();
+        }
+    }
+
+    private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    {
+        orig(self, setHazardMarker, preventRunBob);
+        Enemies ??= [];
+        List<HealthManager> newEnemies = [];
+        foreach (HealthManager item in Enemies)
+            if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
+            {
+                item.gameObject.AddComponent<BaseEnemy>();
+                newEnemies.Add(item);
+            }
+        if (!StageController.QuietRoom)
+            InCombat = true;
+    }
+
+    private static bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead) => false;
 
     #endregion
 
@@ -201,13 +310,13 @@ public static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            orig = 3 + (CombatLevel * 2) + (CombatLevel >= 19 ? 1 : 0);
+            orig = 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
         else if (name == nameof(PlayerData.maxHealthCap))
             return 25;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
             return 5 + EnduranceLevel;
         else if (name == nameof(PlayerData.maxMP))
-            return Math.Min(99, 33 + (Math.Min(SpiritLevel, 18) * 8) + (SpiritLevel == 19 ? 10 : 0));
+            return Math.Min(99, 33 + Math.Min(SpiritLevel, 18) * 8 + (SpiritLevel == 19 ? 10 : 0));
         else if (name == nameof(PlayerData.MPReserveMax))
         {
             if (SpiritLevel < 9)
@@ -225,8 +334,10 @@ public static class CombatController
     private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         // Block overcharm
-        if (name == nameof(PlayerData.instance.overcharmed))
+        if (name == nameof(PlayerData.overcharmed))
             return false;
+        else if (name == nameof(PlayerData.isInvincible))
+            return orig || TreasureManager.SelectionActive;
         return orig;
     }
 
@@ -260,9 +371,9 @@ public static class CombatController
         {
             if (HasPower<ImprovedCaringShell>(out _))
             {
-                if (!StageController.InCombat)
+                if (!InCombat)
                     return 0;
-                damageAmount = damageAmount.Lower(2 + (EnduranceLevel / 4));
+                damageAmount = damageAmount.Lower(2 + EnduranceLevel / 4);
             }
             else if (HasPower<CaringShell>(out _))
                 damageAmount = damageAmount.Lower(1);
@@ -345,7 +456,7 @@ public static class CombatController
         orig(self, hitInstance);
     }
 
-    private static void HeroController_Move(MonoMod.Cil.ILContext il)
+    private static void HeroController_Move(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
@@ -443,8 +554,8 @@ public static class CombatController
             string parentName = self.Fsm.GameObject.transform.parent?.name;
             if (gameObjectName.Contains("Fireball")
                 || gameObjectName == "Q Fall Damage"
-                || (gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2"))
-                || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
+                || gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2")
+                || (gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2"))
                 self.DamageDealt = Math.Max(1, Mathf.FloorToInt(self.DamageDealt.Value * (2.2f - soul.SpellCount * 0.2f)));
         }
         else if (isNailArtModifier)
@@ -474,7 +585,7 @@ public static class CombatController
                     caching.ActiveSoulCache.GetComponent<SoulCache>().SoulAmount += excessiveAmount;
                 else
                 {
-                    caching.ActiveSoulCache = GameObject.Instantiate(Powers.Common.Caching.SoulCache);
+                    caching.ActiveSoulCache = UnityEngine.Object.Instantiate(Powers.Common.Caching.SoulCache);
                     caching.ActiveSoulCache.transform.position = HeroController.instance.transform.position;
                     BoxCollider2D collider = caching.ActiveSoulCache.AddComponent<BoxCollider2D>();
                     collider.size = new(1.4f, 1.4f);
@@ -494,9 +605,9 @@ public static class CombatController
         orig(self, go, damageSide, damageAmount, hazardType);
         if (currentHealth != PDHelper.Health)
         {
-            if ((HasPower(out FragileGreed greed) && greed.GreedActive) || (HasPower(out FragileSpirit spirit) && spirit.SpiritActive)
-                || (HasPower(out FragileStrength strength) && strength.StrengthActive))
-            { 
+            if (HasPower(out FragileGreed greed) && greed.GreedActive || HasPower(out FragileSpirit spirit) && spirit.SpiritActive
+                || HasPower(out FragileStrength strength) && strength.StrengthActive)
+            {
                 HeroController.instance.proxyFSM.GetState("Flower?").GetFirstAction<ActivateGameObject>().gameObject.GameObject.Value.SetActive(true);
                 GameManager.instance.SaveGame();
             }

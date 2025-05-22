@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 
 namespace TrialOfCrusaders.Powers.Common;
 

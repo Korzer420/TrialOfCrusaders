@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using KorzUtils.Helper;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Enums;
@@ -51,7 +52,7 @@ public class RoomData
         else
         {
             // Each 20th room is guaranteed a boss.
-            if (currentRoom % 20 == 0)
+            if (currentRoom % 20 == 0 && currentRoom != 0)
                 return false;
             bool available = progress.HasFlag(NeededProgress) && (ConditionalProgress?.Count == 0 || ConditionalProgress.Any(x => progress.HasFlag(x)));
             if (!easyMode)

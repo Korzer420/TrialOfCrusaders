@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
@@ -18,15 +19,15 @@ internal class CheatDeath : Power
     protected override void Enable()
     {
         On.HeroController.Die += HeroController_Die;
-        StageController.RoomCleared += StageController_RoomCleared;
+        StageController.RoomEnded += StageController_RoomCleared;
     }
 
-    private void StageController_RoomCleared() => _cooldown = _cooldown.Lower(1);
+    private void StageController_RoomCleared(bool quietRoom) => _cooldown = _cooldown.Lower(quietRoom ? 0 : 1);
 
     protected override void Disable()
     {
         On.HeroController.Die -= HeroController_Die;
-        StageController.RoomCleared -= StageController_RoomCleared;
+        StageController.RoomEnded -= StageController_RoomCleared;
     }
 
     private IEnumerator HeroController_Die(On.HeroController.orig_Die orig, HeroController self)

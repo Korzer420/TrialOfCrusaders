@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using Modding;
 using System.Collections.Generic;
+using TrialOfCrusaders.Controller;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents;

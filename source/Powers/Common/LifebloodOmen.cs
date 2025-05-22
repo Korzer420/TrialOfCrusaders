@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using System.Collections;
 using System.Collections.Generic;
+using TrialOfCrusaders.Controller;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -27,8 +28,8 @@ internal class LifebloodOmen : Power
         while (true)
         {
             // If a player sits a bench herocontroller doesn't accept input, which makes the first part redundant... I think. I still keep it, just in case.
-            if (PDHelper.AtBench || !HeroController.instance.acceptingInput || StageController.QuietRoom || !StageController.InCombat)
-                yield return new WaitUntil(() => !PDHelper.AtBench && HeroController.instance.acceptingInput && !StageController.QuietRoom || StageController.InCombat);
+            if (PDHelper.AtBench || !HeroController.instance.acceptingInput || StageController.QuietRoom || !CombatController.InCombat)
+                yield return new WaitUntil(() => !PDHelper.AtBench && HeroController.instance.acceptingInput && !StageController.QuietRoom || CombatController.InCombat);
             int index = DetermineGhost();
             ghost = GameObject.Instantiate(Ghosts[index]);
             ghost.transform.localPosition = HeroController.instance.transform.localPosition + new Vector3(0f, 3f, 0f);

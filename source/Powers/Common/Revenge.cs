@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.UnityComponents;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -10,17 +11,16 @@ internal class Revenge : Power
     protected override void Enable()
     {
         On.HeroController.TakeDamage += HeroController_TakeDamage;
-        On.HealthManager.Die += HealthManager_Die;
+        CombatController.EnemyKilled += CombatController_EnemyKilled;
     }
 
-    private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
+    private void CombatController_EnemyKilled(HealthManager enemy)
     {
-        if (self.GetComponent<RevengeEffect>() is RevengeEffect revengeEffect)
+        if (enemy.GetComponent<RevengeEffect>() is RevengeEffect revengeEffect)
         {
             Object.Destroy(revengeEffect);
             HeroController.instance.AddHealth(1 + (CombatController.CombatLevel + CombatController.EnduranceLevel) / 8);
         }
-        orig(self, attackDirection, attackType, ignoreEvasion);
     }
 
     private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
@@ -36,6 +36,6 @@ internal class Revenge : Power
     protected override void Disable()
     {
         On.HeroController.TakeDamage -= HeroController_TakeDamage;
-        On.HealthManager.Die -= HealthManager_Die;
+        CombatController.EnemyKilled -= CombatController_EnemyKilled;
     }
 }

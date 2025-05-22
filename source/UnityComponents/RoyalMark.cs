@@ -1,4 +1,5 @@
 ﻿using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents;
@@ -25,11 +26,11 @@ internal class RoyalMark : MonoBehaviour
             {
                 int rolled = RngProvider.GetStageRandom(1, 100);
                 if (rolled <= 2)
-                    TreasureController.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
+                    TreasureManager.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
                 else if (rolled <= 10)
-                    TreasureController.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
+                    TreasureManager.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
                 else if (rolled <= 35)
-                    TreasureController.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
+                    TreasureManager.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
                 else
                     HeroController.instance.AddGeo(100);
                 HeroController.instance.AddGeo(100);

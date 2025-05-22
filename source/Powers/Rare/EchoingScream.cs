@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Helper;
 using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents;

@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using Modding;
 using System;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 using UnityEngine;

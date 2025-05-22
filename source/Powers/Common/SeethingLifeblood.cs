@@ -1,4 +1,6 @@
-﻿namespace TrialOfCrusaders.Powers.Common;
+﻿using TrialOfCrusaders.Controller;
+
+namespace TrialOfCrusaders.Powers.Common;
 
 internal class SeethingLifeblood : Power
 {
@@ -8,20 +10,20 @@ internal class SeethingLifeblood : Power
 
     protected override void Enable()
     {
-        StageController.RoomCleared += StageController_RoomCleared;
+        StageController.RoomEnded += StageController_RoomCleared;
         CombatController.TookDamage += CombatController_TookDamage;
     }
 
-    private void StageController_RoomCleared()
+    private void StageController_RoomCleared(bool quietRoom)
     {
-        if (!_takenDamage && RngProvider.GetRandom(1, 40) <= CombatController.EnduranceLevel)
+        if (!quietRoom && !_takenDamage && RngProvider.GetRandom(1, 40) <= CombatController.EnduranceLevel)
             EventRegister.SendEvent("ADD BLUE HEALTH");
         _takenDamage = false;
     }
 
     protected override void Disable()
     {
-        StageController.RoomCleared -= StageController_RoomCleared;
+        StageController.RoomEnded -= StageController_RoomCleared;
         CombatController.TookDamage -= CombatController_TookDamage;
     }
 

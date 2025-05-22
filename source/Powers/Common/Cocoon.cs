@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.Powers.Uncommon;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Powers.Uncommon;
 
 namespace TrialOfCrusaders.Powers.Common;
 

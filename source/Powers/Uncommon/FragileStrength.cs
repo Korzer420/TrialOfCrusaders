@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.Enums;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Uncommon;

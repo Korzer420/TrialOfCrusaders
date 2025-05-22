@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 

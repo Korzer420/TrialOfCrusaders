@@ -68,7 +68,7 @@ internal class InUtterDarkness : Power
 
     private void HeroController_AddHealth(On.HeroController.orig_AddHealth orig, HeroController self, int amount)
     {
-        if (!TreasureController.EnduranceHealthGrant)
+        if (!TreasureManager.EnduranceHealthGrant)
             amount = 0;
         orig(self, amount);
     }

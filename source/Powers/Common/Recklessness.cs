@@ -1,4 +1,6 @@
-﻿namespace TrialOfCrusaders.Powers.Common;
+﻿using TrialOfCrusaders.Controller;
+
+namespace TrialOfCrusaders.Powers.Common;
 
 internal class Recklessness : Power
 {

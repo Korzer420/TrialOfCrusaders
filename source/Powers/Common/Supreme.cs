@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.UnityComponents;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.UnityComponents;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -13,29 +14,25 @@ internal class Supreme : Power
     protected override void Enable()
     {
         _killedEnemies = 0;
-        On.HealthManager.Die += HealthManager_Die;
+        CombatController.EnemyKilled += CombatController_EnemyKilled;
         CombatController.TookDamage += CombatController_TookDamage;
+    }
+
+    private void CombatController_EnemyKilled(HealthManager enemy)
+    {
+        _killedEnemies++;
+        if (_killedEnemies >= NeededEnemies)
+        {
+            _killedEnemies = 0;
+            HeroController.instance.AddHealth(1);
+        }
     }
 
     protected override void Disable()
     {
-        On.HealthManager.Die -= HealthManager_Die;
+        CombatController.EnemyKilled -= CombatController_EnemyKilled;
         CombatController.TookDamage -= CombatController_TookDamage;
     }
 
     private void CombatController_TookDamage() => _killedEnemies = 0;
-
-    private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
-    {
-        orig(self, attackDirection, attackType, ignoreEvasion);
-        if (self.GetComponent<BaseEnemy>() != null)
-        {
-            _killedEnemies++;
-            if (_killedEnemies >= NeededEnemies)
-            {
-                _killedEnemies = 0;
-                HeroController.instance.AddHealth(1);
-            }
-        }
-    }
 }

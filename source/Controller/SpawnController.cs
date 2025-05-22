@@ -1,33 +1,47 @@
 ﻿using GlobalEnums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Controls the respawn in the starting room.
 /// </summary>
-internal static class Spawner
+internal static class SpawnController
 {
+    private static bool _enabled;
     private static string _warpScene;
 
-    internal static void Load()
+    //public static bool ContinueSpawn { get; set; }
+
+    internal static void Initialize()
     {
+        if (_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Enable Spawn Controller", KorzUtils.Enums.LogType.Debug);
         PDHelper.RespawnMarkerName = "SpawnPoint";
         PDHelper.RespawnScene = "Room_Colosseum_01";
+        //PDHelper.RespawnScene = ContinueSpawn 
+        //        ? "Room_Colosseum_01"
+        //        : "Room_nailmaster";
         PlayerData.instance.mapZone = MapZone.COLOSSEUM;
         PDHelper.RespawnType = 2;
-        PDHelper.RespawnFacingRight = true;
+        PDHelper.RespawnFacingRight = true; //!ContinueSpawn;
         PDHelper.HazardRespawnFacingRight = true;
-        PDHelper.ColosseumBronzeOpened = true;
         On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint += HeroController_LocateSpawnPoint;
+        _enabled = true;
     }
 
     internal static void Unload()
     {
+        if (!_enabled)
+            return;
+        LogHelper.Write<TrialOfCrusaders>("Disable Spawn Controller", KorzUtils.Enums.LogType.Debug);
         On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint -= HeroController_LocateSpawnPoint;
+        _enabled = false;
     }
 
     private static Transform HeroController_LocateSpawnPoint(On.HeroController.orig_LocateSpawnPoint orig, HeroController self)
@@ -41,8 +55,22 @@ internal static class Spawner
             tag = "RespawnPoint"
         };
         gameObject.transform.position = new(15.95f, 6.4f);
-        gameObject.AddComponent<RespawnMarker>().respawnFacingRight = true;
+        //gameObject.transform.position = ContinueSpawn 
+        //    ? new(19.52f, 4.4f)
+        //    : new(15.95f, 6.4f);
+        gameObject.AddComponent<RespawnMarker>().respawnFacingRight = true;//!ContinueSpawn;
         gameObject.SetActive(true);
+
+        //if (ContinueSpawn)
+        //{
+        //    GameObject gate = GameObject.Instantiate(Gate.Prefab);
+        //    gate.transform.position = new(26.33f, 5.4f);
+        //    gate.SetActive(true);
+        //    gate.transform.SetRotation2D(180f);
+        //    CoroutineHelper.WaitFrames(() => PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE"), true);
+        //    CoroutineHelper.WaitForHero(() => ContinueSpawn = false, true);
+        //}
+
         return gameObject.transform;
     }
 
@@ -52,8 +80,13 @@ internal static class Spawner
         {
             PlayerData.instance.SetInt(nameof(PlayerData.instance.respawnType), 2);
             info.SceneName = "Room_Colosseum_01";
+            //info.SceneName = ContinueSpawn 
+            //    ? "Room_nailmaster" 
+            //    : "Room_Colosseum_01";
             info.EntryGateName = "left1";
             _warpScene = info.SceneName;
+            //if (ContinueSpawn)
+            //    StageController.Initialize();
         }
         orig(self, info);
     }
