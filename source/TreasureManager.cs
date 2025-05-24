@@ -451,7 +451,7 @@ public static class TreasureManager
 
     #region Selection Handling
 
-    private static int _powerSet = 32;
+    //private static int _powerSet = 32;
 
     internal static GameObject CreatePowerOverlay(PlayMakerFSM fsm, int optionAmount)
     {
@@ -485,9 +485,9 @@ public static class TreasureManager
         text.alignment = TextAlignmentOptions.Center;
         text.textContainer.size = new(5f, 1f);
         powerOverlay.SetActive(true);
-        _powerSet++;
-        if (_powerSet == 40)
-            LogHelper.Write("Called last power set.");
+        //_powerSet++;
+        //if (_powerSet == 40)
+        //    LogHelper.Write("Called last power set.");
         return powerOverlay;
     }
 
@@ -572,8 +572,8 @@ public static class TreasureManager
         string powerName = optionName.Contains("_")
             ? optionName.Split('_')[0]
             : optionName;
-        //Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
-        Power selectedPower = Powers[count + _powerSet * 3];
+        Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
+        //Power selectedPower = Powers[count + _powerSet * 3];
         if (selectedPower != null)
         {
             titleText.text = selectedPower.Name;
@@ -755,7 +755,7 @@ public static class TreasureManager
         if (pickedPower != null)
         {
             CombatController.ObtainedPowers.Add(pickedPower);
-            //pickedPower.EnablePower();
+            pickedPower.EnablePower();
         }
         shinyFsm.SendEvent("CHARM");
     }
