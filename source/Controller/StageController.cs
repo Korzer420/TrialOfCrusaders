@@ -204,7 +204,7 @@ internal static class StageController
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
-
+                    
                     // Treasure rooms can only appear under these conditions:
                     // Not later than 115.
                     // Not earlier than 10.

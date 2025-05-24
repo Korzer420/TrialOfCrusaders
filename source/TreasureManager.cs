@@ -29,7 +29,7 @@ public static class TreasureManager
 
     private static GameObject _glow;
 
-    public static Sprite BackgroundSprite
+    internal static Sprite BackgroundSprite
     {
         get
         {

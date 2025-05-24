@@ -39,6 +39,14 @@ public class ScoreData
 
     public float PassedTime { get; set; }
 
+    public int TakenHits { get; set; }
+
+    public int Score { get; set; }
+
+    public int Essences { get; set; }
+
+    public bool HitlessFinalBoss { get; set; }
+
     #endregion
 
     public ScoreData Copy() => new()
@@ -49,6 +57,7 @@ public class ScoreData
         TotalHitlessRooms = TotalHitlessRooms,
         HighestHitlessRoomStreak = HighestHitlessRoomStreak,
         HighestKillStreak = HighestKillStreak,
-        PassedTime = PassedTime
+        PassedTime = PassedTime,
+        TakenHits = TakenHits
     };
 }

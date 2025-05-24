@@ -26,8 +26,6 @@ public static class ScoreController
 
     public static ScoreData Score { get; set; } = new();
 
-    public static bool HitlessFinalBoss { get; set; }
-
     public static int BonusGeo { get; set; }
 
     #endregion
@@ -153,7 +151,7 @@ public static class ScoreController
                     Score.HitlessBosses++;
                 if (StageController.CurrentRoomNumber == 120)
                 { 
-                    HitlessFinalBoss = true;
+                    Score.HitlessFinalBoss = true;
                     StopTimer();
                 }
                 Score.CurrentHitlessRoomStreak++;
@@ -166,6 +164,7 @@ public static class ScoreController
     {
         _tookDamage = true;
         Score.CurrentKillStreak = 0;
+        Score.TakenHits++;
     } 
 
     #endregion
@@ -214,7 +213,7 @@ public static class ScoreController
         Score.TotalHitlessRooms = 34;
         Score.HighestHitlessRoomStreak = 20;
         Score.HitlessBosses = 4;
-        HitlessFinalBoss = true;
+        Score.HitlessFinalBoss = true;
 #endif
         /*
          Score:
@@ -236,7 +235,7 @@ public static class ScoreController
             new("Flawless stage bonus:", Score.TotalHitlessRooms * 20),
             new("Perfect streak bonus:", Score.HighestHitlessRoomStreak * 20),
             new("Perfect boss bonus:", Score.HitlessBosses * 200),
-            new("Perfect final bonus:", HitlessFinalBoss ? 1000 : 0),
+            new("Perfect final bonus:", Score.HitlessFinalBoss ? 1000 : 0),
         ];
         values.Add(new("Final score:", values.Select(x => x.Item2).Sum()));
         int position = 225;

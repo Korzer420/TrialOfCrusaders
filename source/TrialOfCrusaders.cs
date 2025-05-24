@@ -142,9 +142,10 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void GameManager_StartNewGame(On.GameManager.orig_StartNewGame orig, GameManager self, bool permadeathMode, bool bossRushMode)
     {
         //Spawner.ContinueSpawn = false;
-        //SpawnController.Initialize();
+        SpawnController.Initialize();
         self.ContinueGame();
-        //HubController.Initialize();
+        HubController.Initialize();
+        HistoryController.Initialize();
         PDHelper.CorniferAtHome = true;
         PDHelper.ColosseumBronzeOpened = true;
         PDHelper.GiantFlyDefeated = true;
