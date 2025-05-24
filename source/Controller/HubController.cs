@@ -123,14 +123,14 @@ internal static class HubController
             CoroutineHelper.WaitUntil(() =>
             {
                 GameObject pedestal = new("Pedestal");
-                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
                 pedestal.transform.position = new(104.68f, 15.4f, 0);
                 pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
                 pedestal.layer = 8; // Terrain layer
                 pedestal.SetActive(true);
 
                 pedestal = new("Pedestal2");
-                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
                 pedestal.transform.position = new(109f, 15.4f, 0);
                 pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
                 pedestal.layer = 8; // Terrain layer
@@ -172,7 +172,7 @@ internal static class HubController
                 obstacleGameObject.SetActive(false);
                 obstacleGameObject.transform.position = new(xPosition, yPosition, -0.08f);
                 obstacleGameObject.transform.localScale = new(2f, 2f, 1f);
-                obstacleGameObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Tablet");
+                obstacleGameObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Mirror");
                 obstacleGameObject.AddComponent<BoxCollider2D>().size = new(1f, 1f);
                 obstacleGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
                 obstacleGameObject.AddComponent<TinkEffect>().blockEffect = ConcussionEffect.ConcussionObject.GetComponent<TinkEffect>().blockEffect;

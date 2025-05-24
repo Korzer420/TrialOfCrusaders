@@ -14,7 +14,7 @@ internal class RoyalMark : MonoBehaviour
         if (GetComponent<SpriteRenderer>() is not SpriteRenderer renderer)
             renderer = gameObject.AddComponent<SpriteRenderer>();
         renderer.sortingOrder = 1;
-        renderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.KingsBrand");
+        renderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.KingsBrand");
         CorrectPosition();
     }
 

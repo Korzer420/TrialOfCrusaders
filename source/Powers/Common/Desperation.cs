@@ -1,6 +1,6 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Powers.Uncommon;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 

@@ -6,7 +6,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
-namespace TrialOfCrusaders.Powers.Uncommon;
+namespace TrialOfCrusaders.Powers.Rare;
 
 internal class InUtterDarkness : Power
 {
@@ -14,16 +14,16 @@ internal class InUtterDarkness : Power
 
     public static GameObject Sibling { get; set; }
 
-    public override (float, float, float) BonusRates => new(40f, 0f, 0f);
+    public override (float, float, float) BonusRates => new(50f, 50f, 0f);
 
-    public override Rarity Tier => Rarity.Uncommon;
+    public override Rarity Tier => Rarity.Rare;
 
     public bool EffectGranted { get; set; }
 
     protected override void Enable()
     {
-        //if (!EffectGranted)
-        //    HeroController.instance.MaxHealth();
+        if (!EffectGranted)
+            HeroController.instance.MaxHealth();
         EffectGranted = true;
         On.HeroController.AddHealth += HeroController_AddHealth;
         On.HutongGames.PlayMaker.Actions.SetVector3Value.OnEnter += SetVector3Value_OnEnter;
@@ -31,16 +31,16 @@ internal class InUtterDarkness : Power
         On.SetHP.OnEnter += SetHP_OnEnter;
     }
 
-    private void SetVector3Value_OnEnter(On.HutongGames.PlayMaker.Actions.SetVector3Value.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SetVector3Value self)
+    private void SetVector3Value_OnEnter(On.HutongGames.PlayMaker.Actions.SetVector3Value.orig_OnEnter orig, SetVector3Value self)
     {
         if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*"))
         {
             int amount = self.Fsm.Variables.FindFsmInt("Health Increase").Value;
-            GameObject shade = GameObject.Instantiate(GameManager.instance.sm.hollowShadeObject);
+            GameObject shade = Object.Instantiate(GameManager.instance.sm.hollowShadeObject);
             shade.SetActive(true);
             shade.name = "Void Shade";
             shade.transform.position = HeroController.instance.transform.position + new Vector3(0f, 2f, 0f);
-            GameObject voidZone = GameObject.Instantiate(VoidZone.Ring, shade.transform);
+            GameObject voidZone = Object.Instantiate(VoidZone.Ring, shade.transform);
             voidZone.transform.SetParent(shade.transform);
             voidZone.transform.localPosition = new(0f, 0f);
             voidZone.transform.localScale = new(1f, 1f);

@@ -4,6 +4,7 @@ using MonoMod.Cil;
 using System;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -16,6 +17,8 @@ internal class CarefreeMelody : Power
     public override Rarity Tier => Rarity.Uncommon;
 
     public override bool CanAppear => !HasPower<Grimmchild>() && !HasPower<CarefreeMelody>();
+
+    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {

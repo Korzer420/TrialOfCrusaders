@@ -340,9 +340,9 @@
     <value>Geo value is slightly increased.</value>
   </data>
   <data name="InUtterDarkness" xml:space="preserve">
-    <value>Fully heals you. You can no longer heal. Focus now spawns a void zone.</value>
+    <value>Fully heals you. You can no longer heal. Focus now spawns a shade which afflicts debuffs.</value>
   </data>
-  <data name="Kingssoul" xml:space="preserve">
+  <data name="Kingsoul" xml:space="preserve">
     <value>Slowly generates soul.</value>
   </data>
   <data name="LifebloodOmen" xml:space="preserve">
@@ -361,9 +361,9 @@
     <value>Attacks in the same direction within half a second second grant stacking attack speed.</value>
   </data>
   <data name="Mindblast" xml:space="preserve">
-    <value>Dream nail applies shattered mind, permanently causes enemies to take increased damage.</value>
+    <value>Dream nail applies shattered mind.</value>
   </data>
-  <data name="NailMastersGlory" xml:space="preserve">
+  <data name="NailmastersGlory" xml:space="preserve">
     <value>Decreases the charge time of nail arts.</value>
   </data>
   <data name="NailProdigy" xml:space="preserve">
@@ -455,6 +455,9 @@
   </data>
   <data name="ThornsOfAgony" xml:space="preserve">
     <value>Getting hit let thorns attack nearby enemies.</value>
+  </data>
+  <data name="TreasureHunter" xml:space="preserve">
+    <value>Increases the chance of finding a treasure room.</value>
   </data>
   <data name="Vanish" xml:space="preserve">
     <value>Killing an enemy grants short invincibility.</value>

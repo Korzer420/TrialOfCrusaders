@@ -1,20 +1,19 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
 internal class ImprovedGrimmchild : Power
 {
-    public override string Name => "Improved Grimmchild";
-
-    public override string Description => "Scarlet energy flows through the Grimmchild increasing its power.";
-
     public override (float, float, float) BonusRates => new(95f, 0f, 5f);
 
     public override Rarity Tier => Rarity.Rare;
 
     public override bool CanAppear => HasPower<ImprovedGrimmchild>();
+
+    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {

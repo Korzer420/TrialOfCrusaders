@@ -160,9 +160,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
     {
         //Spawner.ContinueSpawn = true;
-        SpawnController.Initialize();
+        //SpawnController.Initialize();
         orig(self);
-        HubController.Initialize();
+        //HubController.Initialize();
     }
 
     private IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)

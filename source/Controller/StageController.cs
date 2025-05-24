@@ -10,6 +10,7 @@ using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
+using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
@@ -215,6 +216,8 @@ internal static class StageController
                         float chance = 0.5f;
                         if (CombatController.HasPower<Damocles>(out _))
                             chance += 4.5f;
+                        if (CombatController.HasPower<TreasureHunter>(out _))
+                            chance += 2.5f;
                         UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
                         if (UpcomingTreasureRoom)
                             _treasureRoomCooldown = 6;
@@ -258,7 +261,7 @@ internal static class StageController
         if (QuietRoom && CurrentRoomIndex != -1 && self.name == "right1")
         {
             GameObject pedestal = new("Pedestal");
-            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
+            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
             pedestal.transform.position = new(94.23f, 14.8f, -0.1f);
             pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
             pedestal.layer = 8; // Terrain layer

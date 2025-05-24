@@ -1,10 +1,13 @@
 ﻿using KorzUtils.Helper;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class DashSlash : Power
 {
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+
+    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     public override bool CanAppear => PDHelper.HasDash;
 

@@ -1,7 +1,6 @@
 ﻿using KorzUtils.Helper;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.Debuffs;
@@ -63,15 +62,17 @@ public abstract class Power : IEquatable<Power>
         {
             string description = Resources.Text.PowerDescriptions.ResourceManager.GetString(GetType().Name);
             // Apply debuff colors
-            description.Replace(" bleed", $"<color={BleedEffect.TextColor}> bleed</color>");
-            description.Replace(" concussion", $"<color={ConcussionEffect.TextColor}> concussion</color>");
-            description.Replace(" burn", $"<color={BurnEffect.TextColor}> burn</color>");
-            description.Replace(" weakenend", $"<color={WeakenedEffect.TextColor}> weakenend</color>");
-            description.Replace(" root", $"<color={RootEffect.TextColor}> root</color>");
-            description.Replace(" shattered mind", $"<color={ShatteredMindEffect.TextColor}> shattered mind</color>");
+            description = description.Replace(" bleed", $"<color={BleedEffect.TextColor}> bleed</color>");
+            description = description.Replace(" concussion", $"<color={ConcussionEffect.TextColor}> concussion</color>");
+            description = description.Replace(" burn", $"<color={BurnEffect.TextColor}> burn</color>");
+            description = description.Replace(" weakenend", $"<color={WeakenedEffect.TextColor}> weakenend</color>");
+            description = description.Replace(" root", $"<color={RootEffect.TextColor}> root</color>");
+            description = description.Replace(" shattered mind", $"<color={ShatteredMindEffect.TextColor}> shattered mind</color>");
             return description;
         }
     }
+
+    public virtual Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.Placeholder"); //SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     #endregion
 

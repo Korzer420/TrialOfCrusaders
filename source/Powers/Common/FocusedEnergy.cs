@@ -1,6 +1,6 @@
 ﻿using System;
 using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Powers.Uncommon;
+using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -10,7 +10,7 @@ internal class FocusedEnergy : Power
 
     public bool Activated { get; set; }
 
-    public override string Description => $"Grant {Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel)} lifeblood.";
+    public override string Description => $"Grant {Math.Max(Math.Max(CombatController.EnduranceLevel, CombatController.CombatLevel), CombatController.SpiritLevel)} lifeblood. Scales with your highest stat.";
 
     public override (float, float, float) BonusRates => new(3f, 3f, 4f);
 

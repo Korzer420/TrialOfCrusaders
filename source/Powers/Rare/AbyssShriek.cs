@@ -2,6 +2,7 @@
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -12,6 +13,8 @@ internal class AbyssShriek : Power
     public override Rarity Tier => Rarity.Rare;
 
     public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
+
+    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {

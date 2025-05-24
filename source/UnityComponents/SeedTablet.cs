@@ -11,16 +11,16 @@ internal class SeedTablet : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private static List<string> _seedSprites =
     [
-        "Crystal_Dash",
-        "Cyclone_Slash",
-        "Desolate_Dive",
-        "Great_Slash",
-        "Howling_Wraiths",
-        "Ismas_Tear",
-        "Mantis_Claw",
-        "Monarch_Wings",
-        "Mothwing_Cloak",
-        "Vengeful_Spirit"
+        "CrystalDash",
+        "CycloneSlash",
+        "DesolateDive",
+        "GreatSlash",
+        "HowlingWraiths",
+        "IsmasTear",
+        "MantisClaw",
+        "MonarchWings",
+        "MothwingCloak",
+        "VengefulSpirit"
     ];
 
     public int Index { get; set; }
@@ -30,7 +30,7 @@ internal class SeedTablet : MonoBehaviour
     void Start()
     {
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.AbilitySprites." + _seedSprites[Number]);
+        spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + _seedSprites[Number]);
     }
 
     void Update() => _cooldown = Math.Max(0, _cooldown - Time.deltaTime);
@@ -43,6 +43,6 @@ internal class SeedTablet : MonoBehaviour
         Number++;
         if (Number == 10)
             Number = 0;
-        spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.AbilitySprites." + _seedSprites[Number]);
+        spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + _seedSprites[Number]);
     }
 }

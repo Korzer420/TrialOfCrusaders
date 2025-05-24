@@ -4,7 +4,7 @@ using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 
-namespace TrialOfCrusaders.Powers.Rare;
+namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class HotStreak : Power
 {
@@ -18,9 +18,9 @@ internal class HotStreak : Power
 
     #region Properties
 
-    public override Rarity Tier => Rarity.Rare;
+    public override Rarity Tier => Rarity.Uncommon;
 
-    public override (float, float, float) BonusRates => new(80f, 0f, 0f); 
+    public override (float, float, float) BonusRates => new(40f, 0f, 0f);
 
     #endregion
 

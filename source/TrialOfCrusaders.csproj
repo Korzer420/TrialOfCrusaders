@@ -18,46 +18,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Sprites\Border\Power_Border.png" />
-	  <None Remove="Resources\Sprites\Border\Stat_Border_Lower.png" />
-	  <None Remove="Resources\Sprites\Border\Stat_Border_Upper.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\Data\Backup_RoomData.json" />
-	  <EmbeddedResource Include="Resources\Data\RoomData.json" />
-	  <EmbeddedResource Include="Resources\SoundEffects\Room_Clear.wav" />
-	  <EmbeddedResource Include="Resources\SoundEffects\Run_Finished.wav" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Crystal_Dash.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Cyclone_Slash.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Desolate_Dive.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Great_Slash.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Howling_Wraiths.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Ismas_Tear.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Mantis_Claw.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Monarch_Wings.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Mothwing_Cloak.png" />
-	  <EmbeddedResource Include="Resources\Sprites\AbilitySprites\Vengeful_Spirit.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Arrow.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Border\Power_Border.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Border\Stat_Border_Lower.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Border\Stat_Border_Upper.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Crossroads.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Claw_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Combat_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Crystal_Dash_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Dash_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Desolate_Dive_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Endurance_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Lantern_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Shade_Dash_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Spirit_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Tear_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Vengeful_Spirit_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Icons\Wings_Icon.png" />
-	  <EmbeddedResource Include="Resources\Sprites\KingsBrand.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Pedestal.png" />
-	  <EmbeddedResource Include="Resources\Sprites\Tablet.png" />
+		<EmbeddedResource Include="Resources\**\*" Exclude="Resources\Text\*.resx"/>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -115,30 +76,6 @@
 		<Reference Include="UnityEngine.UI">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>
 		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Resources\Text\LittleFoolDialog.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>LittleFoolDialog.resx</DependentUpon>
-	  </Compile>
-	  <Compile Update="Resources\Text\PowerDescriptions.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Text\LittleFoolDialog.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>LittleFoolDialog.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>PowerDescriptions.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
 	</ItemGroup>
 
 	<Target Name="CopyMod" AfterTargets="PostBuildEvent">

@@ -114,7 +114,7 @@ public static class ScoreController
         {
             // 102.41, 6.4
             GameObject pedestal = new("Pedestal");
-            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Pedestal");
+            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
             pedestal.transform.position = new(102.41f, 6.2f, -0.1f);
             pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.4f);
             pedestal.transform.localScale = new(2f, 2f);

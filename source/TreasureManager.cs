@@ -2,6 +2,7 @@
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ public static class TreasureManager
         new Sporeshroom(),
         new SharpShadow(),
         new Weaversong(),
-        new Dreamshield(),
+        new DreamShield(),
         new GrubberflysElegy(),
         new GatheringSwarm(),
         new DreamNail(),
@@ -101,6 +102,9 @@ public static class TreasureManager
         new Vanish(),
         new Damocles(),
         new PolarityShift(),
+        new LifebloodOmen(),
+        new DeepBreath(),
+        new SeethingLifeblood(),
         // Uncommon
         new SoulEater(),
         new Dashmaster(),
@@ -141,12 +145,13 @@ public static class TreasureManager
         new FragileSpirit(),
         new ImprovedMonarchWings(),
         new MercilessPursuit(),
-        new InUtterDarkness(),
+        new HotStreak(),
         // Rare
+        new InUtterDarkness(),
         new ShamanStone(),
         new QuickSlash(),
-        new Kingssoul(),
-        new NailMastersGlory(),
+        new Kingsoul(),
+        new NailmastersGlory(),
         new DreamWielder(),
         new ShadeSoul(),
         new DescendingDark(),
@@ -160,8 +165,9 @@ public static class TreasureManager
         new EchoingScream(),
         new ImprovedFocus(),
         new PaleShell(),
-        new VoidHeart(),
-        new ShiningBound()
+        new TreasureHunter(),
+        new ShiningBound(),
+        new VoidHeart()
     ];
 
     public static int BadLuckProtection { get; set; } = 0;
@@ -445,6 +451,8 @@ public static class TreasureManager
 
     #region Selection Handling
 
+    private static int _powerSet = 32;
+
     internal static GameObject CreatePowerOverlay(PlayMakerFSM fsm, int optionAmount)
     {
         GameObject powerOverlay = new("Power overlay");
@@ -477,6 +485,9 @@ public static class TreasureManager
         text.alignment = TextAlignmentOptions.Center;
         text.textContainer.size = new(5f, 1f);
         powerOverlay.SetActive(true);
+        _powerSet++;
+        if (_powerSet == 40)
+            LogHelper.Write("Called last power set.");
         return powerOverlay;
     }
 
@@ -552,7 +563,7 @@ public static class TreasureManager
         option.transform.GetChild(0).localPosition = new(0f, -2f);
         GameObject text = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
         TextMeshPro description = text.GetComponent<TextMeshPro>();
-        description.textContainer.size = new(2f, 5f);
+        description.textContainer.size = new(2.5f, 5f);
         description.alignment = TextAlignmentOptions.Center;
         description.fontSize = 2f;
         description.enableWordWrapping = true;
@@ -561,13 +572,13 @@ public static class TreasureManager
         string powerName = optionName.Contains("_")
             ? optionName.Split('_')[0]
             : optionName;
-        Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
+        //Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
+        Power selectedPower = Powers[count + _powerSet * 3];
         if (selectedPower != null)
         {
             titleText.text = selectedPower.Name;
             description.text = selectedPower.Description;
-            // ToDo: Implement proper sprites.
-            option.GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Crossroads");
+            option.GetComponent<SpriteRenderer>().sprite = selectedPower.Sprite;
 
             GameObject rarity = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
             TextMeshPro rarityText = rarity.GetComponent<TextMeshPro>();
@@ -655,7 +666,7 @@ public static class TreasureManager
         rotateLeftArrow.transform.SetParent(parent);
         rotateLeftArrow.transform.localPosition = new(-9f, 1.7f);
         rotateLeftArrow.transform.localScale = new(3f, 3f);
-        rotateLeftArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Arrow");
+        rotateLeftArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         rotateLeftArrow.GetComponent<SpriteRenderer>().flipX = true;
         rotateLeftArrow.GetComponent<SpriteRenderer>().sortingLayerID = 629535577;
         rotateLeftArrow.SetActive(true);
@@ -664,7 +675,7 @@ public static class TreasureManager
         rotateRightArrow.transform.SetParent(parent);
         rotateRightArrow.transform.localPosition = new(-3.4f, 1.7f);
         rotateRightArrow.transform.localScale = new(3f, 3f);
-        rotateRightArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Arrow");
+        rotateRightArrow.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         rotateRightArrow.GetComponent<SpriteRenderer>().sortingLayerID = 629535577;
         rotateRightArrow.SetActive(true);
 
@@ -744,7 +755,7 @@ public static class TreasureManager
         if (pickedPower != null)
         {
             CombatController.ObtainedPowers.Add(pickedPower);
-            pickedPower.EnablePower();
+            //pickedPower.EnablePower();
         }
         shinyFsm.SendEvent("CHARM");
     }

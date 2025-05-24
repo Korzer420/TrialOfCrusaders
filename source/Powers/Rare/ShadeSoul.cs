@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -11,6 +12,8 @@ internal class ShadeSoul : Power
     public override Rarity Tier => Rarity.Rare;
 
     public override bool CanAppear => HasPower<VengefulSpirit>();
+
+    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {
