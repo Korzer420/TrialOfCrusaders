@@ -111,9 +111,7 @@ internal static class SetupManager
         }
         bool fireballFirst = RngProvider.GetRandom(0, 1) == 1;
         int dashRoom, clawRoom, wingRoom, cDashRoom, tearRoom, shadeCloakRoom, lanternRoom;
-        dashRoom = RngProvider.GetRandom(2, 60);
-        while (dashRoom > 37 && dashRoom < 43)
-            dashRoom = RngProvider.GetRandom(2, 60);
+        dashRoom = RngProvider.GetRandom(2, 30);
         availableAbilityRooms.RemoveAll(x => x >= dashRoom - 3 && x <= dashRoom + 3);
         // Claw should be forced fairly early (as it opens many rooms)
         List<int> clawSelection = [.. availableAbilityRooms.Where(x => x <= 30)];

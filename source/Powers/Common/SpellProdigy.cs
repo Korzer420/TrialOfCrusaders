@@ -13,13 +13,15 @@ internal class SpellProdigy : Power
     protected override void Enable()
     {
         On.HeroController.Attack += HeroController_Attack;
-        StageController.RoomEnded += StageController_RoomCleared;
+        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
 
     protected override void Disable()
     {
         On.HeroController.Attack -= HeroController_Attack;
-        StageController.RoomEnded -= StageController_RoomCleared;
+        CombatController.EnemiesCleared -= CombatController_EnemiesCleared;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
     }
 
     private void HeroController_Attack(On.HeroController.orig_Attack orig, HeroController self, GlobalEnums.AttackDirection attackDir)
@@ -28,10 +30,12 @@ internal class SpellProdigy : Power
         orig(self, attackDir);
     }
 
-    private void StageController_RoomCleared(bool quietRoom)
+    private void CombatController_EnemiesCleared()
     {
-        if (!quietRoom && !_nailUsed && CombatController.SpiritLevel < 20 && RngProvider.GetStageRandom(1, 10) <= 2)
+        if (!_nailUsed && CombatController.SpiritLevel < 20 && RngProvider.GetStageRandom(1, 10) <= 2)
             TreasureManager.SpawnShiny(Enums.TreasureType.SpiritOrb, HeroController.instance.transform.position);
-        _nailUsed = false;
+        _nailUsed = true;
     }
+
+    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1) => _nailUsed = false;
 }

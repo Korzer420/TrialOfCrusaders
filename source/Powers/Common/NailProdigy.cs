@@ -16,13 +16,17 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
-        StageController.RoomEnded += StageController_RoomCleared;
+        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
     }
 
-    private void StageController_RoomCleared(bool quietRoom)
+    private void CombatController_EnemiesCleared()
     {
-        if (!quietRoom && !_spellUsed && CombatController.CombatLevel < 20 && RngProvider.GetStageRandom(1, 10) == 1)
-            TreasureManager.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
+        if (!_spellUsed)
+        {
+            if (CombatController.CombatLevel < 20 && !StageController.CurrentRoom.BossRoom && RngProvider.GetStageRandom(1, 20) == 1)
+                TreasureManager.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
+            _spellUsed = true;
+        }
     }
 
     private void Tk2dPlayFrame_OnEnter(On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Tk2dPlayFrame self)
@@ -44,11 +48,8 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter -= SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
-        StageController.RoomEnded -= StageController_RoomCleared;
+        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
     }
 
-    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
-    {
-        _spellUsed = false;
-    }
+    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1) => _spellUsed = false;
 }

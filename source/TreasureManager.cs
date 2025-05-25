@@ -763,7 +763,6 @@ public static class TreasureManager
             pickedPower.EnablePower();
         }
         shinyFsm.SendEvent("CHARM");
-        EventRegister.SendEvent("ADD BLUE HEALTH");
         if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)
             TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
     }
