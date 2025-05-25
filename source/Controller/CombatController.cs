@@ -738,6 +738,7 @@ public static class CombatController
 
     private static int ModHooks_SoulGainHook(int amount)
     {
+        amount = SpiritLevel + 3;
         if (HasPower(out Versatility versatility) && versatility.CastedSpell)
             amount += 2 + (SpiritLevel + CombatLevel) / 8;
         if (HasPower(out Powers.Common.Caching caching))

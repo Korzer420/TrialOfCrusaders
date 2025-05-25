@@ -245,7 +245,8 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Combat_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_COMBAT";
                     GameHelper.OneTimeMessage("INV_NAME_COMBAT", "Combat Up", "UI");
-                    CombatController.CombatLevel++;
+                    if (CombatController.CombatLevel < 20)
+                        CombatController.CombatLevel++;
                     PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
                     fsm.SendEvent("TRINKET");
                     break;
@@ -253,18 +254,22 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Spirit_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPIRIT";
                     GameHelper.OneTimeMessage("INV_NAME_SPIRIT", "Spirit Up", "UI");
-                    CombatController.SpiritLevel++;
+                    if (CombatController.SpiritLevel < 20)
+                        CombatController.SpiritLevel++;
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.EnduranceOrb:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Endurance_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_ENDURANCE";
                     GameHelper.OneTimeMessage("INV_NAME_ENDURANCE", "Endurance Up", "UI");
-                    CombatController.EnduranceLevel++;
-                    EnduranceHealthGrant = true;
-                    HeroController.instance.AddHealth(1);
-                    EnduranceHealthGrant = false;
-                    PlayMakerFSM.BroadcastEvent("MAX HP UP");
+                    if (CombatController.EnduranceLevel < 20)
+                    {
+                        CombatController.EnduranceLevel++;
+                        EnduranceHealthGrant = true;
+                        HeroController.instance.AddHealth(1);
+                        EnduranceHealthGrant = false;
+                        PlayMakerFSM.BroadcastEvent("MAX HP UP");
+                    }
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Dash:
@@ -629,8 +634,8 @@ public static class TreasureManager
             description.text = powerName switch
             {
                 "Combat" => "Increases your nail damage. Abilities marked with (C) scale with your combat level.",
-                "Spirit" => "Increases the amount of soul you can have. Abilities marked with (S) scale with your spirit level.",
-                "Endurance" => "Increases your maximum health. Abilities marked with (E) scale with your endurance level.",
+                "Spirit" => "Increases the amount of soul you can have and receive. Abilities marked with (S) scale with your spirit level.",
+                "Endurance" => "Increases your maximum and current health. Abilities marked with (E) scale with your endurance level.",
                 _ => "If nothing else, geo is always there."
             };
             option.GetComponent<SpriteRenderer>().sprite = powerName switch
