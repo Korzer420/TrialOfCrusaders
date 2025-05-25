@@ -41,7 +41,13 @@ internal static class HubController
         PDHelper.QuakeLevel = 0;
         PDHelper.Geo = 0;
         PDHelper.DreamOrbs = 0;
-
+        PDHelper.HasDreamNail = true;
+        PDHelper.MaxHealth = 5;
+        PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
+        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
+        TrialOfCrusaders.Instance.RunActive = false;
+        
         _enabled = true;
     }
 
@@ -70,7 +76,13 @@ internal static class HubController
         transitions.Remove(left);
         Object.Destroy(left);
         transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
-        CoroutineHelper.WaitForHero(() => GameManager.instance.SaveGame(), true);
+        CoroutineHelper.WaitForHero(() =>
+        {
+            GameManager.instance.SaveGame();
+            GameObject.Find("_GameCameras").transform.Find("HudCamera/Hud Canvas/Geo Counter").gameObject
+                .LocateMyFSM("Geo Counter")
+                .SendEvent("TO ZERO");
+        }, true);
     } 
 
     #endregion
@@ -108,10 +120,7 @@ internal static class HubController
             info.SceneName = "GG_Spa";
             info.EntryGateName = "door_dreamEnter";
             int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
-            if (finalSeed != _rolledSeed)
-            {
-                // ToDo: Flag for seeded run.
-            }
+            RngProvider.Seeded = finalSeed != _rolledSeed;
             StageController.CurrentRoomData = SetupManager.GenerateNormalRun(finalSeed);
             StageController.CurrentRoomIndex = -1;
 
@@ -119,9 +128,11 @@ internal static class HubController
             StageController.Initialize();
             ScoreController.Initialize();
             CombatController.Initialize();
+            HistoryController.Unload();
 
             CoroutineHelper.WaitUntil(() =>
             {
+                PDHelper.HasDreamNail = false;
                 GameObject pedestal = new("Pedestal");
                 pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
                 pedestal.transform.position = new(104.68f, 15.4f, 0);
@@ -138,11 +149,13 @@ internal static class HubController
                 // Spawn two orbs at the start.
                 TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
                 TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+                TrialOfCrusaders.Instance.RunActive = true;
                 Unload();
             }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
         }
         else if (info.SceneName == "Room_Colosseum_Bronze")
         {
+            PDHelper.HasDreamNail = false;
             info.SceneName = "Deepnest_East_10";
             info.EntryGateName = "left1";
         }
@@ -204,16 +217,6 @@ internal static class HubController
                 SpecialTransition transition = startTransition.AddComponent<SpecialTransition>();
                 transition.VanillaTransition = GameObject.Find("left1").GetComponent<TransitionPoint>();
                 transition.LoadIntoDream = true;
-            }, true);
-        }
-        else if (arg1.name == "GG_Spa")
-        {
-            CoroutineHelper.WaitForHero(() =>
-            {
-                GameObject startTransition = new("Start Transition");
-                SpecialTransition transition = startTransition.AddComponent<SpecialTransition>();
-                transition.VanillaTransition = GameObject.Find("right1").GetComponent<TransitionPoint>();
-                transition.LoadIntoDream = false;
             }, true);
         }
     } 

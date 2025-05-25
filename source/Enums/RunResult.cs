@@ -1,6 +1,6 @@
 ﻿namespace TrialOfCrusaders.Enums;
 
-internal enum RunResult
+public enum RunResult
 {
     /// <summary>
     /// Successfully ended the run.

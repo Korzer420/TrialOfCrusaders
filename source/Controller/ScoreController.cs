@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +28,6 @@ public static class ScoreController
 
     public static ScoreData Score { get; set; } = new();
 
-    public static int BonusGeo { get; set; }
-
     #endregion
 
     public static void Initialize()
@@ -40,98 +40,24 @@ public static class ScoreController
         StageController.RoomEnded += StageController_RoomEnded;
         On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable += SetupResultElements;
+        HistoryController.CreateEntry += HistoryController_CreateEntry;
         StartTimer();
-        _enabled = false;
-    }
-
-    private static void SetupResultElements(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
-    {
-        if (self.gameObject.name == "Colosseum Manager")
-        {
-            if (self.FsmName == "Manager")
-            {
-                // Skip unnecessary states.
-                self.GetState("Init").AdjustTransitions("Idle");
-                self.GetState("Init Cheer").RemoveFirstAction<ActivateGameObject>();
-                self.GetState("Init Cheer").AdjustTransitions("Extra Title Pause");
-                self.AddState("Wait", [new Wait() { time = 1f, finishEvent = self.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") }], FsmTransitionData.FromTargetState("Start Pause").WithEventName("FINISHED"));
-                self.GetState("Extra Title Pause").AdjustTransitions("Wait");
-                self.GetState("Start Pause").AddActions(() => self.gameObject.LocateMyFSM("Geo Pool").SendEvent("GIVE GEO"));
-
-                // Prevent vanilla trial from starting.
-                self.GetState("Waves Start").RemoveFirstAction<SendEventByName>();
-            }
-            else if (self.FsmName == "Geo Pool")
-            {
-                PDHelper.ColosseumGoldCompleted = true;
-                // Each power decreases the final value. 2 are ignored as spells are forced by room 40 and 80.
-                self.FsmVariables.FindFsmInt("Starting Pool").Value = Math.Max(100, 5000 - (CombatController.ObtainedPowers.Count - 2) * 100);
-                self.AddState("Wait for Result", () =>
-                {
-                    PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-                    GameObject inspect = UnityEngine.Object.Instantiate(StageController.TransitionObject);
-                    inspect.SetActive(true);
-                    inspect.transform.position = new(102.41f, 10.8f);
-                    inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
-                    PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
-                    FsmState state = fsm.GetState("Open UI");
-                    state.RemoveAllActions();
-                    state.AdjustTransition("FINISHED", "Take Control");
-                    fsm.AddState("Return Control", () => { HeroController.instance.RegainControl(); HeroController.instance.StartAnimationControl(); PlayMakerFSM.BroadcastEvent("SHINY PICKED UP"); UnityEngine.Object.Destroy(inspect); });
-                    fsm.AddState("Display Score", () =>
-                    {
-                        PlayMakerFSM.BroadcastEvent("CROWD CHEER");
-                        StageController.PlayClearSound(false);
-                        ScoreController.DisplayScore();
-                        PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-                    }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
-                    fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
-                    fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
-                    fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
-
-                    fsm = inspect.LocateMyFSM("npc_control");
-                    fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
-
-                    fsm.GetState("In Range").AddActions(() =>
-                    {
-                        Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
-                        UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
-                        promptObject.GetComponent<TextMeshPro>().text = "Finish";
-                    });
-                }, FsmTransitionData.FromTargetState("Open Gates").WithEventName("SHINY PICKED UP"));
-                self.GetState("Achieve Check").AdjustTransitions("Wait for Result");
-            }
-        }
-        orig(self);
-    }
-
-    private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
-    {
-        orig(self, setHazardMarker, preventRunBob);
-        if (GameManager.instance.sceneName.Contains("Bronze"))
-        {
-            // 102.41, 6.4
-            GameObject pedestal = new("Pedestal");
-            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
-            pedestal.transform.position = new(102.41f, 6.2f, -0.1f);
-            pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.4f);
-            pedestal.transform.localScale = new(2f, 2f);
-            pedestal.layer = 8; // Terrain layer
-            pedestal.SetActive(true);
-        }
+        _enabled = true;
     }
 
     public static void Unload()
     {
         if (!_enabled)
             return;
-        // ToDo: Tally score.
+        LogHelper.Write<TrialOfCrusaders>("Disable Score Controller", KorzUtils.Enums.LogType.Debug);
         CombatController.TookDamage -= CombatController_TookDamage;
         CombatController.EnemyKilled -= CombatController_EnemyKilled;
         StageController.RoomEnded -= StageController_RoomEnded;
+        On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
+        On.PlayMakerFSM.OnEnable -= SetupResultElements;
+        HistoryController.CreateEntry -= HistoryController_CreateEntry;
         StopTimer();
-        Score = new();
-        LogHelper.Write<TrialOfCrusaders>("Enable Score Controller", KorzUtils.Enums.LogType.Debug);
+        Score = null;
         _enabled = false;
     }
 
@@ -165,9 +91,19 @@ public static class ScoreController
         _tookDamage = true;
         Score.CurrentKillStreak = 0;
         Score.TakenHits++;
-    } 
+    }
 
     #endregion
+
+    private static void HistoryController_CreateEntry(HistoryData entry, Enums.RunResult result)
+    {
+        entry.Score = Score.Copy();
+        if (result == RunResult.Failed)
+            entry.Score.Score = PDHelper.GeoPool;
+        else if (result == RunResult.Forfeited)
+            entry.Score.Score = PDHelper.GeoPool;
+        entry.Score.Essence = PDHelper.DreamOrbs;
+    }
 
     #region Result show
 
@@ -333,6 +269,96 @@ public static class ScoreController
         }
         pointValue.text = $"{value.Item2}";
         _finishedScores++;
+    }
+
+    private static void SetupResultElements(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    {
+        if (self.gameObject.name == "Colosseum Manager")
+        {
+            if (self.FsmName == "Manager")
+            {
+                // Skip unnecessary states.
+                self.GetState("Init").AdjustTransitions("Idle");
+                self.GetState("Init Cheer").RemoveFirstAction<ActivateGameObject>();
+                self.GetState("Init Cheer").AdjustTransitions("Extra Title Pause");
+                self.AddState("Wait", [new Wait() { time = 1f, finishEvent = self.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") }], FsmTransitionData.FromTargetState("Start Pause").WithEventName("FINISHED"));
+                self.GetState("Extra Title Pause").AdjustTransitions("Wait");
+                self.GetState("Start Pause").AddActions(() => self.gameObject.LocateMyFSM("Geo Pool").SendEvent("GIVE GEO"));
+
+                // Prevent vanilla trial from starting.
+                self.GetState("Waves Start").RemoveFirstAction<SendEventByName>();
+            }
+            else if (self.FsmName == "Geo Pool")
+            {
+                PDHelper.ColosseumGoldCompleted = true;
+                // Each power decreases the final value. 2 are ignored as spells are forced by room 40 and 80.
+                self.FsmVariables.FindFsmInt("Starting Pool").Value = Math.Max(100, (CombatController.HasPower<VoidHeart>(out _) ? 5000 : 2500) - (CombatController.ObtainedPowers.Count - 2) * 50);
+                self.AddState("Wait for Result", () =>
+                {
+                    PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+                    GameObject inspect = UnityEngine.Object.Instantiate(StageController.TransitionObject);
+                    inspect.SetActive(true);
+                    inspect.transform.position = new(102.41f, 10.8f);
+                    inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
+                    PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
+                    FsmState state = fsm.GetState("Open UI");
+                    state.RemoveAllActions();
+                    state.AdjustTransition("FINISHED", "Take Control");
+                    fsm.AddState("Return Control", () =>
+                    {
+                        HeroController.instance.RegainControl();
+                        HeroController.instance.StartAnimationControl();
+                        PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
+                        HistoryController.TempEntry.Score.Score = PDHelper.Geo;
+                        HistoryController.TempEntry.RunId = HistoryController.TempEntry.RunId;
+                        HistoryController.History.Add(HistoryController.TempEntry);
+                        HistoryController.TempEntry = null;
+                        GameManager.instance.SaveGame();
+                        Unload();
+                        UnityEngine.Object.Destroy(inspect);
+                    });
+                    fsm.AddState("Display Score", () =>
+                    {
+                        PlayMakerFSM.BroadcastEvent("CROWD CHEER");
+                        StageController.PlayClearSound(false);
+                        DisplayScore();
+                        PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+                    }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
+                    fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
+                    fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
+                    fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
+
+                    fsm = inspect.LocateMyFSM("npc_control");
+                    fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
+
+                    fsm.GetState("In Range").AddActions(() =>
+                    {
+                        Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
+                        UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
+                        promptObject.GetComponent<TextMeshPro>().text = "Finish";
+                    });
+                }, FsmTransitionData.FromTargetState("Open Gates").WithEventName("SHINY PICKED UP"));
+                self.GetState("Achieve Check").AdjustTransitions("Wait for Result");
+            }
+        }
+        orig(self);
+    }
+
+    private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    {
+        orig(self, setHazardMarker, preventRunBob);
+        if (GameManager.instance.sceneName.Contains("Bronze"))
+        {
+            StopTimer();
+            // 102.41, 6.4
+            GameObject pedestal = new("Pedestal");
+            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+            pedestal.transform.position = new(102.41f, 6.2f, -0.1f);
+            pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.4f);
+            pedestal.transform.localScale = new(2f, 2f);
+            pedestal.layer = 8; // Terrain layer
+            pedestal.SetActive(true);
+        }
     }
 
     #endregion

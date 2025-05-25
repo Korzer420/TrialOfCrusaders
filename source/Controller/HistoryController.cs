@@ -13,6 +13,7 @@ namespace TrialOfCrusaders.Controller;
 
 internal static class HistoryController
 {
+    private static bool _active;
     private static int _pageIndex = 0;
     private static int _powerPageIndex = 0;
     private static Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookUp = [];
@@ -30,78 +31,111 @@ internal static class HistoryController
         "VengefulSpirit"
     ];
 
-    internal static GameObject UI { get; set; }
+    internal static event Action<HistoryData, RunResult> CreateEntry;
+
+    public static HistoryData TempEntry { get; set; } = new();
 
     internal static List<HistoryData> History { get; set; } = [];
 
     internal static void Initialize()
     {
+        if (_active)
+            return;
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
-
+        _active = true;
 #if DEBUG
-        for (int i = 1; i < 6; i++)
-        {
-            History.Add(new()
-            {
-                Seed = 987654320 + i,
-                CommonPowerAmount = 21 + i,
-                UncommonPowerAmount = 13 + i,
-                RarePowerAmount = 4 + i,
-                FinalCombatLevel = 15 + i,
-                FinalEnduranceLevel = 20 + i,
-                FinalSpiritLevel = 4 + i,
-                FinalRoomNumber = 100 + i,
-                Seeded = i % 2 == 0,
-                GameMode = GameMode.Normal,
-                ModVersion = TrialOfCrusaders.Instance.GetVersion(),
-                Result = (RunResult)(i % 3),
-                Score = new()
-                {
-                    TotalHitlessRooms = 24,
-                    HighestHitlessRoomStreak = 12,
-                    HighestKillStreak = 44,
-                    HitlessBosses = 2,
-                    PassedTime = 1800f,
-                    Score = 520 * i,
-                    Essences = 5 * i
-                },
-                Powers = [..TreasureManager.Powers.Select(x => x.Name)]
-            });
-            History[i - 1].RunId = History[i - 1].GetRunId();
-        }
-        History.Add(new()
-        {
-            Seed = 999999999,
-            CommonPowerAmount = 21,
-            UncommonPowerAmount = 13,
-            RarePowerAmount = 4,
-            FinalCombatLevel = 15,
-            FinalEnduranceLevel = 20,
-            FinalSpiritLevel = 4,
-            FinalRoomNumber = 100,
-            GameMode = GameMode.Normal,
-            ModVersion = TrialOfCrusaders.Instance.GetVersion(),
-            Result = RunResult.Forfeited,
-            Score = new()
-            {
-                TotalHitlessRooms = 24,
-                HighestHitlessRoomStreak = 12,
-                HighestKillStreak = 44,
-                HitlessBosses = 2,
-                PassedTime = 1800f,
-                TakenHits = 12,
-                Score = 123,
-                Essences = 10
-            },
-            RunId = 1
-        });
+        // Mock Data
+        //for (int i = 1; i < 6; i++)
+        //{
+        //    History.Add(new()
+        //    {
+        //        Seed = 987654320 + i,
+        //        CommonPowerAmount = 21 + i,
+        //        UncommonPowerAmount = 13 + i,
+        //        RarePowerAmount = 4 + i,
+        //        FinalCombatLevel = 15 + i,
+        //        FinalEnduranceLevel = 20 + i,
+        //        FinalSpiritLevel = 4 + i,
+        //        FinalRoomNumber = 100 + i,
+        //        Seeded = i % 2 == 0,
+        //        GameMode = GameMode.Normal,
+        //        ModVersion = TrialOfCrusaders.Instance.GetVersion(),
+        //        Result = (RunResult)(i % 3),
+        //        Score = new()
+        //        {
+        //            TotalHitlessRooms = 24,
+        //            HighestHitlessRoomStreak = 12,
+        //            HighestKillStreak = 44,
+        //            HitlessBosses = 2,
+        //            PassedTime = 1800f,
+        //            Score = 520 * i,
+        //            Essences = 5 * i
+        //        },
+        //        Powers = [..TreasureManager.Powers.Select(x => x.Name)]
+        //    });
+        //    History[i - 1].RunId = History[i - 1].GetRunId();
+        //}
+        //History.Add(new()
+        //{
+        //    Seed = 999999999,
+        //    CommonPowerAmount = 21,
+        //    UncommonPowerAmount = 13,
+        //    RarePowerAmount = 4,
+        //    FinalCombatLevel = 15,
+        //    FinalEnduranceLevel = 20,
+        //    FinalSpiritLevel = 4,
+        //    FinalRoomNumber = 100,
+        //    GameMode = GameMode.Normal,
+        //    ModVersion = TrialOfCrusaders.Instance.GetVersion(),
+        //    Result = RunResult.Forfeited,
+        //    Score = new()
+        //    {
+        //        TotalHitlessRooms = 24,
+        //        HighestHitlessRoomStreak = 12,
+        //        HighestKillStreak = 44,
+        //        HitlessBosses = 2,
+        //        PassedTime = 1800f,
+        //        TakenHits = 12,
+        //        Score = 123,
+        //        Essences = 10
+        //    },
+        //    RunId = 1
+        //});
 #endif
     }
 
     internal static void Unload()
     {
-
+        TempEntry = null;
+        if (!_active)
+            return;
+        On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
+        _active = false;
     }
+
+    internal static void AddEntry(RunResult result)
+    {
+        TempEntry ??= new();
+        CreateEntry?.Invoke(TempEntry, result);
+
+        // Take RngProvider data
+        TempEntry.Seed = RngProvider.Seed;
+        TempEntry.Seeded = RngProvider.Seeded;
+
+        // Set the non-controller related data.
+        TempEntry.ModVersion = TrialOfCrusaders.Instance.GetVersion();
+        TempEntry.Result = result;
+        TempEntry.GameMode = GameMode.Normal;
+        // In the case of completed runs the result is written seperately (as the crowd still throws missable geo).
+        if (result != RunResult.Completed)
+        {
+            TempEntry.RunId = TempEntry.GetRunId();
+            History.Add(TempEntry);
+            TempEntry = null;
+        }
+    }
+
+    internal static void SetupList(List<HistoryData> history) => History = history;
 
     private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
@@ -179,7 +213,7 @@ internal static class HistoryController
             "Perfect final bonus",
             "Final score"
         ];
-        
+
         for (int i = 0; i < values.Count; i++)
         {
             currentElement = TextHelper.CreateUIObject(values[i]);
@@ -211,7 +245,7 @@ internal static class HistoryController
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -0.75f);
         currentElement.Item2.alignment = TextAlignmentOptions.Left;
-        currentElement.Item2.color = new(0.5f,0f,0.5f);
+        currentElement.Item2.color = new(0.5f, 0f, 0.5f);
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
@@ -391,7 +425,7 @@ internal static class HistoryController
         List<(string, int)> values =
         [
             new("Score", currentHistory.Score.Score),
-            new("Essence bonus",  currentHistory.Score.Essences * 10),
+            new("Essence bonus",  currentHistory.Score.Essence * 10),
             new("Time bonus", Math.Max(0, 3600 - Mathf.CeilToInt(currentHistory.Score.PassedTime))),
             new("Killstreak bonus", currentHistory.Score.HighestKillStreak * 5),
             new("Flawless stage bonus", currentHistory.Score.TotalHitlessRooms * 20),
@@ -466,12 +500,12 @@ internal static class HistoryController
             Component.Destroy(currentElement.Item1);
             xPosition += 2.3f;
             if (xPosition > 1.3f)
-            { 
+            {
                 xPosition = -3.3f;
                 yPosition -= 1f;
             }
         }
-        
+
         if (maxPages > 1)
         {
             _elementLookUp["PowerList"].Item2.text = $"Powers ({_powerPageIndex + 1}/ {maxPages})";

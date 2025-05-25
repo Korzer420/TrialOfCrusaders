@@ -34,17 +34,13 @@ internal static class StageController
 
     public static List<RoomData> CurrentRoomData { get; set; } = [];
 
-    public static List<RoomData> RoomPool { get; set; } = [];
-
     public static GameObject TransitionObject { get; set; }
 
     public static bool FinishedEnemies { get; set; }
 
-    public static RoomData CurrentRoom => CurrentRoomData[CurrentRoomIndex];
+    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex];
 
     public static event Action<bool> RoomEnded;
-
-    static StageController() => RoomPool = ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
 
     internal static void Initialize()
     {
@@ -69,6 +65,8 @@ internal static class StageController
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += Block_Doors;
         CombatController.EnemiesCleared += CombatController_EnemiesCleared;
+        HistoryController.CreateEntry += HistoryController_CreateEntry;
+        
         _enabled = true;
     }
 
@@ -94,15 +92,33 @@ internal static class StageController
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter -= Block_Doors;
         CombatController.EnemiesCleared -= CombatController_EnemiesCleared;
+        HistoryController.CreateEntry -= HistoryController_CreateEntry;
+
+        // Reset data.
+        CurrentRoomIndex = -1;
+        QuietRoom = true;
+        _transitionPoints.Clear();
+        _specialTransitions.Clear();
+        CurrentRoomData.Clear();
+        FinishedEnemies = false;
         _enabled = false;
     }
 
     private static void CombatController_EnemiesCleared()
     {
         FinishedEnemies = true;
-        if (CurrentRoomData[CurrentRoomIndex].BossRoom)
-            TrialOfCrusaders.Holder.StartCoroutine(WaitForTransition());
-        else
+        ClearExit();
+    }
+
+    private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    {
+        if (arg1.name == "GG_Engine")
+            UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
+    }
+
+    internal static void ClearExit()
+    {
+        if (!CurrentRoomData[CurrentRoomIndex].BossRoom)
         {
             foreach (TransitionPoint point in _transitionPoints)
                 point.gameObject.GetComponent<Gate>()?.Revert();
@@ -110,12 +126,6 @@ internal static class StageController
                 item.GetComponent<BoxCollider2D>().isTrigger = true;
             PlayClearSound();
         }
-    }
-
-    private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
-    {
-        if (arg1.name == "GG_Engine")
-            UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
     }
 
     internal static void EnableExit()
@@ -141,6 +151,10 @@ internal static class StageController
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => UnityEngine.Object.Destroy(audioObject), () => source == null || !source.isPlaying));
     }
 
+    internal static List<RoomData> LoadRoomData() => ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
+
+    private static void HistoryController_CreateEntry(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
+
     private static void Block_Doors(On.HutongGames.PlayMaker.Actions.BoolTest.orig_OnEnter orig, BoolTest self)
     {
         if (self.IsCorrectContext("Door Control", null, "Can Enter?"))
@@ -165,15 +179,17 @@ internal static class StageController
             else
             {
                 RoomEnded?.Invoke(QuietRoom);
+                FinishedEnemies = false;
+                // Check for ending.
                 if (CurrentRoomIndex == 119)
                 { 
                     CurrentRoomIndex++;
                     QuietRoom = true;
                     info.EntryGateName = "left1";
                     info.SceneName = "Room_Colosseum_Bronze";
-                    ScoreController.BonusGeo = Math.Max(100, 5000 - (CombatController.ObtainedPowers.Count - 2) * 100);
-                    CombatController.Unload();
+                    HistoryController.AddEntry(RunResult.Completed);
                     Unload();
+                    CombatController.Unload();
                     info.Visualization = GameManager.SceneLoadVisualizations.Colosseum;
                     info.PreventCameraFadeOut = QuietRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
@@ -202,8 +218,8 @@ internal static class StageController
                         info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
 
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
-                    info.PreventCameraFadeOut = QuietRoom;
-                    GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
+                    info.PreventCameraFadeOut = QuietRoom || CurrentRoom.BossRoom;
+                    GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom || CurrentRoom.BossRoom;
                     
                     // Treasure rooms can only appear under these conditions:
                     // Not later than 115.
@@ -230,10 +246,6 @@ internal static class StageController
                 _intendedDestination = new(info.SceneName, info.EntryGateName);
             }
         }
-        else
-        {
-            // ToDo: Unload if return to menu.
-        }
         orig(self, info);
     }
 
@@ -246,7 +258,13 @@ internal static class StageController
         if (!QuietRoom)
         {
             Gate gate = self.gameObject.AddComponent<Gate>();
-            CoroutineHelper.WaitForHero(() => gate.PlaceCollider(), true);
+            CoroutineHelper.WaitForHero(() =>
+            {
+                if (self.gameObject.name.Contains("top"))
+                    TrialOfCrusaders.Holder.StartCoroutine(gate.WaitForHero());
+                else
+                    gate.PlaceCollider();
+            }, true);
         }
         if (QuietRoom || UpcomingTreasureRoom || CurrentRoomIndex < 119 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
         {
@@ -398,9 +416,17 @@ internal static class StageController
             UnityEngine.Object.Destroy(self.gameObject);
     }
 
-    private static IEnumerator WaitForTransition()
+    internal static IEnumerator WaitForTransition()
     {
         // Todo: Extra checks for collector and radiance (?).
+        float passedTime = 0f;
+        while(passedTime < 5)
+        {
+            passedTime += Time.deltaTime;
+            yield return null;
+            if (GameManager.instance.IsGamePaused())
+                yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
+        }
         yield return new WaitForSeconds(5f);
         GameObject transition = new("Trial Transition Starter");
         SpecialTransition specialTransition = transition.AddComponent<SpecialTransition>();

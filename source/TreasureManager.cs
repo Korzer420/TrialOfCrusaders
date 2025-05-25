@@ -397,11 +397,11 @@ public static class TreasureManager
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
                 int rolledBonus = RngProvider.GetStageRandom(1, 100);
-                if (/*rolledBonus <= selectedPower.BonusRates.Item1*/true)
+                if (rolledBonus <= selectedPower.BonusRates.Item1 && CombatController.CombatLevel < 20)
                     statBoni.Add("Combat");
-                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2)
+                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 && CombatController.SpiritLevel < 20)
                     statBoni.Add("Spirit");
-                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 + selectedPower.BonusRates.Item3)
+                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 + selectedPower.BonusRates.Item3 && CombatController.EnduranceLevel < 20)
                     statBoni.Add("Endurance");
                 else
                     statBoni.Add(null);
@@ -638,7 +638,7 @@ public static class TreasureManager
                 "Combat" => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Combat_Icon"),
                 "Spirit" => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Spirit_Icon"),
                 "Endurance" => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Endurance_Icon"),
-                _ => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Combat_Icon")
+                _ => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.Placeholder")
             };
         }
 
@@ -758,6 +758,9 @@ public static class TreasureManager
             pickedPower.EnablePower();
         }
         shinyFsm.SendEvent("CHARM");
+        EventRegister.SendEvent("ADD BLUE HEALTH");
+        if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)
+            TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
     }
 
     #endregion

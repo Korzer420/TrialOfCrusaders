@@ -18,12 +18,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\**\*" Exclude="Resources\Text\*.resx"/>
+		<EmbeddedResource Include="Resources\**\*" Exclude="Resources\Text\*.resx" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="Assembly-CSharp">
 			<HintPath>$(HollowKnightRefs)\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="DebugMod">
+		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\DebugMod\DebugMod.dll</HintPath>
 		</Reference>
 		<Reference Include="KorzUtils">
 			<HintPath>$(HollowKnightRefs)\Mods\KorzUtils\KorzUtils.dll</HintPath>

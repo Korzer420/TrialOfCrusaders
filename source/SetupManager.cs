@@ -32,7 +32,7 @@ internal static class SetupManager
         //roomList[0].SelectedTransition = "left1";
         // Add each normal room 5 times so each one has the same probability regardless of available entrances.
         // For bosses we only take one though.
-        List<RoomData> availableRooms = [..StageController.RoomPool.SelectMany(x =>
+        List<RoomData> availableRooms = [..StageController.LoadRoomData().SelectMany(x =>
         {
             if (x.BossRoom)
                 return [x];
@@ -94,6 +94,8 @@ internal static class SetupManager
         // This should only leave NKG, Pure Vessel and Radiance which we use as end bosses.
         availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 120))];
         roomList.Add(availableRooms[RngProvider.GetRandom(0, availableRooms.Count - 1)]);
+
+        //roomList.Insert(1, new() { BossRoom = true, Name = "GG_Broken_Vessel", SelectedTransition = "huh" });
         return roomList;
     }
 

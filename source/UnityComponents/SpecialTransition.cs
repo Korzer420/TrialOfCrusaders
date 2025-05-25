@@ -1,6 +1,9 @@
 ﻿using GlobalEnums;
+using HutongGames.PlayMaker.Actions;
+using KorzUtils.Data;
 using KorzUtils.Helper;
 using System.Collections;
+using System.Linq;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
@@ -79,12 +82,17 @@ internal class SpecialTransition : MonoBehaviour
         HutongGames.PlayMaker.FsmState state = fsm.GetState("Open UI");
         state.RemoveAllActions();
         state.AdjustTransition("FINISHED", "Impact");
-        fsm.GetState("Change Scene").RemoveActions(3); // Removes the enter without input command that causes endless auto walk.
+        fsm.GetState("Change Scene").RemoveActions<SendMessage>();
         fsm.GetState("Change Scene").RemoveFirstAction<GetStaticVariable>();
+        //fsm.GetState("Change Scene").GetFirstAction<BeginSceneTransition>().entryDelay = 3f;
+        fsm.AddState("Wait a bit", [new Wait() { time = 1.5f, finishEvent = fsm.FsmEvents.First(x => x.Name == "GG TRANSITION END") }], FsmTransitionData.FromTargetState("Change Scene")
+            .WithEventName("GG TRANSITION END"));
+        fsm.GetState("Transition").AdjustTransitions("Wait a bit");
         fsm.FsmVariables.FindFsmString("To Scene").Value = "Select Target";
         CoroutineHelper.WaitFrames(() => { fsm.SendEvent("CONVO START"); }, true, 1);
         if (!LoadIntoDream)
             GameManager.instance.StartCoroutine(RemoveTransitionBlocker());
+        GameObject.Destroy(gameObject);
     }
 
     private static IEnumerator RemoveTransitionBlocker()

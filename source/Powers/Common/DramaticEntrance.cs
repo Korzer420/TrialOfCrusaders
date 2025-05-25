@@ -12,11 +12,14 @@ internal class DramaticEntrance : Power
     protected override void Enable()
     {
         _takeDamage = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.Instance | BindingFlags.NonPublic);
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
     }
 
-    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    protected override void Disable() => On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
+
+    private void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
+        orig(self, setHazardMarker, preventRunBob);
         HitInstance hitInstance = new()
         {
             AttackType = AttackTypes.Generic,
@@ -26,8 +29,9 @@ internal class DramaticEntrance : Power
             DamageDealt = 10 + CombatController.CombatLevel * 2
         };
         foreach (HealthManager enemy in CombatController.Enemies)
-            _takeDamage.Invoke(enemy, [hitInstance]);
+        {
+            if (enemy != null)
+                _takeDamage.Invoke(enemy, [hitInstance]);
+        }
     }
-
-    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 }

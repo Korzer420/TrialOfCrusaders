@@ -1,6 +1,6 @@
 ﻿namespace TrialOfCrusaders.Enums;
 
-internal enum GameMode
+public enum GameMode
 {
     Normal,
 

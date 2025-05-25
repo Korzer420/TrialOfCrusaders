@@ -469,7 +469,7 @@
     <value>The first nail hit after casting a spell grants bonus soul.</value>
   </data>
   <data name="WeakenedHusk" xml:space="preserve">
-    <value>Enemies hit by spells are sometimes inflicted with shattered mind permanently increasing all damage taken.</value>
+    <value>Enemies hit by spells are sometimes inflicted with shattered mind.</value>
   </data>
   <data name="Weaversong" xml:space="preserve">
     <value>Spawns weavers that assist you in battle.</value>

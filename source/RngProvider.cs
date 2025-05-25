@@ -19,6 +19,8 @@ public static class RngProvider
         }
     }
 
+    internal static bool Seeded { get; set; }
+
     public static int GetRandom(int minIncluded, int maxIncluded) => _mainGenerator.Next(minIncluded, maxIncluded + 1);
 
     public static float GetRandom(float minIncluded, float maxExcluded) => (float)(_mainGenerator.NextDouble() * (maxExcluded - minIncluded) - minIncluded);

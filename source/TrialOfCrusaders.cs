@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.ModInterop;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.SaveData;
 using TrialOfCrusaders.UnityComponents;
@@ -22,9 +23,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     public static TrialOfCrusaders Instance { get; set; }
 
-    internal static Dummy Holder => Instance._coroutineHolder;
+    public bool RunActive { get; set; }
 
-    public LocalSaveData CurrentSaveData { get; set; } = new();
+    internal static Dummy Holder => Instance._coroutineHolder;
 
     public override List<(string, string)> GetPreloadNames() =>
     [
@@ -116,6 +117,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             GameObject.Destroy(_coroutineHolder.gameObject);
         _coroutineHolder = new GameObject("TrialCoroutineHelper").AddComponent<Dummy>();
         GameObject.DontDestroyOnLoad(_coroutineHolder.gameObject);
+
+        if (ModHooks.GetMod("DebugMod") is Mod)
+            HookDebug();
     }
 
 #if DEBUG
@@ -161,24 +165,35 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
     {
         //Spawner.ContinueSpawn = true;
-        //SpawnController.Initialize();
+        SpawnController.Initialize();
         orig(self);
-        //HubController.Initialize();
+        HubController.Initialize();
     }
 
     private IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
     {
+        // Save forfeited run.
+        if (RunActive)
+            HistoryController.AddEntry(RunResult.Forfeited);
+        RunActive = false;
+        HistoryController.Unload();
         SpawnController.Unload();
         HubController.Unload(); 
         CombatController.Unload();
         StageController.Unload();
         ScoreController.Unload();
+        Holder.StopAllCoroutines();
         yield return orig(self);
+    }
+
+    private void HookDebug()
+    {
+        DebugModInterop.Initialize();
     }
 
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
-        CurrentSaveData = saveData;
+        HistoryController.SetupList(saveData?.OldRunData ?? []);
         // ToDo: Support save inside a run.
         //StageController.CurrentRoomIndex = CurrentSaveData.CurrentRoomNumber - 2;
         //List<Power> powers = [];
@@ -217,6 +232,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         //    CurrentSaveData = CurrentSaveData.GetFixedData();
         //else
         //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
-        return CurrentSaveData;
+        return new() { OldRunData = HistoryController.History };
     }
 }

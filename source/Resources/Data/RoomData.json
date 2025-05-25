@@ -129,7 +129,7 @@
     "Name": "Fungus1_11",
     "AllowedEntrances": [ "left1", "bot1", "top1", "right2", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
+    "NeededProgress": 64,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -156,7 +156,7 @@
     "Name": "Fungus1_12",
     "AllowedEntrances": [ "right1", "left1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
+    "NeededProgress": 64,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -444,7 +444,7 @@
     "Name": "Fungus2_07",
     "AllowedEntrances": [ "left1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
+    "NeededProgress": 1,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -831,7 +831,7 @@
     "Name": "Waterways_07",
     "AllowedEntrances": [ "top1", "left1", "door1" ],
     "BossRoom": false,
-    "NeededProgress": 66,
+    "NeededProgress": 67,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

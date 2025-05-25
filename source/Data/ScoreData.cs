@@ -1,4 +1,6 @@
-﻿namespace TrialOfCrusaders.Data;
+﻿using KorzUtils.Helper;
+
+namespace TrialOfCrusaders.Data;
 
 public class ScoreData
 {
@@ -43,7 +45,7 @@ public class ScoreData
 
     public int Score { get; set; }
 
-    public int Essences { get; set; }
+    public int Essence { get; set; }
 
     public bool HitlessFinalBoss { get; set; }
 
@@ -58,6 +60,9 @@ public class ScoreData
         HighestHitlessRoomStreak = HighestHitlessRoomStreak,
         HighestKillStreak = HighestKillStreak,
         PassedTime = PassedTime,
-        TakenHits = TakenHits
+        TakenHits = TakenHits,
+        Score = Score,
+        Essence = Essence,
+        HitlessFinalBoss = HitlessFinalBoss
     };
 }

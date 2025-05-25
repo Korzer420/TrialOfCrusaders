@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TrialOfCrusaders.Data;
 
 namespace TrialOfCrusaders.SaveData;
 
@@ -6,7 +7,7 @@ public class LocalSaveData
 {
     #region Non-Run Data
 
-    public List<string> OldRunData { get; set; } = [];
+    public List<HistoryData> OldRunData { get; set; } = [];
 
     #endregion
 

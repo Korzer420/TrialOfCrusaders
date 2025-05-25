@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
@@ -10,6 +11,8 @@ internal class ImprovedDefendersCrest : Power
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
     public override Rarity Tier => Rarity.Uncommon;
+
+    public override bool CanAppear => HasPower<DefendersCrest>();
 
     protected override void Enable()
     {

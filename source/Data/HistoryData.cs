@@ -6,7 +6,7 @@ namespace TrialOfCrusaders.Data;
 /// <summary>
 /// Used to show old runs.
 /// </summary>
-internal class HistoryData
+public class HistoryData
 {
     public string ModVersion { get; set; }
 
@@ -42,9 +42,9 @@ internal class HistoryData
     /// Check if the assigned run id matches the values.
     /// If not, the run data might've been tempered with.
     /// </summary>
-    public bool CheckRun() => GetRunId() == RunId;
+    internal bool CheckRun() => GetRunId() == RunId;
 
-    internal int GetRunId() => ($"{ModVersion};{Result};{GameMode};{Seeded};{Seed};{Score.Score};{Score.Essences};{Score.HighestKillStreak};" +
+    internal int GetRunId() => ($"{ModVersion};{Result};{GameMode};{Seeded};{Seed};{Score.Score};{Score.Essence};{Score.HighestKillStreak};" +
                $"{Score.HighestHitlessRoomStreak};{Score.HitlessBosses};{Score.HitlessFinalBoss};{Score.TotalHitlessRooms};" +
                $"{FinalCombatLevel}:{FinalSpiritLevel};{FinalEnduranceLevel}:{FinalRoomNumber};" +
                $"{CommonPowerAmount};{UncommonPowerAmount};{RarePowerAmount};{string.Join(",", Powers)}").GetHashCode();
