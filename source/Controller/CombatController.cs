@@ -115,6 +115,11 @@ public static class CombatController
         ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         HistoryController.CreateEntry += HistoryController_CreateEntry;
+        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
+        IL.BossSequenceController.RestoreBindings += BlockHealthReset;
+        On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter += AdjustLifebloodPosition;
+        On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += MoveLifebloodInFront;
+
         CreateExtraHealth();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
         GameCameras.instance.hudCanvas.gameObject.SetActive(false);
@@ -140,8 +145,7 @@ public static class CombatController
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
-        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
-        IL.BossSequenceController.RestoreBindings += BlockHealthReset;
+        
     }
 
     public static void Unload()
@@ -172,6 +176,8 @@ public static class CombatController
         _attackMethod?.Dispose();
         HistoryController.CreateEntry -= HistoryController_CreateEntry;
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
+        On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
+        On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= MoveLifebloodInFront;
         _enabled = false;
 
         // Reset data.
@@ -304,6 +310,23 @@ public static class CombatController
     {
         ILCursor cursor = new(il);
         cursor.Emit(OpCodes.Ret);
+    }
+
+    private static void MoveLifebloodInFront(On.HutongGames.PlayMaker.Actions.SetPosition.orig_OnEnter orig, SetPosition self)
+    {
+        if (self.IsCorrectContext("blue_health_display", null, "Init"))
+            self.z.Value -= 0.1f;
+        orig(self);
+    }
+
+    private static void AdjustLifebloodPosition(On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.orig_OnEnter orig, ConvertIntToFloat self)
+    {
+        orig(self);
+        if (self.IsCorrectContext("Blue Health Control", "Health", "Add Blue Health"))
+        {
+            self.floatVariable.Value = PDHelper.HealthBlue;
+            LogHelper.Write("Amount: " + self.floatVariable.Value);
+        }
     }
 
     #endregion
