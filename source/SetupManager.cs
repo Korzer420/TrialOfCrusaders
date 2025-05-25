@@ -95,7 +95,7 @@ internal static class SetupManager
         availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 120))];
         roomList.Add(availableRooms[RngProvider.GetRandom(0, availableRooms.Count - 1)]);
 
-        //roomList.Insert(1, new() { BossRoom = true, Name = "GG_Broken_Vessel", SelectedTransition = "huh" });
+        roomList.Insert(1, StageController.LoadRoomData().Where(x => x.BossRoom).Skip(0).First());
         return roomList;
     }
 

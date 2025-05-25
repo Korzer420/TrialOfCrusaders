@@ -121,7 +121,7 @@ internal static class StageController
         if (!CurrentRoomData[CurrentRoomIndex].BossRoom)
         {
             foreach (TransitionPoint point in _transitionPoints)
-                point.gameObject.GetComponent<Gate>()?.Revert();
+                point.gameObject.GetComponent<Gate>()?.Revert(_specialTransitions.Count == 0);
             foreach (SpecialTransition item in _specialTransitions)
                 item.GetComponent<BoxCollider2D>().isTrigger = true;
             PlayClearSound();
@@ -272,7 +272,7 @@ internal static class StageController
                 return;
             GameObject transitionObject = new("Trial Transition");
             SpecialTransition transition = transitionObject.AddComponent<SpecialTransition>();
-            transition.LoadIntoDream = false;
+            transition.LoadIntoDream = CurrentRoomIndex < 119 && CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
             transition.VanillaTransition = self;
             _specialTransitions.Add(transition);
         }

@@ -132,14 +132,15 @@ internal class Gate : MonoBehaviour
     internal void PlaceCollider()
     {
         foreach (var blocker in _blockers)
-            blocker.GetComponent<BoxCollider2D>().offset = new(0f, 0f);
+            if (blocker != null)
+                blocker.GetComponent<BoxCollider2D>().offset = new(0f, 0f);
     }
 
-    internal void Revert()
+    internal void Revert(bool enableCollider)
     {
         if (GetComponent<TransitionPoint>().isADoor)
             return;
-        GetComponent<BoxCollider2D>().enabled = !StageController.UpcomingTreasureRoom;
+        GetComponent<BoxCollider2D>().enabled = enableCollider;
         foreach (GameObject item in _blockers)
             GameObject.Destroy(item);
     }

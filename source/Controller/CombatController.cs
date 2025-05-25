@@ -367,7 +367,7 @@ public static class CombatController
                 if (!enemyFlag.NoLoot)
                 {
                     float rolled = RngProvider.GetStageRandom(0f, 100f);
-                    if (rolled <= 4f || StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)
+                    if (rolled <= 4f || StageController.CurrentRoom.BossRoom)
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
                     else if (rolled <= 12f)
                     {
