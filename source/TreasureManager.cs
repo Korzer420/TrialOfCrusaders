@@ -1,8 +1,6 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
-using Modding;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +20,6 @@ namespace TrialOfCrusaders;
 
 public static class TreasureManager
 {
-
     private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
     private static Sprite _backgroundSprite;

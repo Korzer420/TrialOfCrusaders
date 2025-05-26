@@ -37,11 +37,15 @@ internal class SpecialTransition : MonoBehaviour
         else if (VanillaTransition.gameObject.name.Contains("right"))
             transform.position += new Vector3(0.6f, 0f);
         else if (VanillaTransition.gameObject.name.Contains("top"))
+        { 
             transform.position += new Vector3(0f, 0.6f);
+            gameObject.GetComponent<BoxCollider2D>().offset = new(5000, 5000);
+            StartCoroutine(WaitForHero());
+        }
         else if (VanillaTransition.gameObject.name.Contains("bot"))
             transform.position -= new Vector3(0f, 0.6f);
         else
-            LogHelper.Write<TrialOfCrusaders>("Transition "+VanillaTransition.gameObject.name+" could not assign an offset", KorzUtils.Enums.LogType.Warning);
+            LogHelper.Write<TrialOfCrusaders>("Transition " + VanillaTransition.gameObject.name + " could not assign an offset", KorzUtils.Enums.LogType.Warning);
     }
 
     void Update()
@@ -100,5 +104,15 @@ internal class SpecialTransition : MonoBehaviour
         string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         yield return new WaitUntil(() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != currentScene);
         GameManager.instance.cameraCtrl.transform.parent.parent.Find("HudCamera/Blanker White").gameObject.LocateMyFSM("Blanker Control").SendEvent("FADE OUT");
+    }
+
+    private IEnumerator WaitForHero()
+    {
+        if (VanillaTransition.name.Contains("top"))
+        {
+            yield return new WaitUntil(() => HeroController.instance.transform.position.y < transform.position.y - 1);
+            gameObject.GetComponent<BoxCollider2D>().offset = new(0, 0);
+        }
+        yield return null;
     }
 }

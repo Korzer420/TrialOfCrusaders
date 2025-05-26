@@ -95,7 +95,11 @@ internal static class SetupManager
         availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 120))];
         roomList.Add(availableRooms[RngProvider.GetRandom(0, availableRooms.Count - 1)]);
 
-        roomList.Insert(1, StageController.LoadRoomData().Where(x => x.BossRoom).Skip(0).First());
+        //roomList.RemoveAt(0);
+        //roomList.Insert(0, new() { Name = "Tutorial_01", SelectedTransition = "top1" });
+        //List<RoomData> bossRooms = [.. StageController.LoadRoomData().Where(x => x.BossRoom).SkipWhile(x => x.Name != "GG_Grimm_Nightmare")];
+        //for (int i = 0; i < bossRooms.Count; i++)
+        //    roomList.Insert(1 + i, bossRooms[i]);
         return roomList;
     }
 

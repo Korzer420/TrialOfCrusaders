@@ -60,7 +60,7 @@ internal class LifebloodOmen : Power
 
             float activeTime = 0f;
             float cooldown = RngProvider.GetRandom(90f, 300f);
-            while (activeTime < cooldown && ghost != null)
+            while (activeTime < cooldown)
             {
                 activeTime += Time.deltaTime;
                 yield return null;
@@ -69,6 +69,13 @@ internal class LifebloodOmen : Power
             {
                 PlayMakerFSM.BroadcastEvent("DREAM AREA DISABLE");
                 GameObject.Destroy(ghost);
+            }
+
+            cooldown = RngProvider.GetRandom(90f, 300f);
+            while (activeTime < cooldown)
+            {
+                activeTime += Time.deltaTime;
+                yield return null;
             }
         }
     }

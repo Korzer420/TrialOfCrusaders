@@ -86,7 +86,7 @@ public static class CombatController
     }
 
     #region Setup
-    
+
     public static void Initialize()
     {
         if (_enabled)
@@ -119,6 +119,7 @@ public static class CombatController
         IL.BossSequenceController.RestoreBindings += BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter += AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += MoveLifebloodInFront;
+        On.BossSceneController.Start += BossSceneController_Start;
 
         CreateExtraHealth();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -145,7 +146,7 @@ public static class CombatController
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
-        
+
     }
 
     public static void Unload()
@@ -161,7 +162,7 @@ public static class CombatController
         On.HealthManager.OnEnable -= HealthManager_OnEnable;
         On.HealthManager.Die -= HealthManager_Die;
         IL.HeroController.Move -= HeroController_Move;
-        IL.HeroController.Attack -= HeroController_Attack;  
+        IL.HeroController.Attack -= HeroController_Attack;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
         ModHooks.SoulGainHook -= ModHooks_SoulGainHook;
         On.HeroController.TakeDamage -= HeroController_TakeDamage;
@@ -178,6 +179,7 @@ public static class CombatController
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= MoveLifebloodInFront;
+        On.BossSceneController.Start -= BossSceneController_Start;
         _enabled = false;
 
         // Reset data.
@@ -246,6 +248,25 @@ public static class CombatController
                 self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
                 self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
                 self.FsmVariables.FindFsmInt("P5 Ascent").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+            }
+        }
+        else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss" 
+            || self.gameObject.name == "Mantis Battle" || self.gameObject.name == "Sly Boss")
+        {
+            if (self.FsmName.Contains("Control"))
+            {
+                if (self.gameObject.name != "Nightmare Grimm Boss")
+                    self.GetState("Bow").InsertActions(0, () =>
+                    {
+                        GameObject crowd = GameObject.Find("Godseeker Crowd");
+                        TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x, crowd.transform.position.y - 1f, HeroController.instance.transform.position.z), false);
+                    });
+                else
+                    self.GetState("Send NPC Event").AddActions(() =>
+                    {
+                        GameObject crowd = GameObject.Find("Godseeker Crowd");
+                        TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x, crowd.transform.position.y - 1f, HeroController.instance.transform.position.z), false);
+                    });
             }
         }
         orig(self);
@@ -340,11 +361,13 @@ public static class CombatController
             && self.gameObject.name != "Hollow Shade(Clone)" && self.gameObject.name != "Cap Hit")
         {
             Enemies.Add(self);
+            if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
+                self.gameObject.AddComponent<BossFlag>();
             if (StageController.CurrentRoomNumber >= 20 && self.hp != 1)
             {
                 float scaling = 0.1f;
                 // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
-                if ((StageController.CurrentRoomNumber != 120 || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance") 
+                if ((StageController.CurrentRoomNumber != 120 || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
                     && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
                     scaling = 0.05f;
                 self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
@@ -364,10 +387,10 @@ public static class CombatController
             if (contained && self.GetComponent<BaseEnemy>() is BaseEnemy enemyFlag)
             {
                 EnemyKilled?.Invoke(self);
-                if (!enemyFlag.NoLoot)
+                if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngProvider.GetStageRandom(0f, 100f);
-                    if (rolled <= 4f || StageController.CurrentRoom.BossRoom)
+                    if (rolled <= 4f)
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
                     else if (rolled <= 12f)
                     {
@@ -410,7 +433,7 @@ public static class CombatController
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
         {
-            if (Enemies.Count == 0 && !StageController.QuietRoom && contained && !StageController.FinishedEnemies)
+            if (Enemies.Count == 0 && !StageController.QuietRoom && contained && !StageController.FinishedEnemies && !StageController.CurrentRoom.BossRoom)
             {
                 InCombat = false;
                 EnemiesCleared?.Invoke();
@@ -430,11 +453,22 @@ public static class CombatController
         foreach (HealthManager item in Enemies)
             if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
             {
+                if (StageController.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
+                    item.OnDeath += Boss_OnDeath;
                 item.gameObject.AddComponent<BaseEnemy>().NoLoot = item.hp == 1;
                 newEnemies.Add(item);
             }
         if (!StageController.QuietRoom)
+        { 
             InCombat = true;
+            if (StageController.CurrentRoom.BossRoom)
+                _bossCounter = GameManager.instance.sceneName switch
+                {
+                    "GG_Watcher_Knights" => 6,
+                    "GG_Soul_Master" or "GG_Oblobbles" or "GG_Soul_Tyrant" or "GG_Vengefly_V" => 2,
+                    _ => 1
+                };
+        }
     }
 
     private static bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead) => false;
@@ -462,8 +496,38 @@ public static class CombatController
                 Enemies.RemoveAt(i);
                 i--;
             }
-        if (currentCount != Enemies.Count && Enemies.Count == 0)
+        if (currentCount != Enemies.Count && Enemies.Count == 0 && !StageController.CurrentRoom.BossRoom)
             EnemiesCleared?.Invoke();
+    }
+
+    private static int _bossCounter = 0;
+
+    private static IEnumerator BossSceneController_Start(On.BossSceneController.orig_Start orig, BossSceneController self)
+    {
+        foreach (HealthManager boss in self.bosses)
+            if (!Enemies.Contains(boss))
+            {
+                boss.gameObject.AddComponent<BaseEnemy>();
+                boss.gameObject.AddComponent<BossFlag>();
+                Enemies.Add(boss);
+                boss.OnDeath += Boss_OnDeath;
+            }
+        yield return orig(self);
+    }
+
+    private static void Boss_OnDeath()
+    {
+        _bossCounter--;
+        if (_bossCounter == 0)
+        {
+            // Place shiny at godseeker location.
+            // This should ensure the shiny lands on a platform. (Except for No Eyes)
+            GameObject crowd = GameObject.Find("Godseeker Crowd");
+            TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x + (GameManager.instance.sceneName == "GG_Flukemarm" 
+                ? -7f 
+                : GameManager.instance.sceneName == "GG_Ghost_No_Eyes_V" ? -5f : 0f)
+                , crowd.transform.position.y - 1f, HeroController.instance.transform.position.z), false);
+        }
     }
 
     #endregion

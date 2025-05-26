@@ -1908,7 +1908,7 @@
     "EasyConditionalProgress": []
   },
   {
-    "Name": "GG_Mantis_Lord",
+    "Name": "GG_Mantis_Lords",
     "AllowedEntrances": [],
     "BossRoom": true,
     "NeededProgress": 1,
@@ -2128,6 +2128,33 @@
     "AllowedEntrances": [],
     "BossRoom": true,
     "NeededProgress": 1,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Nailmasters",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Painter",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "GG_Sly",
+    "AllowedEntrances": [],
+    "BossRoom": true,
+    "NeededProgress": 2,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

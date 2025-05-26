@@ -6,7 +6,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class FocusedEnergy : Power
 {
-    public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _);
+    public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _) && (CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel) > 0;
 
     public bool Activated { get; set; }
 

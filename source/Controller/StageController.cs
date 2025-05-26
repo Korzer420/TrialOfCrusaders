@@ -2,6 +2,7 @@
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ internal static class StageController
         On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter -= Block_Doors;
         CombatController.EnemiesCleared -= CombatController_EnemiesCleared;
         HistoryController.CreateEntry -= HistoryController_CreateEntry;
-
+        
         // Reset data.
         CurrentRoomIndex = -1;
         QuietRoom = true;
@@ -158,7 +159,7 @@ internal static class StageController
     private static void Block_Doors(On.HutongGames.PlayMaker.Actions.BoolTest.orig_OnEnter orig, BoolTest self)
     {
         if (self.IsCorrectContext("Door Control", null, "Can Enter?"))
-            self.boolVariable.Value = self.boolVariable.Value && FinishedEnemies;
+            self.boolVariable.Value = self.boolVariable.Value && FinishedEnemies && _specialTransitions.Count == 0;
         orig(self);
     }
 
@@ -418,16 +419,16 @@ internal static class StageController
 
     internal static IEnumerator WaitForTransition()
     {
-        // Todo: Extra checks for collector and radiance (?).
+        HeroController.instance.RelinquishControl();
+        // Todo: Extra checks for radiance (?).
         float passedTime = 0f;
-        while(passedTime < 5)
+        while(passedTime < 2)
         {
             passedTime += Time.deltaTime;
             yield return null;
             if (GameManager.instance.IsGamePaused())
                 yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
         }
-        yield return new WaitForSeconds(5f);
         GameObject transition = new("Trial Transition Starter");
         SpecialTransition specialTransition = transition.AddComponent<SpecialTransition>();
         specialTransition.LoadIntoDream = false;
