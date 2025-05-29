@@ -42,7 +42,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ("Deepnest_East_10", "Dream Gate"),
         ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring"),
         ("GG_Atrium", "GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"),
-        ("Room_Fungus_Shaman", "Scream Control/Scream Item")
+        ("Room_Fungus_Shaman", "Scream Control/Scream Item"),
+        ("Ruins_Bathhouse", "Ghost NPC/Idle Pt")
     ];
 
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -58,58 +59,19 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
         HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
         GameObject.DontDestroyOnLoad(HubController.Tink);
-        ConcussionEffect.PreparePrefab(preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab);
-
-        // We love carl <3
-        GameObject carl = preloadedObjects["Crossroads_ShamanTemple"]["_Enemies/Zombie Runner"];
-
-        GameObject corpse = typeof(EnemyDeathEffects).GetField("corpsePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(carl.GetComponent<EnemyDeathEffects>()) as GameObject;
-        BurnEffect.PreparePrefab(corpse.transform.Find("Corpse Flame").gameObject);
-
-        BleedEffect.PreparePrefab(typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject);
-
-        GameObject ghost = preloadedObjects["Ruins1_28"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
-        ghost = preloadedObjects["RestingGrounds_06"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
-        ghost = preloadedObjects["Hive_03"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
-        GroundSlam.Shockwave = preloadedObjects["Ruins1_24_boss"]["Mage Lord"].LocateMyFSM("Mage Lord")
-            .GetState("Quake Waves")
-            .GetFirstAction<SpawnObjectFromGlobalPool>()
-            .gameObject.Value;
-
-        GreaterMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
-        GameObject.DontDestroyOnLoad(GreaterMind.Orb);
-
+        
         StageController.TransitionObject = preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"];
         GameObject.DontDestroyOnLoad(StageController.TransitionObject);
-
-        Caching.SoulCache = preloadedObjects["Ruins1_23"]["Ruins Vial Empty (2)/Active/soul_cache (1)"];
-        GameObject.DontDestroyOnLoad(Caching.SoulCache);
         Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         GameObject.DontDestroyOnLoad(Gate.Prefab);
-
-        VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
-        GameObject.DontDestroyOnLoad(VoidZone.Ring);
 
         ScoreController.Prefab = preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]
             .LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
         GameObject.DontDestroyOnLoad(ScoreController.Prefab);
 
-        WeakenedEffect.PreparePrefab(preloadedObjects["Room_Fungus_Shaman"]["Scream Control/Scream Item"]);
-        
+        SetupPowerPrefabs(preloadedObjects);
+        SetupDebuffs(preloadedObjects);
+
         On.UIManager.ContinueGame += UIManager_ContinueGame;
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
@@ -129,8 +91,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         orig(self, hitInstance);
-        if (self.GetComponent<ConcussionEffect>() == null)
-            self.gameObject.AddComponent<ConcussionEffect>();
+        if (self.GetComponent<ShatteredMindEffect>() == null)
+            self.gameObject.AddComponent<ShatteredMindEffect>();
     }
 
 #if DEBUG
@@ -251,5 +213,52 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         //else
         //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
         return new() { OldRunData = HistoryController.History };
+    }
+
+    private void SetupPowerPrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
+    {
+        GameObject ghost = preloadedObjects["Ruins1_28"]["Flamebearer Spawn"]
+            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
+        GameObject.DontDestroyOnLoad(ghost);
+        LifebloodOmen.Ghosts.Add(ghost);
+
+        ghost = preloadedObjects["RestingGrounds_06"]["Flamebearer Spawn"]
+            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
+        GameObject.DontDestroyOnLoad(ghost);
+        LifebloodOmen.Ghosts.Add(ghost);
+
+        ghost = preloadedObjects["Hive_03"]["Flamebearer Spawn"]
+            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
+        GameObject.DontDestroyOnLoad(ghost);
+        LifebloodOmen.Ghosts.Add(ghost);
+
+        GroundSlam.Shockwave = preloadedObjects["Ruins1_24_boss"]["Mage Lord"].LocateMyFSM("Mage Lord")
+            .GetState("Quake Waves")
+            .GetFirstAction<SpawnObjectFromGlobalPool>()
+            .gameObject.Value;
+        GameObject.DontDestroyOnLoad(GroundSlam.Shockwave);
+
+        GreaterMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
+        GameObject.DontDestroyOnLoad(GreaterMind.Orb);
+
+        Caching.SoulCache = preloadedObjects["Ruins1_23"]["Ruins Vial Empty (2)/Active/soul_cache (1)"];
+        GameObject.DontDestroyOnLoad(Caching.SoulCache);
+
+        VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
+        GameObject.DontDestroyOnLoad(VoidZone.Ring);
+    }
+
+    private void SetupDebuffs(Dictionary<string, Dictionary<string, GameObject>> objects)
+    {
+        ConcussionEffect.PreparePrefab(objects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab);
+        WeakenedEffect.PreparePrefab(objects["Room_Fungus_Shaman"]["Scream Control/Scream Item"]);
+        ShatteredMindEffect.PreparePrefab(objects["Ruins_Bathhouse"]["Ghost NPC/Idle Pt"]);
+        // We love carl <3
+        GameObject carl = objects["Crossroads_ShamanTemple"]["_Enemies/Zombie Runner"];
+        GameObject corpse = typeof(EnemyDeathEffects).GetField("corpsePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(carl.GetComponent<EnemyDeathEffects>()) as GameObject;
+        BleedEffect.PreparePrefab(typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject);
+        BurnEffect.PreparePrefab(corpse.transform.Find("Corpse Flame").gameObject);
     }
 }
