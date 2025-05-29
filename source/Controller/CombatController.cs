@@ -96,7 +96,6 @@ public static class CombatController
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
         ModHooks.GetPlayerIntHook += ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
-        ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
         On.HealthManager.TakeDamage += HealthManager_TakeDamage;
         On.HealthManager.OnEnable += HealthManager_OnEnable;
         On.HealthManager.Die += HealthManager_Die;
@@ -157,7 +156,6 @@ public static class CombatController
         On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
         ModHooks.GetPlayerIntHook -= ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
-        ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
         On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
         On.HealthManager.OnEnable -= HealthManager_OnEnable;
         On.HealthManager.Die -= HealthManager_Die;
@@ -571,54 +569,6 @@ public static class CombatController
         return orig;
     }
 
-    private static int ModHooks_AfterTakeDamageHook(int hazardType, int damageAmount)
-    {
-        if (damageAmount == InstaKillDamage)
-            return InstaKillDamage;
-        if (HasPower(out PaleShell shell) && shell.Shielded)
-        {
-            shell.Shielded = false;
-            return 0;
-        }
-
-        // Enemy scaling
-        if (hazardType == 1)
-            damageAmount += StageController.CurrentRoomNumber / 20 * damageAmount;
-        else
-            damageAmount += StageController.CurrentRoomNumber / 10;
-
-        if (HasPower<AchillesVerse>(out _))
-        {
-            if (hazardType > 1 && hazardType < 5)
-                return InstaKillDamage;
-            else
-                damageAmount = damageAmount.Lower(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
-            if (damageAmount == 0)
-                return 0;
-        }
-
-        if (hazardType > 1 && hazardType < 5)
-        {
-            if (HasPower<ImprovedCaringShell>(out _))
-            {
-                if (!InCombat)
-                    return 0;
-                damageAmount = damageAmount.Lower(2 + EnduranceLevel / 4);
-            }
-            else if (HasPower<CaringShell>(out _))
-                damageAmount = damageAmount.Lower(1);
-            if (damageAmount == 0)
-                return 0;
-        }
-
-        if (HasPower<Sturdy>(out _))
-            damageAmount--;
-
-        if (HasPower<ShiningBound>(out _))
-            damageAmount = Mathf.CeilToInt(damageAmount / 2f);
-        return damageAmount;
-    }
-
     private static void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         if (hitInstance.AttackType == AttackTypes.Nail)
@@ -831,18 +781,64 @@ public static class CombatController
         return amount;
     }
 
-    private static void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+    private static void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
         int currentHealth = PDHelper.Health;
-        orig(self, go, damageSide, damageAmount, hazardType);
+        if (damageAmount != InstaKillDamage)
+        {
+            if (HasPower(out PaleShell shell) && shell.Shielded)
+            {
+                shell.Shielded = false;
+                damageAmount = 0;
+            }
+
+            // Enemy scaling
+            if (hazardType == 1)
+                damageAmount += StageController.CurrentRoomNumber / 20 * damageAmount;
+            else
+                damageAmount += StageController.CurrentRoomNumber / 15;
+
+            if (HasPower<AchillesVerse>(out _))
+            {
+                if (hazardType > 1 && hazardType < 5)
+                    damageAmount = InstaKillDamage;
+                else
+                    damageAmount = damageAmount.Lower(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
+            }
+
+            if (hazardType > 1 && hazardType < 5)
+            {
+                if (HasPower<ImprovedCaringShell>(out _))
+                {
+                    if (!InCombat)
+                        damageAmount = 0;
+                    else
+                        damageAmount = damageAmount.Lower(2 + EnduranceLevel / 4);
+                }
+                else if (HasPower<CaringShell>(out _))
+                    damageAmount = damageAmount.Lower(1);
+            }
+
+            if (HasPower<Sturdy>(out _))
+                damageAmount--;
+
+            if (HasPower<ShiningBound>(out _))
+                damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+            if (sourceObject != null)
+            {
+                HealthManager enemyObject = sourceObject.GetComponent<HealthManager>();
+                if (enemyObject == null && sourceObject.transform.parent != null)
+                    enemyObject = sourceObject.GetComponentInParent<HealthManager>();
+                if (enemyObject != null && enemyObject.GetComponent<WeakenedEffect>())
+                    damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+            }
+        }
+        orig(self, sourceObject, damageSide, damageAmount, hazardType);
         if (currentHealth != PDHelper.Health)
         {
             if (HasPower(out FragileGreed greed) && greed.GreedActive || HasPower(out FragileSpirit spirit) && spirit.SpiritActive
                 || HasPower(out FragileStrength strength) && strength.StrengthActive)
-            {
                 HeroController.instance.proxyFSM.GetState("Flower?").GetFirstAction<ActivateGameObject>().gameObject.GameObject.Value.SetActive(true);
-                GameManager.instance.SaveGame();
-            }
             TookDamage?.Invoke();
         }
     }

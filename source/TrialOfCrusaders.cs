@@ -41,7 +41,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ("GG_Workshop", "GG_Statue_Vengefly/Inspect"),
         ("Deepnest_East_10", "Dream Gate"),
         ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring"),
-        ("GG_Atrium", "GG_Challenge_Door (1)/Door/Unlocked Set/Inspect")
+        ("GG_Atrium", "GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"),
+        ("Room_Fungus_Shaman", "Scream Control/Scream Item")
     ];
 
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -108,6 +109,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             .LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
         GameObject.DontDestroyOnLoad(ScoreController.Prefab);
 
+        WeakenedEffect.PreparePrefab(preloadedObjects["Room_Fungus_Shaman"]["Scream Control/Scream Item"]);
+        
         On.UIManager.ContinueGame += UIManager_ContinueGame;
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
@@ -121,6 +124,14 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
         if (ModHooks.GetMod("DebugMod") is Mod)
             HookDebug();
+        On.HealthManager.TakeDamage += HealthManager_TakeDamage;
+    }
+
+    private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
+    {
+        orig(self, hitInstance);
+        if (self.GetComponent<WeakenedEffect>() == null)
+            self.gameObject.AddComponent<WeakenedEffect>();
     }
 
 #if DEBUG
@@ -147,26 +158,27 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void GameManager_StartNewGame(On.GameManager.orig_StartNewGame orig, GameManager self, bool permadeathMode, bool bossRushMode)
     {
         //Spawner.ContinueSpawn = false;
-        SpawnController.Initialize();
-        self.ContinueGame();
-        HubController.Initialize();
-        HistoryController.Initialize();
-        PDHelper.CorniferAtHome = true;
-        PDHelper.ColosseumBronzeOpened = true;
-        PDHelper.GiantFlyDefeated = true;
-        PDHelper.ZoteDead = true;
-        PDHelper.GiantBuzzerDefeated = true;
-        PDHelper.FountainVesselSummoned = true;
-        PDHelper.HasKingsBrand = true;
-        PDHelper.DuskKnightDefeated = true;
-        PDHelper.KilledInfectedKnight = true;
-        PDHelper.KilledMageKnight = true;
-        PDHelper.MegaMossChargerDefeated = true;
-        PDHelper.InfectedKnightDreamDefeated = true;
-        PDHelper.AbyssGateOpened = true;
-        PDHelper.HegemolDefeated = true;
+        //SpawnController.Initialize();
+        //self.ContinueGame();
+        //HubController.Initialize();
+        //HistoryController.Initialize();
+        //PDHelper.CorniferAtHome = true;
+        //PDHelper.ColosseumBronzeOpened = true;
+        //PDHelper.GiantFlyDefeated = true;
+        //PDHelper.ZoteDead = true;
+        //PDHelper.GiantBuzzerDefeated = true;
+        //PDHelper.FountainVesselSummoned = true;
+        //PDHelper.HasKingsBrand = true;
+        //PDHelper.DuskKnightDefeated = true;
+        //PDHelper.KilledInfectedKnight = true;
+        //PDHelper.KilledMageKnight = true;
+        //PDHelper.MegaMossChargerDefeated = true;
+        //PDHelper.InfectedKnightDreamDefeated = true;
+        //PDHelper.AbyssGateOpened = true;
+        //PDHelper.HegemolDefeated = true;
+
         // ToDo: Call OnHook (like IC to allow mods to modify).
-        //orig(self, permadeathMode, bossRushMode);
+        orig(self, permadeathMode, bossRushMode);
     }
 
     private void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
