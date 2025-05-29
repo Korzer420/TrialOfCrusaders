@@ -112,7 +112,7 @@ public static class CombatController
         On.HeroController.Die += HeroController_Die;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter += IntSwitch_OnEnter;
         On.GameManager.GetCurrentMapZone += GameManager_GetCurrentMapZone;
-        ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
+        //ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         HistoryController.CreateEntry += HistoryController_CreateEntry;
         // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
@@ -173,7 +173,7 @@ public static class CombatController
         On.HeroController.Die -= HeroController_Die;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter -= IntSwitch_OnEnter;
         On.GameManager.GetCurrentMapZone -= GameManager_GetCurrentMapZone;
-        ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
+        //ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
         _attackMethod?.Dispose();
         HistoryController.CreateEntry -= HistoryController_CreateEntry;
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
@@ -358,7 +358,9 @@ public static class CombatController
     {
         // Prevent "immortal" enemies.
         if (self.hp != 9999 && self.gameObject.name != "Mender Bug" && !self.gameObject.name.Contains("Pigeon") && !self.gameObject.name.Contains("Hatcher Baby Spawner")
-            && self.gameObject.name != "Hollow Shade(Clone)" && self.gameObject.name != "Cap Hit")
+            && self.gameObject.name != "Hollow Shade(Clone)" && !self.gameObject.name.Contains("fluke_baby") 
+            && self.gameObject.name != "Cap Hit" && !self.gameObject.name.Contains("Baby Centipede Spawner") 
+            && !self.gameObject.name.Contains("Zombie Spider") && !self.gameObject.name.Contains("Híveling Spawner"))
         {
             Enemies.Add(self);
             if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
@@ -370,7 +372,7 @@ public static class CombatController
                 if ((StageController.CurrentRoomNumber != 120 || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
                     && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
                     scaling = 0.05f;
-                self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
+                //self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
             }
         }
         orig(self);
@@ -433,7 +435,8 @@ public static class CombatController
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
         {
-            if (Enemies.Count == 0 && !StageController.QuietRoom && contained && !StageController.FinishedEnemies && !StageController.CurrentRoom.BossRoom)
+            if (Enemies.Count(x => x.GetComponent<BaseEnemy>()) == 0 && !StageController.QuietRoom && contained 
+                && !StageController.FinishedEnemies && !StageController.CurrentRoom.BossRoom)
             {
                 InCombat = false;
                 EnemiesCleared?.Invoke();

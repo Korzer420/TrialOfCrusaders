@@ -2,6 +2,7 @@
 using Modding;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
@@ -147,7 +148,7 @@ internal class Gate : MonoBehaviour
 
     internal IEnumerator WaitForHero()
     {
-        yield return new WaitUntil(() => HeroController.instance.transform.position.y < _blockers[0].transform.position.y - 1);
+        yield return new WaitUntil(() => _blockers.FirstOrDefault() == null || HeroController.instance.transform.position.y < _blockers[0].transform.position.y - 1);
         PlaceCollider();
     }
 }

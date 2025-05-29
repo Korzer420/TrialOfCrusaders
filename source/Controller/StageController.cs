@@ -67,8 +67,17 @@ internal static class StageController
         On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += Block_Doors;
         CombatController.EnemiesCleared += CombatController_EnemiesCleared;
         HistoryController.CreateEntry += HistoryController_CreateEntry;
+        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         
         _enabled = true;
+    }
+
+    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
+            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
+            return true;
+        return orig;
     }
 
     internal static void Unload()
@@ -111,10 +120,36 @@ internal static class StageController
         ClearExit();
     }
 
-    private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    public static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "GG_Engine")
             UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
+        else if (arg1.name == "Fungus2_14")
+            UnityEngine.Object.Destroy(GameObject.Find("Mantis Lever (1)"));
+        else if (arg1.name == "Ruins1_05")
+            SpawnTeleporter(new(3.68f, 153.19f), new(3.68f, 142.4f));
+        else if (arg1.name == "Hive_01")
+            SpawnTeleporter(new(44.54f, 11.09f), new(93.57f, 38.1f));
+        else if (arg1.name == "Fungus3_48")
+            SpawnTeleporter(new(19.2f, 105.6f), new(24.89f, 96f));
+        else if (arg1.name == "Hive_03")
+            SpawnTeleporter(new(47.33f, 142.4f), new(30.53f, 126.4f));
+        else if (arg1.name == "Deepnest_East_14")
+            SpawnTeleporter(new(141.57f, 58.15f), new(124.06f, 21.3f));
+        else if (arg1.name == "Abyss_19")
+            SpawnTeleporter(new(90.1f, 3.4f), new(114.41f, 3.4f));
+    }
+
+    private static void SpawnTeleporter(Vector3 source, Vector3 target)
+    {
+        GameObject firstLift = new("Trial Lift");
+        Lift first = firstLift.AddComponent<Lift>();
+        firstLift.transform.position = source + new Vector3(0f, 0f, 0.01f);
+
+        GameObject secondLift = new("Trial Lift 2");
+        secondLift.AddComponent<Lift>().Partner = first;
+        secondLift.transform.position = target + new Vector3(0f,0f, 0.01f);
+        first.Partner = secondLift.GetComponent<Lift>();
     }
 
     internal static void ClearExit()
@@ -210,7 +245,7 @@ internal static class StageController
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-                        //Block Mage Knight at 16.32f, 74.4f
+                        
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
@@ -227,24 +262,25 @@ internal static class StageController
                     // Not earlier than 10.
                     // Not after/before a quiet room.
                     // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
-                        && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
-                    {
-                        float chance = 0.5f;
-                        if (CombatController.HasPower<Damocles>(out _))
-                            chance += 4.5f;
-                        if (CombatController.HasPower<TreasureHunter>(out _))
-                            chance += 2.5f;
-                        UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
-                        if (UpcomingTreasureRoom)
-                            _treasureRoomCooldown = 6;
-                        else
-                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
-                    }
-                    else
-                        UpcomingTreasureRoom = false;
+                    //if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                    //    && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
+                    //{
+                    //    float chance = 0.5f;
+                    //    if (CombatController.HasPower<Damocles>(out _))
+                    //        chance += 4.5f;
+                    //    if (CombatController.HasPower<TreasureHunter>(out _))
+                    //        chance += 2.5f;
+                    //    UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
+                    //    if (UpcomingTreasureRoom)
+                    //        _treasureRoomCooldown = 6;
+                    //    else
+                    //        _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
+                    //}
+                    //else
+                    //    UpcomingTreasureRoom = false;
                 }
                 _intendedDestination = new(info.SceneName, info.EntryGateName);
+                LogHelper.Write("Current room id: " + CurrentRoomIndex+" Entry gate: "+info.EntryGateName);
             }
         }
         orig(self, info);
@@ -312,8 +348,20 @@ internal static class StageController
         //if (Spawner.ContinueSpawn)
         //    return;
         _intendedDestination.Item1 = null;
+        if (GameManager.instance.sceneName == "Fungus3_40")
+        {
+            GameObject marmuGate = GameObject.Find("Dream Gate");
+            if (marmuGate != null)
+                GameObject.Destroy(marmuGate);
+            marmuGate = GameObject.Find("Dream Gate (1)");
+            if (marmuGate != null)
+                GameObject.Destroy(marmuGate);
+        }
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
+        if (!CombatController.HasPower<DreamNail>(out _) 
+            && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
+            GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
     }
 
     #endregion
@@ -415,6 +463,8 @@ internal static class StageController
             UnityEngine.Object.Destroy(self.gameObject);
         else if (self.gameObject.name == "Station Bell")
             UnityEngine.Object.Destroy(self.gameObject);
+        else if (self.FsmName == "Challenge Start" && self.gameObject.name == "Challenge Prompt" && self.transform.parent != null && self.transform.parent.name == "Mantis Battle")
+            self.gameObject.SetActive(false);
     }
 
     internal static IEnumerator WaitForTransition()
@@ -447,7 +497,13 @@ internal static class StageController
             || persistentBoolData.sceneName == "Ruins1_05" && persistentBoolData.id == "Ruins Lever 3"
             || persistentBoolData.sceneName == "Mines_35" && persistentBoolData.id == "mine_1_quake_floor"
             || persistentBoolData.sceneName == "Deepnest_East_14" && persistentBoolData.id.Contains("Quake Floor")
-            || persistentBoolData.sceneName == "Tutorial_01" && persistentBoolData.id == "Door")
+            || persistentBoolData.sceneName == "Tutorial_01" && persistentBoolData.id == "Door"
+            || persistentBoolData.sceneName == "Abyss_19" && persistentBoolData.id == "One Way Wall"
+            || persistentBoolData.sceneName == "Deepnest_41" && persistentBoolData.id == "One Way Wall (2)"
+            || persistentBoolData.sceneName == "Deepnest_01b" && persistentBoolData.id == "One Way Wall"
+            || persistentBoolData.sceneName == "Deepnest_East_02" && persistentBoolData.id == "Quake Floor"
+            || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
+            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass"))
         {
             persistentBoolData.activated = true;
             return persistentBoolData;

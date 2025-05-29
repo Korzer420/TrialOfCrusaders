@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using KorzUtils.Helper;
+using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
@@ -45,7 +46,7 @@ internal static class SetupManager
                 EasyNeededProgress = x.EasyNeededProgress,
                 SelectedTransition = y
             })];
-            if (roomCopies.Count != 5)
+            if (roomCopies.Count < 5)
                 for (int i = roomCopies.Count; i <= 5; i++)
                     roomCopies.Add(new RoomData()
                     {

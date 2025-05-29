@@ -113,6 +113,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
         On.GameManager.StartNewGame += GameManager_StartNewGame;
         On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.OnEnter += SpawnShiny;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += StageController.SceneManager_activeSceneChanged;
         if (_coroutineHolder != null)
             GameObject.Destroy(_coroutineHolder.gameObject);
         _coroutineHolder = new GameObject("TrialCoroutineHelper").AddComponent<Dummy>();
@@ -158,6 +159,12 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         PDHelper.FountainVesselSummoned = true;
         PDHelper.HasKingsBrand = true;
         PDHelper.DuskKnightDefeated = true;
+        PDHelper.KilledInfectedKnight = true;
+        PDHelper.KilledMageKnight = true;
+        PDHelper.MegaMossChargerDefeated = true;
+        PDHelper.InfectedKnightDreamDefeated = true;
+        PDHelper.AbyssGateOpened = true;
+        PDHelper.HegemolDefeated = true;
         // ToDo: Call OnHook (like IC to allow mods to modify).
         //orig(self, permadeathMode, bossRushMode);
     }

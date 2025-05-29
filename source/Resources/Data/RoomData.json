@@ -955,7 +955,7 @@
   },
   {
     "Name": "Abyss_19",
-    "AllowedEntrances": [ "bot2", "right1", "bot1" ],
+    "AllowedEntrances": ["right1", "bot1" ],
     "BossRoom": false,
     "NeededProgress": 128,
     "ConditionalProgress": [],
@@ -1009,7 +1009,7 @@
   },
   {
     "Name": "Fungus3_44",
-    "AllowedEntrances": [ "door1", "bot1", "right1" ],
+    "AllowedEntrances": [ "bot1", "right1" ],
     "BossRoom": false,
     "NeededProgress": 2,
     "ConditionalProgress": [],
@@ -1153,7 +1153,7 @@
   },
   {
     "Name": "Deepnest_41",
-    "AllowedEntrances": [ "left2", "right1", "left1" ],
+    "AllowedEntrances": [ "left2"],
     "BossRoom": false,
     "NeededProgress": 2,
     "ConditionalProgress": [],
@@ -1191,7 +1191,7 @@
     "Name": "Deepnest_01b",
     "AllowedEntrances": [ "bot1", "top1", "right1", "right2", "top2" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 130,
     "ConditionalProgress": [ 1, 128 ],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -1232,15 +1232,15 @@
     "EasyNeededProgress": 129,
     "EasyConditionalProgress": []
   },
-  {
-    "Name": "Abyss_03_c",
-    "AllowedEntrances": [ "door_tram_arrive", "top1" ],
-    "BossRoom": false,
-    "NeededProgress": 2,
-    "ConditionalProgress": [],
-    "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
-  },
+  //{
+  //  "Name": "Abyss_03_c",
+  //  "AllowedEntrances": [ "top1" ],
+  //  "BossRoom": false,
+  //  "NeededProgress": 2,
+  //  "ConditionalProgress": [],
+  //  "EasyNeededProgress": 0,
+  //  "EasyConditionalProgress": []
+  //},
   {
     "Name": "Deepnest_East_01",
     "AllowedEntrances": [ "top1", "right1", "bot1" ],
@@ -1639,7 +1639,7 @@
   },
   {
     "Name": "Fungus3_48",
-    "AllowedEntrances": [ "right2", "bot1" ],
+    "AllowedEntrances": [ "right2", "bot1", "right1" ],
     "BossRoom": false,
     "NeededProgress": 130,
     "ConditionalProgress": [],
