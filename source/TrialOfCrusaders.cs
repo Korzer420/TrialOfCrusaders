@@ -56,8 +56,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         Component.Destroy(TreasureManager.Shiny.GetComponent<PersistentBoolItem>());
         GameObject.DontDestroyOnLoad(TreasureManager.Shiny);
 
-        ConcussionEffect.ConcussionObject = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
-        GameObject.DontDestroyOnLoad(ConcussionEffect.ConcussionObject);
+        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
+        GameObject.DontDestroyOnLoad(HubController.Tink);
+        ConcussionEffect.PreparePrefab(preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab);
 
         // We love carl <3
         GameObject carl = preloadedObjects["Crossroads_ShamanTemple"]["_Enemies/Zombie Runner"];
@@ -128,8 +129,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         orig(self, hitInstance);
-        if (self.GetComponent<BurnEffect>() == null)
-            self.gameObject.AddComponent<BurnEffect>();
+        if (self.GetComponent<ConcussionEffect>() == null)
+            self.gameObject.AddComponent<ConcussionEffect>();
     }
 
 #if DEBUG

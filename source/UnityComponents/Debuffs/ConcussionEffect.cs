@@ -16,15 +16,18 @@ public class ConcussionEffect : MonoBehaviour
 
     #endregion
 
-    public static GameObject ConcussionObject { get; set; }
+    internal static GameObject Prefab { get; set; }
+
+    /// <summary>
+    /// Gets or sets the time which has to pass, before an enemy recovers the concussion. Can be extendend by nail hits.
+    /// </summary>
+    public float Timer { get; set; } = 3f;
 
     private void Start()
     {
-        _visualIndicator = Instantiate(ConcussionObject, transform);
-        Destroy(_visualIndicator.GetComponent<PlayMakerFSM>());
-        Destroy(_visualIndicator.GetComponent<TinkEffect>());
-        Destroy(_visualIndicator.GetComponent<DamageHero>());
+        _visualIndicator = Instantiate(Prefab, transform);
         _visualIndicator.transform.localScale = new(.5f, .5f);
+        _visualIndicator.SetActive(true);
         _collider = gameObject.GetComponent<BoxCollider2D>();
     }
 
@@ -34,11 +37,24 @@ public class ConcussionEffect : MonoBehaviour
         _visualIndicator.transform.localPosition = new(0, 0 + _collider.size.y / 2);
         _passedTime += Time.deltaTime;
         if (_passedTime >= Timer)
+        { 
             Destroy(_visualIndicator);
+            Destroy(this);
+        }
     }
 
-    /// <summary>
-    /// Gets or sets the time which has to pass, before an enemy recovers the concussion. Can be extendend by nail hits.
-    /// </summary>
-    public float Timer { get; set; } = 3f;
+    internal static void PreparePrefab(GameObject prefab)
+    {
+        Destroy(prefab.GetComponent<PlayMakerFSM>());
+        Destroy(prefab.GetComponent<TinkEffect>());
+        Destroy(prefab.GetComponent<DamageHero>());
+        Destroy(prefab.GetComponent<BoxCollider2D>());
+        Destroy(prefab.GetComponent<PlayMakerFixedUpdate>());
+        Destroy(prefab.GetComponent<ObjectBounce>());
+        prefab.GetComponent<tk2dSpriteAnimator>().playAutomatically = true;
+        prefab.GetComponent<tk2dSpriteAnimator>().ClipFps /= 2;
+        prefab.name = "Concussion Effect";
+        Prefab = prefab;
+        GameObject.DontDestroyOnLoad(prefab);
+    }
 }

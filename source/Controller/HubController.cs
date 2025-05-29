@@ -18,6 +18,8 @@ internal static class HubController
     private static int _rolledSeed;
     private static List<SeedTablet> _seedTablets = [];
 
+    internal static GameObject Tink { get; set; }
+
     #region Setup
 
     internal static void Initialize()
@@ -188,7 +190,7 @@ internal static class HubController
                 obstacleGameObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Mirror");
                 obstacleGameObject.AddComponent<BoxCollider2D>().size = new(1f, 1f);
                 obstacleGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
-                obstacleGameObject.AddComponent<TinkEffect>().blockEffect = ConcussionEffect.ConcussionObject.GetComponent<TinkEffect>().blockEffect;
+                obstacleGameObject.AddComponent<TinkEffect>().blockEffect = Tink;
                 obstacleGameObject.layer = 11;
                 SeedTablet tablet = obstacleGameObject.AddComponent<SeedTablet>();
                 _seedTablets.Add(tablet);
