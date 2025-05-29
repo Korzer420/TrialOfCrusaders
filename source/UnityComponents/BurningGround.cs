@@ -45,13 +45,9 @@ internal class BurningGround : MonoBehaviour
 
     private void SpawnFlames(int count)
     {
-        GameObject flame = GameObject.Instantiate(BurnEffect.Burn, transform);
+        GameObject flame = GameObject.Instantiate(BurnEffect.BurnPrefab, transform);
         flame.name = "Ground Flame " + count;
         flame.transform.localPosition = new(-5f + 1.25f * count, 0f);
-        ParticleSystem particle = flame.GetComponent<ParticleSystem>();
-        ParticleSystem.MainModule mainModule = particle.main;
-        mainModule.duration = 10;
         flame.SetActive(true);
-        particle.Play();
     }
 }

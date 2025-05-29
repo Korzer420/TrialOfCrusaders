@@ -64,8 +64,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
         GameObject corpse = typeof(EnemyDeathEffects).GetField("corpsePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
             .GetValue(carl.GetComponent<EnemyDeathEffects>()) as GameObject;
-        BurnEffect.Burn = corpse.transform.Find("Corpse Flame").gameObject;
-        GameObject.DontDestroyOnLoad(BurnEffect.Burn);
+        BurnEffect.PreparePrefab(corpse.transform.Find("Corpse Flame").gameObject);
 
         BleedEffect.PreparePrefab(typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
             .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject);
@@ -129,8 +128,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         orig(self, hitInstance);
-        if (self.GetComponent<BleedEffect>() == null)
-            self.gameObject.AddComponent<BleedEffect>();
+        if (self.GetComponent<BurnEffect>() == null)
+            self.gameObject.AddComponent<BurnEffect>();
     }
 
 #if DEBUG

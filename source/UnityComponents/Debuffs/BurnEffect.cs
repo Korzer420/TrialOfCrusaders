@@ -19,27 +19,16 @@ internal class BurnEffect : MonoBehaviour
 
     public int LeftDamage { get; set; }
 
-    public static GameObject Burn { get; set; }
-
-    internal static bool PoweredUp => CombatController.HasPower(out FragileSpirit spirit) && spirit.SpiritActive;
+    public static GameObject BurnPrefab { get; set; }
 
     public const string TextColor = "#e6a100";
 
     void Start()
     {
-        _flameParticle = Instantiate(Burn, transform);
+        _flameParticle = Instantiate(BurnPrefab, transform);
         _flameParticle.transform.localPosition = new(0f, 0f, -1f);
         _enemy = GetComponent<HealthManager>();
-        ParticleSystem particle = _flameParticle.GetComponent<ParticleSystem>();
-        MainModule mainModule = particle.main;
-        mainModule.duration = 10;
-        mainModule.loop = true;
-        mainModule.maxParticles *= 3;
-        MinMaxCurve speed = mainModule.startSpeed;
-        speed.constantMin *= 3;
-        speed.constantMax *= 3;
         _flameParticle.SetActive(true);
-        particle.Play();
     }
 
     void FixedUpdate()
@@ -54,7 +43,7 @@ internal class BurnEffect : MonoBehaviour
             int damage = Mathf.CeilToInt(LeftDamage / modifier);
             // Respect invinciblity
             if (!_enemy.IsInvincible)
-                _enemy.ApplyExtraDamage(PoweredUp ? damage * 2 : damage);
+                _enemy.ApplyExtraDamage(damage);
             LeftDamage -= damage;
         }
         _leftDuration -= Time.deltaTime;
@@ -70,5 +59,20 @@ internal class BurnEffect : MonoBehaviour
         LeftDamage += damage;
         _leftDuration = 10f;
         _initialDamage = true;
+    }
+
+    internal static void PreparePrefab(GameObject prefab)
+    {
+        prefab.name = "Burn Effect";
+        ParticleSystem particle = prefab.GetComponent<ParticleSystem>();
+        MainModule mainModule = particle.main;
+        mainModule.duration = 10;
+        mainModule.loop = true;
+        mainModule.maxParticles *= 10;
+        mainModule.playOnAwake = true;
+        mainModule.startColor = new(new Color(0.9f, 0.4f, 0f)); // Orange
+        particle.emissionRate = 100f;
+        BurnPrefab = prefab;
+        GameObject.DontDestroyOnLoad(BurnPrefab);
     }
 }
