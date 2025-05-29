@@ -67,9 +67,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         BurnEffect.Burn = corpse.transform.Find("Corpse Flame").gameObject;
         GameObject.DontDestroyOnLoad(BurnEffect.Burn);
 
-        BleedEffect.Bleed = typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject;
-        GameObject.DontDestroyOnLoad(BleedEffect.Bleed);
+        BleedEffect.PreparePrefab(typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject);
 
         GameObject ghost = preloadedObjects["Ruins1_28"]["Flamebearer Spawn"]
             .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
@@ -130,8 +129,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         orig(self, hitInstance);
-        if (self.GetComponent<WeakenedEffect>() == null)
-            self.gameObject.AddComponent<WeakenedEffect>();
+        if (self.GetComponent<BleedEffect>() == null)
+            self.gameObject.AddComponent<BleedEffect>();
     }
 
 #if DEBUG

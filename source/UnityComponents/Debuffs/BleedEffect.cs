@@ -6,6 +6,7 @@ namespace TrialOfCrusaders.UnityComponents.Debuffs;
 internal class BleedEffect : MonoBehaviour
 {
     private float _leftDuration = 5f;
+    private float _animationTimer = 0.25f;
     public const string TextColor = "#ff0303";
 
     private HealthManager _enemy;
@@ -16,17 +17,26 @@ internal class BleedEffect : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_leftDuration <= 0 || _enemy.isDead)
+        if (_leftDuration <= 0 || _enemy == null || !_enemy.gameObject.activeSelf || _enemy.isDead)
             Destroy(this);
-        if (_leftDuration != 5f && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f))
+        if (_leftDuration != 5f && !_enemy.IsInvincible && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f))
+            _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage));
+        _leftDuration -= Time.deltaTime;
+        _animationTimer -= Time.deltaTime;
+        if (_animationTimer <= 0f)
         {
+            _animationTimer = 0.25f;
             // This does recycle itself
             GameObject bleedEffect = Instantiate(Bleed, transform.position - new Vector3(0f, 0f, 1f), Quaternion.identity);
-            bleedEffect.GetComponent<SpriteRenderer>().color = Color.red;
             bleedEffect.SetActive(true);
-            if (!_enemy.IsInvincible)
-                _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage / 5));
         }
-        _leftDuration -= Time.deltaTime;
     }
+    internal static void PreparePrefab(GameObject prefab)
+    {
+        prefab.name = "Bleed Effect";
+        prefab.GetComponent<SpriteRenderer>().color = Color.red;
+        Bleed = prefab;
+        GameObject.DontDestroyOnLoad(Bleed);
+    }
+
 }
