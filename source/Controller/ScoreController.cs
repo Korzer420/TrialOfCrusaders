@@ -155,6 +155,9 @@ public static class ScoreController
             HistoryController.TempEntry = null;
             GameManager.instance.SaveGame();
             Unload();
+            HubController.Initialize();
+            HistoryController.Initialize();
+            PhaseController.CurrentPhase = Phase.Lobby;
             UnityEngine.Object.Destroy(inspect);
         });
         fsm.AddState("Display Score", () =>

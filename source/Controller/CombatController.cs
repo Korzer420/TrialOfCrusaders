@@ -300,21 +300,8 @@ public static class CombatController
     {
         if (self.IsCorrectContext("Hero Death Anim", "Hero Death", "Check MP"))
         {
-            // Reset shade, save history entry and reset to hub control.
-            PDHelper.ShadeMapZone = string.Empty;
-            PDHelper.ShadeScene = string.Empty;
-            PDHelper.ShadePositionX = 0;
-            PDHelper.ShadePositionY = 0;
-            PDHelper.SoulLimited = false;
             self.Fsm.Variables.FindFsmBool("Soul Cracked").Value = false;
-            ScoreController.Score.Score = PDHelper.GeoPool;
-            HistoryController.AddEntry(RunResult.Failed);
-            PDHelper.GeoPool = 0;
-            Unload();
-            ScoreController.Unload();
-            StageController.Unload();
-            HubController.Initialize();
-            HistoryController.Initialize();
+            
         }
         orig(self);
     }

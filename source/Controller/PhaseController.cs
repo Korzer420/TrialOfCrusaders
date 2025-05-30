@@ -71,4 +71,24 @@ public static class PhaseController
         CurrentPhase = Phase.Inactive;
         yield return orig(self);
     }
+
+    internal static void ReturnToLobby()
+    {
+        // Reset shade, save history entry and reset to hub control.
+        PDHelper.ShadeMapZone = string.Empty;
+        PDHelper.ShadeScene = string.Empty;
+        PDHelper.ShadePositionX = 0;
+        PDHelper.ShadePositionY = 0;
+        PDHelper.SoulLimited = false;
+        ScoreController.Score.Score = PDHelper.GeoPool;
+        HistoryController.AddEntry(RunResult.Failed);
+        PDHelper.GeoPool = 0;
+        CombatController.Unload();
+        ScoreController.Unload();
+        StageController.Unload();
+        HubController.Initialize();
+        HistoryController.Initialize();
+        CurrentPhase = Phase.Lobby;
+
+    }
 }

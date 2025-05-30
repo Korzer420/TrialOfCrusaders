@@ -48,7 +48,6 @@ internal static class HubController
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
         GameCameras.instance.hudCanvas.gameObject.SetActive(false);
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
-        TrialOfCrusaders.Instance.RunActive = false;
         
         _enabled = true;
     }
@@ -80,6 +79,7 @@ internal static class HubController
         transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
         CoroutineHelper.WaitForHero(() =>
         {
+            PDHelper.Geo = 0;
             GameManager.instance.SaveGame();
             GameObject.Find("_GameCameras").transform.Find("HudCamera/Hud Canvas/Geo Counter").gameObject
                 .LocateMyFSM("Geo Counter")
@@ -151,7 +151,7 @@ internal static class HubController
                 // Spawn two orbs at the start.
                 TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
                 TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
-                TrialOfCrusaders.Instance.RunActive = true;
+                PhaseController.CurrentPhase = Phase.Run;
                 Unload();
             }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
         }

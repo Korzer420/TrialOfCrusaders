@@ -23,8 +23,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     public static TrialOfCrusaders Instance { get; set; }
 
-    public bool RunActive { get; set; }
-
     internal static Dummy Holder => Instance._coroutineHolder;
 
     public override List<(string, string)> GetPreloadNames() =>
