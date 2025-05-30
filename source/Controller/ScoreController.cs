@@ -2,6 +2,7 @@
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ public static class ScoreController
         On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable += SetupResultElements;
         HistoryController.CreateEntry += HistoryController_CreateEntry;
+        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         StartTimer();
         _enabled = true;
     }
@@ -105,6 +107,13 @@ public static class ScoreController
         else if (result == RunResult.Forfeited)
             entry.Score.Score = PDHelper.GeoPool;
         entry.Score.Essence = PDHelper.DreamOrbs;
+    }
+
+    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.disablePause))
+            return orig || PhaseController.CurrentPhase == Phase.Result;
+        return orig;
     }
 
     #region Result show

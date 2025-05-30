@@ -6,5 +6,7 @@ public enum Phase
 
     Lobby,
 
-    Run
+    Run,
+
+    Result
 }

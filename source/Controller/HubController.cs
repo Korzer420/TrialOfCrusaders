@@ -45,6 +45,7 @@ internal static class HubController
         PDHelper.DreamOrbs = 0;
         PDHelper.HasDreamNail = true;
         PDHelper.MaxHealth = 5;
+        PDHelper.SoulLimited = false;
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
         GameCameras.instance.hudCanvas.gameObject.SetActive(false);
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
@@ -123,37 +124,10 @@ internal static class HubController
             info.EntryGateName = "door_dreamEnter";
             int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
             RngProvider.Seeded = finalSeed != _rolledSeed;
-            StageController.CurrentRoomData = SetupManager.GenerateNormalRun(finalSeed);
+            RngProvider.Seed = finalSeed;
+            StageController.CurrentRoomData = SetupManager.GenerateNormalRun();
             StageController.CurrentRoomIndex = -1;
-
-            // Switch controller set
-            StageController.Initialize();
-            ScoreController.Initialize();
-            CombatController.Initialize();
-            HistoryController.Unload();
-
-            CoroutineHelper.WaitUntil(() =>
-            {
-                PDHelper.HasDreamNail = false;
-                GameObject pedestal = new("Pedestal");
-                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
-                pedestal.transform.position = new(104.68f, 15.4f, 0);
-                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
-                pedestal.layer = 8; // Terrain layer
-                pedestal.SetActive(true);
-
-                pedestal = new("Pedestal2");
-                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
-                pedestal.transform.position = new(109f, 15.4f, 0);
-                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
-                pedestal.layer = 8; // Terrain layer
-                pedestal.SetActive(true);
-                // Spawn two orbs at the start.
-                TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
-                TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
-                PhaseController.CurrentPhase = Phase.Run;
-                Unload();
-            }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+            PhaseController.TransitionTo(Phase.Run);
         }
         else if (info.SceneName == "Room_Colosseum_Bronze")
         {

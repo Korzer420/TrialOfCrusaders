@@ -111,14 +111,15 @@ public static class CombatController
         On.HeroController.Die += HeroController_Die;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter += IntSwitch_OnEnter;
         On.GameManager.GetCurrentMapZone += GameManager_GetCurrentMapZone;
-        //ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-        _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
+        ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
         HistoryController.CreateEntry += HistoryController_CreateEntry;
         // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
         IL.BossSequenceController.RestoreBindings += BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter += AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += MoveLifebloodInFront;
         On.BossSceneController.Start += BossSceneController_Start;
+
+        _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
 
         CreateExtraHealth();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -145,7 +146,6 @@ public static class CombatController
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
-
     }
 
     public static void Unload()
@@ -171,15 +171,15 @@ public static class CombatController
         On.HeroController.Die -= HeroController_Die;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter -= IntSwitch_OnEnter;
         On.GameManager.GetCurrentMapZone -= GameManager_GetCurrentMapZone;
-        //ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
-        _attackMethod?.Dispose();
+        ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
         HistoryController.CreateEntry -= HistoryController_CreateEntry;
+        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= MoveLifebloodInFront;
         On.BossSceneController.Start -= BossSceneController_Start;
-        _enabled = false;
-
+        _attackMethod?.Dispose();
+        
         // Reset data.
         CombatLevel = 0;
         SpiritLevel = 0;
@@ -190,6 +190,7 @@ public static class CombatController
         ObtainedPowers.Clear();
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
+        _enabled = false;
     }
 
     #endregion
@@ -301,7 +302,7 @@ public static class CombatController
         if (self.IsCorrectContext("Hero Death Anim", "Hero Death", "Check MP"))
         {
             self.Fsm.Variables.FindFsmBool("Soul Cracked").Value = false;
-            
+            PhaseController.TransitionTo(Phase.Lobby);
         }
         orig(self);
     }
@@ -619,7 +620,7 @@ public static class CombatController
             hitInstance.DamageDealt += effect.ExtraDamage;
 
 #if DEBUG
-        hitInstance.DamageDealt = Math.Max(50, hitInstance.DamageDealt);
+        //hitInstance.DamageDealt = Math.Max(50, hitInstance.DamageDealt);
 #endif
         orig(self, hitInstance);
     }

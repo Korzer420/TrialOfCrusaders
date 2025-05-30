@@ -8,7 +8,7 @@ namespace TrialOfCrusaders;
 
 internal static class SetupManager
 {
-    internal static List<RoomData> GenerateNormalRun(int seed)
+    internal static List<RoomData> GenerateNormalRun()
     {
         //return StageController.RoomList.Where(x => !x.BossRoom)
         //    .Select(x => new RoomData()
@@ -27,7 +27,6 @@ internal static class SetupManager
         // Forced treasure room at 40 and 80 with fireball/dive (if already obtained, spawn a rare treasure instead).
         // No room repeat under 15 rooms.
         // No boss repeat.
-        RngProvider.Seed = seed;
         List<RoomData> roomList = [];
         //roomList.Add(StageController.RoomList.First(x => x.Name == "Crossroads_39"));
         //roomList[0].SelectedTransition = "left1";

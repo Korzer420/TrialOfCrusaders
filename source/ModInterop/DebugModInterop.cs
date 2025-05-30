@@ -54,6 +54,19 @@ public static class DebugModInterop
     [BindableMethod(name = "Spawn Catch Up Orb", category = "TrialOfCrusaders")]
     public static void SpawnCatchUpOrb() => SpawnShiny(TreasureType.CatchUpStat);
 
+    [BindableMethod(name = "Print Enemies", category = "TrialOfCrusaders")]
+    public static void PrintEnemies()
+    {
+        if (PhaseController.CurrentPhase != Phase.Run)
+        {
+            Console.AddLine("Wrong phase. Cannot print enemies.");
+            return;
+        }
+        Console.AddLine("Print enemies:");
+        foreach (HealthManager enemy in CombatController.Enemies)
+            Console.AddLine("Enemy name: " + enemy.name);
+    }
+
     private static void SpawnShiny(TreasureType type)
     {
         if (PhaseController.CurrentPhase != Phase.Run)

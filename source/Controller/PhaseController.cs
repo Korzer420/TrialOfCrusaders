@@ -1,6 +1,9 @@
 ﻿using KorzUtils.Helper;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using System.Collections;
 using TrialOfCrusaders.Enums;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
 
@@ -13,16 +16,27 @@ public static class PhaseController
         On.UIManager.ContinueGame += UIManager_ContinueGame;
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
         On.GameManager.StartNewGame += GameManager_StartNewGame;
+        IL.GameManager.StartNewGame += SkipStartRoutine;
+    }
+
+    private static void SkipStartRoutine(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        ILLabel label;
+        cursor.GotoNext(x => x.MatchRet());
+        cursor.GotoNext(x => x.MatchRet());
+        label = cursor.MarkLabel();
+        cursor.Goto(0);
+        cursor.EmitDelegate(() => CurrentPhase != Phase.Inactive);
+        cursor.Emit(OpCodes.Brtrue, label);
     }
 
     private static void GameManager_StartNewGame(On.GameManager.orig_StartNewGame orig, GameManager self, bool permadeathMode, bool bossRushMode)
     {
         //Spawner.ContinueSpawn = false;
         // ToDo: Check game mode
-        SpawnController.Initialize();
+        TransitionTo(Phase.Lobby);
         self.ContinueGame();
-        HubController.Initialize();
-        HistoryController.Initialize();
         PDHelper.CorniferAtHome = true;
         PDHelper.ColosseumBronzeOpened = true;
         PDHelper.GiantFlyDefeated = true;
@@ -39,56 +53,111 @@ public static class PhaseController
         PDHelper.HegemolDefeated = true;
         CurrentPhase = Phase.Lobby;
 
-        // ToDo: Call OnHook (like IC to allow mods to modify).
-        //orig(self, permadeathMode, bossRushMode);
+        // The IL hook above should prevent the original code from running.
+        // We still keep this call to allow other mods to trigger.
+        orig(self, permadeathMode, bossRushMode);
     }
 
     private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
     {
         //Spawner.ContinueSpawn = true;
         // ToDo: Check for savefile gamemode.
-        SpawnController.Initialize();
-        CurrentPhase = Phase.Lobby;
+        TransitionTo(Phase.Lobby);
         orig(self);
-        HubController.Initialize();
     }
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
     {
-        // Save forfeited run.
-        if (CurrentPhase == Phase.Run)
-            HistoryController.AddEntry(RunResult.Forfeited);
-        if (CurrentPhase != Phase.Inactive)
-        {
-            HistoryController.Unload();
-            SpawnController.Unload();
-            HubController.Unload();
-            CombatController.Unload();
-            StageController.Unload();
-            ScoreController.Unload();
-            TrialOfCrusaders.Holder.StopAllCoroutines();
-        }
-        CurrentPhase = Phase.Inactive;
+        TransitionTo(Phase.Inactive);
         yield return orig(self);
     }
 
-    internal static void ReturnToLobby()
+    internal static void TransitionTo(Phase targetPhase)
     {
-        // Reset shade, save history entry and reset to hub control.
-        PDHelper.ShadeMapZone = string.Empty;
-        PDHelper.ShadeScene = string.Empty;
-        PDHelper.ShadePositionX = 0;
-        PDHelper.ShadePositionY = 0;
-        PDHelper.SoulLimited = false;
-        ScoreController.Score.Score = PDHelper.GeoPool;
-        HistoryController.AddEntry(RunResult.Failed);
-        PDHelper.GeoPool = 0;
-        CombatController.Unload();
-        ScoreController.Unload();
-        StageController.Unload();
-        HubController.Initialize();
-        HistoryController.Initialize();
-        CurrentPhase = Phase.Lobby;
+        if (CurrentPhase == targetPhase)
+            return;
+        switch (targetPhase)
+        {
+            case Phase.Run:
+                if (CurrentPhase == Phase.Lobby)
+                {
+                    StageController.Initialize();
+                    ScoreController.Initialize();
+                    CombatController.Initialize();
+                    HistoryController.Unload();
+                    CoroutineHelper.WaitUntil(() =>
+                    {
+                        PDHelper.HasDreamNail = false;
+                        GameObject pedestal = new("Pedestal");
+                        pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                        pedestal.transform.position = new(104.68f, 15.4f, 0);
+                        pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                        pedestal.layer = 8; // Terrain layer
+                        pedestal.SetActive(true);
 
+                        pedestal = new("Pedestal2");
+                        pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                        pedestal.transform.position = new(109f, 15.4f, 0);
+                        pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                        pedestal.layer = 8; // Terrain layer
+                        pedestal.SetActive(true);
+                        // Spawn two orbs at the start.
+                        TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
+                        TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+                        PhaseController.CurrentPhase = Phase.Run;
+                        HubController.Unload();
+                    }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+                }
+                else
+                    LogHelper.Write("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
+                break;
+            case Phase.Result:
+                if (CurrentPhase == Phase.Run)
+                {
+                    HistoryController.AddEntry(RunResult.Completed);
+                    StageController.Unload();
+                    CombatController.Unload();
+                }
+                else
+                    LogHelper.Write("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
+                break;
+            case Phase.Inactive:
+                // Save forfeited run.
+                if (CurrentPhase == Phase.Run)
+                    HistoryController.AddEntry(RunResult.Forfeited);
+                HistoryController.Unload();
+                SpawnController.Unload();
+                HubController.Unload();
+                CombatController.Unload();
+                StageController.Unload();
+                ScoreController.Unload();
+                TrialOfCrusaders.Holder.StopAllCoroutines();
+                break;
+            default:
+                HubController.Initialize();
+                HistoryController.Initialize();
+                if (CurrentPhase != Phase.Inactive)
+                {
+                    if (CurrentPhase == Phase.Run)
+                    {
+                        // Reset shade, save history entry and reset to hub control.
+                        PDHelper.ShadeMapZone = string.Empty;
+                        PDHelper.ShadeScene = string.Empty;
+                        PDHelper.ShadePositionX = 0;
+                        PDHelper.ShadePositionY = 0;
+                        PDHelper.SoulLimited = false;
+                        ScoreController.Score.Score = PDHelper.GeoPool;
+                        HistoryController.AddEntry(RunResult.Failed);
+                        CombatController.Unload();
+                        StageController.Unload();
+                    }
+                    PDHelper.GeoPool = 0;
+                    ScoreController.Unload();
+                }
+                else
+                    SpawnController.Initialize();
+                break;
+        }
+        CurrentPhase = targetPhase;
     }
 }

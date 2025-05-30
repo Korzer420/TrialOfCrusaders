@@ -327,8 +327,8 @@
     "Name": "Crossroads_22",
     "AllowedEntrances": [ "bot1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
-    "ConditionalProgress": [ 1, 2 ],
+    "NeededProgress": 2,
+    "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
   },
@@ -840,7 +840,7 @@
     "Name": "Waterways_13",
     "AllowedEntrances": [ "left1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 66,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -1254,7 +1254,7 @@
     "Name": "Hive_01",
     "AllowedEntrances": [ "left1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 130,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

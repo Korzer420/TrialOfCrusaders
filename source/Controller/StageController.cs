@@ -221,9 +221,7 @@ internal static class StageController
                     QuietRoom = true;
                     info.EntryGateName = "left1";
                     info.SceneName = "Room_Colosseum_Bronze";
-                    HistoryController.AddEntry(RunResult.Completed);
-                    Unload();
-                    CombatController.Unload();
+                    PhaseController.TransitionTo(Phase.Result);
                     info.Visualization = GameManager.SceneLoadVisualizations.Colosseum;
                     info.PreventCameraFadeOut = QuietRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;

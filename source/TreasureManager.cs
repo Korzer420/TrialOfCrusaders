@@ -229,9 +229,7 @@ public static class TreasureManager
             default:
                 break;
         }
-        shiny.SetActive(true);
         PlayMakerFSM fsm = shiny.LocateMyFSM("Shiny Control");
-        fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         fsm.AddVariable("Item Select", 0);
         fsm.AddVariable("Option 1", "");
         fsm.AddVariable("Option 2", "");
@@ -354,8 +352,6 @@ public static class TreasureManager
             FsmTransitionData.FromTargetState("Trink Flash").WithEventName("TRINKET"));
         fsm.GetState("Charm?").AdjustTransitions("Check Choice");
         fsm.GetState("Trink Flash").AdjustTransitions("Trink 1");
-        shiny.transform.position = position;
-        fsm.FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
         fsm.GetState("Hero Down").InsertActions(0, () => SelectionActive = true);
         fsm.GetState("Finish").AddActions(() =>
         {
@@ -364,6 +360,10 @@ public static class TreasureManager
             if (!StageController.QuietRoom)
                 HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
         });
+        shiny.SetActive(true);
+        fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
+        shiny.transform.position = position;
+        fsm.FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
     }
 
     private static int RollSelection(PlayMakerFSM fsm, TreasureType treasureType)
@@ -373,8 +373,13 @@ public static class TreasureManager
             bool rare = false;
             List<Power> selectedPowers = [];
             List<string> statBoni = [];
-            List<Power> availablePowers = [.. Powers.Except(CombatController.ObtainedPowers)
-                .Where(x => x.CanAppear)];
+            List<string> availablePowerNames = [.. Powers.Where(x => x.CanAppear).Select(x => x.Name)];
+            List<string> obtainedPowerNames = [.. CombatController.ObtainedPowers.Select(x => x.Name)];
+            availablePowerNames = [..availablePowerNames.Except(obtainedPowerNames)];
+            List<Power> availablePowers = [];
+            foreach (string powerName in availablePowerNames)
+                availablePowers.Add(Powers.First(x => x.Name == powerName));
+
             for (int i = 0; i < 3; i++)
             {
                 if (availablePowers.Count == 0)

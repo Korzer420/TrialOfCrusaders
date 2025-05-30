@@ -1,7 +1,9 @@
 ﻿using GlobalEnums;
+using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using System.Collections;
 using System.Linq;
 using TrialOfCrusaders.Controller;
@@ -83,8 +85,10 @@ internal class SpecialTransition : MonoBehaviour
         GameObject inspect = GameObject.Instantiate(prefab);
         inspect.name = "Godhome Transition";
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
-        HutongGames.PlayMaker.FsmState state = fsm.GetState("Open UI");
+        ReflectionHelper.SetField<PlayMakerFSM, FsmTemplate>(fsm, "fsmTemplate", null);
+        FsmState state = fsm.GetState("Open UI");
         state.RemoveAllActions();
+        //ReflectionHelper.CallMethod(state.ActionData, "ClearActionData");
         state.AdjustTransition("FINISHED", "Impact");
         fsm.GetState("Change Scene").RemoveActions<SendMessage>();
         fsm.GetState("Change Scene").RemoveFirstAction<GetStaticVariable>();
