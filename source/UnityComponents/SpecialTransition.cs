@@ -16,6 +16,8 @@ internal class SpecialTransition : MonoBehaviour
 {
     private float _reminderTime;
 
+    public static GameObject TransitionPrefab { get; set; }
+
     public TransitionPoint VanillaTransition { get; set; }
 
     public bool LoadIntoDream { get; set; }
@@ -76,12 +78,9 @@ internal class SpecialTransition : MonoBehaviour
         }
     }
 
-    internal void StartGodhomeTransition()
+    internal static void SetupPrefab(GameObject prefab)
     {
-        HeroController.instance.RelinquishControl();
-        HeroController.instance.AffectedByGravity(false);
-        GameObject inspect = GameObject.Instantiate(StageController.TransitionObject);
-        inspect.SetActive(true);
+        GameObject inspect = GameObject.Instantiate(prefab);
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
         HutongGames.PlayMaker.FsmState state = fsm.GetState("Open UI");
         state.RemoveAllActions();
@@ -93,6 +92,16 @@ internal class SpecialTransition : MonoBehaviour
             .WithEventName("GG TRANSITION END"));
         fsm.GetState("Transition").AdjustTransitions("Wait a bit");
         fsm.FsmVariables.FindFsmString("To Scene").Value = "Select Target";
+        TransitionPrefab = inspect;
+    }
+
+    internal void StartGodhomeTransition()
+    {
+        HeroController.instance.RelinquishControl();
+        HeroController.instance.AffectedByGravity(false);
+        GameObject inspect = GameObject.Instantiate(TransitionPrefab);
+        inspect.SetActive(true);
+        PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
         CoroutineHelper.WaitFrames(() => { fsm.SendEvent("CONVO START"); }, true, 1);
         if (!LoadIntoDream)
             GameManager.instance.StartCoroutine(RemoveTransitionBlocker());

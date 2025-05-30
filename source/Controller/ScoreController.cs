@@ -24,7 +24,9 @@ public static class ScoreController
 
     #region Properties
 
-    public static GameObject Prefab { get; set; }
+    public static GameObject ScoreboardPrefab { get; set; }
+
+    public static GameObject ResultSequencePrefab { get; set; }
 
     public static ScoreData Score { get; set; } = new();
 
@@ -107,34 +109,86 @@ public static class ScoreController
 
     #region Result show
 
-    public static void DisplayScore()
+    internal static void SetupScoreboard(GameObject prefab)
     {
-        GameObject scoreboard = UnityEngine.Object.Instantiate(Prefab);
-        scoreboard.name = "Scoreboard";
-        UnityEngine.Object.Destroy(scoreboard.GetComponent<BossDoorChallengeUI>());
-        GameObject buttonPrompt = scoreboard.transform.Find("Button Prompts").gameObject;
+        GameObject scoreObject = prefab.LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
+        scoreObject.name = "Scoreboard";
+        UnityEngine.Object.Destroy(scoreObject.GetComponent<BossDoorChallengeUI>());
+        GameObject buttonPrompt = scoreObject.transform.Find("Button Prompts").gameObject;
         GameObject confirmButton = buttonPrompt.transform.GetChild(1).gameObject;
+        confirmButton.name = "Confirm Button";
         buttonPrompt.transform.GetChild(0).gameObject.SetActive(false);
         buttonPrompt.transform.GetChild(2).gameObject.SetActive(false);
-        GameObject textObject = null;
+        confirmButton.transform.Find("Text").GetComponent<TextMeshPro>().text = "Confirm";
+        confirmButton.transform.position = new(-1.6f, -4.4f, -0.1f);
         int childCount = 0;
-        foreach (Transform child in scoreboard.transform.Find("Panel"))
+        foreach (Transform child in scoreObject.transform.Find("Panel"))
         {
             if (childCount > 1)
                 UnityEngine.Object.Destroy(child.gameObject);
             else if (childCount == 1)
-            {
-                child.name = "TextObject";
-                textObject = child.gameObject;
-            }
+                child.name = "Score Text";
             childCount++;
         }
+        ScoreboardPrefab = scoreObject;
+        GameObject.DontDestroyOnLoad(ScoreboardPrefab);
+    }
+
+    internal static void SetupResultInspect(GameObject prefab)
+    {
+        GameObject inspect = GameObject.Instantiate(prefab);
+        inspect.SetActive(true);
+        inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
+        PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
+        FsmState state = fsm.GetState("Open UI");
+        state.RemoveAllActions();
+        state.AdjustTransition("FINISHED", "Take Control");
+        fsm.AddState("Return Control", () =>
+        {
+            HeroController.instance.RegainControl();
+            HeroController.instance.StartAnimationControl();
+            PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
+            HistoryController.TempEntry.Score.Score = PDHelper.Geo;
+            HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
+            HistoryController.History.Add(HistoryController.TempEntry);
+            HistoryController.TempEntry = null;
+            GameManager.instance.SaveGame();
+            Unload();
+            UnityEngine.Object.Destroy(inspect);
+        });
+        fsm.AddState("Display Score", () =>
+        {
+            PlayMakerFSM.BroadcastEvent("CROWD CHEER");
+            StageController.PlayClearSound(false);
+            DisplayScore();
+            PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+        }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
+        fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
+        fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
+        fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
+
+        fsm = inspect.LocateMyFSM("npc_control");
+        fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
+
+        fsm.GetState("In Range").AddActions(() =>
+        {
+            Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
+            UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
+            promptObject.GetComponent<TextMeshPro>().text = "Finish";
+        });
+        ResultSequencePrefab = inspect;
+        GameObject.DontDestroyOnLoad(ResultSequencePrefab);
+    }
+
+    internal static void DisplayScore()
+    {
+        GameObject scoreboard = UnityEngine.Object.Instantiate(ScoreboardPrefab);
         scoreboard.transform.position = Vector3.zero;
         scoreboard.SetActive(true);
         scoreboard.GetComponent<Animator>().Play(0);
-        confirmButton.transform.Find("Text").GetComponent<TextMeshPro>().text = "Confirm";
-        confirmButton.transform.position = new(-1.6f, -4.4f, -0.1f);
-        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(textObject, confirmButton));
+
+        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(scoreboard.transform.Find("Panel/Score Text").gameObject, 
+            scoreboard.transform.Find("Button Prompts/Confirm Button").gameObject));
     }
 
     private static IEnumerator ScoreTally(GameObject textObject, GameObject confirmButton)
@@ -296,47 +350,9 @@ public static class ScoreController
                 self.AddState("Wait for Result", () =>
                 {
                     PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-                    GameObject inspect = UnityEngine.Object.Instantiate(StageController.TransitionObject);
+                    GameObject inspect = UnityEngine.Object.Instantiate(ResultSequencePrefab);
                     inspect.SetActive(true);
                     inspect.transform.position = new(102.41f, 10.8f);
-                    inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
-                    PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
-                    FsmState state = fsm.GetState("Open UI");
-                    state.RemoveAllActions();
-                    state.AdjustTransition("FINISHED", "Take Control");
-                    fsm.AddState("Return Control", () =>
-                    {
-                        HeroController.instance.RegainControl();
-                        HeroController.instance.StartAnimationControl();
-                        PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
-                        HistoryController.TempEntry.Score.Score = PDHelper.Geo;
-                        HistoryController.TempEntry.RunId = HistoryController.TempEntry.RunId;
-                        HistoryController.History.Add(HistoryController.TempEntry);
-                        HistoryController.TempEntry = null;
-                        GameManager.instance.SaveGame();
-                        Unload();
-                        UnityEngine.Object.Destroy(inspect);
-                    });
-                    fsm.AddState("Display Score", () =>
-                    {
-                        PlayMakerFSM.BroadcastEvent("CROWD CHEER");
-                        StageController.PlayClearSound(false);
-                        DisplayScore();
-                        PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-                    }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
-                    fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
-                    fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
-                    fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
-
-                    fsm = inspect.LocateMyFSM("npc_control");
-                    fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
-
-                    fsm.GetState("In Range").AddActions(() =>
-                    {
-                        Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
-                        UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
-                        promptObject.GetComponent<TextMeshPro>().text = "Finish";
-                    });
                 }, FsmTransitionData.FromTargetState("Open Gates").WithEventName("SHINY PICKED UP"));
                 self.GetState("Achieve Check").AdjustTransitions("Wait for Result");
             }

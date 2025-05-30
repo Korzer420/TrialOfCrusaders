@@ -11,7 +11,7 @@ internal class BleedEffect : MonoBehaviour
 
     private HealthManager _enemy;
 
-    public static GameObject Bleed { get; set; }
+    public static GameObject Prefab { get; set; }
 
     void Start() => _enemy = GetComponent<HealthManager>();
 
@@ -27,7 +27,7 @@ internal class BleedEffect : MonoBehaviour
         {
             _animationTimer = 0.25f;
             // This does recycle itself
-            GameObject bleedEffect = Instantiate(Bleed, transform.position - new Vector3(0f, 0f, 1f), Quaternion.identity);
+            GameObject bleedEffect = Instantiate(Prefab, transform.position - new Vector3(0f, 0f, 1f), Quaternion.identity);
             bleedEffect.SetActive(true);
         }
     }
@@ -35,8 +35,8 @@ internal class BleedEffect : MonoBehaviour
     {
         prefab.name = "Bleed Effect";
         prefab.GetComponent<SpriteRenderer>().color = Color.red;
-        Bleed = prefab;
-        GameObject.DontDestroyOnLoad(Bleed);
+        Prefab = prefab;
+        GameObject.DontDestroyOnLoad(Prefab);
     }
 
 }

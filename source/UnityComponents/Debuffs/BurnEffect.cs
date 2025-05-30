@@ -19,13 +19,13 @@ internal class BurnEffect : MonoBehaviour
 
     public int LeftDamage { get; set; }
 
-    public static GameObject BurnPrefab { get; set; }
+    public static GameObject Prefab { get; set; }
 
     public const string TextColor = "#e6a100";
 
     void Start()
     {
-        _flameParticle = Instantiate(BurnPrefab, transform);
+        _flameParticle = Instantiate(Prefab, transform);
         _flameParticle.transform.localPosition = new(0f, 0f, -1f);
         _enemy = GetComponent<HealthManager>();
         _flameParticle.SetActive(true);
@@ -72,7 +72,7 @@ internal class BurnEffect : MonoBehaviour
         mainModule.playOnAwake = true;
         mainModule.startColor = new(new Color(0.9f, 0.4f, 0f)); // Orange
         particle.emissionRate = 100f;
-        BurnPrefab = prefab;
-        GameObject.DontDestroyOnLoad(BurnPrefab);
+        Prefab = prefab;
+        GameObject.DontDestroyOnLoad(Prefab);
     }
 }

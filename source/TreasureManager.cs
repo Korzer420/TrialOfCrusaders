@@ -173,6 +173,15 @@ public static class TreasureManager
 
     public static bool SelectionActive { get; set; }
 
+    internal static void SetupShiny(GameObject chest)
+    {
+        Shiny = chest.transform.Find("Item").GetChild(0).gameObject;
+        Shiny.name = "ToC Item";
+        Component.Destroy(Shiny.GetComponent<ObjectBounce>());
+        Component.Destroy(Shiny.GetComponent<PersistentBoolItem>());
+        GameObject.DontDestroyOnLoad(Shiny);
+    }
+
     internal static void SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
     {
         GameObject shiny = UnityEngine.Object.Instantiate(Shiny);

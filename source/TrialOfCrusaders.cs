@@ -50,63 +50,22 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     {
         Instance = this;
         base.Initialize(preloadedObjects);
-        GameObject chest = preloadedObjects["Tutorial_01"]["_Props/Chest"];
-        TreasureManager.Shiny = chest.transform.Find("Item").GetChild(0).gameObject;
-        TreasureManager.Shiny.name = "ToC Item";
-        Component.Destroy(TreasureManager.Shiny.GetComponent<ObjectBounce>());
-        Component.Destroy(TreasureManager.Shiny.GetComponent<PersistentBoolItem>());
-        GameObject.DontDestroyOnLoad(TreasureManager.Shiny);
 
-        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
-        GameObject.DontDestroyOnLoad(HubController.Tink);
-        
-        StageController.TransitionObject = preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"];
-        GameObject.DontDestroyOnLoad(StageController.TransitionObject);
-        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
-        GameObject.DontDestroyOnLoad(Gate.Prefab);
-
-        ScoreController.Prefab = preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]
-            .LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
-        GameObject.DontDestroyOnLoad(ScoreController.Prefab);
-
-        SetupPowerPrefabs(preloadedObjects);
-        SetupDebuffs(preloadedObjects);
-
-        On.UIManager.ContinueGame += UIManager_ContinueGame;
-        On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
-        On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
-        On.GameManager.StartNewGame += GameManager_StartNewGame;
-        On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.OnEnter += SpawnShiny;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += StageController.SceneManager_activeSceneChanged;
+        // Create a global coroutine handler that all functions in the mod can use (to keep it independend of other behaviors)
         if (_coroutineHolder != null)
             GameObject.Destroy(_coroutineHolder.gameObject);
-        _coroutineHolder = new GameObject("TrialCoroutineHelper").AddComponent<Dummy>();
-        GameObject.DontDestroyOnLoad(_coroutineHolder.gameObject);
+        _coroutineHolder = new GameObject("Coroutine Helper").AddComponent<Dummy>();
 
+        // Handle the preloaded objects.
+        OrganizePrefabs(preloadedObjects);
+
+        // Hook other mods for interops
         if (ModHooks.GetMod("DebugMod") is Mod)
             HookDebug();
-        On.HealthManager.TakeDamage += HealthManager_TakeDamage;
+
+        PhaseController.Initialize();
+        On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
     }
-
-    private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
-    {
-        orig(self, hitInstance);
-        if (self.GetComponent<ShatteredMindEffect>() == null)
-            self.gameObject.AddComponent<ShatteredMindEffect>();
-    }
-
-#if DEBUG
-
-    private void SpawnShiny(On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.orig_OnEnter orig, PlayerDataBoolTest self)
-    {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Set HP Amount*"))
-        {
-            TreasureManager.SpawnShiny(TreasureType.NormalOrb, HeroController.instance.transform.position);
-        }
-        orig(self);
-    } 
-
-#endif
 
     private int EnsureSteelSoul(On.GameManager.orig_GetStatusRecordInt orig, GameManager self, string key)
     {
@@ -114,56 +73,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         if (key == "RecPermadeathMode")
             return 1;
         return orig(self, key);
-    }
-
-    private void GameManager_StartNewGame(On.GameManager.orig_StartNewGame orig, GameManager self, bool permadeathMode, bool bossRushMode)
-    {
-        //Spawner.ContinueSpawn = false;
-        //SpawnController.Initialize();
-        //self.ContinueGame();
-        //HubController.Initialize();
-        //HistoryController.Initialize();
-        //PDHelper.CorniferAtHome = true;
-        //PDHelper.ColosseumBronzeOpened = true;
-        //PDHelper.GiantFlyDefeated = true;
-        //PDHelper.ZoteDead = true;
-        //PDHelper.GiantBuzzerDefeated = true;
-        //PDHelper.FountainVesselSummoned = true;
-        //PDHelper.HasKingsBrand = true;
-        //PDHelper.DuskKnightDefeated = true;
-        //PDHelper.KilledInfectedKnight = true;
-        //PDHelper.KilledMageKnight = true;
-        //PDHelper.MegaMossChargerDefeated = true;
-        //PDHelper.InfectedKnightDreamDefeated = true;
-        //PDHelper.AbyssGateOpened = true;
-        //PDHelper.HegemolDefeated = true;
-
-        // ToDo: Call OnHook (like IC to allow mods to modify).
-        orig(self, permadeathMode, bossRushMode);
-    }
-
-    private void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
-    {
-        //Spawner.ContinueSpawn = true;
-        SpawnController.Initialize();
-        orig(self);
-        HubController.Initialize();
-    }
-
-    private IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
-    {
-        // Save forfeited run.
-        if (RunActive)
-            HistoryController.AddEntry(RunResult.Forfeited);
-        RunActive = false;
-        HistoryController.Unload();
-        SpawnController.Unload();
-        HubController.Unload(); 
-        CombatController.Unload();
-        StageController.Unload();
-        ScoreController.Unload();
-        Holder.StopAllCoroutines();
-        yield return orig(self);
     }
 
     private void HookDebug()
@@ -255,10 +164,61 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ShatteredMindEffect.PreparePrefab(objects["Ruins_Bathhouse"]["Ghost NPC/Idle Pt"]);
         // We love carl <3
         GameObject carl = objects["Crossroads_ShamanTemple"]["_Enemies/Zombie Runner"];
-        GameObject corpse = typeof(EnemyDeathEffects).GetField("corpsePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(carl.GetComponent<EnemyDeathEffects>()) as GameObject;
         BleedEffect.PreparePrefab(typeof(InfectedEnemyEffects).GetField("spatterOrangePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
             .GetValue(carl.GetComponent<InfectedEnemyEffects>()) as GameObject);
+
+        GameObject corpse = typeof(EnemyDeathEffects).GetField("corpsePrefab", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(carl.GetComponent<EnemyDeathEffects>()) as GameObject;
         BurnEffect.PreparePrefab(corpse.transform.Find("Corpse Flame").gameObject);
+    }
+
+    private void OrganizePrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
+    {
+        GameObject container = GameObject.Find("Trial of Crusaders Objects");
+        if (container != null)
+            GameObject.Destroy(container);
+        container = new("Trial of Crusaders Objects");
+        GameObject.DontDestroyOnLoad(container);
+
+        // Setup prefabs
+        SetupPowerPrefabs(preloadedObjects);
+        SetupDebuffs(preloadedObjects);
+        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
+        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
+        TreasureManager.SetupShiny(preloadedObjects["Tutorial_01"]["_Props/Chest"]);
+        ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
+        SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+        ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+
+        GameObject[] preloads = 
+        [
+            // Power prefabs
+            ..LifebloodOmen.Ghosts,
+            GroundSlam.Shockwave,
+            GreaterMind.Orb,
+            Caching.SoulCache,
+            VoidZone.Ring,
+            // Debuffs
+            ConcussionEffect.Prefab,
+            WeakenedEffect.Prefab,
+            ShatteredMindEffect.Prefab,
+            BleedEffect.Prefab,
+            BurnEffect.Prefab,
+            // Other
+            HubController.Tink,
+            Gate.Prefab,
+            TreasureManager.Shiny,
+            ScoreController.ResultSequencePrefab,
+            ScoreController.ScoreboardPrefab,
+            SpecialTransition.TransitionPrefab,
+            _coroutineHolder.gameObject
+        ];
+        foreach (GameObject gameObject in preloads)
+        {
+            gameObject.transform.SetParent(container.transform);
+            GameObject.DontDestroyOnLoad(gameObject);
+            gameObject.SetActive(false);
+        }
+        _coroutineHolder.gameObject.SetActive(true);
     }
 }

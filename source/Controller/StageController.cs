@@ -35,8 +35,6 @@ internal static class StageController
 
     public static List<RoomData> CurrentRoomData { get; set; } = [];
 
-    public static GameObject TransitionObject { get; set; }
-
     public static bool FinishedEnemies { get; set; }
 
     public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex];

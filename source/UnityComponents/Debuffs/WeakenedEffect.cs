@@ -7,7 +7,7 @@ internal class WeakenedEffect : MonoBehaviour
     private float _passedTime = 0f;
     private GameObject _effectObject;
 
-    public static GameObject SpritePrefab { get; set; }
+    public static GameObject Prefab { get; set; }
 
     public const string TextColor = "#02e9ed";
 
@@ -17,7 +17,7 @@ internal class WeakenedEffect : MonoBehaviour
     {
         if (Timer == 0f)
             Timer = Random.Range(3f, 16f);
-        _effectObject = GameObject.Instantiate(SpritePrefab, transform);
+        _effectObject = GameObject.Instantiate(Prefab, transform);
         _effectObject.transform.localPosition = Vector3.zero - new Vector3(0f,0f, 0.01f);
         _effectObject.GetComponent<Animator>().StartPlayback();
         _effectObject.SetActive(true);
@@ -44,7 +44,7 @@ internal class WeakenedEffect : MonoBehaviour
         Component.Destroy(prefab.GetComponent<PlayMakerFixedUpdate>());
         Component.Destroy(prefab.GetComponent<PlayMakerUnity2DProxy>());
         prefab.name = "Weakened Effect";
-        SpritePrefab = prefab;
-        GameObject.DontDestroyOnLoad(SpritePrefab);
+        Prefab = prefab;
+        GameObject.DontDestroyOnLoad(Prefab);
     }
 }

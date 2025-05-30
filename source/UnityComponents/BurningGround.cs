@@ -45,7 +45,7 @@ internal class BurningGround : MonoBehaviour
 
     private void SpawnFlames(int count)
     {
-        GameObject flame = GameObject.Instantiate(BurnEffect.BurnPrefab, transform);
+        GameObject flame = GameObject.Instantiate(BurnEffect.Prefab, transform);
         flame.name = "Ground Flame " + count;
         flame.transform.localPosition = new(-5f + 1.25f * count, 0f);
         flame.SetActive(true);
