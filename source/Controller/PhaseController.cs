@@ -40,7 +40,7 @@ public static class PhaseController
         CurrentPhase = Phase.Lobby;
 
         // ToDo: Call OnHook (like IC to allow mods to modify).
-        orig(self, permadeathMode, bossRushMode);
+        //orig(self, permadeathMode, bossRushMode);
     }
 
     private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)

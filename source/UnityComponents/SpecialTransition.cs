@@ -81,6 +81,7 @@ internal class SpecialTransition : MonoBehaviour
     internal static void SetupPrefab(GameObject prefab)
     {
         GameObject inspect = GameObject.Instantiate(prefab);
+        inspect.name = "Godhome Transition";
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
         HutongGames.PlayMaker.FsmState state = fsm.GetState("Open UI");
         state.RemoveAllActions();

@@ -137,6 +137,7 @@ public static class ScoreController
     internal static void SetupResultInspect(GameObject prefab)
     {
         GameObject inspect = GameObject.Instantiate(prefab);
+        inspect.name = "Result inspect";
         inspect.SetActive(true);
         inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");

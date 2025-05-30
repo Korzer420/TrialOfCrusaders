@@ -145,15 +145,19 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             .GetState("Quake Waves")
             .GetFirstAction<SpawnObjectFromGlobalPool>()
             .gameObject.Value;
+        GroundSlam.Shockwave.name = "Shockwave";
         GameObject.DontDestroyOnLoad(GroundSlam.Shockwave);
 
         GreaterMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
+        GreaterMind.Orb.name = "Greater Mind Orb";
         GameObject.DontDestroyOnLoad(GreaterMind.Orb);
 
         Caching.SoulCache = preloadedObjects["Ruins1_23"]["Ruins Vial Empty (2)/Active/soul_cache (1)"];
+        Caching.SoulCache.name = "Soul Cache";
         GameObject.DontDestroyOnLoad(Caching.SoulCache);
 
         VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
+        VoidZone.Ring.name = "Void Ring";
         GameObject.DontDestroyOnLoad(VoidZone.Ring);
     }
 
@@ -183,12 +187,14 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         // Setup prefabs
         SetupPowerPrefabs(preloadedObjects);
         SetupDebuffs(preloadedObjects);
-        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
-        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         TreasureManager.SetupShiny(preloadedObjects["Tutorial_01"]["_Props/Chest"]);
         ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
         SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
         ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
+        HubController.Tink.name = "Tink Effect";
+        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
+        Gate.Prefab.name = "Gate";
 
         GameObject[] preloads = 
         [
