@@ -516,7 +516,7 @@
     "Name": "Fungus2_13",
     "AllowedEntrances": [ "left2", "top1", "left3" ],
     "BossRoom": false,
-    "NeededProgress": 1,
+    "NeededProgress": 3,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -570,7 +570,7 @@
     "Name": "Fungus2_30",
     "AllowedEntrances": [ "top1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 130,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -703,7 +703,7 @@
   },
   {
     "Name": "Ruins1_30",
-    "AllowedEntrances": [ "left1", "right1" ],
+    "AllowedEntrances": [ "left2" ],
     "BossRoom": false,
     "NeededProgress": 2,
     "ConditionalProgress": [],
@@ -921,7 +921,7 @@
     "Name": "Room_GG_Shortcut",
     "AllowedEntrances": [ "left1", "top1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 34,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

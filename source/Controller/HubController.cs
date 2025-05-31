@@ -33,8 +33,10 @@ internal static class HubController
 
         // Reset data
         PDHelper.HasDash = false;
+        PDHelper.CanDash = false;
         PDHelper.HasShadowDash = false;
         PDHelper.HasWalljump = false;
+        PDHelper.CanWallJump = false;
         PDHelper.HasDoubleJump = false;
         PDHelper.HasLantern = false;
         PDHelper.HasSuperDash = false;

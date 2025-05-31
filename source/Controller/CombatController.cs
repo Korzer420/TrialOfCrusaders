@@ -568,7 +568,7 @@ public static class CombatController
             {
                 self.gameObject.AddComponent<InitiativeEffect>();
                 HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
-                hitInstance.DamageDealt += 20 + CombatLevel * 2;
+                hitInstance.DamageDealt += 10 + CombatLevel * 2;
             }
 
             if (HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
@@ -612,7 +612,7 @@ public static class CombatController
             {
                 self.gameObject.AddComponent<InitiativeEffect>();
                 HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
-                hitInstance.DamageDealt += 20 + CombatLevel * 2;
+                hitInstance.DamageDealt += 10 + CombatLevel * 2;
             }
         }
 
@@ -743,7 +743,7 @@ public static class CombatController
 
     private static int ModHooks_SoulGainHook(int amount)
     {
-        amount = SpiritLevel + 3;
+        amount = amount - 8 + SpiritLevel;
         if (HasPower(out Versatility versatility) && versatility.CastedSpell)
             amount += 2 + (SpiritLevel + CombatLevel) / 8;
         if (HasPower(out Powers.Common.Caching caching))
@@ -774,12 +774,6 @@ public static class CombatController
         int currentHealth = PDHelper.Health;
         if (damageAmount != InstaKillDamage)
         {
-            if (HasPower(out PaleShell shell) && shell.Shielded)
-            {
-                shell.Shielded = false;
-                damageAmount = 0;
-            }
-
             // Enemy scaling
             if (hazardType == 1)
                 damageAmount += StageController.CurrentRoomNumber / 20 * damageAmount;

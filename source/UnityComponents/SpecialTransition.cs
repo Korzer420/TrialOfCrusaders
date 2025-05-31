@@ -88,13 +88,16 @@ internal class SpecialTransition : MonoBehaviour
         ReflectionHelper.SetField<PlayMakerFSM, FsmTemplate>(fsm, "fsmTemplate", null);
         FsmState state = fsm.GetState("Open UI");
         state.RemoveAllActions();
+        state.SaveActions();
         //ReflectionHelper.CallMethod(state.ActionData, "ClearActionData");
         state.AdjustTransition("FINISHED", "Impact");
         fsm.GetState("Change Scene").RemoveActions<SendMessage>();
         fsm.GetState("Change Scene").RemoveFirstAction<GetStaticVariable>();
+        fsm.GetState("Change Scene").SaveActions();
         //fsm.GetState("Change Scene").GetFirstAction<BeginSceneTransition>().entryDelay = 3f;
         fsm.AddState("Wait a bit", [new Wait() { time = 1.5f, finishEvent = fsm.FsmEvents.First(x => x.Name == "GG TRANSITION END") }], FsmTransitionData.FromTargetState("Change Scene")
             .WithEventName("GG TRANSITION END"));
+        fsm.GetState("Wait a bit").SaveActions();
         fsm.GetState("Transition").AdjustTransitions("Wait a bit");
         fsm.FsmVariables.FindFsmString("To Scene").Value = "Select Target";
         TransitionPrefab = inspect;

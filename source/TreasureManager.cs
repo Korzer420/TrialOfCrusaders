@@ -18,6 +18,17 @@ using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
 namespace TrialOfCrusaders;
 
+/*
+    ToDo:
+- Check Dive + Fireball Inventory name for item message.
+- Implement rare power for dive + fireball if already obtained.
+- Check run id verifier.
+- Remove time boni from forfeited/failed run history.
+- Lower Room amount to 80/100 (?)
+- Check why Grimmchild is level 1 at start of game.
+- Adjust KorzUtils to check against the real charm and not the normalized value.
+ */
+
 public static class TreasureManager
 {
     private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -335,6 +346,7 @@ public static class TreasureManager
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
                     CombatController.ObtainedPowers.Add(fireball);
                     fireball.EnablePower();
+                    fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Quake:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Desolate_Dive_Icon");
@@ -342,6 +354,7 @@ public static class TreasureManager
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
                     CombatController.ObtainedPowers.Add(quake);
                     quake.EnablePower();
+                    fsm.SendEvent("TRINKET");
                     break;
                 default:
                     int amount = RollSelection(fsm, treasure);
@@ -360,6 +373,8 @@ public static class TreasureManager
             if (!StageController.QuietRoom)
                 HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
         });
+        fsm.GetState("Destroy").RemoveAllActions();
+        fsm.GetState("Destroy").AdjustTransitions("Fling?");
         shiny.SetActive(true);
         fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         shiny.transform.position = position;
@@ -481,19 +496,18 @@ public static class TreasureManager
         viewBlocker.SetActive(true);
         int layer = 0;
 
-        GameObject prefab = GameObject.Find("_GameCameras").transform.Find("HudCamera/Inventory/Inv/Inv_Items/Geo").gameObject;
-        SpawnStatBox(prefab, powerOverlay.transform);
+        SpawnStatBox(powerOverlay.transform);
         for (int i = 0; i < optionAmount; i++)
-            layer = CreateOption(i, powerOverlay.transform, prefab, fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value);
+            layer = CreateOption(i, powerOverlay.transform, fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value);
         CreateArrows(powerOverlay.transform, layer);
 
-        GameObject titleText = UnityEngine.Object.Instantiate(prefab, powerOverlay.transform, true);
-        titleText.name = "Title";
+        (SpriteRenderer, TextMeshPro) titleInfo = TextHelper.CreateUIObject("Title");
+        GameObject titleText = titleInfo.Item1.gameObject;
+        titleText.transform.SetParent(powerOverlay.transform);
         titleText.transform.position = new(0f, 6.8f, 0f);
         titleText.transform.localScale = new(2f, 2f);
-        TextMeshPro text = titleText.GetComponent<DisplayItemAmount>().textObject;
-        UnityEngine.Object.Destroy(titleText.GetComponent<DisplayItemAmount>());
-        UnityEngine.Object.Destroy(titleText.GetComponent<SpriteRenderer>());
+        UnityEngine.Object.Destroy(titleInfo.Item1);
+        TextMeshPro text = titleInfo.Item2;
         text.fontSize = 3f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
@@ -507,78 +521,85 @@ public static class TreasureManager
         return powerOverlay;
     }
 
-    private static void SpawnStatBox(GameObject prefab, Transform parent)
+    private static void SpawnStatBox(Transform parent)
     {
-        GameObject statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
-        statInfo.name = "Stat";
-        statInfo.transform.position = new(-13.5f, 2f, 0f);
-        statInfo.transform.localScale = new(2f, 2f);
-        TextMeshPro text = statInfo.GetComponent<DisplayItemAmount>().textObject;
-        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
-        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        (SpriteRenderer, TextMeshPro) statInfo = TextHelper.CreateUIObject("Combat Stat");
+        GameObject statObject = statInfo.Item1.gameObject;
+        statObject.transform.SetParent(parent);
+        statObject.transform.position = new(-13.5f, 2f, 0f);
+        statObject.transform.localScale = new(2f, 2f);
+        UnityEngine.Object.Destroy(statInfo.Item1);
+        TextMeshPro text = statInfo.Item2;
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
         text.text = $"<color=#fa0000>Combat: {CombatController.CombatLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
-        statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
-        statInfo.name = "Stat";
-        statInfo.transform.position = new(-13.5f, 1.3f, 0f);
-        statInfo.transform.localScale = new(2f, 2f);
-        text = statInfo.GetComponent<DisplayItemAmount>().textObject;
-        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
-        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        statInfo = TextHelper.CreateUIObject("Spirit Stat");
+        statObject = statInfo.Item1.gameObject;
+        statObject.transform.SetParent(parent);
+        statObject.transform.position = new(-13.5f, 1.3f, 0f);
+        statObject.transform.localScale = new(2f, 2f);
+        UnityEngine.Object.Destroy(statInfo.Item1);
+        text = statInfo.Item2;
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
         text.text = $"<color=#a700fa>Spirit: {CombatController.SpiritLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
-        statInfo = UnityEngine.Object.Instantiate(prefab, parent, true);
-        statInfo.name = "Stat";
-        statInfo.transform.position = new(-13.5f, 0.6f, 0f);
-        statInfo.transform.localScale = new(2f, 2f);
-        text = statInfo.GetComponent<DisplayItemAmount>().textObject;
-        UnityEngine.Object.Destroy(statInfo.GetComponent<DisplayItemAmount>());
-        UnityEngine.Object.Destroy(statInfo.GetComponent<SpriteRenderer>());
+        statInfo = TextHelper.CreateUIObject("Endurance Stat");
+        statObject = statInfo.Item1.gameObject;
+        statObject.transform.SetParent(parent);
+        statObject.transform.position = new(-13.5f, 0.6f, 0f);
+        statObject.transform.localScale = new(2f, 2f);
+        UnityEngine.Object.Destroy(statInfo.Item1);
+        text = statInfo.Item2;
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
         text.text = $"<color=#4fff61>Endurance: {CombatController.EnduranceLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
-        statInfo = new("Upper stat boarder");
-        statInfo.layer = 5; // UI
-        statInfo.transform.SetParent(parent);
-        statInfo.transform.position = new(-14.3f, 1.8f);
-        statInfo.transform.localScale = new(0.5f, 0.5f);
-        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Upper");
+        statObject = new("Upper stat boarder")
+        {
+            layer = 5 // UI
+        };
+        statObject.transform.SetParent(parent);
+        statObject.transform.position = new(-14.3f, 1.8f);
+        statObject.transform.localScale = new(0.5f, 0.5f);
+        statObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Upper");
 
-        statInfo = new("Lower stat boarder");
-        statInfo.layer = 5; // UI
-        statInfo.transform.SetParent(parent);
-        statInfo.transform.position = new(-14.3f, -0.8f);
-        statInfo.transform.localScale = new(0.5f, 0.5f);
-        statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Lower");
+        statObject = new("Lower stat boarder")
+        {
+            layer = 5 // UI
+        };
+        statObject.transform.SetParent(parent);
+        statObject.transform.position = new(-14.3f, -0.8f);
+        statObject.transform.localScale = new(0.5f, 0.5f);
+        statObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Stat_Border_Lower");
     }
 
-    private static int CreateOption(int count, Transform parent, GameObject prefab, string optionName)
+    private static int CreateOption(int count, Transform parent, string optionName)
     {
-        GameObject option = UnityEngine.Object.Instantiate(prefab, parent, true);
-        option.name = "Option " + (count + 1);
+        (SpriteRenderer, TextMeshPro) optionPair = TextHelper.CreateUIObject("Option " + (count + 1));
+        GameObject option = optionPair.Item1.gameObject;
+        option.transform.SetParent(parent);
         option.transform.position = new(-6.2f + count * 8.5f, 2f, 0f);
         option.transform.localScale = new(2f, 2f);
-        TextMeshPro titleText = option.GetComponent<DisplayItemAmount>().textObject;
-        UnityEngine.Object.Destroy(option.GetComponent<DisplayItemAmount>());
+        TextMeshPro titleText = optionPair.Item2;
         titleText.fontSize = 2.5f;
         titleText.enableWordWrapping = true;
-        titleText.gameObject.name = "Power Name";
+        titleText.name = "Power Title";
         titleText.textContainer.size = new(3f, 2f);
         titleText.alignment = TextAlignmentOptions.Center;
         option.transform.GetChild(0).localPosition = new(0f, -2f);
-        GameObject text = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
-        TextMeshPro description = text.GetComponent<TextMeshPro>();
+
+        (SpriteRenderer, TextMeshPro) descriptionObject = TextHelper.CreateUIObject("Description");
+        descriptionObject.Item2.transform.SetParent(option.transform);
+        GameObject.Destroy(descriptionObject.Item1.gameObject);
+        TextMeshPro description = descriptionObject.Item2;
         description.textContainer.size = new(2.5f, 5f);
         description.alignment = TextAlignmentOptions.Center;
         description.fontSize = 2f;
@@ -589,15 +610,17 @@ public static class TreasureManager
             ? optionName.Split('_')[0]
             : optionName;
         Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
-        //Power selectedPower = Powers[count + _powerSet * 3];
         if (selectedPower != null)
         {
             titleText.text = selectedPower.Name;
             description.text = selectedPower.Description;
             option.GetComponent<SpriteRenderer>().sprite = selectedPower.Sprite;
 
-            GameObject rarity = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
-            TextMeshPro rarityText = rarity.GetComponent<TextMeshPro>();
+            (SpriteRenderer, TextMeshPro) rarityInfo = TextHelper.CreateUIObject("Rarity");
+            GameObject rarity = rarityInfo.Item2.gameObject;
+            rarity.transform.SetParent(option.transform);
+            GameObject.Destroy(rarityInfo.Item1.gameObject);
+            TextMeshPro rarityText = rarityInfo.Item2;
             rarityText.text = $"({selectedPower.Tier})";
             rarityText.color = selectedPower.Tier switch
             {
@@ -613,8 +636,11 @@ public static class TreasureManager
             if (optionName.Contains("_"))
             {
                 string bonusStat = optionName.Split('_')[1];
-                GameObject bonus = UnityEngine.Object.Instantiate(titleText.gameObject, option.transform);
-                TextMeshPro bonusText = bonus.GetComponent<TextMeshPro>();
+                (SpriteRenderer, TextMeshPro) bonusInfo = TextHelper.CreateUIObject("Bonus");
+                GameObject bonus = bonusInfo.Item2.gameObject;
+                bonus.transform.SetParent(option.transform);
+                GameObject.Destroy(bonusInfo.Item1.gameObject);
+                TextMeshPro bonusText = bonusInfo.Item2;
                 bonusText.text = bonusStat switch
                 {
                     "Combat" => "+1 Combat",
@@ -673,7 +699,7 @@ public static class TreasureManager
         statInfo.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.Power_Border");
 
         option.SetActive(true);
-        return prefab.layer;
+        return optionPair.Item1.gameObject.layer;
     }
 
     private static void CreateArrows(Transform parent, int layer)

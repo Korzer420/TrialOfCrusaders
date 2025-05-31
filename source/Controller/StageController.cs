@@ -252,28 +252,28 @@ internal static class StageController
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom || CurrentRoom.BossRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom || CurrentRoom.BossRoom;
-                    
+
                     // Treasure rooms can only appear under these conditions:
                     // Not later than 115.
                     // Not earlier than 10.
                     // Not after/before a quiet room.
                     // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                    //if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
-                    //    && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
-                    //{
-                    //    float chance = 0.5f;
-                    //    if (CombatController.HasPower<Damocles>(out _))
-                    //        chance += 4.5f;
-                    //    if (CombatController.HasPower<TreasureHunter>(out _))
-                    //        chance += 2.5f;
-                    //    UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
-                    //    if (UpcomingTreasureRoom)
-                    //        _treasureRoomCooldown = 6;
-                    //    else
-                    //        _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
-                    //}
-                    //else
-                    //    UpcomingTreasureRoom = false;
+                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                        && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
+                    {
+                        float chance = 0.5f;
+                        if (CombatController.HasPower<Damocles>(out _))
+                            chance += 4.5f;
+                        if (CombatController.HasPower<TreasureHunter>(out _))
+                            chance += 2.5f;
+                        UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
+                        if (UpcomingTreasureRoom)
+                            _treasureRoomCooldown = 6;
+                        else
+                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
+                    }
+                    else
+                        UpcomingTreasureRoom = false;
                 }
                 _intendedDestination = new(info.SceneName, info.EntryGateName);
                 LogHelper.Write("Current room id: " + CurrentRoomIndex+" Entry gate: "+info.EntryGateName);

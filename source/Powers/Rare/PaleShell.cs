@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.Enums;
+﻿using Modding;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine.SceneManagement;
 
@@ -14,9 +15,28 @@ internal class PaleShell : Power
 
     public override bool CanAppear => !HasPower<FragileStrength>() && !HasPower<FragileSpirit>() && !HasPower<FragileGreed>();
 
-    protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+    protected override void Enable()
+    { 
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        ModHooks.AfterTakeDamageHook += ModHooks_AfterTakeDamageHook;
+    }
 
-    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+    protected override void Disable()
+    { 
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        ModHooks.AfterTakeDamageHook -= ModHooks_AfterTakeDamageHook;
+    }
 
     private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1) => Shielded = true;
+    
+    private int ModHooks_AfterTakeDamageHook(int hazardType, int damageAmount)
+    {
+        if (Shielded)
+        {
+            damageAmount = 0;
+            Shielded = false;
+        }
+        return damageAmount;
+    }
+
 }

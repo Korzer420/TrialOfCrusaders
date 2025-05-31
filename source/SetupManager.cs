@@ -64,7 +64,7 @@ internal static class SetupManager
 
         // Used to prevent room repeats under 15 rooms.
         List<string> lastRooms = [];
-        for (int currentRoom = 0; currentRoom < 120; currentRoom++)
+        for (int currentRoom = 0; currentRoom < 119; currentRoom++)
         {
             // Ability rooms/Treasure rooms are not part of the normal routine.
             // The latter will be generated on the spot, but since the abilities open more rooms, we calculate them before hand.

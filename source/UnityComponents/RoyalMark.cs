@@ -1,4 +1,5 @@
 ﻿using KorzUtils.Helper;
+using System.Collections.Generic;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
@@ -18,32 +19,48 @@ internal class RoyalMark : MonoBehaviour
         CorrectPosition();
     }
 
+    void OnDestroy() => On.HealthManager.Die -= HealthManager_Die;
+
     private void HealthManager_Die(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
     {
-        if (self == AttachedEnemy)
+        try
         {
-            if (CombatController.Enemies.Count == 0)
+            if (self == AttachedEnemy)
             {
-                int rolled = RngProvider.GetStageRandom(1, 100);
-                if (rolled <= 2)
-                    TreasureManager.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
-                else if (rolled <= 10)
-                    TreasureManager.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
-                else if (rolled <= 35)
-                    TreasureManager.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
-                else
+                List<HealthManager> newEnemies = [];
+                foreach (HealthManager item in CombatController.Enemies)
+                    if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
+                    {
+                        item.gameObject.AddComponent<BaseEnemy>().NoLoot = item.hp == 1;
+                        newEnemies.Add(item);
+                    }
+                if (newEnemies.Count == 0)
+                {
+                    int rolled = RngProvider.GetStageRandom(1, 100);
+                    if (rolled <= 2)
+                        TreasureManager.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
+                    else if (rolled <= 10)
+                        TreasureManager.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
+                    else if (rolled <= 35)
+                        TreasureManager.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
+                    else
+                        HeroController.instance.AddGeo(100);
                     HeroController.instance.AddGeo(100);
-                HeroController.instance.AddGeo(100);
-                
+
+                }
+                else
+                {
+                    AttachedEnemy = newEnemies[Random.Range(0, newEnemies.Count)];
+                    CorrectPosition();
+                }
             }
             else
-            {
-                AttachedEnemy = CombatController.Enemies[Random.Range(0, CombatController.Enemies.Count)];
-                CorrectPosition();
-            }
+                Destroy(gameObject);
         }
-        else
-            Destroy(gameObject);
+        catch (System.Exception exception)
+        {
+            LogHelper.Write<TrialOfCrusaders>("Error in Royal Mark: ", exception);
+        }
         orig(self, attackDirection, attackType, ignoreEvasion);
     }
 

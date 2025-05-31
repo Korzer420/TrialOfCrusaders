@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ internal class ShamanStone : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    public override bool CanAppear => !HasPower<ShiningBound>();
+    public override bool CanAppear => !HasPower<ShiningBound>() && CombatController.HasSpell();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

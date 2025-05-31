@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
@@ -12,7 +13,7 @@ internal class SpellTwister : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
-    public override bool CanAppear => !HasPower<ShiningBound>();
+    public override bool CanAppear => !HasPower<ShiningBound>() && CombatController.HasSpell();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
