@@ -426,7 +426,7 @@ internal static class HistoryController
         [
             new("Score", currentHistory.Score.Score),
             new("Essence bonus",  currentHistory.Score.Essence * 10),
-            new("Time bonus", Math.Max(0, 3600 - Mathf.CeilToInt(currentHistory.Score.PassedTime))),
+            new("Time bonus", currentHistory.Result == RunResult.Completed ? Math.Max(0, 3600 - Mathf.CeilToInt(currentHistory.Score.PassedTime)) : -1),
             new("Killstreak bonus", currentHistory.Score.HighestKillStreak * 5),
             new("Flawless stage bonus", currentHistory.Score.TotalHitlessRooms * 20),
             new("Perfect streak bonus", currentHistory.Score.HighestHitlessRoomStreak * 20),
@@ -436,7 +436,10 @@ internal static class HistoryController
         values.Add(new("Final score", values.Select(x => x.Item2).Sum()));
 
         foreach (var item in values)
-            _elementLookUp[item.Item1].Item2.text = $"{item.Item1}: {item.Item2}";
+            if (item.Item1 != "Time bonus" && item.Item1 != "Final score" || currentHistory.Result == RunResult.Completed)
+                _elementLookUp[item.Item1].Item2.text = $"{item.Item1}: {item.Item2}";
+            else
+                _elementLookUp[item.Item1].Item2.text = $"{item.Item1}: -";
 
         _elementLookUp["CombatLevel"].Item2.text = $"Combat Level: {currentHistory.FinalCombatLevel}";
         _elementLookUp["SpiritLevel"].Item2.text = $"Spirit Level: {currentHistory.FinalSpiritLevel}";
@@ -473,7 +476,6 @@ internal static class HistoryController
             if (_powerPageIndex == -1)
                 _powerPageIndex = maxPages - 1;
         }
-        LogHelper.Write("Page index is: " + _powerPageIndex);
         foreach (Transform item in _elementLookUp["PowerList"].Item2.transform)
             GameObject.Destroy(item.gameObject);
         float xPosition = -3.3f;

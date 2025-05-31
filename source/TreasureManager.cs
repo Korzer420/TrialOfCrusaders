@@ -21,7 +21,6 @@ namespace TrialOfCrusaders;
 /*
     ToDo:
 - Check run id verifier.
-- Remove time boni from forfeited/failed run history.
  */
 
 public static class TreasureManager
