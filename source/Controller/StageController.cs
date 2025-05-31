@@ -216,7 +216,7 @@ internal static class StageController
                 FinishedEnemies = false;
                 // Check for ending.
                 if (CurrentRoomIndex == CurrentRoomData.Count)
-                { 
+                {
                     CurrentRoomIndex++;
                     QuietRoom = true;
                     info.EntryGateName = "left1";
@@ -241,7 +241,7 @@ internal static class StageController
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-                        
+
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
@@ -270,16 +270,13 @@ internal static class StageController
                         if (UpcomingTreasureRoom)
                             _treasureRoomCooldown = 6;
                         else
-                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(_treasureRoomCooldown);
+                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(1);
                     }
-                    else
-                        UpcomingTreasureRoom = false;
+                    _intendedDestination = new(info.SceneName, info.EntryGateName);
                 }
-                _intendedDestination = new(info.SceneName, info.EntryGateName);
-                LogHelper.Write("Current room id: " + CurrentRoomIndex+" Entry gate: "+info.EntryGateName);
             }
+            orig(self, info);
         }
-        orig(self, info);
     }
 
     private static void TransitionPoint_Start(On.TransitionPoint.orig_Start orig, TransitionPoint self)
@@ -299,7 +296,7 @@ internal static class StageController
                     gate.PlaceCollider();
             }, true);
         }
-        if ((QuietRoom || UpcomingTreasureRoom) && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
+        if ((QuietRoom || UpcomingTreasureRoom) && CurrentRoomIndex - 1 < CurrentRoomData.Count - 1 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
         {
             if (self.isADoor)
                 return;

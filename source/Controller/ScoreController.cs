@@ -79,7 +79,7 @@ public static class ScoreController
             {
                 if (StageController.CurrentRoom.BossRoom)
                     Score.HitlessBosses++;
-                if (StageController.CurrentRoomNumber == 120)
+                if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
                 { 
                     Score.HitlessFinalBoss = true;
                     StopTimer();
