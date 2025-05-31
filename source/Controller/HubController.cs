@@ -31,27 +31,6 @@ internal static class HubController
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
 
-        // Reset data
-        PDHelper.HasDash = false;
-        PDHelper.CanDash = false;
-        PDHelper.HasShadowDash = false;
-        PDHelper.HasWalljump = false;
-        PDHelper.CanWallJump = false;
-        PDHelper.HasDoubleJump = false;
-        PDHelper.HasLantern = false;
-        PDHelper.HasSuperDash = false;
-        PDHelper.HasAcidArmour = false;
-        PDHelper.FireballLevel = 0;
-        PDHelper.QuakeLevel = 0;
-        PDHelper.Geo = 0;
-        PDHelper.DreamOrbs = 0;
-        PDHelper.HasDreamNail = true;
-        PDHelper.MaxHealth = 5;
-        PDHelper.SoulLimited = false;
-        PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
-        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
-        
         _enabled = true;
     }
 
@@ -82,11 +61,32 @@ internal static class HubController
         transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
         CoroutineHelper.WaitForHero(() =>
         {
+            // Reset data
+            PDHelper.HasDash = false;
+            PDHelper.CanDash = false;
+            PDHelper.HasShadowDash = false;
+            PDHelper.HasWalljump = false;
+            PDHelper.CanWallJump = false;
+            PDHelper.HasDoubleJump = false;
+            PDHelper.HasLantern = false;
+            PDHelper.HasSuperDash = false;
+            PDHelper.HasAcidArmour = false;
+            PDHelper.FireballLevel = 0;
+            PDHelper.QuakeLevel = 0;
             PDHelper.Geo = 0;
-            GameManager.instance.SaveGame();
+            PDHelper.DreamOrbs = 0;
+            PDHelper.HasDreamNail = true;
+            PDHelper.MaxHealth = 5;
+            PDHelper.SoulLimited = false;
+            PDHelper.GrimmChildLevel = 0;
+            PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+            GameCameras.instance.hudCanvas.gameObject.SetActive(false);
+            GameCameras.instance.hudCanvas.gameObject.SetActive(true);
+            PDHelper.Geo = 0;
             GameObject.Find("_GameCameras").transform.Find("HudCamera/Hud Canvas/Geo Counter").gameObject
                 .LocateMyFSM("Geo Counter")
                 .SendEvent("TO ZERO");
+            GameManager.instance.SaveGame();
         }, true);
     } 
 

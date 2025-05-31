@@ -1,5 +1,4 @@
-﻿using KorzUtils.Helper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
@@ -64,7 +63,7 @@ internal static class SetupManager
 
         // Used to prevent room repeats under 15 rooms.
         List<string> lastRooms = [];
-        for (int currentRoom = 0; currentRoom < 119; currentRoom++)
+        for (int currentRoom = 0; currentRoom < 99; currentRoom++)
         {
             // Ability rooms/Treasure rooms are not part of the normal routine.
             // The latter will be generated on the spot, but since the abilities open more rooms, we calculate them before hand.
@@ -92,7 +91,7 @@ internal static class SetupManager
                 lastRooms.RemoveAt(0);
         }
         // This should only leave NKG, Pure Vessel and Radiance which we use as end bosses.
-        availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 120))];
+        availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 10))];
         roomList.Add(availableRooms[RngProvider.GetRandom(0, availableRooms.Count - 1)]);
 
         //roomList.RemoveAt(0);
@@ -105,7 +104,7 @@ internal static class SetupManager
 
     private static Dictionary<int, Progress> RollAbilityRooms()
     {
-        List<int> availableAbilityRooms = [.. Enumerable.Range(3, 107)];
+        List<int> availableAbilityRooms = [.. Enumerable.Range(3, 90)];
         // 40 and 80 are reserved for fireball + quake (exclude the rooms before and after as well)
         for (int i = 38; i < 83; i++)
         {

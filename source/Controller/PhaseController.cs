@@ -62,8 +62,8 @@ public static class PhaseController
     {
         //Spawner.ContinueSpawn = true;
         // ToDo: Check for savefile gamemode.
-        TransitionTo(Phase.Lobby);
         orig(self);
+        TransitionTo(Phase.Lobby);
     }
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)

@@ -215,7 +215,7 @@ internal static class StageController
                 RoomEnded?.Invoke(QuietRoom);
                 FinishedEnemies = false;
                 // Check for ending.
-                if (CurrentRoomIndex == 119)
+                if (CurrentRoomIndex == CurrentRoomData.Count)
                 { 
                     CurrentRoomIndex++;
                     QuietRoom = true;
@@ -299,13 +299,13 @@ internal static class StageController
                     gate.PlaceCollider();
             }, true);
         }
-        if (QuietRoom || UpcomingTreasureRoom || CurrentRoomIndex < 119 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
+        if ((QuietRoom || UpcomingTreasureRoom) && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
         {
             if (self.isADoor)
                 return;
             GameObject transitionObject = new("Trial Transition");
             SpecialTransition transition = transitionObject.AddComponent<SpecialTransition>();
-            transition.LoadIntoDream = CurrentRoomIndex < 119 && CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
+            transition.LoadIntoDream = CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
             transition.VanillaTransition = self;
             _specialTransitions.Add(transition);
         }

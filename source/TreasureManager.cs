@@ -20,13 +20,8 @@ namespace TrialOfCrusaders;
 
 /*
     ToDo:
-- Check Dive + Fireball Inventory name for item message.
-- Implement rare power for dive + fireball if already obtained.
 - Check run id verifier.
 - Remove time boni from forfeited/failed run history.
-- Lower Room amount to 80/100 (?)
-- Check why Grimmchild is level 1 at start of game.
-- Adjust KorzUtils to check against the real charm and not the normalized value.
  */
 
 public static class TreasureManager
@@ -197,6 +192,9 @@ public static class TreasureManager
     {
         GameObject shiny = UnityEngine.Object.Instantiate(Shiny);
         GameObject glow = null;
+        if ((treasure == TreasureType.Fireball && CombatController.HasPower<VengefulSpirit>(out _))
+            || (treasure == TreasureType.Quake && CombatController.HasPower<DesolateDive>(out _)))
+            treasure = TreasureType.RareOrb;
         if ((int)treasure > 6 || (int)treasure < 2)
         {
             if (_glow == null)
@@ -342,7 +340,7 @@ public static class TreasureManager
                     break;
                 case TreasureType.Fireball:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Vengeful_Spirit_Icon");
-                    fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_FIREBALL";
+                    fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_FIREBALL1";
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
                     CombatController.ObtainedPowers.Add(fireball);
                     fireball.EnablePower();
@@ -350,7 +348,7 @@ public static class TreasureManager
                     break;
                 case TreasureType.Quake:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Desolate_Dive_Icon");
-                    fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_QUAKE";
+                    fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_QUAKE1";
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
                     CombatController.ObtainedPowers.Add(quake);
                     quake.EnablePower();
