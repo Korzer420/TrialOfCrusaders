@@ -371,6 +371,7 @@ public static class ScoreController
             HubController.Initialize();
             HistoryController.Initialize();
             PhaseController.CurrentPhase = Phase.Lobby;
+            GameCameras.instance.hudCanvas.LocateMyFSM("Slide Out").SendEvent("IN");
             UnityEngine.Object.Destroy(inspect);
         });
         fsm.AddState("Display Score", () =>

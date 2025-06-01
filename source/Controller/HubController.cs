@@ -146,6 +146,7 @@ internal static class HubController
             SetupTransitions();
         else if (arg1.name == "Deepnest_East_10")
         {
+            _seedTablets.Clear();
             Object.Destroy(GameObject.Find("plat_float_05 (1)"));
             Object.Destroy(GameObject.Find("plat_float_05"));
             Object.Destroy(GameObject.Find("white_ash_scenery_0004_5 (3)"));
