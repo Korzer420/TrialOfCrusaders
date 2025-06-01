@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Data;
 using KorzUtils.Helper;
+using MonoMod.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,7 @@ internal static class HistoryController
         if (_active)
             return;
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
+        IL.Breakable.Break += Breakable_Break;
         _active = true;
 #if DEBUG
         // Mock Data
@@ -110,6 +112,7 @@ internal static class HistoryController
         if (!_active)
             return;
         On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
+        IL.Breakable.Break -= Breakable_Break;
         _active = false;
     }
 
@@ -139,11 +142,23 @@ internal static class HistoryController
 
     private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
-        if (self.FsmName == "inspect_region" && self.transform.parent != null && self.transform.parent.parent != null && self.transform.parent.parent.name == "Plaque_statue_02 (3)")
+        if (self.FsmName == "inspect_region" && self.transform.parent != null && self.transform.parent.parent != null && self.transform.parent.parent.name.Contains("Plaque_statue_"))
         {
-            self.transform.parent.parent.localPosition += new Vector3(15, 0f);
-            self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
-            self.GetState("Centre?").AdjustTransitions("Show History");
+            if (self.transform.parent.parent.name == "Plaque_statue_02 (3)")
+            {
+                self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
+                self.GetState("Centre?").AdjustTransitions("Show History");
+                GameObject blocker = new("Blocker");
+                blocker.transform.position = new(22.85f, 17.39f);
+                blocker.layer = 8;
+                blocker.AddComponent<BoxCollider2D>().size = new(1f, 10f);
+            }
+            else
+            {
+                orig(self);
+                GameObject.Destroy(self.transform.parent.parent.gameObject);
+                return;
+            }
         }
         orig(self);
     }
@@ -459,8 +474,6 @@ internal static class HistoryController
     private static void UpdatePowerList(bool down, bool setup = false)
     {
         HistoryData currentHistory = History[_pageIndex];
-        if (currentHistory.Powers.Count <= 15 && !setup)
-            return;
         int maxPages = Mathf.CeilToInt(currentHistory.Powers.Count / 15f);
         if (setup)
             _powerPageIndex = 0;
@@ -482,23 +495,26 @@ internal static class HistoryController
         float yPosition = -1.2f;
         // Only display 15 per page.
         List<string> pagePowers = [.. currentHistory.Powers.Skip(_powerPageIndex * 15).Take(15)];
-        for (int i = 0; i < pagePowers.Count; i++)
+        for (int i = 0; i < 15; i++)
         {
-            (SpriteRenderer, TextMeshPro) currentElement = TextHelper.CreateUIObject(pagePowers[i]);
+            (SpriteRenderer, TextMeshPro) currentElement = TextHelper.CreateUIObject(i >= pagePowers.Count ? "Dummy" : pagePowers[i]);
             currentElement.Item1.transform.SetParent(_elementLookUp["PowerList"].Item2.transform);
             currentElement.Item1.transform.localPosition = new(xPosition, yPosition);
             currentElement.Item2.alignment = TextAlignmentOptions.Center;
             currentElement.Item2.fontSize = 2;
             currentElement.Item2.enableWordWrapping = true;
             currentElement.Item2.textContainer.size = new(2f, 1f);
-            Power power = TreasureManager.Powers.FirstOrDefault(x => x.Name == pagePowers[i]);
-            currentElement.Item2.color = power.Tier switch
-            {
-                Rarity.Rare => Color.cyan,
-                Rarity.Uncommon => new(0.2f, 0.8f, 0.2f),
-                _ => Color.white
-            };
-            currentElement.Item2.text = power.Name;
+            Power power = i >= pagePowers.Count
+                ? null
+                : TreasureManager.Powers.FirstOrDefault(x => x.Name == pagePowers[i]);
+            if (power != null)
+                currentElement.Item2.color = power.Tier switch
+                {
+                    Rarity.Rare => Color.cyan,
+                    Rarity.Uncommon => new(0.2f, 0.8f, 0.2f),
+                    _ => Color.white
+                };
+            currentElement.Item2.text = power?.Name ?? "-";
             Component.Destroy(currentElement.Item1);
             xPosition += 2.3f;
             if (xPosition > 1.3f)
@@ -527,5 +543,13 @@ internal static class HistoryController
         }
         else
             _elementLookUp["PowerList"].Item2.text = "Powers";
+    }
+
+    private static void Breakable_Break(MonoMod.Cil.ILContext il)
+    {
+        ILCursor cursor = new(il);
+        cursor.Goto(0);
+        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<Breakable>("isBroken"));
+        cursor.EmitDelegate<Func<bool, bool>>(x => x || GameManager.instance.sceneName == "Dream_Room_Believer_Shrine");
     }
 }

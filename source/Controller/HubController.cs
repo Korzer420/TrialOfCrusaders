@@ -159,7 +159,7 @@ internal static class HubController
                 // 18.2f
                 // 21.7f, 9.5f
                 // 25.2f, 9.5f
-                // 4.9f oder 9.5f Y
+                // 4.9f or 9.5f Y
                 GameObject obstacleGameObject = new("Sign");
                 obstacleGameObject.SetActive(false);
                 obstacleGameObject.transform.position = new(xPosition, yPosition, -0.08f);

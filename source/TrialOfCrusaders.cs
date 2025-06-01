@@ -25,6 +25,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     internal static Dummy Holder => Instance._coroutineHolder;
 
+    public override string GetVersion() => "0.0.1.0-beta1";
+
     public override List<(string, string)> GetPreloadNames() =>
     [
         ("Tutorial_01", "_Props/Chest"),
