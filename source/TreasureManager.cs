@@ -343,6 +343,7 @@ public static class TreasureManager
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
                     CombatController.ObtainedPowers.Add(fireball);
                     fireball.EnablePower();
+                    StageController.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Quake:
@@ -351,6 +352,7 @@ public static class TreasureManager
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
                     CombatController.ObtainedPowers.Add(quake);
                     quake.EnablePower();
+                    StageController.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 default:
