@@ -246,7 +246,7 @@ public static class CombatController
                 self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
                 self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
                 self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                self.FsmVariables.FindFsmInt("P5 Ascent").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+                self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
             }
         }
         else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss" 
@@ -351,14 +351,21 @@ public static class CombatController
             Enemies.Add(self);
             if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
                 self.gameObject.AddComponent<BossFlag>();
-            if (StageController.CurrentRoomNumber >= 20 && self.hp != 1)
+            if (self.hp != 1)
             {
-                float scaling = 0.1f;
-                // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
-                if ((StageController.CurrentRoomNumber != 120 || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
-                    && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
-                    scaling = 0.05f;
-                //self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
+                if (StageController.CurrentRoomNumber >= 20)
+                {
+                    float scaling = 0.1f;
+                    // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
+                    if ((StageController.CurrentRoomNumber != StageController.CurrentRoomData.Count || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
+                        && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
+                        scaling = 0.05f;
+#if RELEASE
+                    self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling)); 
+#endif
+                }
+                else if (self.hp > 50)
+                    self.hp /= 2;
             }
         }
         orig(self);
@@ -375,9 +382,36 @@ public static class CombatController
             if (contained && self.GetComponent<BaseEnemy>() is BaseEnemy enemyFlag)
             {
                 EnemyKilled?.Invoke(self);
+                if (HasPower<RoyalDecree>(out _))
+                {
+                    if (self.GetComponent<RoyalMark>() is RoyalMark mark)
+                    {
+                        if (Enemies.Count == 0)
+                        {
+                            int rolled = RngProvider.GetStageRandom(1, 100);
+                            if (rolled <= 2)
+                                TreasureManager.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
+                            else if (rolled <= 10)
+                                TreasureManager.SpawnShiny(Enums.TreasureType.NormalOrb, self.transform.position);
+                            else if (rolled <= 35)
+                                TreasureManager.SpawnShiny(Enums.TreasureType.PrismaticOrb, self.transform.position);
+                            else
+                                HeroController.instance.AddGeo(100);
+                        }
+                        else
+                            mark.CorrectPosition(Enemies[RngProvider.GetRandom(0, Enemies.Count - 1)]);
+                    }
+                    else
+                    {
+                        HealthManager enemy = Enemies.FirstOrDefault(x => x.GetComponent<RoyalMark>());
+                        if (enemy != null)
+                            Component.Destroy(enemy.GetComponent<RoyalMark>());
+                    }
+                }
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngProvider.GetStageRandom(0f, 100f);
+                    LogHelper.Write("Rolled: " + rolled);
                     if (rolled <= 4f)
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
                     else if (rolled <= 12f)
@@ -447,6 +481,7 @@ public static class CombatController
                 item.gameObject.AddComponent<BaseEnemy>().NoLoot = item.hp == 1;
                 newEnemies.Add(item);
             }
+        Enemies = newEnemies;
         if (!StageController.QuietRoom)
         { 
             InCombat = true;
@@ -457,6 +492,13 @@ public static class CombatController
                     "GG_Soul_Master" or "GG_Oblobbles" or "GG_Soul_Tyrant" or "GG_Vengefly_V" => 2,
                     _ => 1
                 };
+            else if (HasPower<RoyalDecree>(out _) && Enemies.Count > 0)
+            {
+                GameObject royalMark = new("Royal Decree");
+                royalMark.SetActive(false);
+                royalMark.AddComponent<RoyalMark>().CorrectPosition(Enemies[UnityEngine.Random.Range(0, Enemies.Count)]);
+                royalMark.SetActive(true);
+            }
         }
     }
 
@@ -509,13 +551,21 @@ public static class CombatController
         _bossCounter--;
         if (_bossCounter == 0)
         {
-            // Place shiny at godseeker location.
-            // This should ensure the shiny lands on a platform. (Except for No Eyes)
-            GameObject crowd = GameObject.Find("Godseeker Crowd");
-            TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x + (GameManager.instance.sceneName == "GG_Flukemarm" 
-                ? -7f 
-                : GameManager.instance.sceneName == "GG_Ghost_No_Eyes_V" ? -5f : 0f)
-                , crowd.transform.position.y - 1f, HeroController.instance.transform.position.z), false);
+            if (StageController.CurrentRoomIndex == StageController.CurrentRoomData.Count - 1)
+            {
+                if (GameManager.instance.sceneName == "GG_Hollow_Knight")
+                    TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
+            }
+            else
+            {
+                // Place shiny at godseeker location.
+                // This should ensure the shiny lands on a platform. (Except for No Eyes)
+                GameObject crowd = GameObject.Find("Godseeker Crowd");
+                TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x + (GameManager.instance.sceneName == "GG_Flukemarm"
+                    ? -7f
+                    : GameManager.instance.sceneName == "GG_Ghost_No_Eyes_V" ? -5f : 0f)
+                    , crowd.transform.position.y - 1f, HeroController.instance.transform.position.z), false);
+            }
         }
     }
 
@@ -743,7 +793,7 @@ public static class CombatController
 
     private static int ModHooks_SoulGainHook(int amount)
     {
-        amount = amount - 8 + SpiritLevel;
+        amount = Math.Max(1, amount - 8 + SpiritLevel);
         if (HasPower(out Versatility versatility) && versatility.CastedSpell)
             amount += 2 + (SpiritLevel + CombatLevel) / 8;
         if (HasPower(out Powers.Common.Caching caching))

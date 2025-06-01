@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using KorzUtils.Helper;
+using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
@@ -63,7 +64,7 @@ internal static class SetupManager
 
         // Used to prevent room repeats under 15 rooms.
         List<string> lastRooms = [];
-        for (int currentRoom = 0; currentRoom < 99; currentRoom++)
+        for (int currentRoom = 0; currentRoom < 100; currentRoom++)
         {
             // Ability rooms/Treasure rooms are not part of the normal routine.
             // The latter will be generated on the spot, but since the abilities open more rooms, we calculate them before hand.
@@ -71,6 +72,7 @@ internal static class SetupManager
             {
                 roomList.Add(new() { Name = progressItemRooms[currentRoom].ToString(), SelectedTransition = "Warp" });
                 currentProgress |= progressItemRooms[currentRoom];
+                continue;
             }
             List<RoomData> reachableRooms = [];
             foreach (RoomData room in availableRooms)
@@ -91,7 +93,8 @@ internal static class SetupManager
                 lastRooms.RemoveAt(0);
         }
         // This should only leave NKG, Pure Vessel and Radiance which we use as end bosses.
-        availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 10))];
+        availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 100))];
+        LogHelper.Write("Available room count: " + availableRooms.Count);
         roomList.Add(availableRooms[RngProvider.GetRandom(0, availableRooms.Count - 1)]);
 
         //roomList.RemoveAt(0);

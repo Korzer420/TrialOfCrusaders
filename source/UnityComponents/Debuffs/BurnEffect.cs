@@ -42,7 +42,7 @@ internal class BurnEffect : MonoBehaviour
             int modifier = (int)_leftDuration + 1;
             int damage = Mathf.CeilToInt(LeftDamage / modifier);
             // Respect invinciblity
-            if (!_enemy.IsInvincible)
+            if (!_enemy.IsInvincible && _enemy != null && _enemy.hp > 0)
                 _enemy.ApplyExtraDamage(damage);
             LeftDamage -= damage;
         }

@@ -75,6 +75,8 @@ internal static class StageController
         if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
             || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             return true;
+        else if (name == nameof(PlayerData.crossroadsInfected))
+            return CurrentRoomNumber >= 60;
         return orig;
     }
 
@@ -181,7 +183,8 @@ internal static class StageController
         source.outputAudioMixerGroup = HeroController.instance.transform.Find("Attacks/Slash").GetComponent<AudioSource>().outputAudioMixerGroup;
         audioObject.SetActive(true);
         // Play as one shot so we can increase the volume
-        source.PlayOneShot(SoundHelper.CreateSound(ResourceHelper.LoadResource<TrialOfCrusaders>(room ? "SoundEffects.Room_Clear.wav" : "SoundEffects.Run_Finished.wav"), "Room_Clear"), 2f);
+        string clipName = room ? "Room_Clear.wav" : "Run_Finished.wav";
+        source.PlayOneShot(SoundHelper.CreateSound(ResourceHelper.LoadResource<TrialOfCrusaders>($"SoundEffects.{clipName}"), clipName), 2f);
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => UnityEngine.Object.Destroy(audioObject), () => source == null || !source.isPlaying));
     }
 
@@ -215,8 +218,9 @@ internal static class StageController
                 RoomEnded?.Invoke(QuietRoom);
                 FinishedEnemies = false;
                 // Check for ending.
-                if (CurrentRoomIndex == CurrentRoomData.Count)
+                if (CurrentRoomNumber == CurrentRoomData.Count)
                 {
+                    LogHelper.Write("Trigger ending");
                     CurrentRoomIndex++;
                     QuietRoom = true;
                     info.EntryGateName = "left1";
@@ -232,9 +236,12 @@ internal static class StageController
                     {
                         info.SceneName = "GG_Engine";
                         QuietRoom = true;
+                        UpcomingTreasureRoom = false;
                     }
                     else
                     {
+                        if (CurrentRoomIndex == 2)
+                            CurrentRoomIndex = 98;
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
                         if (QuietRoom)
@@ -258,7 +265,7 @@ internal static class StageController
                     // Not earlier than 10.
                     // Not after/before a quiet room.
                     // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= 115 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= CurrentRoomData.Count - 5 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
                         && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
                     {
                         float chance = 0.5f;
@@ -269,9 +276,9 @@ internal static class StageController
                         UpcomingTreasureRoom = chance >= RngProvider.GetStageRandom(1f, 100f);
                         if (UpcomingTreasureRoom)
                             _treasureRoomCooldown = 6;
-                        else
-                            _treasureRoomCooldown = _treasureRoomCooldown.Lower(1);
                     }
+                    else
+                        _treasureRoomCooldown = _treasureRoomCooldown.Lower(1);
                     _intendedDestination = new(info.SceneName, info.EntryGateName);
                 }
             }
@@ -296,11 +303,12 @@ internal static class StageController
                     gate.PlaceCollider();
             }, true);
         }
-        if ((QuietRoom || UpcomingTreasureRoom) && CurrentRoomIndex - 1 < CurrentRoomData.Count - 1 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom))
+        if (QuietRoom || UpcomingTreasureRoom || (CurrentRoomIndex - 1 < CurrentRoomData.Count - 2 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)))
         {
             if (self.isADoor)
                 return;
             GameObject transitionObject = new("Trial Transition");
+            LogHelper.Write("Called trial transition in room: " + CurrentRoomIndex);
             SpecialTransition transition = transitionObject.AddComponent<SpecialTransition>();
             transition.LoadIntoDream = CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
             transition.VanillaTransition = self;
@@ -338,6 +346,7 @@ internal static class StageController
     private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
+        LogHelper.Write("Current room number: " + CurrentRoomNumber);
         //if (Spawner.ContinueSpawn)
         //    return;
         _intendedDestination.Item1 = null;
@@ -458,6 +467,8 @@ internal static class StageController
             UnityEngine.Object.Destroy(self.gameObject);
         else if (self.FsmName == "Challenge Start" && self.gameObject.name == "Challenge Prompt" && self.transform.parent != null && self.transform.parent.name == "Mantis Battle")
             self.gameObject.SetActive(false);
+        else if (self.FsmName == "Control" && self.gameObject.name == "Hornet Fountain Encounter")
+            UnityEngine.Object.Destroy(self.gameObject);
     }
 
     internal static IEnumerator WaitForTransition()

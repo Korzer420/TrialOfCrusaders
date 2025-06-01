@@ -379,7 +379,7 @@
   },
   {
     "Name": "Crossroads_19",
-    "AllowedEntrances": [ "right1", "top1", "left2", "left1" ],
+    "AllowedEntrances": [ "right1", "left2", "left1" ],
     "BossRoom": false,
     "NeededProgress": 0,
     "ConditionalProgress": [],
@@ -1119,7 +1119,7 @@
     "Name": "Deepnest_39",
     "AllowedEntrances": [ "door1", "right1", "top1", "left1" ],
     "BossRoom": false,
-    "NeededProgress": 3,
+    "NeededProgress": 259,
     "ConditionalProgress": [],
     "EasyNeededProgress": 4,
     "EasyConditionalProgress": []
@@ -1137,7 +1137,7 @@
     "Name": "Deepnest_42",
     "AllowedEntrances": [ "bot1", "top1", "left1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 258,
     "ConditionalProgress": [],
     "EasyNeededProgress": 5,
     "EasyConditionalProgress": []
@@ -1155,7 +1155,7 @@
     "Name": "Deepnest_41",
     "AllowedEntrances": [ "left2"],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 258,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": [ 1, 128 ]

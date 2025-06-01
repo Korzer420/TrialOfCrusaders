@@ -48,13 +48,6 @@ internal class Gate : MonoBehaviour
             blocker.AddComponent<RespawnZone>();
             blocker.SetActive(true);
             _blockers.Add(blocker);
-            blocker.transform.eulerAngles = direction switch
-            {
-                0 => new Vector3(0f, 0f, 90f),
-                1 => new Vector3(0f, 0f, 270f),
-                2 => new Vector3(0f, 0f, 180f),
-                _ => new Vector3(0f, 0f, 0f)
-            };
         }
         // Special case as this transition is placed weirdly.
         else if (gameObject.scene.name == "Crossroads_01" && gameObject.name == "top1")

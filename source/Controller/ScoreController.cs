@@ -145,51 +145,7 @@ public static class ScoreController
 
     internal static void SetupResultInspect(GameObject prefab)
     {
-        GameObject inspect = GameObject.Instantiate(prefab);
-        inspect.name = "Result inspect";
-        inspect.SetActive(true);
-        inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
-        PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
-        FsmState state = fsm.GetState("Open UI");
-        state.RemoveAllActions();
-        state.AdjustTransition("FINISHED", "Take Control");
-        fsm.AddState("Return Control", () =>
-        {
-            HeroController.instance.RegainControl();
-            HeroController.instance.StartAnimationControl();
-            PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
-            HistoryController.TempEntry.Score.Score = PDHelper.Geo;
-            HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
-            HistoryController.History.Add(HistoryController.TempEntry);
-            HistoryController.TempEntry = null;
-            GameManager.instance.SaveGame();
-            Unload();
-            HubController.Initialize();
-            HistoryController.Initialize();
-            PhaseController.CurrentPhase = Phase.Lobby;
-            UnityEngine.Object.Destroy(inspect);
-        });
-        fsm.AddState("Display Score", () =>
-        {
-            PlayMakerFSM.BroadcastEvent("CROWD CHEER");
-            StageController.PlayClearSound(false);
-            DisplayScore();
-            PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-        }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
-        fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
-        fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
-        fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
-
-        fsm = inspect.LocateMyFSM("npc_control");
-        fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
-
-        fsm.GetState("In Range").AddActions(() =>
-        {
-            Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
-            UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
-            promptObject.GetComponent<TextMeshPro>().text = "Finish";
-        });
-        ResultSequencePrefab = inspect;
+        ResultSequencePrefab = prefab;
         GameObject.DontDestroyOnLoad(ResultSequencePrefab);
     }
 
@@ -319,7 +275,7 @@ public static class ScoreController
         float colorAlpha = 0f;
         while (colorAlpha < 1f)
         {
-            colorAlpha += Time.deltaTime;
+            colorAlpha += Time.deltaTime * 3;
             label.color = new(1f, 1f, 1f, colorAlpha);
             pointValue.color = new(1f, 1f, 1f, colorAlpha);
             yield return null;
@@ -331,7 +287,7 @@ public static class ScoreController
         while (currentDisplayValue < value.Item2)
         {
             yield return null;
-            currentDisplayValue += value.Item1 == "Final score:" ? 10 : 5;
+            currentDisplayValue += value.Item1 == "Final score:" ? 20 : 10;
             pointValue.text = $"{currentDisplayValue}";
         }
         pointValue.text = $"{value.Item2}";
@@ -342,6 +298,7 @@ public static class ScoreController
     {
         if (self.gameObject.name == "Colosseum Manager")
         {
+            GameCameras.instance.hudCanvas.LocateMyFSM("Slide Out").SendEvent("OUT");
             if (self.FsmName == "Manager")
             {
                 // Skip unnecessary states.
@@ -363,7 +320,7 @@ public static class ScoreController
                 self.AddState("Wait for Result", () =>
                 {
                     PlayMakerFSM.BroadcastEvent("CROWD IDLE");
-                    GameObject inspect = UnityEngine.Object.Instantiate(ResultSequencePrefab);
+                    GameObject inspect = CreateInspect();
                     inspect.SetActive(true);
                     inspect.transform.position = new(102.41f, 10.8f);
                 }, FsmTransitionData.FromTargetState("Open Gates").WithEventName("SHINY PICKED UP"));
@@ -388,6 +345,55 @@ public static class ScoreController
             pedestal.layer = 8; // Terrain layer
             pedestal.SetActive(true);
         }
+    }
+
+    private static GameObject CreateInspect()
+    {
+        GameObject inspect = GameObject.Instantiate(ResultSequencePrefab);
+        inspect.name = "Result inspect";
+        inspect.SetActive(true);
+        inspect.transform.Find("Prompt Marker").localPosition = new(0, 1.7f);
+        PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
+        FsmState state = fsm.GetState("Open UI");
+        state.RemoveAllActions();
+        state.AdjustTransition("FINISHED", "Take Control");
+        fsm.AddState("Return Control", () =>
+        {
+            HeroController.instance.RegainControl();
+            HeroController.instance.StartAnimationControl();
+            PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
+            HistoryController.TempEntry.Score.Score = PDHelper.Geo;
+            HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
+            HistoryController.History.Add(HistoryController.TempEntry);
+            HistoryController.TempEntry = null;
+            GameManager.instance.SaveGame();
+            Unload();
+            HubController.Initialize();
+            HistoryController.Initialize();
+            PhaseController.CurrentPhase = Phase.Lobby;
+            UnityEngine.Object.Destroy(inspect);
+        });
+        fsm.AddState("Display Score", () =>
+        {
+            PlayMakerFSM.BroadcastEvent("CROWD CHEER");
+            StageController.PlayClearSound(false);
+            DisplayScore();
+            PlayMakerFSM.BroadcastEvent("CROWD IDLE");
+        }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
+        fsm.AddState("Score Pause", () => PlayMakerFSM.BroadcastEvent("CROWD STILL"), FsmTransitionData.FromTargetState("Display Score").WithEventName("FINISHED"));
+        fsm.GetState("Score Pause").AddActions(new Wait() { time = 5f, finishEvent = fsm.FsmEvents.FirstOrDefault(x => x.Name == "FINISHED") });
+        fsm.GetState("Challenge Audio").AdjustTransitions("Score Pause");
+
+        fsm = inspect.LocateMyFSM("npc_control");
+        fsm.FsmVariables.FindFsmFloat("Move To Offset").Value = 0f;
+
+        fsm.GetState("In Range").AddActions(() =>
+        {
+            Transform promptObject = fsm.FsmVariables.FindFsmGameObject("Prompt").Value.transform.Find("Labels/Challenge");
+            UnityEngine.Object.Destroy(promptObject.GetComponent<SetTextMeshProGameText>());
+            promptObject.GetComponent<TextMeshPro>().text = "Finish";
+        });
+        return inspect;
     }
 
     #endregion
