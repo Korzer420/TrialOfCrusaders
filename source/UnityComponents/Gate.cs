@@ -46,6 +46,8 @@ internal class Gate : MonoBehaviour
             blocker.AddComponent<BoxCollider2D>().size = GetComponent<BoxCollider2D>().size;
             blocker.GetComponent<BoxCollider2D>().isTrigger = true;
             blocker.AddComponent<RespawnZone>();
+            if (direction > 1)
+                blocker.transform.SetRotation2D(90f);
             blocker.SetActive(true);
             _blockers.Add(blocker);
         }
