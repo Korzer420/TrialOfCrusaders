@@ -13,10 +13,25 @@ public static class PhaseController
 
     internal static void Initialize()
     {
+        On.GameManager.ContinueGame += GameManager_ContinueGame;
         On.UIManager.ContinueGame += UIManager_ContinueGame;
         On.UIManager.ReturnToMainMenu += UIManager_ReturnToMainMenu;
         On.GameManager.StartNewGame += GameManager_StartNewGame;
         IL.GameManager.StartNewGame += SkipStartRoutine;
+    }
+
+    private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
+    {
+        TransitionTo(Phase.Listening);
+        LogHelper.Write("UI Continue");
+        orig(self);
+    }
+
+    private static void GameManager_ContinueGame(On.GameManager.orig_ContinueGame orig, GameManager self)
+    {
+        orig(self);
+        if (CurrentPhase == Phase.Initialize)
+            TransitionTo(Phase.Lobby);
     }
 
     private static void SkipStartRoutine(ILContext il)
@@ -35,35 +50,27 @@ public static class PhaseController
     {
         //Spawner.ContinueSpawn = false;
         // ToDo: Check game mode
-        TransitionTo(Phase.Lobby);
-        self.ContinueGame();
-        PDHelper.CorniferAtHome = true;
-        PDHelper.ColosseumBronzeOpened = true;
-        PDHelper.GiantFlyDefeated = true;
-        PDHelper.ZoteDead = true;
-        PDHelper.GiantBuzzerDefeated = true;
-        PDHelper.FountainVesselSummoned = true;
-        PDHelper.HasKingsBrand = true;
-        PDHelper.DuskKnightDefeated = true;
-        PDHelper.KilledInfectedKnight = true;
-        PDHelper.KilledMageKnight = true;
-        PDHelper.MegaMossChargerDefeated = true;
-        PDHelper.InfectedKnightDreamDefeated = true;
-        PDHelper.AbyssGateOpened = true;
-        PDHelper.HegemolDefeated = true;
-        CurrentPhase = Phase.Lobby;
-
         // The IL hook above should prevent the original code from running.
         // We still keep this call to allow other mods to trigger.
         orig(self, permadeathMode, bossRushMode);
-    }
-
-    private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
-    {
-        //Spawner.ContinueSpawn = true;
-        // ToDo: Check for savefile gamemode.
-        orig(self);
-        TransitionTo(Phase.Lobby);
+        if (CurrentPhase == Phase.Initialize)
+        {
+            self.ContinueGame();
+            PDHelper.CorniferAtHome = true;
+            PDHelper.ColosseumBronzeOpened = true;
+            PDHelper.GiantFlyDefeated = true;
+            PDHelper.ZoteDead = true;
+            PDHelper.GiantBuzzerDefeated = true;
+            PDHelper.FountainVesselSummoned = true;
+            PDHelper.HasKingsBrand = true;
+            PDHelper.DuskKnightDefeated = true;
+            PDHelper.KilledInfectedKnight = true;
+            PDHelper.KilledMageKnight = true;
+            PDHelper.MegaMossChargerDefeated = true;
+            PDHelper.InfectedKnightDreamDefeated = true;
+            PDHelper.AbyssGateOpened = true;
+            PDHelper.HegemolDefeated = true;
+        }
     }
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
@@ -74,6 +81,7 @@ public static class PhaseController
 
     internal static void TransitionTo(Phase targetPhase)
     {
+        LogHelper.Write("Transition to " + targetPhase);
         if (CurrentPhase == targetPhase)
             return;
         switch (targetPhase)
@@ -133,10 +141,10 @@ public static class PhaseController
                 ScoreController.Unload();
                 TrialOfCrusaders.Holder.StopAllCoroutines();
                 break;
-            default:
+            case Phase.Lobby:
                 HubController.Initialize();
                 HistoryController.Initialize();
-                if (CurrentPhase != Phase.Inactive)
+                if (CurrentPhase != Phase.Inactive && CurrentPhase != Phase.Initialize)
                 {
                     if (CurrentPhase == Phase.Run)
                     {
@@ -156,6 +164,8 @@ public static class PhaseController
                 }
                 else
                     SpawnController.Initialize();
+                break;
+            default:
                 break;
         }
         CurrentPhase = targetPhase;

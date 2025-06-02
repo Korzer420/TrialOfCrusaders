@@ -4,6 +4,10 @@ public enum Phase
 {
     Inactive,
 
+    Listening,
+
+    Initialize,
+
     Lobby,
 
     Run,

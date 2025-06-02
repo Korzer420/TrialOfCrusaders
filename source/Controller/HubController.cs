@@ -55,7 +55,8 @@ internal static class HubController
         TransitionPoint left = transitions.First(x => x.name == "left1");
         GameObject block = new("Block");
         block.SetActive(true);
-        block.AddComponent<BoxCollider2D>().size = left.GetComponent<BoxCollider2D>().size;
+        block.transform.position = new(14.5f, 9);
+        block.AddComponent<BoxCollider2D>().size = new(1f, 8f);
         transitions.Remove(left);
         Object.Destroy(left);
         transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";

@@ -1,11 +1,9 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
 using Modding;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.ModInterop;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.SaveData;
@@ -63,6 +61,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         if (ModHooks.GetMod("DebugMod") is Mod)
             HookDebug();
 
+        MenuController.AddMode();
+
         PhaseController.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
     }
@@ -82,6 +82,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
+        LogHelper.Write("Load local data");
+        if (PhaseController.CurrentPhase == Enums.Phase.Listening)
+        {
+            LogHelper.Write("Check for save data.");
+            if (saveData != null)
+                PhaseController.TransitionTo(Enums.Phase.Initialize);
+            else
+                PhaseController.TransitionTo(Enums.Phase.Inactive);
+        }
         HistoryController.SetupList(saveData?.OldRunData ?? []);
         // ToDo: Support save inside a run.
         //StageController.CurrentRoomIndex = CurrentSaveData.CurrentRoomNumber - 2;
@@ -196,7 +205,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         Gate.Prefab.name = "Gate";
 
-        GameObject[] preloads = 
+        GameObject[] preloads =
         [
             // Power prefabs
             ..LifebloodOmen.Ghosts,
