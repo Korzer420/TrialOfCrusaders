@@ -10,12 +10,16 @@ using System.Linq;
 using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace TrialOfCrusaders.Controller;
 
+/// <summary>
+/// Handles everything related to the score.
+/// </summary>
 public static class ScoreController
 {
     private static bool _enabled;
@@ -37,14 +41,14 @@ public static class ScoreController
     {
         if (_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Enable Score Controller", KorzUtils.Enums.LogType.Debug);
+        LogManager.Log("Enable Score Controller");
         CombatController.TookDamage += CombatController_TookDamage;
         CombatController.EnemyKilled += CombatController_EnemyKilled;
         StageController.RoomEnded += StageController_RoomEnded;
         On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable += SetupResultElements;
-        HistoryController.CreateEntry += HistoryController_CreateEntry;
-        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
+        HistoryController.CreateEntry += PassHistoryData;
+        ModHooks.GetPlayerBoolHook += BlockPause;
         StartTimer();
         _enabled = true;
     }
@@ -53,13 +57,14 @@ public static class ScoreController
     {
         if (!_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Disable Score Controller", KorzUtils.Enums.LogType.Debug);
+        LogManager.Log("Disable Score Controller");
         CombatController.TookDamage -= CombatController_TookDamage;
         CombatController.EnemyKilled -= CombatController_EnemyKilled;
         StageController.RoomEnded -= StageController_RoomEnded;
         On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable -= SetupResultElements;
-        HistoryController.CreateEntry -= HistoryController_CreateEntry;
+        HistoryController.CreateEntry -= PassHistoryData;
+        ModHooks.GetPlayerBoolHook -= BlockPause;
         StopTimer();
         Score = null;
         _enabled = false;
@@ -99,7 +104,7 @@ public static class ScoreController
 
     #endregion
 
-    private static void HistoryController_CreateEntry(HistoryData entry, Enums.RunResult result)
+    private static void PassHistoryData(HistoryData entry, Enums.RunResult result)
     {
         entry.Score = Score.Copy();
         if (result == RunResult.Failed)
@@ -109,7 +114,7 @@ public static class ScoreController
         entry.Score.Essence = PDHelper.DreamOrbs;
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private static bool BlockPause(string name, bool orig)
     {
         if (name == nameof(PlayerData.disablePause))
             return orig || PhaseController.CurrentPhase == Phase.Result;

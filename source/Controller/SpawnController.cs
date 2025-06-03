@@ -1,6 +1,5 @@
 ﻿using GlobalEnums;
 using KorzUtils.Helper;
-using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;

@@ -3,11 +3,12 @@ using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
@@ -26,6 +27,8 @@ internal static class StageController
     private static int _treasureRoomCooldown = 0;
     private static (string, string) _intendedDestination = new();
 
+    #region Properties
+
     public static bool QuietRoom { get; set; } = true;
 
     public static bool UpcomingTreasureRoom { get; set; }
@@ -38,9 +41,13 @@ internal static class StageController
 
     public static bool FinishedEnemies { get; set; }
 
-    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex];
+    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex]; 
+
+    #endregion
 
     public static event Action<bool> RoomEnded;
+
+    #region Setup
 
     internal static void Initialize()
     {
@@ -48,37 +55,28 @@ internal static class StageController
             return;
         LogHelper.Write<TrialOfCrusaders>("Enable Stage Controller", KorzUtils.Enums.LogType.Debug);
         QuietRoom = true;
-        On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
-        // "Remove" all benches.
-        On.RestBench.Start += RestBench_Start;
-        // These hooks ensure that nothing is saved within a scene so it can repeated indefinetly.
-        On.SceneData.SaveMyState_GeoRockData += SceneData_SaveMyState_GeoRockData;
-        On.SceneData.SaveMyState_PersistentBoolData += SceneData_SaveMyState_PersistentBoolData;
-        On.SceneData.SaveMyState_PersistentIntData += SceneData_SaveMyState_PersistentIntData;
+        On.PlayMakerFSM.OnEnable += FsmEdits;
+        On.RestBench.Start += RemoveBenches;
+
+        // These hooks ensure that nothing is saved within a scene so it can repeated over an dover again.
+        IL.SceneData.SaveMyState_GeoRockData += SkipSceneDataSave;
+        IL.SceneData.SaveMyState_PersistentBoolData += SkipSceneDataSave;
+        IL.SceneData.SaveMyState_PersistentIntData += SkipSceneDataSave;
         // Change flags to prevent softlocks (like already lowering platforms)
-        On.SceneData.FindMyState_PersistentBoolData += SceneData_FindMyState_PersistentBoolData;
+        On.SceneData.FindMyState_PersistentBoolData += ForceSceneFlags;
 
         // Transition handling.
-        On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
-        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
-        On.TransitionPoint.Start += TransitionPoint_Start;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-        On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += Block_Doors;
-        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
-        HistoryController.CreateEntry += HistoryController_CreateEntry;
-        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
-        
-        _enabled = true;
-    }
+        On.GameManager.BeginSceneTransition += InitiateTransition;
+        On.TransitionPoint.Start += ModifyTransitionPoint;
+        On.HeroController.FinishedEnteringScene += FinishedEnteringScene;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneAdjustments;
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
-    {
-        if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
-            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
-            return true;
-        else if (name == nameof(PlayerData.crossroadsInfected))
-            return CurrentRoomNumber >= 60;
-        return orig;
+        On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += Block_Doors;
+        CombatController.EnemiesCleared += OnEnemiesCleared;
+        HistoryController.CreateEntry += PassHistoryData;
+        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
+
+        _enabled = true;
     }
 
     internal static void Unload()
@@ -86,25 +84,27 @@ internal static class StageController
         if (!_enabled)
             return;
         LogHelper.Write<TrialOfCrusaders>("Disable Stage Controller", KorzUtils.Enums.LogType.Debug);
-        On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
-        // "Remove" all benches.
-        On.RestBench.Start -= RestBench_Start;
-        // These hooks ensure that nothing is saved within a scene so it can repeated indefinetly.
-        On.SceneData.SaveMyState_GeoRockData -= SceneData_SaveMyState_GeoRockData;
-        On.SceneData.SaveMyState_PersistentBoolData -= SceneData_SaveMyState_PersistentBoolData;
-        On.SceneData.SaveMyState_PersistentIntData -= SceneData_SaveMyState_PersistentIntData;
+        On.PlayMakerFSM.OnEnable -= FsmEdits;
+        On.RestBench.Start -= RemoveBenches;
+
+        // These hooks ensure that nothing is saved within a scene so it can repeated over an dover again.
+        IL.SceneData.SaveMyState_GeoRockData -= SkipSceneDataSave;
+        IL.SceneData.SaveMyState_PersistentBoolData -= SkipSceneDataSave;
+        IL.SceneData.SaveMyState_PersistentIntData -= SkipSceneDataSave;
         // Change flags to prevent softlocks (like already lowering platforms)
-        On.SceneData.FindMyState_PersistentBoolData -= SceneData_FindMyState_PersistentBoolData;
+        On.SceneData.FindMyState_PersistentBoolData -= ForceSceneFlags;
 
         // Transition handling.
-        On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
-        On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
-        On.TransitionPoint.Start -= TransitionPoint_Start;
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        On.GameManager.BeginSceneTransition -= InitiateTransition;
+        On.HeroController.FinishedEnteringScene -= FinishedEnteringScene;
+        On.TransitionPoint.Start -= ModifyTransitionPoint;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneAdjustments;
+
         On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter -= Block_Doors;
-        CombatController.EnemiesCleared -= CombatController_EnemiesCleared;
-        HistoryController.CreateEntry -= HistoryController_CreateEntry;
-        
+        CombatController.EnemiesCleared -= OnEnemiesCleared;
+        HistoryController.CreateEntry -= PassHistoryData;
+        ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
+
         // Reset data.
         CurrentRoomIndex = -1;
         QuietRoom = true;
@@ -113,33 +113,11 @@ internal static class StageController
         CurrentRoomData.Clear();
         FinishedEnemies = false;
         _enabled = false;
-    }
+    } 
 
-    private static void CombatController_EnemiesCleared()
-    {
-        FinishedEnemies = true;
-        ClearExit();
-    }
+    #endregion
 
-    public static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
-    {
-        if (arg1.name == "GG_Engine")
-            UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
-        else if (arg1.name == "Fungus2_14")
-            UnityEngine.Object.Destroy(GameObject.Find("Mantis Lever (1)"));
-        else if (arg1.name == "Ruins1_05")
-            SpawnTeleporter(new(3.68f, 153.19f), new(3.68f, 142.4f));
-        else if (arg1.name == "Hive_01")
-            SpawnTeleporter(new(44.54f, 11.09f), new(93.57f, 38.1f));
-        else if (arg1.name == "Fungus3_48")
-            SpawnTeleporter(new(19.2f, 105.6f), new(24.89f, 96f));
-        else if (arg1.name == "Hive_03")
-            SpawnTeleporter(new(47.33f, 142.4f), new(30.53f, 126.4f));
-        else if (arg1.name == "Deepnest_East_14")
-            SpawnTeleporter(new(141.57f, 58.15f), new(124.06f, 21.3f));
-        else if (arg1.name == "Abyss_19")
-            SpawnTeleporter(new(90.1f, 3.4f), new(114.41f, 3.4f));
-    }
+    #region Methods
 
     private static void SpawnTeleporter(Vector3 source, Vector3 target)
     {
@@ -149,7 +127,7 @@ internal static class StageController
 
         GameObject secondLift = new("Trial Lift 2");
         secondLift.AddComponent<Lift>().Partner = first;
-        secondLift.transform.position = target + new Vector3(0f,0f, 0.01f);
+        secondLift.transform.position = target + new Vector3(0f, 0f, 0.01f);
         first.Partner = secondLift.GetComponent<Lift>();
     }
 
@@ -191,18 +169,29 @@ internal static class StageController
 
     internal static List<RoomData> LoadRoomData() => ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
 
-    private static void HistoryController_CreateEntry(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
-
-    private static void Block_Doors(On.HutongGames.PlayMaker.Actions.BoolTest.orig_OnEnter orig, BoolTest self)
+    internal static IEnumerator WaitForTransition()
     {
-        if (self.IsCorrectContext("Door Control", null, "Can Enter?"))
-            self.boolVariable.Value = self.boolVariable.Value && FinishedEnemies && _specialTransitions.Count == 0;
-        orig(self);
-    }
+        HeroController.instance.RelinquishControl();
+        float passedTime = 0f;
+        while (passedTime < 2)
+        {
+            passedTime += Time.deltaTime;
+            yield return null;
+            if (GameManager.instance.IsGamePaused())
+                yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
+        }
+        GameObject transition = new("Trial Transition Starter");
+        SpecialTransition specialTransition = transition.AddComponent<SpecialTransition>();
+        specialTransition.LoadIntoDream = false;
+        transition.transform.position = new(-5000, -5000f);
+        specialTransition.StartGodhomeTransition();
+    } 
+
+    #endregion
 
     #region Transition Handling
 
-    private static void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
+    private static void InitiateTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
         _transitionPoints.Clear();
         _specialTransitions.Clear();
@@ -287,7 +276,7 @@ internal static class StageController
         }
     }
 
-    private static void TransitionPoint_Start(On.TransitionPoint.orig_Start orig, TransitionPoint self)
+    private static void ModifyTransitionPoint(On.TransitionPoint.orig_Start orig, TransitionPoint self)
     {
         orig(self);
         _transitionPoints.Add(self);
@@ -344,7 +333,7 @@ internal static class StageController
         }
     }
 
-    private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    private static void FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
         LogHelper.Write("Current room number: " + CurrentRoomNumber);
@@ -369,7 +358,9 @@ internal static class StageController
 
     #endregion
 
-    private static void RestBench_Start(On.RestBench.orig_Start orig, RestBench self)
+    #region Other Eventhandler
+
+    private static void RemoveBenches(On.RestBench.orig_Start orig, RestBench self)
     {
         orig(self);
         // To ensure other mods are running correctly, we just move the bench out of bounce.
@@ -377,7 +368,7 @@ internal static class StageController
             self.transform.position = new(-4000f, -4000f);
     }
 
-    private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         if (self.FsmName == "Shiny Control" && self.gameObject.name.StartsWith("Shiny Item"))
         {
@@ -472,25 +463,7 @@ internal static class StageController
             UnityEngine.Object.Destroy(self.gameObject);
     }
 
-    internal static IEnumerator WaitForTransition()
-    {
-        HeroController.instance.RelinquishControl();
-        float passedTime = 0f;
-        while(passedTime < 2)
-        {
-            passedTime += Time.deltaTime;
-            yield return null;
-            if (GameManager.instance.IsGamePaused())
-                yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
-        }
-        GameObject transition = new("Trial Transition Starter");
-        SpecialTransition specialTransition = transition.AddComponent<SpecialTransition>();
-        specialTransition.LoadIntoDream = false;
-        transition.transform.position = new(-5000, -5000f);
-        specialTransition.StartGodhomeTransition();
-    }
-
-    private static PersistentBoolData SceneData_FindMyState_PersistentBoolData(On.SceneData.orig_FindMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
+    private static PersistentBoolData ForceSceneFlags(On.SceneData.orig_FindMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
     {
         if (persistentBoolData.sceneName == "Fungus1_21" && persistentBoolData.id == "Vine Platform (2)"
             || persistentBoolData.sceneName == "Fungus1_31" && persistentBoolData.id == "Toll Gate Machine"
@@ -515,9 +488,57 @@ internal static class StageController
         return orig(self, persistentBoolData);
     }
 
-    private static void SceneData_SaveMyState_PersistentIntData(On.SceneData.orig_SaveMyState_PersistentIntData orig, SceneData self, PersistentIntData persistentIntData) { }
+    private static void SkipSceneDataSave(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        cursor.Goto(0);
+        cursor.Emit(OpCodes.Ret);
+    }
 
-    private static void SceneData_SaveMyState_PersistentBoolData(On.SceneData.orig_SaveMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData) { }
+    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
+            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
+            return true;
+        else if (name == nameof(PlayerData.crossroadsInfected))
+            return CurrentRoomNumber >= 60;
+        return orig;
+    }
 
-    private static void SceneData_SaveMyState_GeoRockData(On.SceneData.orig_SaveMyState_GeoRockData orig, SceneData self, GeoRockData geoRockData) { }
+    private static void PassHistoryData(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
+
+    private static void Block_Doors(On.HutongGames.PlayMaker.Actions.BoolTest.orig_OnEnter orig, BoolTest self)
+    {
+        if (self.IsCorrectContext("Door Control", null, "Can Enter?"))
+            self.boolVariable.Value = self.boolVariable.Value && FinishedEnemies && _specialTransitions.Count == 0;
+        orig(self);
+    }
+
+    private static void OnEnemiesCleared()
+    {
+        FinishedEnemies = true;
+        ClearExit();
+    }
+
+    public static void SceneAdjustments(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    {
+        if (arg1.name == "GG_Engine")
+            UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
+        else if (arg1.name == "Fungus2_14")
+            UnityEngine.Object.Destroy(GameObject.Find("Mantis Lever (1)"));
+        else if (arg1.name == "Ruins1_05")
+            SpawnTeleporter(new(3.68f, 153.19f), new(3.68f, 142.4f));
+        else if (arg1.name == "Hive_01")
+            SpawnTeleporter(new(44.54f, 11.09f), new(93.57f, 38.1f));
+        else if (arg1.name == "Fungus3_48")
+            SpawnTeleporter(new(19.2f, 105.6f), new(24.89f, 96f));
+        else if (arg1.name == "Hive_03")
+            SpawnTeleporter(new(47.33f, 142.4f), new(30.53f, 126.4f));
+        else if (arg1.name == "Deepnest_East_14")
+            SpawnTeleporter(new(141.57f, 58.15f), new(124.06f, 21.3f));
+        else if (arg1.name == "Abyss_19")
+            SpawnTeleporter(new(90.1f, 3.4f), new(114.41f, 3.4f));
+    }
+
+    #endregion
 }
