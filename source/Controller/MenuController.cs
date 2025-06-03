@@ -4,6 +4,9 @@ using MenuChanger.MenuElements;
 
 namespace TrialOfCrusaders.Controller;
 
+/// <summary>
+/// Handles the menu in the file selection.
+/// </summary>
 internal class MenuController : ModeMenuConstructor
 {
     internal static void AddMode() => ModeMenu.AddMode(new MenuController());
