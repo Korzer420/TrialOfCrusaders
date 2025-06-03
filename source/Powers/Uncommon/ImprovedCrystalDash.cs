@@ -4,7 +4,7 @@ using System.Reflection;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;

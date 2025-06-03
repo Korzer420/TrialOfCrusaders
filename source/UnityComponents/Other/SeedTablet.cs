@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Other;
 
 internal class SeedTablet : MonoBehaviour
 {

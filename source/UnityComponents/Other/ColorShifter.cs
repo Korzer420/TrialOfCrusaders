@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Other;
 
 internal class ColorShifter : MonoBehaviour
 {
@@ -40,7 +40,7 @@ internal class ColorShifter : MonoBehaviour
                 if (GlowSprite != null)
                     GlowSprite.color = color;
             }
-            
+
             _timePassed = 0f;
         }
     }

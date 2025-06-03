@@ -4,8 +4,8 @@ using System.Linq;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
-using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 

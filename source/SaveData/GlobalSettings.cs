@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TrialOfCrusaders.SaveData;
 
-namespace TrialOfCrusaders.SaveData
+public class GlobalSettings
 {
-    internal class GlobalSettings
-    {
-    }
+    #region Properties
+
+    public bool TrackForfeitedRuns { get; set; }
+
+    public bool TrackFailedRuns { get; set; }
+
+    public int HistoryAmount { get; set; }
+
+    #endregion
 }

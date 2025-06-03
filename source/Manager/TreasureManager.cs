@@ -13,7 +13,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 

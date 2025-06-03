@@ -8,19 +8,20 @@ using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.ModInterop;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.SaveData;
-using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.PowerElements;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
-
 
 namespace TrialOfCrusaders;
 
 public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 {
     private Dummy _coroutineHolder;
+
+    #region Mod Setup
 
     public static TrialOfCrusaders Instance { get; set; }
 
@@ -68,27 +69,16 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
         PhaseController.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
-    }
+    } 
 
-    private int EnsureSteelSoul(On.GameManager.orig_GetStatusRecordInt orig, GameManager self, string key)
-    {
-        // If the selection mode menu doesn't appear, a few unity errors are thrown. Therefore we force it to appear.
-        if (key == "RecPermadeathMode")
-            return 1;
-        return orig(self, key);
-    }
+    #endregion
 
-    private void HookDebug()
-    {
-        DebugModInterop.Initialize();
-    }
+    #region Save management
 
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
-        LogHelper.Write("Load local data");
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
-            LogHelper.Write("Check for save data.");
             if (saveData != null)
                 PhaseController.TransitionTo(Enums.Phase.Initialize);
             else
@@ -134,6 +124,62 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         //else
         //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
         return new() { OldRunData = HistoryController.History };
+    } 
+
+    #endregion
+
+    #region Prefab handling
+
+    private void OrganizePrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
+    {
+        GameObject container = GameObject.Find("Trial of Crusaders Objects");
+        if (container != null)
+            GameObject.Destroy(container);
+        container = new("Trial of Crusaders Objects");
+        GameObject.DontDestroyOnLoad(container);
+
+        // Setup prefabs
+        SetupPowerPrefabs(preloadedObjects);
+        SetupDebuffs(preloadedObjects);
+        TreasureManager.SetupShiny(preloadedObjects["Tutorial_01"]["_Props/Chest"]);
+        ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
+        SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+        ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
+        HubController.Tink.name = "Tink Effect";
+        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
+        Gate.Prefab.name = "Gate";
+
+        GameObject[] preloads =
+        [
+            // Power prefabs
+            ..LifebloodOmen.Ghosts,
+            GroundSlam.Shockwave,
+            GreaterMind.Orb,
+            Caching.SoulCache,
+            VoidZone.Ring,
+            // Debuffs
+            ConcussionEffect.Prefab,
+            WeakenedEffect.Prefab,
+            ShatteredMindEffect.Prefab,
+            BleedEffect.Prefab,
+            BurnEffect.Prefab,
+            // Other
+            HubController.Tink,
+            Gate.Prefab,
+            TreasureManager.Shiny,
+            ScoreController.ResultSequencePrefab,
+            ScoreController.ScoreboardPrefab,
+            SpecialTransition.TransitionPrefab,
+            _coroutineHolder.gameObject
+        ];
+        foreach (GameObject gameObject in preloads)
+        {
+            gameObject.transform.SetParent(container.transform);
+            GameObject.DontDestroyOnLoad(gameObject);
+            gameObject.SetActive(false);
+        }
+        _coroutineHolder.gameObject.SetActive(true);
     }
 
     private void SetupPowerPrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -188,55 +234,20 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         BurnEffect.PreparePrefab(corpse.transform.Find("Corpse Flame").gameObject);
     }
 
-    private void OrganizePrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
+    #endregion
+
+    // If the selection mode menu doesn't appear, a few unity errors are thrown. Therefore we force it to appear.
+    private int EnsureSteelSoul(On.GameManager.orig_GetStatusRecordInt orig, GameManager self, string key)
     {
-        GameObject container = GameObject.Find("Trial of Crusaders Objects");
-        if (container != null)
-            GameObject.Destroy(container);
-        container = new("Trial of Crusaders Objects");
-        GameObject.DontDestroyOnLoad(container);
+        int vanillaValue = orig(self, key);
+        
+        if (key == "RecPermadeathMode")
+            return 1;
+        return vanillaValue;
+    }
 
-        // Setup prefabs
-        SetupPowerPrefabs(preloadedObjects);
-        SetupDebuffs(preloadedObjects);
-        TreasureManager.SetupShiny(preloadedObjects["Tutorial_01"]["_Props/Chest"]);
-        ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
-        SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
-        ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
-        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
-        HubController.Tink.name = "Tink Effect";
-        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
-        Gate.Prefab.name = "Gate";
-
-        GameObject[] preloads =
-        [
-            // Power prefabs
-            ..LifebloodOmen.Ghosts,
-            GroundSlam.Shockwave,
-            GreaterMind.Orb,
-            Caching.SoulCache,
-            VoidZone.Ring,
-            // Debuffs
-            ConcussionEffect.Prefab,
-            WeakenedEffect.Prefab,
-            ShatteredMindEffect.Prefab,
-            BleedEffect.Prefab,
-            BurnEffect.Prefab,
-            // Other
-            HubController.Tink,
-            Gate.Prefab,
-            TreasureManager.Shiny,
-            ScoreController.ResultSequencePrefab,
-            ScoreController.ScoreboardPrefab,
-            SpecialTransition.TransitionPrefab,
-            _coroutineHolder.gameObject
-        ];
-        foreach (GameObject gameObject in preloads)
-        {
-            gameObject.transform.SetParent(container.transform);
-            GameObject.DontDestroyOnLoad(gameObject);
-            gameObject.SetActive(false);
-        }
-        _coroutineHolder.gameObject.SetActive(true);
+    private void HookDebug()
+    {
+        DebugModInterop.Initialize();
     }
 }

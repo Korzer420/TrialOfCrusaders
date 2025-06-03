@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.Other;
 
 internal class Dummy : MonoBehaviour { }
