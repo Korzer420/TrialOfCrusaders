@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Reflection;
+using TrialOfCrusaders.Data;
 
 namespace TrialOfCrusaders.Powers.Common;
 

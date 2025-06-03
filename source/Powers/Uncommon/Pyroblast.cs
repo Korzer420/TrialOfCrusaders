@@ -1,7 +1,9 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
@@ -22,7 +24,7 @@ internal class Pyroblast : Power
     {
         orig(self);
         if (self.IsCorrectContext("damages_enemy", null, "Send Event") && (self.Fsm.GameObject.name.Contains("Fireball")))
-            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false && RngProvider.GetRandom(0, 20) <= CombatController.SpiritLevel)
+            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false && RngManager.GetRandom(0, 20) <= CombatController.SpiritLevel)
                 self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatController.SpiritLevel);
     }
 }

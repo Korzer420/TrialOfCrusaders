@@ -1,4 +1,6 @@
-﻿namespace TrialOfCrusaders.Powers.Common;
+﻿using TrialOfCrusaders.Data;
+
+namespace TrialOfCrusaders.Powers.Common;
 
 internal class Sturdy : Power
 {

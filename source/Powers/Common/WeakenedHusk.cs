@@ -1,6 +1,8 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
@@ -27,7 +29,7 @@ internal class WeakenedHusk : Power
                 || (gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2"))
                 || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
             {
-                if (RngProvider.GetRandom(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
+                if (RngManager.GetRandom(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
                     self.Fsm.GameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatController.SpiritLevel;
             }
         }

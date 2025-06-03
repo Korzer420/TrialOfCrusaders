@@ -4,6 +4,7 @@ using MonoMod.Cil;
 using System;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

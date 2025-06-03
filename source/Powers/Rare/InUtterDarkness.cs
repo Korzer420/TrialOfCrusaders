@@ -2,8 +2,10 @@
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
 using System.Collections.Generic;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;

@@ -1,4 +1,5 @@
 ﻿using Modding;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine.SceneManagement;

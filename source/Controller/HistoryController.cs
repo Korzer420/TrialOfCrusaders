@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -122,8 +123,8 @@ internal static class HistoryController
         CreateEntry?.Invoke(TempEntry, result);
 
         // Take RngProvider data
-        TempEntry.Seed = RngProvider.Seed;
-        TempEntry.Seeded = RngProvider.Seeded;
+        TempEntry.Seed = RngManager.Seed;
+        TempEntry.Seeded = RngManager.Seeded;
 
         // Set the non-controller related data.
         TempEntry.ModVersion = TrialOfCrusaders.Instance.GetVersion();
@@ -178,7 +179,7 @@ internal static class HistoryController
         viewBlocker.transform.localPosition = new(0f, 0f);
         viewBlocker.SetActive(true);
 
-        (SpriteRenderer, TextMeshPro) currentElement = TextHelper.CreateUIObject("RunState");
+        (SpriteRenderer, TextMeshPro) currentElement = TextManager.CreateUIObject("RunState");
         _elementLookUp.Add("RunState", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(0f, 6f);
@@ -192,7 +193,7 @@ internal static class HistoryController
         float yPosition = 4f;
         for (int i = 1; i < 10; i++)
         {
-            currentElement = TextHelper.CreateUIObject("SeedSprite" + i);
+            currentElement = TextManager.CreateUIObject("SeedSprite" + i);
             _elementLookUp.Add("SeedSprite" + i, currentElement);
             currentElement.Item1.transform.SetParent(board.transform);
             currentElement.Item1.transform.localPosition = new(xPosition, yPosition);
@@ -208,7 +209,7 @@ internal static class HistoryController
             else if (xPosition == -6f && yPosition == 1f)
                 xPosition += 3f;
         }
-        currentElement = TextHelper.CreateUIObject("TakenTime");
+        currentElement = TextManager.CreateUIObject("TakenTime");
         _elementLookUp.Add("TakenTime", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-14.5f, 0f);
@@ -231,7 +232,7 @@ internal static class HistoryController
 
         for (int i = 0; i < values.Count; i++)
         {
-            currentElement = TextHelper.CreateUIObject(values[i]);
+            currentElement = TextManager.CreateUIObject(values[i]);
             _elementLookUp.Add(values[i], currentElement);
             currentElement.Item1.transform.SetParent(board.transform);
             currentElement.Item1.transform.localPosition = new(-14.5f, -0.75f - (i * 0.5f));
@@ -246,7 +247,7 @@ internal static class HistoryController
             Component.Destroy(currentElement.Item1);
         }
 
-        currentElement = TextHelper.CreateUIObject("CombatLevel");
+        currentElement = TextManager.CreateUIObject("CombatLevel");
         _elementLookUp.Add("CombatLevel", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, 0.25f);
@@ -255,7 +256,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("SpiritLevel");
+        currentElement = TextManager.CreateUIObject("SpiritLevel");
         _elementLookUp.Add("SpiritLevel", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -0.75f);
@@ -264,7 +265,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("EnduranceLevel");
+        currentElement = TextManager.CreateUIObject("EnduranceLevel");
         _elementLookUp.Add("EnduranceLevel", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -1.75f);
@@ -273,7 +274,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("FinalRoom");
+        currentElement = TextManager.CreateUIObject("FinalRoom");
         _elementLookUp.Add("FinalRoom", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -2.75f);
@@ -281,7 +282,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("TotalCommonPowers");
+        currentElement = TextManager.CreateUIObject("TotalCommonPowers");
         _elementLookUp.Add("TotalCommonPowers", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -3.75f);
@@ -289,7 +290,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 3;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("TotalUncommonPowers");
+        currentElement = TextManager.CreateUIObject("TotalUncommonPowers");
         _elementLookUp.Add("TotalUncommonPowers", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -4.75f);
@@ -298,7 +299,7 @@ internal static class HistoryController
         currentElement.Item2.color = new(0.2f, 0.8f, 0.2f);
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("TotalRarePowers");
+        currentElement = TextManager.CreateUIObject("TotalRarePowers");
         _elementLookUp.Add("TotalRarePowers", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-6.75f, -5.75f);
@@ -307,7 +308,7 @@ internal static class HistoryController
         currentElement.Item2.color = Color.cyan;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("PowerList");
+        currentElement = TextManager.CreateUIObject("PowerList");
         _elementLookUp.Add("PowerList", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(6f, 5.5f);
@@ -316,7 +317,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 4;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("Version");
+        currentElement = TextManager.CreateUIObject("Version");
         _elementLookUp.Add("Version", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-15f, 6.7f);
@@ -324,7 +325,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 2;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("EntryNumber");
+        currentElement = TextManager.CreateUIObject("EntryNumber");
         _elementLookUp.Add("EntryNumber", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(11f, 6.9f);
@@ -332,7 +333,7 @@ internal static class HistoryController
         currentElement.Item2.fontSize = 2;
         Component.Destroy(currentElement.Item1);
 
-        currentElement = TextHelper.CreateUIObject("ArrowLeft");
+        currentElement = TextManager.CreateUIObject("ArrowLeft");
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-16f, 0f);
         currentElement.Item1.transform.localScale = new(2f, 2f);
@@ -340,28 +341,28 @@ internal static class HistoryController
         currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         GameObject.Destroy(currentElement.Item2.gameObject);
 
-        currentElement = TextHelper.CreateUIObject("ArrowRight");
+        currentElement = TextManager.CreateUIObject("ArrowRight");
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(16f, 0f);
         currentElement.Item1.transform.localScale = new(2f, 2f);
         currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         GameObject.Destroy(currentElement.Item2.gameObject);
 
-        currentElement = TextHelper.CreateUIObject("UpperBorder");
+        currentElement = TextManager.CreateUIObject("UpperBorder");
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(0f, 7.5f);
         currentElement.Item1.transform.localScale = new(1.8f, 1.8f);
         currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.History_Upper");
         GameObject.Destroy(currentElement.Item2.gameObject);
 
-        currentElement = TextHelper.CreateUIObject("LowerBorder");
+        currentElement = TextManager.CreateUIObject("LowerBorder");
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(0f, -7.5f);
         currentElement.Item1.transform.localScale = new(1.8f, 1.8f);
         currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Border.History_Lower");
         GameObject.Destroy(currentElement.Item2.gameObject);
 
-        currentElement = TextHelper.CreateUIObject("Check");
+        currentElement = TextManager.CreateUIObject("Check");
         _elementLookUp.Add("Check", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-14f, 5.6f);
@@ -369,7 +370,7 @@ internal static class HistoryController
         currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.ImprovedGrimmchild");
         GameObject.Destroy(currentElement.Item2.gameObject);
 
-        currentElement = TextHelper.CreateUIObject("Seeded");
+        currentElement = TextManager.CreateUIObject("Seeded");
         _elementLookUp.Add("Seeded", currentElement);
         currentElement.Item1.transform.SetParent(board.transform);
         currentElement.Item1.transform.localPosition = new(-8.9f, 6f);
@@ -497,7 +498,7 @@ internal static class HistoryController
         List<string> pagePowers = [.. currentHistory.Powers.Skip(_powerPageIndex * 15).Take(15)];
         for (int i = 0; i < 15; i++)
         {
-            (SpriteRenderer, TextMeshPro) currentElement = TextHelper.CreateUIObject(i >= pagePowers.Count ? "Dummy" : pagePowers[i]);
+            (SpriteRenderer, TextMeshPro) currentElement = TextManager.CreateUIObject(i >= pagePowers.Count ? "Dummy" : pagePowers[i]);
             currentElement.Item1.transform.SetParent(_elementLookUp["PowerList"].Item2.transform);
             currentElement.Item1.transform.localPosition = new(xPosition, yPosition);
             currentElement.Item2.alignment = TextAlignmentOptions.Center;
@@ -527,14 +528,14 @@ internal static class HistoryController
         if (maxPages > 1)
         {
             _elementLookUp["PowerList"].Item2.text = $"Powers ({_powerPageIndex + 1}/ {maxPages})";
-            (SpriteRenderer, TextMeshPro) currentElement = TextHelper.CreateUIObject("ArrowUp");
+            (SpriteRenderer, TextMeshPro) currentElement = TextManager.CreateUIObject("ArrowUp");
             currentElement.Item1.transform.SetParent(_elementLookUp["PowerList"].Item2.transform);
             currentElement.Item1.transform.localPosition = new(0f, -1f);
             currentElement.Item1.transform.SetRotation2D(90f);
             currentElement.Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
             GameObject.Destroy(currentElement.Item2.gameObject);
 
-            currentElement = TextHelper.CreateUIObject("ArrowDown");
+            currentElement = TextManager.CreateUIObject("ArrowDown");
             currentElement.Item1.transform.SetParent(_elementLookUp["PowerList"].Item2.transform);
             currentElement.Item1.transform.localPosition = new(0f, -6.2f);
             currentElement.Item1.transform.SetRotation2D(270f);

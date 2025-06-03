@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -126,8 +128,8 @@ internal static class HubController
             info.SceneName = "GG_Spa";
             info.EntryGateName = "door_dreamEnter";
             int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
-            RngProvider.Seeded = finalSeed != _rolledSeed;
-            RngProvider.Seed = finalSeed;
+            RngManager.Seeded = finalSeed != _rolledSeed;
+            RngManager.Seed = finalSeed;
             StageController.CurrentRoomData = SetupManager.GenerateNormalRun();
             StageController.CurrentRoomIndex = -1;
             PhaseController.TransitionTo(Phase.Run);

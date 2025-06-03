@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TrialOfCrusaders.Data;
+using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
 

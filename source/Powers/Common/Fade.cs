@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using Modding;
 using System.Collections;
+using TrialOfCrusaders.Data;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

@@ -1,9 +1,9 @@
 ﻿using System;
 using TrialOfCrusaders.Controller;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Manager;
 
-public static class RngProvider
+public static class RngManager
 {
     private static int _seed = 120;
     private static Random _mainGenerator;

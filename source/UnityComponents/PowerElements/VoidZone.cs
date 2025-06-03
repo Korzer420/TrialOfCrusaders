@@ -1,10 +1,11 @@
 ﻿using Modding.Utils;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
 internal class VoidZone : MonoBehaviour
 {
@@ -27,7 +28,7 @@ internal class VoidZone : MonoBehaviour
     {
         LeftTime -= Time.deltaTime;
         if (LeftTime <= 0)
-            GameObject.Destroy(transform.parent.gameObject);
+            Destroy(transform.parent.gameObject);
         transform.localScale += new Vector3(Time.deltaTime * 2.5f, Time.deltaTime * 2.5f);
         if (transform.localScale.x > 3f)
             transform.localScale = new Vector3(0f, 0f);
@@ -49,9 +50,9 @@ internal class VoidZone : MonoBehaviour
                         DamageDealt = 5 + CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel,
                         Multiplier = 1f
                     }]);
-                    if (UnityEngine.Random.Range(0, 10) < 1)
+                    if (Random.Range(0, 10) < 1)
                     {
-                        int rolled = UnityEngine.Random.Range(0, 6);
+                        int rolled = Random.Range(0, 6);
                         switch (rolled)
                         {
                             // Weakened

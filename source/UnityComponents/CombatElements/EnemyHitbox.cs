@@ -1,8 +1,7 @@
-﻿using KorzUtils.Helper;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.CombatElements;
 
 internal class EnemyHitbox : MonoBehaviour
 {
@@ -12,7 +11,7 @@ internal class EnemyHitbox : MonoBehaviour
     public HitInstance Hit { get; set; }
 
     void Start()
-    { 
+    {
         _ownCollider = GetComponent<Collider2D>();
     }
 
@@ -26,7 +25,7 @@ internal class EnemyHitbox : MonoBehaviour
             return;
         }
         if (!manager.IsInvincible && !manager.isDead && manager.GetComponent<EnemyShield>() == null)
-        { 
+        {
             _hitMethod.Invoke(manager, [Hit]);
             manager.gameObject.AddComponent<EnemyShield>()
                 .SetTimer(0.25f)

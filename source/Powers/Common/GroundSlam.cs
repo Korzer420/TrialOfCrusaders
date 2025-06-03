@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.Data;
+using TrialOfCrusaders.UnityComponents.CombatElements;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

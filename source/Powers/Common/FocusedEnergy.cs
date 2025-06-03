@@ -1,5 +1,6 @@
 ﻿using System;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;

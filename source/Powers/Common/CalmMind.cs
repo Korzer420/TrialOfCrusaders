@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

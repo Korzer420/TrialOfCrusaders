@@ -6,7 +6,7 @@ using System.Linq;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.StageElements;
 
 internal class Gate : MonoBehaviour
 {
@@ -35,10 +35,10 @@ internal class Gate : MonoBehaviour
         else if (gameObject.name.Contains("left"))
             direction = 3;
         // Exceptions which should receive a hazard respawn to prevent softlocks.
-        if ((gameObject.scene.name == "Cliffs_02" && (gameObject.name == "right1" || gameObject.name == "bot2"))
-            || (gameObject.scene.name == "Deepnest_East_07" && gameObject.name.Contains("bot"))
-            || (gameObject.scene.name == "Mines_34" && gameObject.name != "bot1")
-            || (gameObject.scene.name == "Fungus2_30" && gameObject.name == "bot1"))
+        if (gameObject.scene.name == "Cliffs_02" && (gameObject.name == "right1" || gameObject.name == "bot2")
+            || gameObject.scene.name == "Deepnest_East_07" && gameObject.name.Contains("bot")
+            || gameObject.scene.name == "Mines_34" && gameObject.name != "bot1"
+            || gameObject.scene.name == "Fungus2_30" && gameObject.name == "bot1")
         {
             GameObject blocker = new("TrialBlocker");
             blocker.transform.localScale = transform.localScale;
@@ -58,11 +58,11 @@ internal class Gate : MonoBehaviour
         {
             int realHeight = Mathf.CeilToInt(GetComponent<BoxCollider2D>().size.y * transform.localScale.y);
             if (realHeight % 4 != 0)
-                realHeight += 4 - (realHeight % 4);
+                realHeight += 4 - realHeight % 4;
             bool evenAmount = realHeight % 8 == 0;
             for (; realHeight > 0; realHeight -= 4)
             {
-                GameObject blocker = GameObject.Instantiate(Prefab);
+                GameObject blocker = Instantiate(Prefab);
                 blocker.name = "TrialBlocker";
                 blocker.transform.localScale = new(1f, 1f);
                 blocker.SetActive(true);
@@ -71,7 +71,7 @@ internal class Gate : MonoBehaviour
                 blocker.LocateMyFSM("Control").GetState("Init").RemoveActions(1);
                 // Remove camera lock.
                 foreach (Transform child in blocker.transform)
-                    GameObject.Destroy(child.gameObject);
+                    Destroy(child.gameObject);
                 int platformAmount = _blockers.Count;
                 Vector3 position;
                 if (evenAmount)
@@ -86,9 +86,9 @@ internal class Gate : MonoBehaviour
                     if (platformAmount == 0)
                         position = elementPosition;
                     else if (direction < 2)
-                        position = new(elementPosition.x + ((platformAmount % 2 == 1 ? 4 : -4) * Mathf.CeilToInt(platformAmount / 2f)), elementPosition.y);
+                        position = new(elementPosition.x + (platformAmount % 2 == 1 ? 4 : -4) * Mathf.CeilToInt(platformAmount / 2f), elementPosition.y);
                     else
-                        position = new(elementPosition.x, elementPosition.y + ((platformAmount % 2 == 1 ? 4 : -4) * Mathf.CeilToInt(platformAmount / 2f)));
+                        position = new(elementPosition.x, elementPosition.y + (platformAmount % 2 == 1 ? 4 : -4) * Mathf.CeilToInt(platformAmount / 2f));
                 }
 
                 switch (direction)
@@ -138,7 +138,7 @@ internal class Gate : MonoBehaviour
             return;
         GetComponent<BoxCollider2D>().enabled = enableCollider;
         foreach (GameObject item in _blockers)
-            GameObject.Destroy(item);
+            Destroy(item);
     }
 
     internal IEnumerator WaitForHero()

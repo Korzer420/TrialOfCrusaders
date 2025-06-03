@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.CombatElements;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;

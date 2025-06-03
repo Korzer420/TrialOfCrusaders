@@ -6,7 +6,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Data;
 
 public abstract class Power : IEquatable<Power>
 {
@@ -80,7 +80,7 @@ public abstract class Power : IEquatable<Power>
 
     internal void EnablePower()
     {
-        if(_enabled)
+        if (_enabled)
         {
             LogHelper.Write("Power " + Name + " is already enabled.", KorzUtils.Enums.LogType.Warning);
             return;

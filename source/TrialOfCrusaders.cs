@@ -4,11 +4,14 @@ using Modding;
 using System.Collections.Generic;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.ModInterop;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.SaveData;
 using TrialOfCrusaders.UnityComponents;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.PowerElements;
+using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 

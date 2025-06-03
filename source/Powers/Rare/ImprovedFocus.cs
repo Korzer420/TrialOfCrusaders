@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
 using System;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Rare;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.CombatElements;
 
 internal class EnemyShield : MonoBehaviour
 {

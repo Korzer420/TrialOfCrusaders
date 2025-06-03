@@ -14,11 +14,13 @@ using System.Linq;
 using System.Reflection;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -388,7 +390,7 @@ public static class CombatController
                     {
                         if (Enemies.Count == 0)
                         {
-                            int rolled = RngProvider.GetStageRandom(1, 100);
+                            int rolled = RngManager.GetStageRandom(1, 100);
                             if (rolled <= 2)
                                 TreasureManager.SpawnShiny(Enums.TreasureType.RareOrb, self.transform.position);
                             else if (rolled <= 10)
@@ -399,7 +401,7 @@ public static class CombatController
                                 HeroController.instance.AddGeo(100);
                         }
                         else
-                            mark.CorrectPosition(Enemies[RngProvider.GetRandom(0, Enemies.Count - 1)]);
+                            mark.CorrectPosition(Enemies[RngManager.GetRandom(0, Enemies.Count - 1)]);
                     }
                     else
                     {
@@ -410,7 +412,7 @@ public static class CombatController
                 }
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
-                    float rolled = RngProvider.GetStageRandom(0f, 100f);
+                    float rolled = RngManager.GetStageRandom(0f, 100f);
                     LogHelper.Write("Rolled: " + rolled);
                     if (rolled <= 4f)
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
@@ -799,7 +801,7 @@ public static class CombatController
         if (HasPower(out Powers.Common.Caching caching))
         {
             int excessiveAmount = (PDHelper.MaxMP + PDHelper.MPReserveMax - PDHelper.MPCharge - PDHelper.MPReserve - amount) * -1;
-            if (excessiveAmount > 0 && RngProvider.GetRandom(0, 50) <= SpiritLevel)
+            if (excessiveAmount > 0 && RngManager.GetRandom(0, 50) <= SpiritLevel)
             {
                 if (caching.ActiveSoulCache != null)
                     caching.ActiveSoulCache.GetComponent<SoulCache>().SoulAmount += excessiveAmount;
@@ -887,7 +889,7 @@ public static class CombatController
 
     private static System.Collections.IEnumerator HeroController_Die(On.HeroController.orig_Die orig, HeroController self)
     {
-        if (!HasPower(out CheatDeath cheatDeath) || cheatDeath.Cooldown != 0 && RngProvider.GetRandom(1, 21) >= EnduranceLevel + 1)
+        if (!HasPower(out CheatDeath cheatDeath) || cheatDeath.Cooldown != 0 && RngManager.GetRandom(1, 21) >= EnduranceLevel + 1)
             yield return orig(self);
         else
         {

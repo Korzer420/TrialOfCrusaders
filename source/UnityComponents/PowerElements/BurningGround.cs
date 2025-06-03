@@ -4,7 +4,7 @@ using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
 internal class BurningGround : MonoBehaviour
 {
@@ -40,12 +40,12 @@ internal class BurningGround : MonoBehaviour
         if (_igniteCooldown > 0f)
             return;
         _igniteCooldown = 1.5f;
-        col.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(100 + (CombatController.SpiritLevel * 2));
+        col.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(100 + CombatController.SpiritLevel * 2);
     }
 
     private void SpawnFlames(int count)
     {
-        GameObject flame = GameObject.Instantiate(BurnEffect.Prefab, transform);
+        GameObject flame = Instantiate(BurnEffect.Prefab, transform);
         flame.name = "Ground Flame " + count;
         flame.transform.localPosition = new(-5f + 1.25f * count, 0f);
         flame.SetActive(true);

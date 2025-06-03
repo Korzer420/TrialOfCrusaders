@@ -2,6 +2,7 @@
 using Modding;
 using MonoMod.RuntimeDetour;
 using System.Collections;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
 

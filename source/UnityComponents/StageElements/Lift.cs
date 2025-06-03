@@ -1,10 +1,9 @@
-﻿using IL.InControl.UnityDeviceProfiles;
-using KorzUtils.Helper;
+﻿using KorzUtils.Helper;
 using Modding;
 using System.Collections;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.StageElements;
 
 public class Lift : MonoBehaviour
 {
@@ -42,15 +41,15 @@ public class Lift : MonoBehaviour
         HeroController.instance.RelinquishControl();
         HeroController.instance.AffectedByGravity(false);
 
-        CameraLockArea[] locks = GameObject.FindObjectsOfType<CameraLockArea>();
+        CameraLockArea[] locks = FindObjectsOfType<CameraLockArea>();
         foreach (var cameraLock in locks)
             cameraLock.gameObject.SetActive(false);
-        CameraController controller = Object.FindObjectOfType<CameraController>();
+        CameraController controller = FindObjectOfType<CameraController>();
         controller.camTarget.mode = CameraTarget.TargetMode.FOLLOW_HERO;
 
         Vector3 currentPosition = HeroController.instance.transform.position;
-        HeroHelper.Sprite.color = new(1f,1f,1f,0f);
-        while(Vector3.Distance(currentPosition, Partner.transform.position) > 0.1f)
+        HeroHelper.Sprite.color = new(1f, 1f, 1f, 0f);
+        while (Vector3.Distance(currentPosition, Partner.transform.position) > 0.1f)
         {
             currentPosition = Vector3.MoveTowards(currentPosition, Partner.transform.position, Time.deltaTime * 50);
             HeroController.instance.transform.position = currentPosition;

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using TMPro;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
@@ -16,7 +17,7 @@ using TrialOfCrusaders.UnityComponents;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Manager;
 
 /*
     ToDo:
@@ -182,17 +183,17 @@ public static class TreasureManager
     {
         Shiny = chest.transform.Find("Item").GetChild(0).gameObject;
         Shiny.name = "ToC Item";
-        Component.Destroy(Shiny.GetComponent<ObjectBounce>());
-        Component.Destroy(Shiny.GetComponent<PersistentBoolItem>());
-        GameObject.DontDestroyOnLoad(Shiny);
+        UnityEngine.Object.Destroy(Shiny.GetComponent<ObjectBounce>());
+        UnityEngine.Object.Destroy(Shiny.GetComponent<PersistentBoolItem>());
+        UnityEngine.Object.DontDestroyOnLoad(Shiny);
     }
 
     internal static void SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
     {
         GameObject shiny = UnityEngine.Object.Instantiate(Shiny);
         GameObject glow = null;
-        if ((treasure == TreasureType.Fireball && CombatController.HasPower<VengefulSpirit>(out _))
-            || (treasure == TreasureType.Quake && CombatController.HasPower<DesolateDive>(out _)))
+        if (treasure == TreasureType.Fireball && CombatController.HasPower<VengefulSpirit>(out _)
+            || treasure == TreasureType.Quake && CombatController.HasPower<DesolateDive>(out _))
             treasure = TreasureType.RareOrb;
         if ((int)treasure > 6 || (int)treasure < 2)
         {
@@ -389,7 +390,7 @@ public static class TreasureManager
             List<string> statBoni = [];
             List<string> availablePowerNames = [.. Powers.Where(x => x.CanAppear).Select(x => x.Name)];
             List<string> obtainedPowerNames = [.. CombatController.ObtainedPowers.Select(x => x.Name)];
-            availablePowerNames = [..availablePowerNames.Except(obtainedPowerNames)];
+            availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
             List<Power> availablePowers = [];
             foreach (string powerName in availablePowerNames)
                 availablePowers.Add(Powers.First(x => x.Name == powerName));
@@ -403,7 +404,7 @@ public static class TreasureManager
                     List<Power> powerPool = [.. availablePowers];
                     int rolledNumber = treasureType == TreasureType.RareOrb
                         ? 99
-                        : RngProvider.GetStageRandom(1, 100);
+                        : RngManager.GetStageRandom(1, 100);
                     if (rolledNumber <= 65 - BadLuckProtection)
                         powerPool = [.. powerPool.Where(x => x.Tier == Rarity.Common)];
                     else if (rolledNumber <= 95 - BadLuckProtection)
@@ -422,11 +423,11 @@ public static class TreasureManager
                         i--;
                         continue;
                     }
-                    selectedPowers.Add(powerPool[RngProvider.GetStageRandom(0, powerPool.Count - 1)]);
+                    selectedPowers.Add(powerPool[RngManager.GetStageRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
-                int rolledBonus = RngProvider.GetStageRandom(1, 100);
+                int rolledBonus = RngManager.GetStageRandom(1, 100);
                 if (rolledBonus <= selectedPower.BonusRates.Item1 && CombatController.CombatLevel < 20)
                     statBoni.Add("Combat");
                 else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 && CombatController.SpiritLevel < 20)
@@ -500,7 +501,7 @@ public static class TreasureManager
             layer = CreateOption(i, powerOverlay.transform, fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value);
         CreateArrows(powerOverlay.transform, layer);
 
-        (SpriteRenderer, TextMeshPro) titleInfo = TextHelper.CreateUIObject("Title");
+        (SpriteRenderer, TextMeshPro) titleInfo = TextManager.CreateUIObject("Title");
         GameObject titleText = titleInfo.Item1.gameObject;
         titleText.transform.SetParent(powerOverlay.transform);
         titleText.transform.position = new(0f, 6.8f, 0f);
@@ -522,7 +523,7 @@ public static class TreasureManager
 
     private static void SpawnStatBox(Transform parent)
     {
-        (SpriteRenderer, TextMeshPro) statInfo = TextHelper.CreateUIObject("Combat Stat");
+        (SpriteRenderer, TextMeshPro) statInfo = TextManager.CreateUIObject("Combat Stat");
         GameObject statObject = statInfo.Item1.gameObject;
         statObject.transform.SetParent(parent);
         statObject.transform.position = new(-13.5f, 2f, 0f);
@@ -535,7 +536,7 @@ public static class TreasureManager
         text.text = $"<color=#fa0000>Combat: {CombatController.CombatLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
-        statInfo = TextHelper.CreateUIObject("Spirit Stat");
+        statInfo = TextManager.CreateUIObject("Spirit Stat");
         statObject = statInfo.Item1.gameObject;
         statObject.transform.SetParent(parent);
         statObject.transform.position = new(-13.5f, 1.3f, 0f);
@@ -548,7 +549,7 @@ public static class TreasureManager
         text.text = $"<color=#a700fa>Spirit: {CombatController.SpiritLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
-        statInfo = TextHelper.CreateUIObject("Endurance Stat");
+        statInfo = TextManager.CreateUIObject("Endurance Stat");
         statObject = statInfo.Item1.gameObject;
         statObject.transform.SetParent(parent);
         statObject.transform.position = new(-13.5f, 0.6f, 0f);
@@ -582,7 +583,7 @@ public static class TreasureManager
 
     private static int CreateOption(int count, Transform parent, string optionName)
     {
-        (SpriteRenderer, TextMeshPro) optionPair = TextHelper.CreateUIObject("Option " + (count + 1));
+        (SpriteRenderer, TextMeshPro) optionPair = TextManager.CreateUIObject("Option " + (count + 1));
         GameObject option = optionPair.Item1.gameObject;
         option.transform.SetParent(parent);
         option.transform.position = new(-6.2f + count * 8.5f, 2f, 0f);
@@ -595,9 +596,9 @@ public static class TreasureManager
         titleText.alignment = TextAlignmentOptions.Center;
         option.transform.GetChild(0).localPosition = new(0f, -2f);
 
-        (SpriteRenderer, TextMeshPro) descriptionObject = TextHelper.CreateUIObject("Description");
+        (SpriteRenderer, TextMeshPro) descriptionObject = TextManager.CreateUIObject("Description");
         descriptionObject.Item2.transform.SetParent(option.transform);
-        GameObject.Destroy(descriptionObject.Item1.gameObject);
+        UnityEngine.Object.Destroy(descriptionObject.Item1.gameObject);
         TextMeshPro description = descriptionObject.Item2;
         description.textContainer.size = new(2.5f, 5f);
         description.alignment = TextAlignmentOptions.Center;
@@ -615,10 +616,10 @@ public static class TreasureManager
             description.text = selectedPower.Description;
             option.GetComponent<SpriteRenderer>().sprite = selectedPower.Sprite;
 
-            (SpriteRenderer, TextMeshPro) rarityInfo = TextHelper.CreateUIObject("Rarity");
+            (SpriteRenderer, TextMeshPro) rarityInfo = TextManager.CreateUIObject("Rarity");
             GameObject rarity = rarityInfo.Item2.gameObject;
             rarity.transform.SetParent(option.transform);
-            GameObject.Destroy(rarityInfo.Item1.gameObject);
+            UnityEngine.Object.Destroy(rarityInfo.Item1.gameObject);
             TextMeshPro rarityText = rarityInfo.Item2;
             rarityText.text = $"({selectedPower.Tier})";
             rarityText.color = selectedPower.Tier switch
@@ -635,10 +636,10 @@ public static class TreasureManager
             if (optionName.Contains("_"))
             {
                 string bonusStat = optionName.Split('_')[1];
-                (SpriteRenderer, TextMeshPro) bonusInfo = TextHelper.CreateUIObject("Bonus");
+                (SpriteRenderer, TextMeshPro) bonusInfo = TextManager.CreateUIObject("Bonus");
                 GameObject bonus = bonusInfo.Item2.gameObject;
                 bonus.transform.SetParent(option.transform);
-                GameObject.Destroy(bonusInfo.Item1.gameObject);
+                UnityEngine.Object.Destroy(bonusInfo.Item1.gameObject);
                 TextMeshPro bonusText = bonusInfo.Item2;
                 bonusText.text = bonusStat switch
                 {

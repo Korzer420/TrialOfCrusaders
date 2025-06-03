@@ -1,9 +1,9 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Manager;
 
-internal static class TextHelper
+internal static class TextManager
 {
     /// <summary>
     /// Creates an object with a <see cref="SpriteRenderer"/> on the normal element and a <see cref="TextMeshPro"/> component on it's child.
@@ -12,15 +12,15 @@ internal static class TextHelper
     internal static (SpriteRenderer, TextMeshPro) CreateUIObject(string objectName)
     {
         GameObject prefab = GameObject.Find("_GameCameras").transform.Find("HudCamera/Inventory/Inv/Inv_Items/Geo").gameObject;
-        GameObject uiElement = GameObject.Instantiate(prefab);
+        GameObject uiElement = Object.Instantiate(prefab);
         uiElement.GetComponent<SpriteRenderer>().enabled = true;
-        uiElement.GetComponent<SpriteRenderer>().color = new(1f,1f,1f,1f);
+        uiElement.GetComponent<SpriteRenderer>().color = new(1f, 1f, 1f, 1f);
         uiElement.name = objectName;
         TextMeshPro text = uiElement.GetComponent<DisplayItemAmount>().textObject;
         text.GetComponent<MeshRenderer>().enabled = true;
         text.color = new(1f, 1f, 1f, 1f);
         text.gameObject.name = objectName + "_Text";
-        UnityEngine.Object.Destroy(uiElement.GetComponent<DisplayItemAmount>());
+        Object.Destroy(uiElement.GetComponent<DisplayItemAmount>());
         return new(uiElement.GetComponent<SpriteRenderer>(), text);
     }
 }

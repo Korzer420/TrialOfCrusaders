@@ -9,7 +9,7 @@ using System.Linq;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.StageElements;
 
 /// <summary>
 /// Used for a godhome transition.
@@ -41,7 +41,7 @@ internal class SpecialTransition : MonoBehaviour
         else if (VanillaTransition.gameObject.name.Contains("right"))
             transform.position += new Vector3(0.6f, 0f);
         else if (VanillaTransition.gameObject.name.Contains("top"))
-        { 
+        {
             transform.position += new Vector3(0f, 0.6f);
             gameObject.GetComponent<BoxCollider2D>().offset = new(5000, 5000);
             StartCoroutine(WaitForHero());
@@ -82,7 +82,7 @@ internal class SpecialTransition : MonoBehaviour
 
     internal static void SetupPrefab(GameObject prefab)
     {
-        GameObject inspect = GameObject.Instantiate(prefab);
+        GameObject inspect = Instantiate(prefab);
         inspect.name = "Godhome Transition";
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
         ReflectionHelper.SetField<PlayMakerFSM, FsmTemplate>(fsm, "fsmTemplate", null);
@@ -107,13 +107,13 @@ internal class SpecialTransition : MonoBehaviour
     {
         HeroController.instance.RelinquishControl();
         HeroController.instance.AffectedByGravity(false);
-        GameObject inspect = GameObject.Instantiate(TransitionPrefab);
+        GameObject inspect = Instantiate(TransitionPrefab);
         inspect.SetActive(true);
         PlayMakerFSM fsm = inspect.LocateMyFSM("GG Boss UI");
         CoroutineHelper.WaitFrames(() => { fsm.SendEvent("CONVO START"); }, true, 1);
         if (!LoadIntoDream)
             GameManager.instance.StartCoroutine(RemoveTransitionBlocker());
-        GameObject.Destroy(gameObject);
+        Destroy(gameObject);
     }
 
     private static IEnumerator RemoveTransitionBlocker()

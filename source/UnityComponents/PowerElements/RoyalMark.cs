@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TrialOfCrusaders.Controller;
 using UnityEngine;
 
-namespace TrialOfCrusaders.UnityComponents;
+namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
 internal class RoyalMark : MonoBehaviour
 {

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -59,7 +61,7 @@ internal class LifebloodOmen : Power
             fsm.SendEvent("START");
 
             float activeTime = 0f;
-            float cooldown = RngProvider.GetRandom(90f, 300f);
+            float cooldown = RngManager.GetRandom(90f, 300f);
             while (activeTime < cooldown)
             {
                 activeTime += Time.deltaTime;
@@ -71,7 +73,7 @@ internal class LifebloodOmen : Power
                 GameObject.Destroy(ghost);
             }
 
-            cooldown = RngProvider.GetRandom(90f, 300f);
+            cooldown = RngManager.GetRandom(90f, 300f);
             while (activeTime < cooldown)
             {
                 activeTime += Time.deltaTime;

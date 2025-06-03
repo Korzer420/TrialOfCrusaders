@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 

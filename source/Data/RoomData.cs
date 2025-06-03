@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Enums;
 
-namespace TrialOfCrusaders;
+namespace TrialOfCrusaders.Data;
 
 public class RoomData
 {

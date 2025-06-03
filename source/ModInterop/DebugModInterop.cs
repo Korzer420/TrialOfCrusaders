@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 
 namespace TrialOfCrusaders.ModInterop;
 

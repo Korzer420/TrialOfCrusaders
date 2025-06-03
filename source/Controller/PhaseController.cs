@@ -3,6 +3,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System.Collections;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;

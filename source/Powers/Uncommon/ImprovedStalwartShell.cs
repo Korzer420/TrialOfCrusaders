@@ -4,6 +4,7 @@ using MonoMod.Utils;
 using System;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 
