@@ -29,7 +29,7 @@ internal class DramaticEntrance : Power
             IsExtraDamage = true,
             DamageDealt = 10 + CombatController.CombatLevel * 2
         };
-        foreach (HealthManager enemy in CombatController.Enemies)
+        foreach (HealthManager enemy in CombatController.ActiveEnemies)
         {
             if (enemy != null)
                 _takeDamage.Invoke(enemy, [hitInstance]);

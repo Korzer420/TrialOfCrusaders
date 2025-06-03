@@ -6,7 +6,7 @@ namespace TrialOfCrusaders.Manager;
 
 internal static class LogManager
 {
-    internal static void Log(string message, LogType logType)
+    internal static void Log(string message, LogType logType = LogType.Normal)
     {
 #if DEBUG
         LogHelper.Write<TrialOfCrusaders>(message, logType);

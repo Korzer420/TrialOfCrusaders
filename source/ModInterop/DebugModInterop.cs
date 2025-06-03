@@ -64,7 +64,7 @@ public static class DebugModInterop
             return;
         }
         Console.AddLine("Print enemies:");
-        foreach (HealthManager enemy in CombatController.Enemies)
+        foreach (HealthManager enemy in CombatController.ActiveEnemies)
             Console.AddLine("Enemy name: " + enemy.name);
     }
 

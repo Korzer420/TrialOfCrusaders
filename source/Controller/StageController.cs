@@ -475,7 +475,6 @@ internal static class StageController
     internal static IEnumerator WaitForTransition()
     {
         HeroController.instance.RelinquishControl();
-        // Todo: Extra checks for radiance (?).
         float passedTime = 0f;
         while(passedTime < 2)
         {
