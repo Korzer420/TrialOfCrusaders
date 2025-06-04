@@ -132,7 +132,6 @@ internal static class CombatController
 
         CreateExtraHealth();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
-        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         CoroutineHelper.WaitUntil(() =>
         {
@@ -342,7 +341,7 @@ internal static class CombatController
                         if (ActiveEnemies.Count == 0)
                         {
                             LogManager.Log("No enemies left. Grant reward.");
-                            int rolled = RngManager.GetStageRandom(1, 100);
+                            int rolled = RngManager.GetRandom(1, 100);
                             if (rolled <= 2)
                                 TreasureManager.SpawnShiny(TreasureType.RareOrb, self.transform.position);
                             else if (rolled <= 10)
@@ -368,7 +367,7 @@ internal static class CombatController
                 }
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
-                    float rolled = RngManager.GetStageRandom(0f, 100f);
+                    float rolled = RngManager.GetRandom(0f, 100f);
                     if (rolled <= 4f / (1 + _stageTreasures))
                     {
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);

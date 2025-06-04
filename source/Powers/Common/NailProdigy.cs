@@ -25,7 +25,7 @@ internal class NailProdigy : Power
     {
         if (!_spellUsed)
         {
-            if (CombatController.CombatLevel < 20 && !StageController.CurrentRoom.BossRoom && RngManager.GetStageRandom(1, 20) == 1)
+            if (CombatController.CombatLevel < 20 && !StageController.CurrentRoom.BossRoom && RngManager.GetRandom(1, 20) == 1)
                 TreasureManager.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
             _spellUsed = true;
         }

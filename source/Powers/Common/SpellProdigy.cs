@@ -34,7 +34,7 @@ internal class SpellProdigy : Power
 
     private void CombatController_EnemiesCleared()
     {
-        if (!_nailUsed && CombatController.SpiritLevel < 20 && RngManager.GetStageRandom(1, 10) <= 2)
+        if (!_nailUsed && CombatController.SpiritLevel < 20 && RngManager.GetRandom(1, 10) <= 2)
             TreasureManager.SpawnShiny(Enums.TreasureType.SpiritOrb, HeroController.instance.transform.position);
         _nailUsed = true;
     }

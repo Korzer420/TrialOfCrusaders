@@ -17,9 +17,6 @@ internal class Hiveblood : Power
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(CharmRef.Hiveblood);
-        // To not deal with the UI, we just toggle it.
-        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
     }
 
     protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.Hiveblood);

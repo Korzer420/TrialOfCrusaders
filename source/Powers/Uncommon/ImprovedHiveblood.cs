@@ -17,9 +17,6 @@ internal class ImprovedHiveblood : Power
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Hiveblood);
-        // To not deal with the UI, we just toggle it.
-        GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter += FloatAdd_OnEnter;
     }
 

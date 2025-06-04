@@ -282,7 +282,7 @@ internal static class StageController
                             chance += 4.5f;
                         if (CombatController.HasPower<TreasureHunter>(out _))
                             chance += 2.5f;
-                        UpcomingTreasureRoom = chance >= RngManager.GetStageRandom(1f, 100f);
+                        UpcomingTreasureRoom = chance >= RngManager.GetRandom(1f, 100f);
                         if (UpcomingTreasureRoom)
                             _treasureRoomCooldown = 6;
                     }
@@ -332,7 +332,7 @@ internal static class StageController
             pedestal.SetActive(true);
             // If we are in a quiet room even though the room flag isn't set, we are in a treasure room instead.
             if (!CurrentRoomData[CurrentRoomIndex].IsQuietRoom)
-                TreasureManager.SpawnShiny(RngManager.GetStageRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
+                TreasureManager.SpawnShiny(RngManager.GetRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
             else
             {
                 // Special case for spells at 40 and 80. If they have been obtained already, they get replaced by a rare treasure guaranteed.

@@ -404,7 +404,7 @@ public static class TreasureManager
                     List<Power> powerPool = [.. availablePowers];
                     int rolledNumber = treasureType == TreasureType.RareOrb
                         ? 99
-                        : RngManager.GetStageRandom(1, 100);
+                        : RngManager.GetRandom(1, 100);
                     if (rolledNumber <= 65 - BadLuckProtection)
                         powerPool = [.. powerPool.Where(x => x.Tier == Rarity.Common)];
                     else if (rolledNumber <= 95 - BadLuckProtection)
@@ -423,11 +423,11 @@ public static class TreasureManager
                         i--;
                         continue;
                     }
-                    selectedPowers.Add(powerPool[RngManager.GetStageRandom(0, powerPool.Count - 1)]);
+                    selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
-                int rolledBonus = RngManager.GetStageRandom(1, 100);
+                int rolledBonus = RngManager.GetRandom(1, 100);
                 if (rolledBonus <= selectedPower.BonusRates.Item1 && CombatController.CombatLevel < 20)
                     statBoni.Add("Combat");
                 else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 && CombatController.SpiritLevel < 20)
