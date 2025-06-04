@@ -21,6 +21,8 @@ internal class ImprovedCrystalDash : Power
 
     public override bool CanAppear => PDHelper.HasSuperDash;
 
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
+
     protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetBoolValue.OnEnter += SetBoolValue_OnEnter;

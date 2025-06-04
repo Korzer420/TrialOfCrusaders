@@ -1,6 +1,6 @@
 ﻿using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
-using TrialOfCrusaders.UnityComponents;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -11,6 +11,8 @@ internal class Supreme : Power
     public int NeededEnemies => 50 - CombatController.CombatLevel - CombatController.EnduranceLevel;
 
     public override (float, float, float) BonusRates => new(6f, 0f, 4f);
+
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
     protected override void Enable()
     {

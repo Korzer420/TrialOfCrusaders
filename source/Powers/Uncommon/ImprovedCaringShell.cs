@@ -1,5 +1,4 @@
-﻿using Modding;
-using TrialOfCrusaders.Data;
+﻿using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 
@@ -12,4 +11,6 @@ internal class ImprovedCaringShell : Power
     public override Rarity Tier => Rarity.Uncommon;
 
     public override bool CanAppear => HasPower<CaringShell>();
+
+    public override StatScaling Scaling => StatScaling.Endurance;
 }

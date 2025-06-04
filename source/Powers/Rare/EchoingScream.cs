@@ -19,6 +19,8 @@ internal class EchoingScream : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override StatScaling Scaling => StatScaling.Spirit;
+
     public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
 
     public GameObject Scream

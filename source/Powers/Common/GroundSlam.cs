@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using UnityEngine;
 
@@ -12,17 +13,25 @@ internal class GroundSlam : Power
 
     public static GameObject Shockwave { get; set; }
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     protected override void Enable()
     {
         On.HeroController.DoHardLanding += HeroController_DoHardLanding;
         On.SetDamageHeroAmount.OnEnter += SetDamageHeroAmount_OnEnter;
     }
 
+    protected override void Disable()
+    {
+        On.HeroController.DoHardLanding -= HeroController_DoHardLanding;
+        On.SetDamageHeroAmount.OnEnter -= SetDamageHeroAmount_OnEnter;
+    }
+
     private void SetDamageHeroAmount_OnEnter(On.SetDamageHeroAmount.orig_OnEnter orig, SetDamageHeroAmount self)
     {
         orig(self);
         if (self.IsCorrectContext("Damage timing", null, "Activate"))
-        { 
+        {
             Component.Destroy(self.Fsm.GameObject.GetComponent<DamageHero>());
             self.Fsm.GameObject.AddComponent<EnemyHitbox>().Hit = new HitInstance()
             {
@@ -60,11 +69,5 @@ internal class GroundSlam : Power
 
         shockwaveLeft.SetActive(true);
         shockWaveRight.SetActive(true);
-    }
-
-    protected override void Disable()
-    {
-        On.HeroController.DoHardLanding -= HeroController_DoHardLanding;
-        On.SetDamageHeroAmount.OnEnter -= SetDamageHeroAmount_OnEnter;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Helper;
 using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
@@ -20,6 +21,8 @@ internal class ImprovedMonarchWings : Power
 
     public override bool CanAppear => PDHelper.HasDoubleJump;
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     protected override void Enable()
     {
         _wings = HeroController.instance.transform.Find("Effects/Double J Wings").gameObject;
@@ -32,7 +35,7 @@ internal class ImprovedMonarchWings : Power
         _leftHitbox.AddComponent<BoxCollider2D>().isTrigger = true;
         Component.Destroy(_leftHitbox.LocateMyFSM("set_thorn_damage"));
         PlayMakerFSM fsm = _leftHitbox.LocateMyFSM("damages_enemy");
-        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50;
+        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatController.CombatLevel * 2;
         fsm.FsmVariables.FindFsmFloat("magnitudeMult").Value = 4;
         fsm.FsmVariables.FindFsmFloat("direction").Value = 270;
 
@@ -52,7 +55,7 @@ internal class ImprovedMonarchWings : Power
         _rightHitbox.AddComponent<BoxCollider2D>().isTrigger = true;
         Component.Destroy(_rightHitbox.LocateMyFSM("set_thorn_damage"));
         fsm = _rightHitbox.LocateMyFSM("damages_enemy");
-        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50;
+        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatController.CombatLevel * 2;
         fsm.FsmVariables.FindFsmFloat("magnitudeMult").Value = 4;
         fsm.FsmVariables.FindFsmFloat("direction").Value = 270;
 

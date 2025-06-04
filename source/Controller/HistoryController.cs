@@ -45,7 +45,7 @@ internal static class HistoryController
     {
         if (_active)
             return;
-        LogManager.Log("Enable history controller");
+        LogManager.Log("Enable History controller");
         On.PlayMakerFSM.OnEnable += FsmEdits;
         IL.Breakable.Break += PreventTabletBreak;
         _active = true;
@@ -56,7 +56,7 @@ internal static class HistoryController
         TempEntry = null;
         if (!_active)
             return;
-        LogManager.Log("Disable history controller");
+        LogManager.Log("Disable History controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         IL.Breakable.Break -= PreventTabletBreak;
         _active = false;
@@ -326,7 +326,6 @@ internal static class HistoryController
 
         }
         fsm.SendEvent("CONVO_FINISH");
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         GameObject.Destroy(board);
     }
 

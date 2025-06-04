@@ -1,4 +1,5 @@
-﻿using HutongGames.PlayMaker;
+﻿using GlobalEnums;
+using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
@@ -41,7 +42,7 @@ internal static class StageController
 
     public static bool FinishedEnemies { get; set; }
 
-    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex]; 
+    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex];
 
     #endregion
 
@@ -53,7 +54,7 @@ internal static class StageController
     {
         if (_enabled)
             return;
-       LogManager.Log("Enable Stage Controller");
+        LogManager.Log("Enable Stage Controller");
         QuietRoom = true;
         On.PlayMakerFSM.OnEnable += FsmEdits;
         On.RestBench.Start += RemoveBenches;
@@ -83,7 +84,7 @@ internal static class StageController
     {
         if (!_enabled)
             return;
-       LogManager.Log("Disable Stage Controller");
+        LogManager.Log("Disable Stage Controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         On.RestBench.Start -= RemoveBenches;
 
@@ -113,7 +114,7 @@ internal static class StageController
         CurrentRoomData.Clear();
         FinishedEnemies = false;
         _enabled = false;
-    } 
+    }
 
     #endregion
 
@@ -185,7 +186,7 @@ internal static class StageController
         specialTransition.LoadIntoDream = false;
         transition.transform.position = new(-5000, -5000f);
         specialTransition.StartGodhomeTransition();
-    } 
+    }
 
     #endregion
 
@@ -205,8 +206,26 @@ internal static class StageController
             }
             else
             {
-                RoomEnded?.Invoke(QuietRoom, !QuietRoom && !CurrentRoomData[CurrentRoomIndex].BossRoom
-                        && CurrentRoomData[CurrentRoomIndex].SelectedTransition != info.EntryGateName && info.EntryGateName != "door_dreamEnter");
+                if (CurrentRoomNumber > 0)
+                {
+                    GatePosition entryPosition;
+                    string entryGateName = CurrentRoom.SelectedTransition;
+                    if (entryGateName.StartsWith("left"))
+                        entryPosition = GatePosition.left;
+                    else if (entryGateName.StartsWith("right"))
+                        entryPosition = GatePosition.right;
+                    else if (entryGateName.StartsWith("bot"))
+                        entryPosition = GatePosition.bottom;
+                    else if (entryGateName.StartsWith("top"))
+                        entryPosition = GatePosition.top;
+                    else if (entryGateName.StartsWith("door"))
+                        entryPosition = GatePosition.door;
+                    else
+                        entryPosition = GatePosition.unknown;
+                    RoomEnded?.Invoke(QuietRoom, !QuietRoom && info.HeroLeaveDirection != null 
+                        && info.HeroLeaveDirection != entryPosition && entryPosition != GatePosition.unknown);
+                }
+                
                 FinishedEnemies = false;
                 // Check for ending.
                 if (CurrentRoomNumber == CurrentRoomData.Count)
@@ -353,7 +372,7 @@ internal static class StageController
         }
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
-        if (!CombatController.HasPower<DreamNail>(out _) 
+        if (!CombatController.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
     }
@@ -482,9 +501,7 @@ internal static class StageController
             || persistentBoolData.sceneName == "Deepnest_01b" && persistentBoolData.id == "One Way Wall"
             || persistentBoolData.sceneName == "Deepnest_East_02" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
-            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass")
-            || persistentBoolData.sceneName == "Crossroads_04" && persistentBoolData.id == "Battle Scene"
-            || persistentBoolData.sceneName == "Ruins1_23" && persistentBoolData.id == "Battle Scene v2")
+            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass"))
         {
             persistentBoolData.activated = true;
             return persistentBoolData;

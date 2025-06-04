@@ -14,6 +14,8 @@ internal class ImprovedSharpShadow : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
+
     protected override void Enable() => On.HealthManager.Die += HealthManager_Die;
 
     protected override void Disable() => On.HealthManager.Die -= HealthManager_Die;

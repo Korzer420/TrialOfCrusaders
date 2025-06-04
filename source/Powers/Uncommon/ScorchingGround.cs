@@ -18,6 +18,8 @@ internal class ScorchingGround : Power
 
     public override bool CanAppear => HasPower<DesolateDive>();
 
+    public override StatScaling Scaling => StatScaling.Spirit;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
 
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;

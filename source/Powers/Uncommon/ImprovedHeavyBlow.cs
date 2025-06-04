@@ -21,7 +21,7 @@ internal class ImprovedHeavyBlow : Power
     {
         if (hitInstance.AttackType == AttackTypes.Nail)
         {
-            bool buffedHit = UnityEngine.Random.Range(1, 26) == 1;
+            bool buffedHit = UnityEngine.Random.Range(1, 21) == 1;
             if (self.GetComponent<ConcussionEffect>() is ConcussionEffect concussionComponent)
                 concussionComponent.Timer += buffedHit ? 3 : 0.5f;
             else if (buffedHit)

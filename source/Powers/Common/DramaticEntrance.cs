@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -9,6 +10,8 @@ internal class DramaticEntrance : Power
     private MethodInfo _takeDamage;
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+
+    public override StatScaling Scaling => StatScaling.Combat;
 
     protected override void Enable()
     {

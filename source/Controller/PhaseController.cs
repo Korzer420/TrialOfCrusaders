@@ -29,7 +29,6 @@ public static class PhaseController
     private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
     {
         TransitionTo(Phase.Listening);
-        LogManager.Log("UI Continue");
         orig(self);
     }
 

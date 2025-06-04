@@ -2,6 +2,7 @@
 using Modding.Utils;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
@@ -13,6 +14,8 @@ internal class WeakenedHusk : Power
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
     public override bool CanAppear => CombatController.HasSpell();
+
+    public override StatScaling Scaling => StatScaling.Spirit;
 
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
 

@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -8,6 +9,8 @@ internal class Versatility : Power
     public bool CastedSpell { get; set; } = false;
 
     public override (float, float, float) BonusRates => new(5f, 5f, 0f);
+
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Spirit;
 
     protected override void Enable()
     {

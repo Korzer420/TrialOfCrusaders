@@ -27,7 +27,7 @@ internal class ImprovedDefendersCrest : Power
     {
         if (extraDamageType == ExtraDamageTypes.Dung || extraDamageType == ExtraDamageTypes.Dung2)
         {
-            bool afflictWeakness = UnityEngine.Random.Range(1, 101) == 1;
+            bool afflictWeakness = UnityEngine.Random.Range(1, 101) <= 2;
             if (afflictWeakness)
             {
                 if (self.GetComponent<HealthManager>() != null)

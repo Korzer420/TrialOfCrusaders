@@ -17,6 +17,8 @@ public class ImprovedWeaversong : Power
 
     public override bool CanAppear => HasPower<Weaversong>();
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Weaversong);

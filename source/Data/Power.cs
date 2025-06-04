@@ -75,6 +75,33 @@ public abstract class Power : IEquatable<Power>
 
     public virtual Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.Placeholder"); //SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
+    /// <summary>
+    /// Gets the stat scaling that apply to this ability.
+    /// </summary>
+    public virtual StatScaling Scaling { get; }
+
+    /// <summary>
+    /// Gets the name with the stat scaling attached.
+    /// </summary>
+    public string ScaledName
+    {
+        get
+        {
+            string name = Name + ((int)Scaling switch
+            { 
+                1 => " (C)",
+                2 => " (S)",
+                3 => " (C, S)",
+                4 => " (E)",
+                5 => " (C, E)",
+                6 => " (S, E)",
+                7 => " (C, S, E)",
+                _ => ""
+            });
+            return name;
+        }
+    }
+
     #endregion
 
     #region Methods

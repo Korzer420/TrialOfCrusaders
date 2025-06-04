@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using System.Collections;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -12,6 +13,8 @@ internal class Acrobat : Power
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
     public override bool CanAppear => PDHelper.HasDash;
+
+    public override StatScaling Scaling => StatScaling.Combat;
 
     protected override void Enable() => On.HeroController.FinishedDashing += HeroController_FinishedDashing;
 

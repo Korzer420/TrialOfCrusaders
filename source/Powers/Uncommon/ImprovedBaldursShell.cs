@@ -22,6 +22,8 @@ internal class ImprovedBaldursShell : Power
 
     public override bool CanAppear => HasPower<BaldurShell>();
 
+    public override StatScaling Scaling => StatScaling.Endurance;
+
     protected override void Enable()
     {
         _currentHitPoints = 10;

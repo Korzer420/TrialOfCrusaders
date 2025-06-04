@@ -16,6 +16,8 @@ internal class Pyroblast : Power
 
     public override bool CanAppear => HasPower<VengefulSpirit>();
 
+    public override StatScaling Scaling => StatScaling.Spirit;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
     
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;

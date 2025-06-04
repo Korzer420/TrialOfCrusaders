@@ -20,6 +20,8 @@ internal class ImprovedStalwartShell : Power
 
     public override bool CanAppear => HasPower<StalwartShell>();
 
+    public override StatScaling Scaling => StatScaling.Endurance;
+
     protected override void Enable()
         => _hook = new(typeof(HeroController).GetMethod("StartRecoil", BindingFlags.NonPublic | BindingFlags.Instance).GetStateMachineTarget(), IL_StartRecoil);
 

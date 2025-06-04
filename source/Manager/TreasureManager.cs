@@ -82,7 +82,6 @@ public static class TreasureManager
         new Cocoon(),
         new BrutalStrikes(),
         new BurstingSoul(),
-        new CullTheWeak(),
         new WeakenedHusk(),
         new FocusedEnergy(),
         new GroundSlam(),
@@ -108,6 +107,7 @@ public static class TreasureManager
         new LifebloodOmen(),
         new DeepBreath(),
         new SeethingLifeblood(),
+        new Hiveblood(),
         // Uncommon
         new SoulEater(),
         new Dashmaster(),
@@ -117,7 +117,7 @@ public static class TreasureManager
         new FuryOfTheFallen(),
         new QuickFocus(),
         new DeepFocus(),
-        new Hiveblood(),
+        new CullTheWeak(),
         new ShapeOfUnn(),
         new CarefreeMelody(),
         new Grimmchild(),
@@ -612,7 +612,7 @@ public static class TreasureManager
         Power selectedPower = Powers.FirstOrDefault(x => x.Name == powerName);
         if (selectedPower != null)
         {
-            titleText.text = selectedPower.Name;
+            titleText.text = selectedPower.ScaledName;
             description.text = selectedPower.Description;
             option.GetComponent<SpriteRenderer>().sprite = selectedPower.Sprite;
 

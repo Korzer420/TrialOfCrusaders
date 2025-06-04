@@ -23,6 +23,8 @@ internal class HotStreak : Power
 
     public override (float, float, float) BonusRates => new(40f, 0f, 0f);
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     #endregion
 
     #region Private Methods

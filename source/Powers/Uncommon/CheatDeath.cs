@@ -7,7 +7,7 @@ namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class CheatDeath : Power
 {
-    public int Cooldown = 0;
+    public int Cooldown { get; set; } = 0;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 

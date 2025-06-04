@@ -1,5 +1,4 @@
-﻿using KorzUtils.Helper;
-using Modding.Utils;
+﻿using Modding.Utils;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
@@ -16,6 +15,8 @@ internal class Mindblast : Power
 
     public override bool CanAppear => HasPower<DreamNail>();
 
+    public override StatScaling Scaling => StatScaling.Spirit;
+
     protected override void Enable() => On.EnemyDreamnailReaction.RecieveDreamImpact += Apply_Mindblast;
 
     protected override void Disable() => On.EnemyDreamnailReaction.RecieveDreamImpact -= Apply_Mindblast;
@@ -24,6 +25,6 @@ internal class Mindblast : Power
     {
         orig(self);
         ShatteredMindEffect mindBlast = self.gameObject.GetOrAddComponent<ShatteredMindEffect>();
-        mindBlast.ExtraDamage += 10 + CombatController.SpiritLevel * 5;
+        mindBlast.ExtraDamage += 20 + CombatController.SpiritLevel * 5;
     }
 }

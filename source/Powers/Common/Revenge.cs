@@ -1,5 +1,6 @@
 ﻿using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace TrialOfCrusaders.Powers.Common;
 internal class Revenge : Power
 {
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
+
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
     protected override void Enable()
     {

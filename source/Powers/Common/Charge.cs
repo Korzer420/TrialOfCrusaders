@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -12,6 +14,8 @@ internal class Charge : Power
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     public bool Active { get; set; }
 
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
@@ -22,7 +26,7 @@ internal class Charge : Power
     {
         Active = true;
         float passedTime = 0f;
-        while(passedTime <= 10f)
+        while(passedTime <= 5 + CombatController.CombatLevel / 2)
         {
             passedTime+= Time.deltaTime;
             yield return null;

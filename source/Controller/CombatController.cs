@@ -51,6 +51,9 @@ internal static class CombatController
 
     public static bool InCombat { get; set; }
 
+    // As this is called very frequently we store it in an extra value.
+    internal static bool DebuffsStronger { get; set; }
+
     #endregion
 
     #region Events
@@ -60,6 +63,8 @@ internal static class CombatController
     public static event Action EnemiesCleared;
 
     public static event Action<HealthManager> EnemyKilled;
+
+    public static event Action BeginCombat;
 
     #endregion
 
@@ -292,10 +297,10 @@ internal static class CombatController
             {
                 if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
                     self.gameObject.AddComponent<BossFlag>();
+                if (!InCombat)
+                    ActiveEnemies.Add(self);
                 if (self.hp != 1)
                 {
-                    if (!InCombat)
-                        ActiveEnemies.Add(self);
                     if (StageController.CurrentRoomNumber >= 20)
                     {
                         float scaling = 0.1f;
@@ -457,6 +462,7 @@ internal static class CombatController
                     royalMark.AddComponent<RoyalMark>().CorrectPosition(ActiveEnemies[UnityEngine.Random.Range(0, ActiveEnemies.Count)]);
                     royalMark.SetActive(true);
                 }
+                BeginCombat.Invoke();
             }
         }
         catch (Exception ex)
@@ -877,7 +883,7 @@ internal static class CombatController
                 }
 
                 if (HasPower<Sturdy>(out _))
-                    damageAmount--;
+                    damageAmount = damageAmount.LowerPositive(1);
 
                 if (HasPower<ShiningBound>(out _))
                     damageAmount = Mathf.CeilToInt(damageAmount / 2f);
@@ -887,7 +893,7 @@ internal static class CombatController
                     if (enemyObject == null && sourceObject.transform.parent != null)
                         enemyObject = sourceObject.GetComponentInParent<HealthManager>();
                     if (enemyObject != null && enemyObject.GetComponent<WeakenedEffect>())
-                        damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+                        damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
                 }
             }
         }

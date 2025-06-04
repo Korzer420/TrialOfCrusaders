@@ -19,6 +19,8 @@ public class FragileSpirit : Power
 
     public override bool CanAppear => !HasPower<PaleShell>() && CombatController.HasSpell();
 
+    public override StatScaling Scaling => StatScaling.Spirit; 
+
     protected override void Enable()
     {
         CombatController.TookDamage += CombatController_TookDamage;

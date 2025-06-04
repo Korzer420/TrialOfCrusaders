@@ -12,6 +12,8 @@ internal class ImprovedGrimmchild : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override StatScaling Scaling => StatScaling.Combat;
+
     public override bool CanAppear => HasPower<ImprovedGrimmchild>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
@@ -31,10 +33,11 @@ internal class ImprovedGrimmchild : Power
     private void GetHP_OnEnter(On.GetHP.orig_OnEnter orig, GetHP self)
     {
         int normalDamage = self.Fsm.Variables.FindFsmInt("Damage").Value;
-        if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GetState("Send Impact") != null)
+        bool correctContext = self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GetState("Send Impact") != null;
+        if (correctContext)
             self.Fsm.Variables.FindFsmInt("Damage").Value = 15 + (CombatController.CombatLevel * 10);
         orig(self);
-        if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GetState("Send Impact") != null)
+        if (correctContext)
             self.Fsm.Variables.FindFsmInt("Damage").Value = normalDamage;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
@@ -16,6 +17,8 @@ internal class GreaterMind : Power
     public static GameObject Orb { get; set; }
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
+
+    public override StatScaling Scaling => StatScaling.Spirit;
 
     protected override void Enable()
     {
@@ -78,6 +81,8 @@ internal class GreaterMind : Power
             orb.transform.SetRotation2D(rotation);
             passedTime += Time.deltaTime;
             yield return null;
+            if (GameManager.instance.IsGamePaused())
+                yield return new WaitUntil(() => !GameManager.instance.IsGamePaused());
         }
         GameObject.Destroy(orb);
     }

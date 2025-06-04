@@ -1,4 +1,6 @@
 ﻿using KorzUtils.Helper;
+using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents.Debuffs;
@@ -21,7 +23,7 @@ internal class BleedEffect : MonoBehaviour
             Destroy(this);
         if (_leftDuration != 5f && !_enemy.IsInvincible && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f)
             && _enemy != null && _enemy.hp > 0)
-            _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage / 5));
+            _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage / (CombatController.DebuffsStronger ? 1 : 2)));
         _leftDuration -= Time.deltaTime;
         _animationTimer -= Time.deltaTime;
         if (_animationTimer <= 0f)

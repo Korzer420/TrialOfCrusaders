@@ -80,7 +80,6 @@ internal static class HubController
                 PDHelper.SoulLimited = false;
                 PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
                 GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-                GameCameras.instance.hudCanvas.gameObject.SetActive(true);
                 PDHelper.Geo = 0;
                 GameObject.Find("_GameCameras").transform.Find("HudCamera/Hud Canvas/Geo Counter").gameObject
                     .LocateMyFSM("Geo Counter")

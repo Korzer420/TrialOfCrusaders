@@ -1,24 +1,25 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.Powers.Uncommon;
+using TrialOfCrusaders.Powers.Common;
+using TrialOfCrusaders.Powers.Rare;
 
-namespace TrialOfCrusaders.Powers.Rare;
+namespace TrialOfCrusaders.Powers.Uncommon;
 
 internal class ImprovedHiveblood : Power
 {
-    public override (float, float, float) BonusRates => new(0f, 0f, 100f);
+    public override (float, float, float) BonusRates => new(0f, 0f, 40f);
 
-    public override Rarity Tier => Rarity.Rare;
+    public override Rarity Tier => Rarity.Uncommon;
 
     public override bool CanAppear => HasPower<Hiveblood>() && !HasPower<InUtterDarkness>();
 
-    protected override void Enable() 
-    { 
-        CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Hiveblood); 
+    protected override void Enable()
+    {
+        CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Hiveblood);
         // To not deal with the UI, we just toggle it.
         GameCameras.instance.hudCanvas.gameObject.SetActive(false);
-        GameCameras.instance.hudCanvas.gameObject.SetActive(true); 
+        GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         On.HutongGames.PlayMaker.Actions.FloatAdd.OnEnter += FloatAdd_OnEnter;
     }
 

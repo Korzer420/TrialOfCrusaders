@@ -20,6 +20,8 @@ internal class ImprovedGlowingWomb : Power
 
     public override bool CanAppear => HasPower<GlowingWomb>();
 
+    public override StatScaling Scaling => StatScaling.Combat | StatScaling.Spirit;
+
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.GlowingWomb);
