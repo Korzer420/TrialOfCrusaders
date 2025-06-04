@@ -84,7 +84,6 @@ internal static class HubController
                 GameObject.Find("_GameCameras").transform.Find("HudCamera/Hud Canvas/Geo Counter").gameObject
                     .LocateMyFSM("Geo Counter")
                     .SendEvent("TO ZERO");
-                GameManager.instance.SaveGame();
             }, true);
         }
         catch (System.Exception ex)

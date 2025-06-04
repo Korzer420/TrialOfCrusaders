@@ -34,6 +34,9 @@ internal static class CombatController
     private static Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
     private static int _stageTreasures = 0;
+    public const string CombatStatColor = "#fa0000";
+    public const string SpiritStatColor = "#f403fc";
+    public const string EnduranceStatColor = "#4fff61";
 
     #region Properties
 
@@ -69,7 +72,7 @@ internal static class CombatController
     #endregion
 
     #region Power Utils
-   
+
     public static bool HasPower<T>(out T selectedPower) where T : Power
     {
         foreach (Power power in ObtainedPowers)
@@ -90,7 +93,7 @@ internal static class CombatController
     {
         foreach (Power power in ObtainedPowers)
             power.DisablePower();
-    } 
+    }
 
     #endregion
 
@@ -129,8 +132,9 @@ internal static class CombatController
         On.BossSceneController.Start += TrackBosses;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         StageController.RoomEnded += StageController_RoomEnded;
+        On.GGCheckBoundSoul.OnEnter += PreventFullSoulSprite;
 
-        CreateExtraHealth();
+        CreateExtraHudElements();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         CoroutineHelper.WaitUntil(() =>
@@ -154,6 +158,23 @@ internal static class CombatController
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
+        On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += ControlExtraVesselSpawn;
+    }
+
+    private static void ControlExtraVesselSpawn(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, IntCompare self)
+    {
+        if (self.IsCorrectContext("vessel_orb", "Vessel*", "Appear?"))
+            if (self.Fsm.GameObjectName.Contains("1"))
+                self.integer1.Value = SpiritLevel >= 7 ? 33 : 0;
+            else if (self.Fsm.GameObjectName.Contains("2"))
+                self.integer1.Value = SpiritLevel >= 10 ? 66 : 0;
+            else if (self.Fsm.GameObjectName.Contains("3"))
+                self.integer1.Value = SpiritLevel >= 12 ? 99 : 0;
+            else if (self.Fsm.GameObjectName.Contains("4"))
+                self.integer1.Value = SpiritLevel >= 15 ? 132 : 0;
+            else
+                self.integer1.Value = SpiritLevel >= 18 ? 165 : 0;
+        orig(self);
     }
 
     public static void Unload()
@@ -184,9 +205,9 @@ internal static class CombatController
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= MoveLifebloodInFront;
         On.BossSceneController.Start -= TrackBosses;
-
         _attackMethod?.Dispose();
         StageController.RoomEnded -= StageController_RoomEnded;
+        On.GGCheckBoundSoul.OnEnter -= PreventFullSoulSprite;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -199,20 +220,62 @@ internal static class CombatController
 
     #region Health Setup
 
-    private static void CreateExtraHealth()
+    private static void CreateExtraHudElements()
     {
         Transform cameraObject = GameObject.Find("_GameCameras").transform;
-        if (cameraObject.Find("HudCamera/Hud Canvas/Health/Health 12") != null)
-            return;
-        GameObject healthPrefab = cameraObject.Find("HudCamera/Hud Canvas/Health/Health 11").gameObject;
-        float space = healthPrefab.transform.localPosition.x - cameraObject.Find("HudCamera/Hud Canvas/Health/Health 10").localPosition.x;
-
-        for (int i = 1; i <= 14; i++)
+        if (cameraObject.Find("HudCamera/Hud Canvas/Health/Health 12") == null)
         {
-            GameObject gameObject = UnityEngine.Object.Instantiate(healthPrefab, cameraObject.Find("HudCamera/Hud Canvas/Health"));
-            gameObject.name = "Health " + (i + 11);
-            gameObject.LocateMyFSM("health_display").FsmVariables.FindFsmInt("Health Number").Value = i + 11;
-            gameObject.transform.localPosition = new Vector3(healthPrefab.transform.localPosition.x + space * i, healthPrefab.transform.localPosition.y, healthPrefab.transform.localPosition.z);
+            LogManager.Log("Create needed extra health.");
+            GameObject healthPrefab = cameraObject.Find("HudCamera/Hud Canvas/Health/Health 11").gameObject;
+            float space = healthPrefab.transform.localPosition.x - cameraObject.Find("HudCamera/Hud Canvas/Health/Health 10").localPosition.x;
+
+            for (int i = 1; i <= 14; i++)
+            {
+                GameObject gameObject = UnityEngine.Object.Instantiate(healthPrefab, cameraObject.Find("HudCamera/Hud Canvas/Health"));
+                gameObject.name = "Health " + (i + 11);
+                gameObject.LocateMyFSM("health_display").FsmVariables.FindFsmInt("Health Number").Value = i + 11;
+                gameObject.transform.localPosition = new Vector3(healthPrefab.transform.localPosition.x + space * i, healthPrefab.transform.localPosition.y, healthPrefab.transform.localPosition.z);
+            }
+        }
+        if (cameraObject.Find("HudCamera/Hud Canvas/Soul Orb/Vessels/Vessel 5") == null)
+        {
+            LogManager.Log("Create needed extra vessel.");
+            GameObject particlePrefab = cameraObject.Find("HudCamera/Hud Canvas/Soul Orb/Vessels/Particle 1").gameObject;
+            GameObject particle = GameObject.Instantiate(particlePrefab, particlePrefab.transform.parent);
+            particle.name = "Particle 5";
+            particle.transform.position = new(-13.23f, 7.76f, -10f);
+            particle.transform.SetRotation2D(50);
+            GameObject vesselPrefab = cameraObject.Find("HudCamera/Hud Canvas/Soul Orb/Vessels/Vessel 1").gameObject;
+            GameObject vessel = GameObject.Instantiate(vesselPrefab, vesselPrefab.transform.parent);
+            vessel.name = "Vessel 5";
+            vessel.transform.position = new(-13.23f, 7.76f);
+            PlayMakerFSM fsm = vessel.LocateMyFSM("vessel_orb");
+            fsm.FsmVariables.FindFsmGameObject("Self").Value = vessel;
+            fsm.FsmVariables.FindFsmGameObject("Flash").Value = vessel.transform.Find("Flash").gameObject;
+            fsm.FsmVariables.FindFsmInt("Quarter Amount").Value = 140;
+            fsm.FsmVariables.FindFsmInt("Half Amount").Value = 148;
+            fsm.FsmVariables.FindFsmInt("Full Amount").Value = 165;
+            fsm.FsmVariables.FindFsmInt("Empty Amount").Value = 132;
+            fsm.FsmVariables.FindFsmInt("3Quarter Amount").Value = 156;
+
+            fsm = vesselPrefab.transform.parent.gameObject.LocateMyFSM("Update Vessels");
+            SendEventToGameObjectOptimized referenceAction = fsm.GetState("Send Up Msg").GetFirstAction<SendEventToGameObjectOptimized>();
+            fsm.GetState("Send Up Msg").AddActions(() => vessel.LocateMyFSM("vessel_orb").SendEvent("MP RESERVE UP"));
+
+            referenceAction = fsm.GetState("Send Down Msg").GetFirstAction<SendEventToGameObjectOptimized>();
+            fsm.GetState("Send Down Msg").AddActions(() => vessel.LocateMyFSM("vessel_orb").SendEvent("MP RESERVE DOWN"));
+
+            fsm = fsm.gameObject.LocateMyFSM("Vessel Drain");
+            fsm.GetState("Drain Pause").InsertActions(4, () => particle.GetComponent<ParticleSystem>().enableEmission = false);
+            fsm.GetState("Idle").AddActions(() => particle.GetComponent<ParticleSystem>().enableEmission = false);
+            fsm.AddState("5",
+            [
+                ..fsm.GetState("1").Actions
+            ], FsmTransitionData.FromTargetState("Drain").WithEventName("FINISHED"));
+            fsm.GetState("5").GetFirstAction<SetParticleEmission>().emission = false;
+            fsm.GetState("5").AddActions(() => particle.GetComponent<ParticleSystem>().enableEmission = true);
+            fsm.GetState("Particle Check").AddTransition("5", "5");
+            fsm.GetState("Particle Check").AddActions(() => fsm.SendEvent("5"));
         }
     }
 
@@ -298,7 +361,7 @@ internal static class CombatController
                     self.gameObject.AddComponent<BossFlag>();
                 if (!InCombat)
                     ActiveEnemies.Add(self);
-                if (self.hp != 1)
+                if (self.hp != 1 && self.GetComponent<BaseEnemy>() == null)
                 {
                     if (StageController.CurrentRoomNumber >= 20)
                     {
@@ -311,6 +374,7 @@ internal static class CombatController
                     }
                     else if (StageController.CurrentRoomNumber < 10)
                         self.hp /= 2;
+                    self.gameObject.AddComponent<BaseEnemy>();
                 }
             }
         }
@@ -415,7 +479,7 @@ internal static class CombatController
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
         {
-            if (ActiveEnemies.Count == 0 && !StageController.QuietRoom && contained 
+            if (ActiveEnemies.Count == 0 && !StageController.QuietRoom && contained
                 && !StageController.CurrentRoom.BossRoom)
                 FireEnemiesCleared();
         }
@@ -439,7 +503,6 @@ internal static class CombatController
                 {
                     if (StageController.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
                         item.OnDeath += Boss_OnDeath;
-                    item.gameObject.AddComponent<BaseEnemy>();
                     newEnemies.Add(item);
                 }
             ActiveEnemies = newEnemies;
@@ -461,7 +524,7 @@ internal static class CombatController
                     royalMark.AddComponent<RoyalMark>().CorrectPosition(ActiveEnemies[UnityEngine.Random.Range(0, ActiveEnemies.Count)]);
                     royalMark.SetActive(true);
                 }
-                BeginCombat.Invoke();
+                BeginCombat?.Invoke();
             }
         }
         catch (Exception ex)
@@ -544,7 +607,7 @@ internal static class CombatController
                 else
                 {
                     // Place shiny at godseeker location.
-                    // This should ensure the shiny lands on a platform. (Except for No Eyes)
+                    // This should ensure the shiny lands on a platform. (Except for No Eyes and Flukemarm)
                     GameObject crowd = GameObject.Find("Godseeker Crowd");
                     TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(crowd.transform.position.x + (GameManager.instance.sceneName == "GG_Flukemarm"
                         ? -7f
@@ -558,7 +621,7 @@ internal static class CombatController
             LogManager.Log("Failed to count boss death", ex);
         }
     }
-    
+
     internal static void FireEnemiesCleared()
     {
         if (!InCombat)
@@ -567,7 +630,6 @@ internal static class CombatController
         InCombat = false;
         EnemiesCleared.Invoke();
     }
-
 
     #endregion
 
@@ -582,18 +644,21 @@ internal static class CombatController
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
             return 5 + EnduranceLevel;
         else if (name == nameof(PlayerData.maxMP))
-            return Math.Min(99, 33 + Math.Min(SpiritLevel, 18) * 8 + (SpiritLevel == 19 ? 10 : 0));
+            return Math.Min(99, 33 + SpiritLevel * 11);
         else if (name == nameof(PlayerData.MPReserveMax))
         {
-            if (SpiritLevel < 9)
+            // Each spirit level grants 11 soul (with the exception of level 10 and 20 which grant 16 and 17 respectivly).
+            if (SpiritLevel <= 6)
                 return 0;
-            else if (SpiritLevel == 20)
-                return 99;
-            else if (SpiritLevel == 19)
-                return 88;
-            int spirit = Math.Max(0, -2 + (SpiritLevel - 8) * 8);
-            return spirit;
+            int soulCapacity = (SpiritLevel - 6) * 11;
+            if (SpiritLevel > 10)
+                soulCapacity += 5;
+            if (SpiritLevel == 20)
+                soulCapacity += 6;
+            return soulCapacity;
         }
+        else if (name == nameof(PlayerData.MPReserveCap))
+            return orig == 99 ? 165 : 5;
         return orig;
     }
 
@@ -816,7 +881,7 @@ internal static class CombatController
     {
         try
         {
-            amount = Math.Max(1, amount - 8 + SpiritLevel);
+            amount = Math.Max(1, amount - 8 + SpiritLevel / 2);
             if (HasPower(out Versatility versatility) && versatility.CastedSpell)
                 amount += 2 + (SpiritLevel + CombatLevel) / 8;
             if (HasPower(out Powers.Common.Caching caching))
@@ -1033,4 +1098,11 @@ internal static class CombatController
     }
 
     private static void StageController_RoomEnded(bool obj, bool traversed) => _stageTreasures = 0;
+
+    private static void PreventFullSoulSprite(On.GGCheckBoundSoul.orig_OnEnter orig, GGCheckBoundSoul self)
+    {
+        orig(self);
+        if (self.IsCorrectContext("Soul Orb Control", "Soul Orb", "MP Full") && SpiritLevel < 6)
+            self.Fsm.Event("FINISHED");
+    }
 }

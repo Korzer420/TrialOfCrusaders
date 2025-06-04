@@ -45,16 +45,17 @@ public class ConcussionEffect : MonoBehaviour
 
     internal static void PreparePrefab(GameObject prefab)
     {
-        Destroy(prefab.GetComponent<PlayMakerFSM>());
-        Destroy(prefab.GetComponent<TinkEffect>());
-        Destroy(prefab.GetComponent<DamageHero>());
-        Destroy(prefab.GetComponent<BoxCollider2D>());
-        Destroy(prefab.GetComponent<PlayMakerFixedUpdate>());
-        Destroy(prefab.GetComponent<ObjectBounce>());
-        prefab.GetComponent<tk2dSpriteAnimator>().playAutomatically = true;
-        prefab.GetComponent<tk2dSpriteAnimator>().ClipFps /= 2;
-        prefab.name = "Concussion Effect";
-        Prefab = prefab;
-        GameObject.DontDestroyOnLoad(prefab);
+        GameObject copy = GameObject.Instantiate(prefab);
+        Destroy(copy.GetComponent<PlayMakerFSM>());
+        Destroy(copy.GetComponent<TinkEffect>());
+        Destroy(copy.GetComponent<DamageHero>());
+        Destroy(copy.GetComponent<BoxCollider2D>());
+        Destroy(copy.GetComponent<PlayMakerFixedUpdate>());
+        Destroy(copy.GetComponent<ObjectBounce>());
+        copy.GetComponent<tk2dSpriteAnimator>().playAutomatically = true;
+        copy.GetComponent<tk2dSpriteAnimator>().ClipFps /= 2;
+        copy.name = "Concussion Effect";
+        Prefab = copy;
+        GameObject.DontDestroyOnLoad(copy);
     }
 }

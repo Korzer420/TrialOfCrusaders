@@ -258,31 +258,21 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Combat_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_COMBAT";
                     GameHelper.OneTimeMessage("INV_NAME_COMBAT", "Combat Up", "UI");
-                    if (CombatController.CombatLevel < 20)
-                        CombatController.CombatLevel++;
-                    PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+                    GrantCombatLevel();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.SpiritOrb:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Spirit_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPIRIT";
                     GameHelper.OneTimeMessage("INV_NAME_SPIRIT", "Spirit Up", "UI");
-                    if (CombatController.SpiritLevel < 20)
-                        CombatController.SpiritLevel++;
+                    GrantSpiritLevel();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.EnduranceOrb:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Endurance_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_ENDURANCE";
                     GameHelper.OneTimeMessage("INV_NAME_ENDURANCE", "Endurance Up", "UI");
-                    if (CombatController.EnduranceLevel < 20)
-                    {
-                        CombatController.EnduranceLevel++;
-                        EnduranceHealthGrant = true;
-                        HeroController.instance.AddHealth(1);
-                        EnduranceHealthGrant = false;
-                        PlayMakerFSM.BroadcastEvent("MAX HP UP");
-                    }
+                    GrantEnduranceLevel();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Dash:
@@ -533,7 +523,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color=#fa0000>Combat: {CombatController.CombatLevel}</color>";
+        text.text = $"<color={CombatController.CombatStatColor}>Combat: {CombatController.CombatLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statInfo = TextManager.CreateUIObject("Spirit Stat");
@@ -546,7 +536,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color=#a700fa>Spirit: {CombatController.SpiritLevel}</color>";
+        text.text = $"<color={CombatController.SpiritStatColor}>Spirit: {CombatController.SpiritLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statInfo = TextManager.CreateUIObject("Endurance Stat");
@@ -559,7 +549,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color=#4fff61>Endurance: {CombatController.EnduranceLevel}</color>";
+        text.text = $"<color={CombatController.EnduranceStatColor}>Endurance: {CombatController.EnduranceLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statObject = new("Upper stat boarder")
@@ -777,18 +767,13 @@ public static class TreasureManager
             switch (pickedStat)
             {
                 case "Combat":
-                    CombatController.CombatLevel++;
-                    PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+                    GrantCombatLevel();
                     break;
                 case "Spirit":
-                    CombatController.SpiritLevel++;
+                    GrantSpiritLevel();
                     break;
                 case "Endurance":
-                    CombatController.EnduranceLevel++;
-                    EnduranceHealthGrant = true;
-                    HeroController.instance.AddHealth(1);
-                    EnduranceHealthGrant = false;
-                    PlayMakerFSM.BroadcastEvent("MAX HP UP");
+                    GrantEnduranceLevel();
                     break;
                 default:
                     HeroController.instance.AddGeo(200);
@@ -805,4 +790,31 @@ public static class TreasureManager
     }
 
     #endregion
+
+    internal static void GrantCombatLevel()
+    {
+        if (CombatController.CombatLevel >= 20)
+            return;
+        CombatController.CombatLevel++;
+        PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+    }
+
+    internal static void GrantSpiritLevel()
+    {
+        if (CombatController.SpiritLevel >= 20)
+            return;
+        CombatController.SpiritLevel++;
+        PlayMakerFSM.BroadcastEvent("NEW SOUL ORB");
+    }
+
+    internal static void GrantEnduranceLevel()
+    {
+        if (CombatController.EnduranceLevel >= 20)
+            return;
+        CombatController.EnduranceLevel++;
+        EnduranceHealthGrant = true;
+        HeroController.instance.AddHealth(1);
+        EnduranceHealthGrant = false;
+        PlayMakerFSM.BroadcastEvent("MAX HP UP");
+    }
 }
