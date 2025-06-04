@@ -16,7 +16,7 @@ internal class SeethingLifeblood : Power
         CombatController.TookDamage += CombatController_TookDamage;
     }
 
-    private void StageController_RoomCleared(bool quietRoom)
+    private void StageController_RoomCleared(bool quietRoom, bool traversed)
     {
         if (!quietRoom && !_takenDamage && RngManager.GetRandom(1, 40) <= CombatController.EnduranceLevel)
             EventRegister.SendEvent("ADD BLUE HEALTH");

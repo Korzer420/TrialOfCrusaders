@@ -1,5 +1,6 @@
 ﻿using GlobalEnums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -18,7 +19,7 @@ internal static class SpawnController
     {
         if (_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Enable Spawn Controller", KorzUtils.Enums.LogType.Debug);
+        LogManager.Log("Enable Spawn Controller");
         PDHelper.RespawnMarkerName = "SpawnPoint";
         PDHelper.RespawnScene = "Room_Colosseum_01";
         //PDHelper.RespawnScene = ContinueSpawn 
@@ -37,7 +38,7 @@ internal static class SpawnController
     {
         if (!_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Disable Spawn Controller", KorzUtils.Enums.LogType.Debug);
+        LogManager.Log("Disable Spawn Controller");
         On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint -= HeroController_LocateSpawnPoint;
         _enabled = false;

@@ -517,7 +517,7 @@ public static class TreasureManager
         powerOverlay.SetActive(true);
         //_powerSet++;
         //if (_powerSet == 40)
-        //    LogHelper.Write("Called last power set.");
+        //    LogManager.Log("Called last power set.");
         return powerOverlay;
     }
 

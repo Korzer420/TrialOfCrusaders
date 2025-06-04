@@ -29,7 +29,7 @@ public static class PhaseController
     private static void UIManager_ContinueGame(On.UIManager.orig_ContinueGame orig, UIManager self)
     {
         TransitionTo(Phase.Listening);
-        LogHelper.Write("UI Continue");
+        LogManager.Log("UI Continue");
         orig(self);
     }
 
@@ -131,7 +131,7 @@ public static class PhaseController
                         }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
                     }
                     else
-                        LogHelper.Write("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
+                        LogManager.Log("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
                     break;
                 case Phase.Result:
                     if (CurrentPhase == Phase.Run)
@@ -141,7 +141,7 @@ public static class PhaseController
                         CombatController.Unload();
                     }
                     else
-                        LogHelper.Write("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
+                        LogManager.Log("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
                     break;
                 case Phase.Inactive:
                     // Save forfeited run.

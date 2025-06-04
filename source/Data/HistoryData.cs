@@ -42,10 +42,12 @@ public class HistoryData
     /// Check if the assigned run id matches the values.
     /// If not, the run data might've been tempered with.
     /// </summary>
-    internal bool CheckRun() => GetRunId() == RunId;
+    internal bool CheckRun() => true; /*GetRunId() == RunId;*/
 
-    internal int GetRunId() => ($"{ModVersion};{Result};{GameMode};{Seeded};{Seed};{Score.Score};{Score.Essence};{Score.HighestKillStreak};" +
-               $"{Score.HighestHitlessRoomStreak};{Score.HitlessBosses};{Score.HitlessFinalBoss};{Score.TotalHitlessRooms};" +
-               $"{FinalCombatLevel}:{FinalSpiritLevel};{FinalEnduranceLevel}:{FinalRoomNumber};" +
-               $"{CommonPowerAmount};{UncommonPowerAmount};{RarePowerAmount};{string.Join(",", Powers)}").GetHashCode();
+    internal int GetRunId() => 1;
+    // ToDo: Implement run id verifier.
+    //internal int GetRunId() => ($"{ModVersion};{Result};{GameMode};{Seeded};{Seed};{Score.Score};{Score.EssenceBonus};{Score.KillStreakBonus};" +
+    //           $"{Score.HighestHitlessRoomStreak};{Score.PerfectBossesBonus};{Score.HitlessFinalBoss};{Score.TotalHitlessRooms};" +
+    //           $"{FinalCombatLevel}:{FinalSpiritLevel};{FinalEnduranceLevel}:{FinalRoomNumber};" +
+    //           $"{CommonPowerAmount};{UncommonPowerAmount};{RarePowerAmount};{string.Join(",", Powers)}").GetHashCode();
 }

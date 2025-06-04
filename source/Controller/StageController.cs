@@ -45,7 +45,7 @@ internal static class StageController
 
     #endregion
 
-    public static event Action<bool> RoomEnded;
+    public static event Action<bool, bool> RoomEnded;
 
     #region Setup
 
@@ -53,7 +53,7 @@ internal static class StageController
     {
         if (_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Enable Stage Controller", KorzUtils.Enums.LogType.Debug);
+       LogManager.Log("Enable Stage Controller");
         QuietRoom = true;
         On.PlayMakerFSM.OnEnable += FsmEdits;
         On.RestBench.Start += RemoveBenches;
@@ -83,7 +83,7 @@ internal static class StageController
     {
         if (!_enabled)
             return;
-        LogHelper.Write<TrialOfCrusaders>("Disable Stage Controller", KorzUtils.Enums.LogType.Debug);
+       LogManager.Log("Disable Stage Controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         On.RestBench.Start -= RemoveBenches;
 
@@ -205,12 +205,13 @@ internal static class StageController
             }
             else
             {
-                RoomEnded?.Invoke(QuietRoom);
+                RoomEnded?.Invoke(QuietRoom, !QuietRoom && !CurrentRoomData[CurrentRoomIndex].BossRoom
+                        && CurrentRoomData[CurrentRoomIndex].SelectedTransition != info.EntryGateName && info.EntryGateName != "door_dreamEnter");
                 FinishedEnemies = false;
                 // Check for ending.
                 if (CurrentRoomNumber == CurrentRoomData.Count)
                 {
-                    LogHelper.Write("Trigger ending");
+                    LogManager.Log("Trigger ending");
                     CurrentRoomIndex++;
                     QuietRoom = true;
                     info.EntryGateName = "left1";
@@ -222,6 +223,7 @@ internal static class StageController
                 }
                 else
                 {
+
                     if (UpcomingTreasureRoom)
                     {
                         info.SceneName = "GG_Engine";
@@ -230,8 +232,6 @@ internal static class StageController
                     }
                     else
                     {
-                        if (CurrentRoomIndex == 2)
-                            CurrentRoomIndex = 98;
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
                         if (QuietRoom)
@@ -298,7 +298,6 @@ internal static class StageController
             if (self.isADoor)
                 return;
             GameObject transitionObject = new("Trial Transition");
-            LogHelper.Write("Called trial transition in room: " + CurrentRoomIndex);
             SpecialTransition transition = transitionObject.AddComponent<SpecialTransition>();
             transition.LoadIntoDream = CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
             transition.VanillaTransition = self;
@@ -336,7 +335,10 @@ internal static class StageController
     private static void FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
-        LogHelper.Write("Current room number: " + CurrentRoomNumber);
+        // Already triggered, we skip this.
+        if (_intendedDestination.Item1 == null)
+            return;
+        LogManager.Log("Current room number: " + CurrentRoomNumber);
         //if (Spawner.ContinueSpawn)
         //    return;
         _intendedDestination.Item1 = null;
@@ -480,7 +482,9 @@ internal static class StageController
             || persistentBoolData.sceneName == "Deepnest_01b" && persistentBoolData.id == "One Way Wall"
             || persistentBoolData.sceneName == "Deepnest_East_02" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
-            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass"))
+            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass")
+            || persistentBoolData.sceneName == "Crossroads_04" && persistentBoolData.id == "Battle Scene"
+            || persistentBoolData.sceneName == "Ruins1_23" && persistentBoolData.id == "Battle Scene v2")
         {
             persistentBoolData.activated = true;
             return persistentBoolData;

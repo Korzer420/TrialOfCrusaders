@@ -46,7 +46,8 @@ internal class Perfection : Power
         // Activate geo flashing like from fragile greed.
         cursor.EmitDelegate<Func<bool, bool>>(x => true);
     }
-    private void StageController_RoomCleared(bool quietRoom)
+
+    private void StageController_RoomCleared(bool quietRoom, bool traversed)
     {
         if (!quietRoom && !_hit)
             _clearedRoom = Math.Min(60, _clearedRoom++);

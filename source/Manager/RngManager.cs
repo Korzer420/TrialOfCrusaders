@@ -38,16 +38,4 @@ public static class RngManager
             _stageGenerator = new(StageController.CurrentRoomIndex, new(_seed + StageController.CurrentRoomIndex));
         return (float)(_mainGenerator.NextDouble() * (maxExcluded - minIncluded) - minIncluded);
     }
-
-    public static int GetProgressRandom(int minIncluded, int maxIncluded)
-    {
-        Random random = new(_seed + StageController.CurrentRoomIndex + CombatController.SpiritLevel * 10 + CombatController.CombatLevel * 201 + CombatController.EnduranceLevel * 2006);
-        return random.Next(minIncluded, maxIncluded + 1);
-    }
-
-    public static float GetProgressRandom(float minIncluded, float maxExcluded)
-    {
-        Random random = new(_seed + StageController.CurrentRoomIndex + CombatController.SpiritLevel * 10 + CombatController.CombatLevel * 201 + CombatController.EnduranceLevel * 2006);
-        return (float)(random.NextDouble() * (maxExcluded - minIncluded) - minIncluded);
-    }
 }

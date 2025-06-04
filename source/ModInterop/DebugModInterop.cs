@@ -30,7 +30,7 @@ public static class DebugModInterop
             Console.AddLine("Gate function not available in boss scenes. Spawn a shiny to initiate a transition.");
             return;
         }
-        StageController.ClearExit();
+        CombatController.FireEnemiesCleared();
         Console.AddLine("Open Gates");
     }
 

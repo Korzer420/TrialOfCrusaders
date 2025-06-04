@@ -49,6 +49,8 @@ public static class ScoreController
         On.PlayMakerFSM.OnEnable += SetupResultElements;
         HistoryController.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += BlockPause;
+        On.PlayerData.IncrementInt += CountGrubs;
+        Score = new();
         StartTimer();
         _enabled = true;
     }
@@ -65,6 +67,7 @@ public static class ScoreController
         On.PlayMakerFSM.OnEnable -= SetupResultElements;
         HistoryController.CreateEntry -= PassHistoryData;
         ModHooks.GetPlayerBoolHook -= BlockPause;
+        On.PlayerData.IncrementInt -= CountGrubs;
         StopTimer();
         Score = null;
         _enabled = false;
@@ -74,22 +77,21 @@ public static class ScoreController
 
     private static void CombatController_EnemyKilled(HealthManager enemy) => Score.CurrentKillStreak++;
 
-    private static void StageController_RoomEnded(bool quietRoom)
+    private static void StageController_RoomEnded(bool quietRoom, bool traversed)
     {
         if (!quietRoom)
         {
-            if (_tookDamage)
-                Score.CurrentHitlessRoomStreak = 0;
-            else
+            if (!_tookDamage)
             {
                 if (StageController.CurrentRoom.BossRoom)
-                    Score.HitlessBosses++;
+                    Score.PerfectBossesBonus++;
                 if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
-                { 
                     Score.HitlessFinalBoss = true;
-                    StopTimer();
-                }
-                Score.CurrentHitlessRoomStreak++;
+            }
+            if (traversed)
+            { 
+                Score.TraverseBonus++;
+                LogManager.Log("Left room through other exit. Increase traverse bonus");
             }
         }
         _tookDamage = false;
@@ -111,7 +113,7 @@ public static class ScoreController
             entry.Score.Score = PDHelper.GeoPool;
         else if (result == RunResult.Forfeited)
             entry.Score.Score = PDHelper.GeoPool;
-        entry.Score.Essence = PDHelper.DreamOrbs;
+        entry.Score.EssenceBonus = PDHelper.DreamOrbs;
     }
 
     private static bool BlockPause(string name, bool orig)
@@ -119,6 +121,16 @@ public static class ScoreController
         if (name == nameof(PlayerData.disablePause))
             return orig || PhaseController.CurrentPhase == Phase.Result;
         return orig;
+    }
+
+    private static void CountGrubs(On.PlayerData.orig_IncrementInt orig, PlayerData self, string intName)
+    {
+        orig(self, intName);
+        if (intName == nameof(PlayerData.grubsCollected))
+        {
+            PDHelper.GrubsCollected--;
+            Score.GrubBonus++;
+        }
     }
 
     #region Result show
@@ -170,38 +182,10 @@ public static class ScoreController
         textObject.SetActive(false);
         confirmButton.SetActive(false);
 #if DEBUG
-        PDHelper.Geo = 3500;
-        PDHelper.DreamOrbs = 120;
-        Score.PassedTime = 1400f;
-        Score.HighestKillStreak = 65;
-        Score.TotalHitlessRooms = 34;
-        Score.HighestHitlessRoomStreak = 20;
-        Score.HitlessBosses = 4;
-        Score.HitlessFinalBoss = true;
 #endif
-        /*
-         Score:
-        - 1 per geo.
-        - +200 per Hitless boss (except the last)
-        - +1000 if last boss was hitless
-        - 10 per Dream Essence
-        - +20 per Hitless room
-        - Double hitless points for highest hitless room streak.
-        - 5 Points per enemy in the longest Enemy kill streak (without taking damage).
-        - 1 Point per second before 1 hour.
-         */
-        List<(string, int)> values =
-        [
-            new("Score:", PDHelper.Geo),
-            new("Essence bonus:", PDHelper.DreamOrbs * 10),
-            new("Time bonus:", Math.Max(0, 3600 - Mathf.CeilToInt(Score.PassedTime))),
-            new("Killstreak bonus:", Score.HighestKillStreak * 5),
-            new("Flawless stage bonus:", Score.TotalHitlessRooms * 20),
-            new("Perfect streak bonus:", Score.HighestHitlessRoomStreak * 20),
-            new("Perfect boss bonus:", Score.HitlessBosses * 200),
-            new("Perfect final bonus:", Score.HitlessFinalBoss ? 1000 : 0),
-        ];
-        values.Add(new("Final score:", values.Select(x => x.Item2).Sum()));
+        Score.Score = PDHelper.Geo;
+        Score.EssenceBonus = PDHelper.DreamOrbs;
+        List<(string, int)> values = Score.TransformToList();
         int position = 225;
         yield return new WaitForSeconds(1f);
         GameObject currentText = UnityEngine.Object.Instantiate(textObject, textObject.transform.parent);
@@ -231,7 +215,7 @@ public static class ScoreController
         currentText = UnityEngine.Object.Instantiate(textObject, textObject.transform.parent);
         currentText.transform.localPosition = new(0f, position);
         position -= 50;
-        yield return FadeInText(currentText, values[8]);
+        yield return FadeInText(currentText, values.Last());
 
         confirmButton.SetActive(true);
         bool pressed = false;
@@ -265,7 +249,7 @@ public static class ScoreController
             pointValue.text = "-";
         pointValue.alignment = TextAnchor.MiddleRight;
 
-        if (value.Item1 == "Final score:")
+        if (value.Item1 == ScoreData.FinalScoreField)
         {
             label.fontSize += 2;
             pointValue.fontSize += 2;
@@ -292,7 +276,7 @@ public static class ScoreController
         while (currentDisplayValue < value.Item2)
         {
             yield return null;
-            currentDisplayValue += value.Item1 == "Final score:" ? 20 : 10;
+            currentDisplayValue += value.Item1 == ScoreData.FinalScoreField ? 20 : 10;
             pointValue.text = $"{currentDisplayValue}";
         }
         pointValue.text = $"{value.Item2}";

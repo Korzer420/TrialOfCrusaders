@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
 
@@ -82,22 +83,40 @@ public abstract class Power : IEquatable<Power>
     {
         if (_enabled)
         {
-            LogHelper.Write("Power " + Name + " is already enabled.", KorzUtils.Enums.LogType.Warning);
+            LogManager.Log("Power " + Name + " is already enabled.", KorzUtils.Enums.LogType.Warning);
             return;
         }
-        Enable();
-        _enabled = true;
+        try
+        {
+            Enable();
+            _enabled = true;
+            LogManager.Log("Enabled power " + Name);
+            return;
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("Failed to enable power " + Name, ex);
+        }
     }
 
     internal void DisablePower()
     {
         if (!_enabled)
         {
-            LogHelper.Write("Power " + Name + " is already disabled.", KorzUtils.Enums.LogType.Warning);
+            LogManager.Log("Power " + Name + " is already disabled.", KorzUtils.Enums.LogType.Warning);
             return;
         }
-        Disable();
-        _enabled = false;
+        try
+        {
+            Disable();
+            _enabled = false;
+            LogManager.Log("Disabled power " + Name);
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("Failed to disable power " + Name, ex);
+        }
+        
     }
 
     /// <summary>

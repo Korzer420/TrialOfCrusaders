@@ -62,7 +62,6 @@ internal static class HubController
             block.AddComponent<BoxCollider2D>().size = new(1f, 8f);
             transitions.Remove(left);
             Object.Destroy(left);
-            transitions.First(x => x.name == "bot1").targetScene = "Dream_Room_Believer_Shrine";
             CoroutineHelper.WaitForHero(() =>
             {
                 // Reset data
@@ -75,14 +74,10 @@ internal static class HubController
                 PDHelper.HasLantern = false;
                 PDHelper.HasSuperDash = false;
                 PDHelper.HasAcidArmour = false;
-                PDHelper.FireballLevel = 0;
-                PDHelper.QuakeLevel = 0;
-                PDHelper.Geo = 0;
                 PDHelper.DreamOrbs = 0;
                 PDHelper.HasDreamNail = true;
                 PDHelper.MaxHealth = 5;
                 PDHelper.SoulLimited = false;
-                PDHelper.GrimmChildLevel = 0;
                 PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
                 GameCameras.instance.hudCanvas.gameObject.SetActive(false);
                 GameCameras.instance.hudCanvas.gameObject.SetActive(true);
@@ -131,9 +126,7 @@ internal static class HubController
     {
         try
         {
-            if (info.SceneName == "Dream_Room_Believer_Shrine")
-                info.EntryGateName = "left1";
-            else if (info.SceneName == "Dream_Backer_Shrine")
+            if (info.SceneName == "Dream_Backer_Shrine")
             {
                 info.SceneName = "Room_Colosseum_01";
                 info.EntryGateName = "bot1";
@@ -154,6 +147,11 @@ internal static class HubController
                 PDHelper.HasDreamNail = false;
                 info.SceneName = "Deepnest_East_10";
                 info.EntryGateName = "left1";
+            }
+            else if (info.SceneName == "Room_Colosseum_02")
+            {
+                info.EntryGateName = "left1";
+                info.SceneName = "Dream_Room_Believer_Shrine";
             }
         }
         catch (System.Exception ex)

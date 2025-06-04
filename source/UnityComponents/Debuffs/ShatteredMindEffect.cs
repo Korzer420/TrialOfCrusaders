@@ -24,6 +24,7 @@ public class ShatteredMindEffect : MonoBehaviour
         prefab.name = "Shattered Mind Effect";
         prefab.GetComponent<ParticleSystem>().enableEmission = true;
         prefab.GetComponent<ParticleSystem>().emissionRate = 10;
+        prefab.GetComponent<ParticleSystem>().loop = true;
         Prefab = prefab;
         GameObject.DontDestroyOnLoad(Prefab);
     }

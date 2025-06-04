@@ -33,6 +33,7 @@ internal static class CombatController
     private static ILHook _attackMethod;
     private static Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
+    private static int _stageTreasures = 0;
 
     #region Properties
 
@@ -122,6 +123,7 @@ internal static class CombatController
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += MoveLifebloodInFront;
         On.BossSceneController.Start += TrackBosses;
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
+        StageController.RoomEnded += StageController_RoomEnded;
 
         CreateExtraHealth();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -180,9 +182,12 @@ internal static class CombatController
         On.BossSceneController.Start -= TrackBosses;
 
         _attackMethod?.Dispose();
+        StageController.RoomEnded -= StageController_RoomEnded;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
+        DisablePowers();
+        ObtainedPowers.Clear();
         _enabled = false;
     }
 
@@ -283,13 +288,14 @@ internal static class CombatController
             if (self.hp != 9999 && self.gameObject.name != "Mender Bug" && !self.gameObject.name.Contains("Pigeon") && !self.gameObject.name.Contains("Hatcher Baby Spawner")
                 && self.gameObject.name != "Hollow Shade(Clone)" && !self.gameObject.name.Contains("fluke_baby")
                 && self.gameObject.name != "Cap Hit" && !self.gameObject.name.Contains("Baby Centipede Spawner")
-                && !self.gameObject.name.Contains("Zombie Spider") && !self.gameObject.name.Contains("Híveling Spawner"))
+                && !self.gameObject.name.Contains("Zombie Spider") && !self.gameObject.name.Contains("Hiveling Spawner"))
             {
-                ActiveEnemies.Add(self);
                 if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
                     self.gameObject.AddComponent<BossFlag>();
                 if (self.hp != 1)
                 {
+                    if (!InCombat)
+                        ActiveEnemies.Add(self);
                     if (StageController.CurrentRoomNumber >= 20)
                     {
                         float scaling = 0.1f;
@@ -299,7 +305,7 @@ internal static class CombatController
                             scaling = 0.05f;
                         self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
                     }
-                    else if (self.hp > 50)
+                    else if (StageController.CurrentRoomNumber < 10)
                         self.hp /= 2;
                 }
             }
@@ -324,10 +330,13 @@ internal static class CombatController
                 EnemyKilled?.Invoke(self);
                 if (HasPower<RoyalDecree>(out _))
                 {
+                    LogManager.Log("Check royal decree target");
                     if (self.GetComponent<RoyalMark>() is RoyalMark mark)
                     {
+                        LogManager.Log("Killed enemy had mark.");
                         if (ActiveEnemies.Count == 0)
                         {
+                            LogManager.Log("No enemies left. Grant reward.");
                             int rolled = RngManager.GetStageRandom(1, 100);
                             if (rolled <= 2)
                                 TreasureManager.SpawnShiny(TreasureType.RareOrb, self.transform.position);
@@ -339,7 +348,11 @@ internal static class CombatController
                                 HeroController.instance.AddGeo(100);
                         }
                         else
+                        {
+                            LogManager.Log("Find new enemy target");
                             mark.CorrectPosition(ActiveEnemies[RngManager.GetRandom(0, ActiveEnemies.Count - 1)]);
+                            LogManager.Log("New enemy is: " + mark.AttachedEnemy.name);
+                        }
                     }
                     else
                     {
@@ -351,10 +364,14 @@ internal static class CombatController
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetStageRandom(0f, 100f);
-                    if (rolled <= 4f)
-                        TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
-                    else if (rolled <= 12f)
+                    if (rolled <= 4f / (1 + _stageTreasures))
                     {
+                        TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
+                        _stageTreasures++;
+                    }
+                    else if (rolled <= 12f / (1 + _stageTreasures))
+                    {
+                        _stageTreasures++;
                         List<int> amounts = [CombatLevel, SpiritLevel, EnduranceLevel];
                         int max = amounts.Max();
                         int maxStats = amounts.Count(x => x == max);
@@ -394,12 +411,9 @@ internal static class CombatController
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
         {
-            if (ActiveEnemies.Count(x => x.GetComponent<BaseEnemy>()) == 0 && !StageController.QuietRoom && contained 
-                && !StageController.FinishedEnemies && !StageController.CurrentRoom.BossRoom)
-            {
-                InCombat = false;
-                EnemiesCleared?.Invoke();
-            }
+            if (ActiveEnemies.Count == 0 && !StageController.QuietRoom && contained 
+                && !StageController.CurrentRoom.BossRoom)
+                FireEnemiesCleared();
         }
         catch (Exception ex)
         {
@@ -412,6 +426,8 @@ internal static class CombatController
         orig(self, setHazardMarker, preventRunBob);
         try
         {
+            if (InCombat)
+                return;
             ActiveEnemies ??= [];
             List<HealthManager> newEnemies = [];
             foreach (HealthManager item in ActiveEnemies)
@@ -419,13 +435,14 @@ internal static class CombatController
                 {
                     if (StageController.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
                         item.OnDeath += Boss_OnDeath;
-                    item.gameObject.AddComponent<BaseEnemy>().NoLoot = item.hp == 1;
+                    item.gameObject.AddComponent<BaseEnemy>();
                     newEnemies.Add(item);
                 }
             ActiveEnemies = newEnemies;
             if (!StageController.QuietRoom)
             {
                 InCombat = true;
+                LogManager.Log("Required enemy amount: " + ActiveEnemies.Count);
                 if (StageController.CurrentRoom.BossRoom)
                     _bossCounter = GameManager.instance.sceneName switch
                     {
@@ -457,7 +474,7 @@ internal static class CombatController
         while (true)
         {
             yield return new WaitForSeconds(1f);
-            if (StageController.QuietRoom)
+            if (StageController.QuietRoom || !InCombat)
                 continue;
             UpdateEnemies();
         }
@@ -475,8 +492,8 @@ internal static class CombatController
                     ActiveEnemies.RemoveAt(i);
                     i--;
                 }
-            if (currentCount != ActiveEnemies.Count && ActiveEnemies.FirstOrDefault(x => x.GetComponent<BaseEnemy>()) == null && !StageController.CurrentRoom.BossRoom)
-                EnemiesCleared?.Invoke();
+            if (ActiveEnemies.Count == 0 && !StageController.CurrentRoom.BossRoom)
+                FireEnemiesCleared();
         }
         catch (Exception ex)
         {
@@ -513,6 +530,7 @@ internal static class CombatController
             _bossCounter--;
             if (_bossCounter == 0)
             {
+                InCombat = false;
                 if (StageController.CurrentRoomIndex == StageController.CurrentRoomData.Count - 1)
                 {
                     if (GameManager.instance.sceneName == "GG_Hollow_Knight")
@@ -535,6 +553,16 @@ internal static class CombatController
             LogManager.Log("Failed to count boss death", ex);
         }
     }
+    
+    internal static void FireEnemiesCleared()
+    {
+        if (!InCombat)
+            return;
+        LogManager.Log("All required enemies killed.");
+        InCombat = false;
+        EnemiesCleared.Invoke();
+    }
+
 
     #endregion
 
@@ -580,7 +608,7 @@ internal static class CombatController
             if (hitInstance.AttackType == AttackTypes.Nail)
             {
                 if (HasPower(out FragileStrength strength) && strength.StrengthActive)
-                    hitInstance.DamageDealt *= 4;
+                    hitInstance.DamageDealt *= 3;
 
                 if (HasPower<Initiative>(out _) && self.GetComponent<InitiativeEffect>() == null)
                 {
@@ -832,7 +860,7 @@ internal static class CombatController
                     if (hazardType > 1 && hazardType < 5)
                         damageAmount = InstaKillDamage;
                     else
-                        damageAmount = damageAmount.Lower(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
+                        damageAmount = damageAmount.LowerPositive(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
                 }
 
                 if (hazardType > 1 && hazardType < 5)
@@ -842,10 +870,10 @@ internal static class CombatController
                         if (!InCombat)
                             damageAmount = 0;
                         else
-                            damageAmount = damageAmount.Lower(2 + EnduranceLevel / 4);
+                            damageAmount = damageAmount.LowerPositive(2 + EnduranceLevel / 4);
                     }
                     else if (HasPower<CaringShell>(out _))
-                        damageAmount = damageAmount.Lower(1);
+                        damageAmount = damageAmount.LowerPositive(1);
                 }
 
                 if (HasPower<Sturdy>(out _))
@@ -967,7 +995,7 @@ internal static class CombatController
             else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss"
                 || self.gameObject.name == "Mantis Battle" || self.gameObject.name == "Sly Boss")
             {
-                if (self.FsmName.Contains("Control"))
+                if (self.FsmName.Contains("Control") && !self.FsmName.Contains("Stun"))
                 {
                     if (self.gameObject.name != "Nightmare Grimm Boss")
                         self.GetState("Bow").InsertActions(0, () =>
@@ -988,6 +1016,9 @@ internal static class CombatController
                         });
                 }
             }
+            // Prevent the small centipedes from moving away.
+            else if (self.FsmName == "Dig Away" && self.gameObject.name.Contains("Baby Centipede"))
+                self.GetState("Dig").RemoveFirstAction<SetFsmBool>();
         }
         catch (Exception ex)
         {
@@ -995,4 +1026,6 @@ internal static class CombatController
         }
         orig(self);
     }
+
+    private static void StageController_RoomEnded(bool obj, bool traversed) => _stageTreasures = 0;
 }

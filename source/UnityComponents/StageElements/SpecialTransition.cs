@@ -7,6 +7,7 @@ using Modding;
 using System.Collections;
 using System.Linq;
 using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents.StageElements;
@@ -49,7 +50,7 @@ internal class SpecialTransition : MonoBehaviour
         else if (VanillaTransition.gameObject.name.Contains("bot"))
             transform.position -= new Vector3(0f, 0.6f);
         else
-            LogHelper.Write<TrialOfCrusaders>("Transition " + VanillaTransition.gameObject.name + " could not assign an offset", KorzUtils.Enums.LogType.Warning);
+           LogManager.Log("Transition " + VanillaTransition.gameObject.name + " could not assign an offset", KorzUtils.Enums.LogType.Warning);
     }
 
     void Update()

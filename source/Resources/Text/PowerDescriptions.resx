@@ -145,7 +145,7 @@
     <value>While at full health, slowing regenerates soul.</value>
   </data>
   <data name="CarefreeMelody" xml:space="preserve">
-    <value>Occusionally blocks damage.</value>
+    <value>Occusionally blocks damage. Doesn't work against instant kill damage.</value>
   </data>
   <data name="CaringShell" xml:space="preserve">
     <value>Hazards deal less damage.</value>

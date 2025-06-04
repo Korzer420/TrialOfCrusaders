@@ -120,20 +120,20 @@ internal static class HistoryController
             currentElement.Item1.transform.SetParent(board.transform);
             currentElement.Item1.transform.localPosition = new(-14.5f, 0f);
             currentElement.Item2.alignment = TextAlignmentOptions.Left;
-            currentElement.Item2.fontSize = 4;
+            currentElement.Item2.fontSize = 3;
             Component.Destroy(currentElement.Item1);
 
             List<string> values =
             [
-                "Score",
-            "Essence bonus",
-            "Time bonus",
-            "Killstreak bonus",
-            "Flawless stage bonus",
-            "Perfect streak bonus",
-            "Perfect boss bonus",
-            "Perfect final bonus",
-            "Final score"
+                ScoreData.ScoreField,
+                ScoreData.TimeField,
+                ScoreData.KillStreakField,
+                ScoreData.EssenceField,
+                ScoreData.GrubField,
+                ScoreData.TraverseField,
+                ScoreData.PerfectBossesField,
+                ScoreData.PerfectFinalBossField,
+                ScoreData.FinalScoreField,
             ];
 
             for (int i = 0; i < values.Count; i++)
@@ -352,24 +352,13 @@ internal static class HistoryController
                 ? new DateTime(TimeSpan.FromSeconds(currentHistory.Score.PassedTime).Ticks).ToString("HH:mm:ss.ff")
                 : new DateTime(TimeSpan.FromSeconds(currentHistory.Score.PassedTime).Ticks).ToString("mm:ss.ff"));
 
-            List<(string, int)> values =
-            [
-                new("Score", currentHistory.Score.Score),
-            new("Essence bonus",  currentHistory.Score.Essence * 10),
-            new("Time bonus", currentHistory.Result == RunResult.Completed ? Math.Max(0, 3600 - Mathf.CeilToInt(currentHistory.Score.PassedTime)) : -1),
-            new("Killstreak bonus", currentHistory.Score.HighestKillStreak * 5),
-            new("Flawless stage bonus", currentHistory.Score.TotalHitlessRooms * 20),
-            new("Perfect streak bonus", currentHistory.Score.HighestHitlessRoomStreak * 20),
-            new("Perfect boss bonus", currentHistory.Score.HitlessBosses * 200),
-            new("Perfect final bonus", currentHistory.Score.HitlessFinalBoss ? 1000 : 0),
-        ];
-            values.Add(new("Final score", values.Select(x => x.Item2).Sum()));
+            Dictionary<string, int> scoreValues = currentHistory.Score.TransformToDictionary();
 
-            foreach (var item in values)
-                if (item.Item1 != "Time bonus" && item.Item1 != "Final score" || currentHistory.Result == RunResult.Completed)
-                    _elementLookUp[item.Item1].Item2.text = $"{item.Item1}: {item.Item2}";
+            foreach (var item in scoreValues.Keys)
+                if (item != ScoreData.TimeField && item != ScoreData.FinalScoreField || currentHistory.Result == RunResult.Completed)
+                    _elementLookUp[item].Item2.text = $"{item} {scoreValues[item]}";
                 else
-                    _elementLookUp[item.Item1].Item2.text = $"{item.Item1}: -";
+                    _elementLookUp[item].Item2.text = $"{item} -";
 
             _elementLookUp["CombatLevel"].Item2.text = $"Combat Level: {currentHistory.FinalCombatLevel}";
             _elementLookUp["SpiritLevel"].Item2.text = $"Spirit Level: {currentHistory.FinalSpiritLevel}";
