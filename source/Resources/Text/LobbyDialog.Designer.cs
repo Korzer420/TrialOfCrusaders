@@ -22,14 +22,14 @@ namespace TrialOfCrusaders.Resources.Text {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class LittleFoolDialog {
+    internal class LobbyDialog {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal LittleFoolDialog() {
+        internal LobbyDialog() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TrialOfCrusaders.Resources.Text.LittleFoolDialog", typeof(LittleFoolDialog).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TrialOfCrusaders.Resources.Text.LobbyDialog", typeof(LobbyDialog).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,20 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Don&apos;t let a lose discourage you. Maybe you should try a different strategy next time? It&apos;s all a learning experience. Learn. Die. Repeat.  ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... ähnelt.
         /// </summary>
-        internal static string FirstTrialFailed {
+        internal static string ExplanationTrial {
             get {
-                return ResourceManager.GetString("FirstTrialFailed", resourceCulture);
+                return ResourceManager.GetString("ExplanationTrial", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Look at that! You were successful! Great job, little warrior! ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die They say if the signs align, some may experience a similiar fate every time, though they will be marked as heretics for trying to shape destiny... ähnelt.
         /// </summary>
-        internal static string FirstTrialSuccessful {
+        internal static string SeededTutorial {
             get {
-                return ResourceManager.GetString("FirstTrialSuccessful", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die How does one acquire this Void Heart? And what does it do? ähnelt.
-        /// </summary>
-        internal static string FoolDream {
-            get {
-                return ResourceManager.GetString("FoolDream", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Oh, hey there! I&apos;ve heard that someone announced some kind of trial for the greatest adventurers and gladiators around here. Are you ready for the challenge? If so, interact with one of the banners behind me. You might need to prove your worth first before embarking on the more difficult versions. If you&apos;d like to see your progress so far, I&apos;d recommend going into the hole on the right side. ähnelt.
-        /// </summary>
-        internal static string Greeting {
-            get {
-                return ResourceManager.GetString("Greeting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die What are you waiting for? Prove your worth in the trials. If you seek more knowledge about what you should do or how well you&apos;re doing, I&apos;d recommend going down the hole to the right of me ähnelt.
-        /// </summary>
-        internal static string GreetingsRepeat {
-            get {
-                return ResourceManager.GetString("GreetingsRepeat", resourceCulture);
+                return ResourceManager.GetString("SeededTutorial", resourceCulture);
             }
         }
     }

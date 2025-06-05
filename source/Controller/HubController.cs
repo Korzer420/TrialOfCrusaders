@@ -1,4 +1,5 @@
 ﻿using KorzUtils.Helper;
+using Modding;
 using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Enums;
@@ -21,6 +22,8 @@ internal static class HubController
 
     internal static GameObject Tink { get; set; }
 
+    internal static GameObject InspectPrefab { get; set; }
+
     #region Setup
 
     internal static void Initialize()
@@ -31,7 +34,7 @@ internal static class HubController
         On.PlayMakerFSM.OnEnable += FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneChanged;
         On.GameManager.BeginSceneTransition += ModifySceneTransition;
-
+        ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         _enabled = true;
     }
 
@@ -43,6 +46,7 @@ internal static class HubController
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneChanged;
         On.GameManager.BeginSceneTransition -= ModifySceneTransition;
+        ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         _enabled = false;
     }
 
@@ -85,6 +89,7 @@ internal static class HubController
                     .LocateMyFSM("Geo Counter")
                     .SendEvent("TO ZERO");
             }, true);
+            GameObject.Destroy(GameObject.Find("Bronze Trial Board"));
         }
         catch (System.Exception ex)
         {
@@ -140,7 +145,7 @@ internal static class HubController
                 StageController.CurrentRoomIndex = -1;
                 PhaseController.TransitionTo(Phase.Run);
             }
-            else if (info.SceneName == "Room_Colosseum_Bronze")
+            else if (info.SceneName == "Room_Colosseum_Silver")
             {
                 PDHelper.HasDreamNail = false;
                 info.SceneName = "Deepnest_East_10";
@@ -172,6 +177,11 @@ internal static class HubController
                 Object.Destroy(GameObject.Find("plat_float_05"));
                 Object.Destroy(GameObject.Find("white_ash_scenery_0004_5 (3)"));
                 Object.Destroy(GameObject.Find("Inspect Region Ghost"));
+                Object.Destroy(GameObject.Find("ghost_shrines_0001_markoth_corpse_01"));
+                Object.Destroy(GameObject.Find("ghost_shrines_0002_markoth_corpse_02"));
+                Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03"));
+                Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (1)"));
+                Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (2)"));
                 _rolledSeed = Random.Range(100000000, 1000000000);
                 float xPosition = 18.2f;
                 float yPosition = 9.5f;
@@ -183,7 +193,7 @@ internal static class HubController
                     // 4.9f or 9.5f Y
                     GameObject obstacleGameObject = new("Sign");
                     obstacleGameObject.SetActive(false);
-                    obstacleGameObject.transform.position = new(xPosition, yPosition, -0.08f);
+                    obstacleGameObject.transform.position = new(xPosition, yPosition, 0.02f);
                     obstacleGameObject.transform.localScale = new(2f, 2f, 1f);
                     obstacleGameObject.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Mirror");
                     obstacleGameObject.AddComponent<BoxCollider2D>().size = new(1f, 1f);
@@ -211,6 +221,15 @@ internal static class HubController
                         xPosition = 18.2f;
                     }
                 }
+
+                GameObject explanationSprite = new("Tablet Sprite");
+                explanationSprite.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Sign");
+                explanationSprite.transform.position = new(11.95f, 4.5f, 0.01f);
+                explanationSprite.transform.localScale = new(2f, 2f);
+                GameObject explanationTablet = GameObject.Instantiate(InspectPrefab);
+                explanationTablet.SetActive(true);
+                explanationTablet.LocateMyFSM("inspect_region").FsmVariables.FindFsmString("Game Text Convo").Value = "Explanation_Trial";
+                explanationTablet.transform.position = new(11.95f, 4.4f);
                 CoroutineHelper.WaitForHero(() =>
                 {
                     GameObject startTransition = new("Start Transition");
@@ -224,7 +243,20 @@ internal static class HubController
         {
             LogManager.Log("Error on hub scene changed.", ex);
         }
-    } 
+    }
+
+    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    {
+        if (key == "Explanation_Trial")
+            return $"{LobbyDialog.ExplanationTrial}<page>{LobbyDialog.SeededTutorial}";
+        else if (key == "TRIAL_BOARD_SILVER")
+            return "Begin Trial of the Crusader?";
+        else if (key == "LITTLE_FOOL_UNPAID")
+            return "This trial is not available at the moment.";
+        else if (key == "LITTLE_FOOL_DREAM")
+            return LittleFoolDialog.FoolDream;
+        return orig;
+    }
 
     #endregion
 }

@@ -11,7 +11,7 @@ internal class WeakenedEffect : MonoBehaviour
 
     public const string TextColor = "#02e9ed";
 
-    public float Timer { get; set; }
+    public float Timer { get; set; } = 5f;
 
     void Start()
     {

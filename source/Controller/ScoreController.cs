@@ -181,8 +181,6 @@ public static class ScoreController
     {
         textObject.SetActive(false);
         confirmButton.SetActive(false);
-#if DEBUG
-#endif
         Score.Score = PDHelper.Geo;
         Score.EssenceBonus = PDHelper.DreamOrbs;
         List<(string, int)> values = Score.TransformToList();
@@ -197,7 +195,7 @@ public static class ScoreController
         currentText.GetComponent<Text>().fontSize++;
         currentText.SetActive(true);
         _finishedScores = 0;
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < values.Count - 1; i++)
         {
             currentText = UnityEngine.Object.Instantiate(textObject, textObject.transform.parent);
             currentText.transform.localPosition = new(0f, position);
@@ -211,7 +209,8 @@ public static class ScoreController
             }
         }
         // For final score wait a bit
-        yield return new WaitUntil(() => _finishedScores == 8);
+        while (_finishedScores != values.Count - 1)
+            yield return null;
         currentText = UnityEngine.Object.Instantiate(textObject, textObject.transform.parent);
         currentText.transform.localPosition = new(0f, position);
         position -= 50;
@@ -271,7 +270,10 @@ public static class ScoreController
         }
 
         if (value.Item2 == 0)
+        {
+            _finishedScores++;
             yield break;
+        }
         int currentDisplayValue = 0;
         while (currentDisplayValue < value.Item2)
         {

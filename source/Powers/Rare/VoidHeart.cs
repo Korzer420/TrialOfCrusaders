@@ -1,4 +1,5 @@
-﻿using TrialOfCrusaders.Data;
+﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Rare;
@@ -13,5 +14,5 @@ internal class VoidHeart : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    public override bool CanAppear => false;
+    public override bool CanAppear => ScoreController.Score.KillStreakBonus > 30;
 }

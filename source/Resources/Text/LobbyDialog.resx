@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FirstTrialFailed" xml:space="preserve">
-    <value>Don't let a lose discourage you. Maybe you should try a different strategy next time? It's all a learning experience. Learn. Die. Repeat. </value>
+  <data name="ExplanationTrial" xml:space="preserve">
+    <value>Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time...</value>
   </data>
-  <data name="FirstTrialSuccessful" xml:space="preserve">
-    <value>Look at that! You were successful! Great job, little warrior!</value>
-  </data>
-  <data name="FoolDream" xml:space="preserve">
-    <value>How does one acquire this Void Heart? And what does it do?</value>
-  </data>
-  <data name="Greeting" xml:space="preserve">
-    <value>Oh, hey there! I've heard that someone announced some kind of trial for the greatest adventurers and gladiators around here. Are you ready for the challenge? If so, interact with one of the banners behind me. You might need to prove your worth first before embarking on the more difficult versions. If you'd like to see your progress so far, I'd recommend going into the hole on the right side.</value>
-  </data>
-  <data name="GreetingsRepeat" xml:space="preserve">
-    <value>What are you waiting for? Prove your worth in the trials. If you seek more knowledge about what you should do or how well you're doing, I'd recommend going down the hole to the right of me</value>
+  <data name="SeededTutorial" xml:space="preserve">
+    <value>They say if the signs align, some may experience a similiar fate every time, though they will be marked as heretics for trying to shape destiny...</value>
   </data>
 </root>

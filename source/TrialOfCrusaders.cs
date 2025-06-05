@@ -39,6 +39,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ("Hive_03", "Flamebearer Spawn"), // Large Ghost
         ("Ruins1_24_boss", "Mage Lord"),
         ("Ruins1_23", "Mage"),
+        ("Ruins1_23", "Inspect Region"),
         ("Ruins1_23", "Ruins Vial Empty (2)/Active/soul_cache (1)"),
         ("GG_Workshop", "GG_Statue_Vengefly/Inspect"),
         ("Deepnest_East_10", "Dream Gate"),
@@ -147,6 +148,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
         HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
         HubController.Tink.name = "Tink Effect";
+        HubController.InspectPrefab = preloadedObjects["Ruins1_23"]["Inspect Region"];
         Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         Gate.Prefab.name = "Gate";
 
@@ -166,12 +168,13 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             BurnEffect.Prefab,
             // Other
             HubController.Tink,
+            HubController.InspectPrefab,
             Gate.Prefab,
             TreasureManager.Shiny,
             ScoreController.ResultSequencePrefab,
             ScoreController.ScoreboardPrefab,
             SpecialTransition.TransitionPrefab,
-            _coroutineHolder.gameObject
+            _coroutineHolder.gameObject,
         ];
         foreach (GameObject gameObject in preloads)
         {

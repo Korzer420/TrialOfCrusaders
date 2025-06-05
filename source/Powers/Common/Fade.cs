@@ -10,17 +10,20 @@ namespace TrialOfCrusaders.Powers.Common;
 internal class Fade : Power
 {
     private bool _fading;
+    private Coroutine _routine;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
     protected override void Enable()
     {
-        StartRoutine(WaitForFade());
+        _routine = StartRoutine(WaitForFade());
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
     }
 
     protected override void Disable()
     {
+        if (_routine != null)
+            StopRoutine(_routine);
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
     }
 
@@ -46,7 +49,7 @@ internal class Fade : Power
                     || InputHandler.Instance.inputActions.focus.IsPressed || InputHandler.Instance.inputActions.cast.IsPressed
                     || InputHandler.Instance.inputActions.quickMap.IsPressed || !HeroController.instance.acceptingInput)
                     break;
-                if (StageController.CurrentRoom.BossRoom)
+                if (StageController.CurrentRoom.BossRoom || GameManager.instance.IsGamePaused())
                     passedTime = 0f;
             }
             if (passedTime >= 5f)

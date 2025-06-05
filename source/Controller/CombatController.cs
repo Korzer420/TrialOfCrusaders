@@ -213,6 +213,10 @@ internal static class CombatController
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
         DisablePowers();
         ObtainedPowers.Clear();
+        CombatLevel = 0;
+        SpiritLevel = 0;
+        EnduranceLevel = 0;
+        _stageTreasures = 0;
         _enabled = false;
     }
 
@@ -372,7 +376,7 @@ internal static class CombatController
                             scaling = 0.05f;
                         self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
                     }
-                    else if (StageController.CurrentRoomNumber < 10)
+                    else
                         self.hp /= 2;
                     self.gameObject.AddComponent<BaseEnemy>();
                 }
@@ -432,6 +436,8 @@ internal static class CombatController
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetRandom(0f, 100f);
+                    if (StageController.CurrentRoomNumber <= 10)
+                        rolled /= 2;
                     if (rolled <= 4f / (1 + _stageTreasures))
                     {
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
@@ -686,7 +692,7 @@ internal static class CombatController
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
                     hitInstance.DamageDealt += 10 + CombatLevel * 2;
                 }
-
+                
                 if (HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
                 {
                     mantisStyle.Parried = false;
@@ -741,7 +747,7 @@ internal static class CombatController
         }
 
 #if DEBUG
-        //hitInstance.DamageDealt = Math.Max(50, hitInstance.DamageDealt);
+        //hitInstance.DamageDealt = Math.Max(100, hitInstance.DamageDealt);
 #endif
         orig(self, hitInstance);
     }
@@ -989,8 +995,8 @@ internal static class CombatController
             if (HasPower(out FragileGreed greed) && greed.GreedActive)
                 amount *= 3;
             // Greed works differently and should overwrite Interest.
-            if (HasPower<Interest>(out _) && !HasPower<Greed>(out _))
-                amount = Mathf.CeilToInt(amount * 1.2f);
+            if (HasPower<Interest>(out _))
+                amount = Mathf.FloorToInt(amount * 1.2f);
         }
         catch (Exception ex)
         {
@@ -1053,13 +1059,25 @@ internal static class CombatController
                 {
                     self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().trueEvent = self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().falseEvent;
                     self.GetState("Statue Death 2").AdjustTransitions("Return to workshop");
+                    self.GetState("Return to workshop").AddActions(() => {
+                        HeroController.instance.GetComponent<MeshRenderer>().enabled = true;
+                        GameManager.instance.BeginSceneTransition(new()
+                        {
+                            SceneName = "Silksong",
+                            EntryGateName = "left1",
+                            HeroLeaveDirection = GlobalEnums.GatePosition.door,
+                            PreventCameraFadeOut = true,
+                            Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory
+                        });
+                    });
                 }
                 else if (self.FsmName == "Phase Control" && StageController.CurrentRoomNumber >= 20)
                 {
-                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(self.FsmVariables.FindFsmInt("P2 Spike Waves").Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+                    int basePhase2 = self.FsmVariables.FindFsmInt("P2 Spike Waves").Value;
+                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
                 }
             }
             else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss"

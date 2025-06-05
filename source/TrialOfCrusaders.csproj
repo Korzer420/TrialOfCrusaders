@@ -84,6 +84,35 @@
 		</Reference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Resources\Text\LittleFoolDialog.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>LittleFoolDialog.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Text\LobbyDialog.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>LobbyDialog.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Text\LittleFoolDialog.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>LittleFoolDialog.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\LobbyDialog.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>LobbyDialog.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\LobbyDialog.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>LobbyDialog.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 	<Target Name="CopyMod" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)\Mods\$(TargetName)" OverwriteReadOnlyFiles="true" />
 	</Target>

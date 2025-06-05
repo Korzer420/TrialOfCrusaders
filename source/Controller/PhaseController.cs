@@ -62,7 +62,8 @@ public static class PhaseController
         {
             self.ContinueGame();
             PDHelper.CorniferAtHome = true;
-            PDHelper.ColosseumBronzeOpened = true;
+            PDHelper.ColosseumBronzeCompleted = true;
+            PDHelper.ColosseumSilverOpened = true;
             PDHelper.GiantFlyDefeated = true;
             PDHelper.ZoteDead = true;
             PDHelper.GiantBuzzerDefeated = true;
