@@ -1443,7 +1443,7 @@
     "Name": "Mines_11",
     "AllowedEntrances": [ "top1", "bot1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 2,
+    "NeededProgress": 6,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
