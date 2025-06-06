@@ -133,6 +133,7 @@ internal static class CombatController
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         StageController.RoomEnded += StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter += PreventFullSoulSprite;
+        On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter += ScaleSpellDamage;
 
         CreateExtraHudElements();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -159,22 +160,6 @@ internal static class CombatController
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += ControlExtraVesselSpawn;
-    }
-
-    private static void ControlExtraVesselSpawn(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, IntCompare self)
-    {
-        if (self.IsCorrectContext("vessel_orb", "Vessel*", "Appear?"))
-            if (self.Fsm.GameObjectName.Contains("1"))
-                self.integer1.Value = SpiritLevel >= 7 ? 33 : 0;
-            else if (self.Fsm.GameObjectName.Contains("2"))
-                self.integer1.Value = SpiritLevel >= 10 ? 66 : 0;
-            else if (self.Fsm.GameObjectName.Contains("3"))
-                self.integer1.Value = SpiritLevel >= 12 ? 99 : 0;
-            else if (self.Fsm.GameObjectName.Contains("4"))
-                self.integer1.Value = SpiritLevel >= 15 ? 132 : 0;
-            else
-                self.integer1.Value = SpiritLevel >= 18 ? 165 : 0;
-        orig(self);
     }
 
     public static void Unload()
@@ -208,6 +193,7 @@ internal static class CombatController
         _attackMethod?.Dispose();
         StageController.RoomEnded -= StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter -= PreventFullSoulSprite;
+        On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= ScaleSpellDamage;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -374,10 +360,13 @@ internal static class CombatController
                         if ((StageController.CurrentRoomNumber != StageController.CurrentRoomData.Count || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
                             && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
                             scaling = 0.05f;
+                        // Scaling is halved for bigger enemies to make them not massive bullet sponges.
+                        if (self.hp > 50 && !StageController.CurrentRoom.BossRoom)
+                            scaling /= 2f;
                         self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
                     }
                     else
-                        self.hp /= 2;
+                        self.hp = Mathf.CeilToInt(self.hp * 0.5f + 0.025f * StageController.CurrentRoomNumber);
                     self.gameObject.AddComponent<BaseEnemy>();
                 }
             }
@@ -692,7 +681,7 @@ internal static class CombatController
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
                     hitInstance.DamageDealt += 10 + CombatLevel * 2;
                 }
-                
+
                 if (HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
                 {
                     mantisStyle.Parried = false;
@@ -927,7 +916,12 @@ internal static class CombatController
             {
                 // Enemy scaling
                 if (hazardType == 1)
-                    damageAmount += StageController.CurrentRoomNumber / 20 * damageAmount;
+                {
+                    if (StageController.CurrentRoomNumber < 20 || damageAmount == 1)
+                        damageAmount += StageController.CurrentRoomNumber / 20;
+                    else if (damageAmount == 2)
+                        damageAmount += Mathf.CeilToInt(StageController.CurrentRoomNumber / 20 * 1.5f);
+                }
                 else
                     damageAmount += StageController.CurrentRoomNumber / 15;
 
@@ -966,6 +960,9 @@ internal static class CombatController
                         damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
                 }
             }
+            else if (HasPower(out CheatDeath cheatDeath))
+                cheatDeath.Cooldown = 10;
+
         }
         catch (Exception ex)
         {
@@ -1059,7 +1056,8 @@ internal static class CombatController
                 {
                     self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().trueEvent = self.GetState("Tendrils 2").GetFirstAction<GGCheckIfBossSequence>().falseEvent;
                     self.GetState("Statue Death 2").AdjustTransitions("Return to workshop");
-                    self.GetState("Return to workshop").AddActions(() => {
+                    self.GetState("Return to workshop").AddActions(() =>
+                    {
                         HeroController.instance.GetComponent<MeshRenderer>().enabled = true;
                         GameManager.instance.BeginSceneTransition(new()
                         {
@@ -1122,5 +1120,43 @@ internal static class CombatController
         orig(self);
         if (self.IsCorrectContext("Soul Orb Control", "Soul Orb", "MP Full") && SpiritLevel < 6)
             self.Fsm.Event("FINISHED");
+    }
+
+    private static void ControlExtraVesselSpawn(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, IntCompare self)
+    {
+        if (self.IsCorrectContext("vessel_orb", "Vessel*", "Appear?"))
+            if (self.Fsm.GameObjectName.Contains("1"))
+                self.integer1.Value = SpiritLevel >= 7 ? 33 : 0;
+            else if (self.Fsm.GameObjectName.Contains("2"))
+                self.integer1.Value = SpiritLevel >= 10 ? 66 : 0;
+            else if (self.Fsm.GameObjectName.Contains("3"))
+                self.integer1.Value = SpiritLevel >= 12 ? 99 : 0;
+            else if (self.Fsm.GameObjectName.Contains("4"))
+                self.integer1.Value = SpiritLevel >= 15 ? 132 : 0;
+            else
+                self.integer1.Value = SpiritLevel >= 18 ? 165 : 0;
+        orig(self);
+    }
+
+    private static void ScaleSpellDamage(On.HutongGames.PlayMaker.Actions.SetFsmInt.orig_OnEnter orig, SetFsmInt self)
+    {
+        orig(self);
+        try
+        {
+            if (self.IsCorrectContext("Set Damage", null, "Set Damage") && self.Fsm.GameObject.transform.parent != null)
+            {
+                string parentName = self.Fsm.GameObject.transform.parent.name;
+                if (parentName == "Scr Heads" || parentName == "Scr Heads 2"
+                    || parentName == "Q Slam" || parentName == "Q Slam 2")
+                    self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = self.setValue.Value + SpiritLevel * 2;
+            }
+            else if (self.IsCorrectContext("Fireball Control", null, "Set Damage"))
+                self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = self.setValue.Value + SpiritLevel * 2;
+
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("Failed to set spell damage.", ex);
+        }
     }
 }

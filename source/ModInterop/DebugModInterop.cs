@@ -68,6 +68,17 @@ public static class DebugModInterop
             Console.AddLine("Enemy name: " + enemy.name);
     }
 
+    [BindableMethod(name = "Remove Treasure Gates", category = "TrialOfCrusaders")]
+    public static void RemoveTreasureGates()
+    {
+        if (PhaseController.CurrentPhase != Phase.Run)
+        {
+            Console.AddLine("Wrong phase. Cannot open treasure gates.");
+            return;
+        }
+        StageController.EnableExit();
+    }
+
     private static void SpawnShiny(TreasureType type)
     {
         if (PhaseController.CurrentPhase != Phase.Run)

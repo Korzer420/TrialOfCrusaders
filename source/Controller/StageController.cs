@@ -146,8 +146,11 @@ internal static class StageController
 
     internal static void EnableExit()
     {
-        _specialTransitions.First().GetComponent<BoxCollider2D>().isTrigger = true;
-        _specialTransitions.First().WaitForItem = false;
+        if (_specialTransitions.Count > 0)
+        {
+            _specialTransitions.First().GetComponent<BoxCollider2D>().isTrigger = true;
+            _specialTransitions.First().WaitForItem = false;
+        }
     }
 
     public static void PlayClearSound(bool room = true)
@@ -252,8 +255,8 @@ internal static class StageController
                     else
                     {
 #if DEBUG
-                        //if (CurrentRoomNumber == 2)
-                        //    CurrentRoomIndex = 97; 
+                        if (CurrentRoomNumber == 2)
+                            CurrentRoomIndex = 37;
 #endif
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
@@ -339,8 +342,8 @@ internal static class StageController
                 TreasureManager.SpawnShiny(RngManager.GetRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
             else
             {
-                // Special case for spells at 40 and 80. If they have been obtained already, they get replaced by a rare treasure guaranteed.
-                if (CurrentRoomNumber == 40 || CurrentRoomNumber == 80)
+                // Special case for spells at 41 and 81. If they have been obtained already, they get replaced by a rare treasure guaranteed.
+                if (CurrentRoomNumber == 41 || CurrentRoomNumber == 81)
                 {
                     TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoomData[CurrentRoomIndex].Name);
                     if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0 || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)
@@ -508,7 +511,8 @@ internal static class StageController
             || persistentBoolData.sceneName == "Deepnest_01b" && persistentBoolData.id == "One Way Wall"
             || persistentBoolData.sceneName == "Deepnest_East_02" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
-            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass"))
+            || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass")
+            || persistentBoolData.id == "Flamebearer Spawn")
         {
             persistentBoolData.activated = true;
             return persistentBoolData;

@@ -192,9 +192,6 @@ public static class TreasureManager
     {
         GameObject shiny = UnityEngine.Object.Instantiate(Shiny);
         GameObject glow = null;
-        if (treasure == TreasureType.Fireball && CombatController.HasPower<VengefulSpirit>(out _)
-            || treasure == TreasureType.Quake && CombatController.HasPower<DesolateDive>(out _))
-            treasure = TreasureType.RareOrb;
         if ((int)treasure > 6 || (int)treasure < 2)
         {
             if (_glow == null)
@@ -429,6 +426,10 @@ public static class TreasureManager
             }
             if (selectedPowers.Count != 0)
             {
+                if (StageController.CurrentRoomNumber == 0)
+                    selectedPowers[0] = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
+                else if (StageController.CurrentRoomNumber == 1)
+                    selectedPowers[1] = Powers.First(x => x.GetType() == typeof(DesolateDive));
                 if (!rare)
                     BadLuckProtection = Math.Min(BadLuckProtection + 8, 64);
                 for (int i = 0; i < selectedPowers.Count; i++)
@@ -661,7 +662,7 @@ public static class TreasureManager
             description.text = powerName switch
             {
                 "Combat" => "Increases your nail damage. Abilities marked with (C) scale with your combat level.",
-                "Spirit" => "Increases the amount of soul you can have and receive. Abilities marked with (S) scale with your spirit level.",
+                "Spirit" => "Increases the amount of soul you can have and receive. Also increases spell damage. Abilities marked with (S) scale with your spirit level.",
                 "Endurance" => "Increases your maximum and current health. Abilities marked with (E) scale with your endurance level.",
                 _ => "If nothing else, geo is always there."
             };

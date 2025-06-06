@@ -47,6 +47,8 @@ internal class LifebloodOmen : Power
         GameObject ghost;
         int index = DetermineGhost();
         ghost = GameObject.Instantiate(Ghosts[index]);
+        if (ghost.GetComponent<PersistentBoolItem>() is PersistentBoolItem boolItem)
+            Component.Destroy(boolItem);
         ghost.transform.localPosition = HeroController.instance.transform.localPosition + new Vector3(0f, 3f, 0f);
         ghost.name = "Lifeblood Ghost";
         ghost.GetComponent<tk2dSprite>().color = Color.cyan;

@@ -15,7 +15,11 @@ internal class CheatDeath : Power
 
     public override bool CanAppear => !HasPower<InUtterDarkness>();
 
-    protected override void Enable() => StageController.RoomEnded += StageController_RoomCleared;
+    protected override void Enable()
+    {
+        Cooldown = 0;
+        StageController.RoomEnded += StageController_RoomCleared;
+    }
 
     protected override void Disable() => StageController.RoomEnded -= StageController_RoomCleared;
     

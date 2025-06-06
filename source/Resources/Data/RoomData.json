@@ -534,7 +534,7 @@
     "Name": "Fungus2_14",
     "AllowedEntrances": [ "bot3", "top1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 1,
+    "NeededProgress": 3,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
