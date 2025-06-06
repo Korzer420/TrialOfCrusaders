@@ -255,8 +255,6 @@ internal static class StageController
                     else
                     {
 #if DEBUG
-                        if (CurrentRoomNumber == 2)
-                            CurrentRoomIndex = 37;
 #endif
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;

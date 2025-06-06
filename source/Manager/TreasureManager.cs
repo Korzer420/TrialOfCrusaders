@@ -426,10 +426,6 @@ public static class TreasureManager
             }
             if (selectedPowers.Count != 0)
             {
-                if (StageController.CurrentRoomNumber == 0)
-                    selectedPowers[0] = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
-                else if (StageController.CurrentRoomNumber == 1)
-                    selectedPowers[1] = Powers.First(x => x.GetType() == typeof(DesolateDive));
                 if (!rare)
                     BadLuckProtection = Math.Min(BadLuckProtection + 8, 64);
                 for (int i = 0; i < selectedPowers.Count; i++)
