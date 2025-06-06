@@ -366,7 +366,7 @@ internal static class CombatController
                         self.hp = Mathf.CeilToInt(self.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
                     }
                     else
-                        self.hp = Mathf.CeilToInt(self.hp * 0.5f + 0.025f * StageController.CurrentRoomNumber);
+                        self.hp = Mathf.CeilToInt(self.hp * (0.5f + 0.025f * StageController.CurrentRoomNumber));
                     self.gameObject.AddComponent<BaseEnemy>();
                 }
             }
