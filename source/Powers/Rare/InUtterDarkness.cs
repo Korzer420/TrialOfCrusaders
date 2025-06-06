@@ -42,7 +42,7 @@ internal class InUtterDarkness : Power
             shade.SetActive(true);
             shade.name = "Void Shade";
             shade.transform.position = HeroController.instance.transform.position + new Vector3(0f, 2f, 0f);
-            Component.Destroy(shade.GetComponent<BoxCollider2D>());
+            shade.GetComponent<BoxCollider2D>().enabled = false;
             GameObject voidZone = Object.Instantiate(VoidZone.Ring, shade.transform);
             voidZone.transform.SetParent(shade.transform);
             voidZone.transform.localPosition = new(0f, 0f);

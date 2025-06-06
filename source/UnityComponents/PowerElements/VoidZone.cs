@@ -19,7 +19,7 @@ internal class VoidZone : MonoBehaviour
     {
         var collider = gameObject.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
-        gameObject.layer = 17;
+        gameObject.layer = 15;
         collider.radius = 3.5f;
         GetComponent<SpriteRenderer>().color = new(1f, 0f, 1f);
     }
