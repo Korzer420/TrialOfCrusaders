@@ -348,9 +348,12 @@ internal static class StageController
                         TreasureManager.SpawnShiny(TreasureType.RareOrb, new(94.23f, 16.4f), false);
                         return;
                     }
+                    else
+                        _specialTransitions.Last().WaitForItem = true;
                 }
+                else
+                    _specialTransitions.Last().WaitForItem = true;
                 TreasureManager.SpawnShiny((TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoomData[CurrentRoomIndex].Name), new(94.23f, 16.4f), false);
-                _specialTransitions.Last().WaitForItem = true;
             }
         }
     }
