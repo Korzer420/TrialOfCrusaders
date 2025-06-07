@@ -355,6 +355,7 @@ public static class ScoreController
             PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
             HistoryController.TempEntry.Score.Score = PDHelper.Geo;
             HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
+            HistoryController.History ??= [];
             HistoryController.History.Add(HistoryController.TempEntry);
             HistoryController.TempEntry = null;
             GameManager.instance.SaveGame();

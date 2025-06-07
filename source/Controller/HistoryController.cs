@@ -333,7 +333,15 @@ internal static class HistoryController
     {
         try
         {
-            HistoryData currentHistory = History[_pageIndex];
+            HistoryData currentHistory = History.Count != 0 
+                ? History[_pageIndex]
+                : new()
+                {
+                    Score = new()
+                    {
+                        PassedTime = 10f
+                    }
+                };
             _elementLookUp["RunState"].Item2.text = currentHistory.Result.ToString();
             _elementLookUp["RunState"].Item2.color = currentHistory.Result switch
             {

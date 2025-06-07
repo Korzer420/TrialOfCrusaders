@@ -70,7 +70,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
         PhaseController.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
-    } 
+    }
 
     #endregion
 
@@ -78,6 +78,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
+        HistoryController.SetupList(saveData?.OldRunData);
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
@@ -85,7 +86,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             else
                 PhaseController.TransitionTo(Enums.Phase.Inactive);
         }
-        HistoryController.SetupList(saveData?.OldRunData ?? []);
         // ToDo: Support save inside a run.
         //StageController.CurrentRoomIndex = CurrentSaveData.CurrentRoomNumber - 2;
         //List<Power> powers = [];
@@ -124,8 +124,10 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         //    CurrentSaveData = CurrentSaveData.GetFixedData();
         //else
         //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
-        return new() { OldRunData = HistoryController.History };
-    } 
+        if (HistoryController.History != null)
+            return new() { OldRunData = HistoryController.History };
+        return null;
+    }
 
     #endregion
 
@@ -243,7 +245,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     private int EnsureSteelSoul(On.GameManager.orig_GetStatusRecordInt orig, GameManager self, string key)
     {
         int vanillaValue = orig(self, key);
-        
+
         if (key == "RecPermadeathMode")
             return 1;
         return vanillaValue;

@@ -76,13 +76,17 @@ public static class PhaseController
             PDHelper.InfectedKnightDreamDefeated = true;
             PDHelper.AbyssGateOpened = true;
             PDHelper.HegemolDefeated = true;
+            HistoryController.History = [];
         }
+        else 
+            HistoryController.History = null;
     }
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
     {
         TransitionTo(Phase.Inactive);
         yield return orig(self);
+        HistoryController.History = null;
     }
 
     #endregion
