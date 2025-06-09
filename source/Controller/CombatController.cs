@@ -133,6 +133,8 @@ internal static class CombatController
         StageController.RoomEnded += StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter += PreventFullSoulSprite;
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter += ScaleSpellDamage;
+        On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += ControlExtraVesselSpawn;
+        On.SetHP.OnEnter += ApplyHpScaling;
 
         CreateExtraHudElements();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -158,7 +160,6 @@ internal static class CombatController
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
         _enabled = true;
-        On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += ControlExtraVesselSpawn;
     }
 
     public static void Unload()
@@ -193,6 +194,7 @@ internal static class CombatController
         On.GGCheckBoundSoul.OnEnter -= PreventFullSoulSprite;
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= ScaleSpellDamage;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= ControlExtraVesselSpawn;
+        On.SetHP.OnEnter -= ApplyHpScaling;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -336,6 +338,8 @@ internal static class CombatController
     #endregion
 
     #region Enemy Control
+
+    private static int _bossCounter = 0;
 
     private static void ModifyEnemy(On.HealthManager.orig_OnEnable orig, HealthManager self)
     {
@@ -484,7 +488,7 @@ internal static class CombatController
                 if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
                 {
                     if (StageController.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
-                        item.OnDeath += Boss_OnDeath;
+                        item.OnDeath += BossDeathHandling;
                     newEnemies.Add(item);
                 }
             ActiveEnemies = newEnemies;
@@ -553,8 +557,6 @@ internal static class CombatController
         }
     }
 
-    private static int _bossCounter = 0;
-
     private static IEnumerator TrackBosses(On.BossSceneController.orig_Start orig, BossSceneController self)
     {
         try
@@ -566,7 +568,7 @@ internal static class CombatController
                     boss.gameObject.AddComponent<BossFlag>();
                     ScaleEnemy(boss);
                     ActiveEnemies.Add(boss);
-                    boss.OnDeath += Boss_OnDeath;
+                    boss.OnDeath += BossDeathHandling;
                 }
         }
         catch (Exception ex)
@@ -576,7 +578,7 @@ internal static class CombatController
         yield return orig(self);
     }
 
-    private static void Boss_OnDeath()
+    private static void BossDeathHandling()
     {
         try
         {
@@ -607,15 +609,6 @@ internal static class CombatController
         }
     }
 
-    internal static void FireEnemiesCleared()
-    {
-        if (!InCombat)
-            return;
-        LogManager.Log("All required enemies killed.");
-        InCombat = false;
-        EnemiesCleared.Invoke();
-    }
-
     private static void ScaleEnemy(HealthManager enemy)
     {
         if (StageController.CurrentRoomNumber >= 20)
@@ -631,6 +624,26 @@ internal static class CombatController
         }
         else if (enemy.hp > 40 && !StageController.CurrentRoom.BossRoom)
             enemy.hp /= 2;
+    }
+
+    private static void ApplyHpScaling(On.SetHP.orig_OnEnter orig, SetHP self)
+    {
+        if (StageController.CurrentRoomNumber >= 20 && self.IsCorrectContext("hp_scaler", null, null))
+        {
+            self.hp.Value = Mathf.CeilToInt(self.hp.Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.1f));
+            if (!self.Fsm.GameObjectName.Contains("Sentry"))
+                LogManager.Log("Applied hp scaling to unknown enemy: " + self.Fsm.GameObjectName + " please report this to the mod developer.");
+        }
+        orig(self);
+    }
+
+    internal static void FireEnemiesCleared()
+    {
+        if (!InCombat)
+            return;
+        LogManager.Log("All required enemies killed.");
+        InCombat = false;
+        EnemiesCleared.Invoke();
     }
 
     #endregion
