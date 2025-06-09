@@ -29,12 +29,12 @@ public class ScoreData
         set
         {
             _currentKillStreak = value;
-            if (value > _currentKillStreak)
+            if (value > KillStreakBonus)
                 KillStreakBonus = value;
         }
     }
 
-    public int KillStreakBonus { get; internal set; }
+    public int KillStreakBonus { get; set; }
 
     public int Score { get; set; }
 

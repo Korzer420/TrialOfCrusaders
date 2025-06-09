@@ -207,6 +207,7 @@ internal static class StageController
             }
             else
             {
+                CombatController.ActiveEnemies.Clear();
                 if (CurrentRoomNumber > 0)
                 {
                     GatePosition entryPosition;

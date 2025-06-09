@@ -305,7 +305,7 @@ public static class ScoreController
             }
             else if (self.FsmName == "Geo Pool")
             {
-                PDHelper.ColosseumGoldCompleted = true;
+                PDHelper.ColosseumSilverCompleted = true;
                 // Each power decreases the final value. 2 are ignored as spells are forced by room 40 and 80.
                 self.FsmVariables.FindFsmInt("Starting Pool").Value = Math.Max(100, (CombatController.HasPower<VoidHeart>(out _) ? 5000 : 2500) - (CombatController.ObtainedPowers.Count - 2) * 50);
                 self.AddState("Wait for Result", () =>

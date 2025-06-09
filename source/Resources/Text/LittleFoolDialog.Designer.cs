@@ -88,7 +88,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Oh, hey there! I&apos;ve heard that someone announced some kind of trial for the greatest adventurers and gladiators around here. Are you ready for the challenge? If so, interact with one of the banners behind me. You might need to prove your worth first before embarking on the more difficult versions. If you&apos;d like to see your progress so far, I&apos;d recommend going into the hole on the right side. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Oh, hey there! I&apos;ve heard that someone announced some kind of trial for the greatest adventurers and gladiators around here. Are you ready for the challenge? If so, interact with one of the banners behind me. You might need to prove your worth first before embarking on the more difficult versions. If you&apos;d like to see your progress so far, I&apos;d recommend going into the hole on the right side.&lt;page&gt; (Keep in mind that this mod is currently under development, if you encounter any issue/have a suggestion please [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
         internal static string Greeting {
             get {
