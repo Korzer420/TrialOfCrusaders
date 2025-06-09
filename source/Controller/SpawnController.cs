@@ -31,6 +31,7 @@ internal static class SpawnController
         PDHelper.HazardRespawnFacingRight = true;
         On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint += HeroController_LocateSpawnPoint;
+        On.GameManager.GetCurrentMapZone += PreventDreamRespawn;
         _enabled = true;
     }
 
@@ -41,6 +42,7 @@ internal static class SpawnController
         LogManager.Log("Disable Spawn Controller");
         On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint -= HeroController_LocateSpawnPoint;
+        On.GameManager.GetCurrentMapZone -= PreventDreamRespawn;
         _enabled = false;
     }
 
@@ -89,5 +91,13 @@ internal static class SpawnController
             //    StageController.Initialize();
         }
         orig(self, info);
+    }
+
+    private static string PreventDreamRespawn(On.GameManager.orig_GetCurrentMapZone orig, GameManager self)
+    {
+        string value = orig(self);
+        if (value == "GODS_GLORY" || value == "WHITE_PALACE" || value == "DREAM_WORLD")
+            return "CROSSROADS";
+        return value;
     }
 }

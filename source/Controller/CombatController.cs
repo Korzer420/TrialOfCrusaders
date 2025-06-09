@@ -194,6 +194,7 @@ internal static class CombatController
         StageController.RoomEnded -= StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter -= PreventFullSoulSprite;
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= ScaleSpellDamage;
+        On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= ControlExtraVesselSpawn;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -1157,7 +1158,6 @@ internal static class CombatController
             }
             else if (self.IsCorrectContext("Fireball Control", null, "Set Damage"))
                 self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = self.setValue.Value + SpiritLevel * 2;
-
         }
         catch (Exception ex)
         {

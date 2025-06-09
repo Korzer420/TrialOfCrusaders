@@ -546,7 +546,7 @@ internal static class StageController
             || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
-            return CurrentRoomNumber >= 60;
+            return CurrentRoomNumber >= 50;
         return orig;
     }
 
