@@ -199,6 +199,7 @@ internal static class CombatController
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
         DisablePowers();
         ObtainedPowers.Clear();
+        ActiveEnemies.Clear();
         CombatLevel = 0;
         SpiritLevel = 0;
         EnduranceLevel = 0;
@@ -538,7 +539,7 @@ internal static class CombatController
         {
             yield return new WaitForSeconds(1f);
             if (StageController.QuietRoom || !InCombat)
-                continue;
+                yield return new WaitUntil(() => InCombat && !StageController.QuietRoom);
             UpdateEnemies();
         }
     }
@@ -547,20 +548,24 @@ internal static class CombatController
     {
         try
         {
-            int currentCount = ActiveEnemies.Count;
-            // Unity doesn't like the "?" operator.
-            for (int i = 0; i < ActiveEnemies.Count; i++)
-                if (ActiveEnemies[i] == null || ActiveEnemies[i].gameObject == null || !ActiveEnemies[i].gameObject.activeSelf)
-                {
-                    ActiveEnemies.RemoveAt(i);
-                    i--;
-                }
-            if (ActiveEnemies.Count == 0 && !StageController.CurrentRoom.BossRoom)
-                FireEnemiesCleared();
+            if (ActiveEnemies != null && StageController.CurrentRoomIndex >= 0)
+            {
+                int currentCount = ActiveEnemies.Count;
+                // Unity doesn't like the "?" operator.
+                for (int i = 0; i < ActiveEnemies.Count; i++)
+                    if (ActiveEnemies[i] == null || ActiveEnemies[i].gameObject == null
+                        || !ActiveEnemies[i].gameObject.activeSelf || ActiveEnemies[i].hp <= 0)
+                    {
+                        ActiveEnemies.RemoveAt(i);
+                        i--;
+                    }
+                if (ActiveEnemies.Count == 0 && !StageController.CurrentRoom.BossRoom)
+                    FireEnemiesCleared();
+            }
         }
         catch (Exception ex)
         {
-            LogManager.Log("Failed to update enemies", ex);
+            LogManager.Log("Failed to update enemies: ", ex);
         }
     }
 
@@ -862,7 +867,7 @@ internal static class CombatController
             if (isNailArtModifier)
             {
                 HealthManager enemy = self.Target.Value.GetComponent<HealthManager>() ?? self.Target.Value.GetComponentInChildren<HealthManager>();
-                if (enemy?.isDead == false)
+                if (enemy != null && !enemy.isDead && enemy.hp > 0)
                     HeroController.instance.TakeDamage(self.Target.Value, GlobalEnums.CollisionSide.top, 1, 1);
             }
         }

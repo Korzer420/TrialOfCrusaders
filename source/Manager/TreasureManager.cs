@@ -1,4 +1,5 @@
 ﻿using HutongGames.PlayMaker.Actions;
+using IL.InControl;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using System;
@@ -149,6 +150,7 @@ public static class TreasureManager
         new ImprovedMonarchWings(),
         new MercilessPursuit(),
         new HotStreak(),
+        new LuckyCharm(),
         // Rare
         new InUtterDarkness(),
         new ShamanStone(),
@@ -414,12 +416,15 @@ public static class TreasureManager
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
+                (float, float, float) bonusChances = selectedPower.BonusRates;
                 int rolledBonus = RngManager.GetRandom(1, 100);
-                if (rolledBonus <= selectedPower.BonusRates.Item1 && CombatController.CombatLevel < 20)
+                if (selectedPower.Tier != Rarity.Rare && CombatController.HasPower<LuckyCharm>(out _))
+                    bonusChances = new(bonusChances.Item1 * 1.5f, bonusChances.Item2 * 1.5f, bonusChances.Item3 * 2);
+                if (rolledBonus <= bonusChances.Item1 && CombatController.CombatLevel < 20)
                     statBoni.Add("Combat");
-                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 && CombatController.SpiritLevel < 20)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 && CombatController.SpiritLevel < 20)
                     statBoni.Add("Spirit");
-                else if (rolledBonus <= selectedPower.BonusRates.Item1 + selectedPower.BonusRates.Item2 + selectedPower.BonusRates.Item3 && CombatController.EnduranceLevel < 20)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 + bonusChances.Item3 && CombatController.EnduranceLevel < 20)
                     statBoni.Add("Endurance");
                 else
                     statBoni.Add(null);
@@ -637,7 +642,7 @@ public static class TreasureManager
                 bonusText.color = bonusStat switch
                 {
                     "Combat" => Color.red,
-                    "Spirit" => new(0.5f, 0f, 0.5f),
+                    "Spirit" => new(0.957f, 0.012f, 0.988f),
                     _ => Color.green
                 };
                 bonusText.textContainer.size = new(2f, 2f);

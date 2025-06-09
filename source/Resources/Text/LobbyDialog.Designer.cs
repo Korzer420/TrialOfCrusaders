@@ -61,11 +61,20 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;Leave through the left door to begin. ähnelt.
         /// </summary>
         internal static string ExplanationTrial {
             get {
                 return ResourceManager.GetString("ExplanationTrial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Once you&apos;ve embarked on a trial, you can view the progress that your journey ended on here, regardless if you succeeded, failed or forfeited. ähnelt.
+        /// </summary>
+        internal static string HistoryEmpty {
+            get {
+                return ResourceManager.GetString("HistoryEmpty", resourceCulture);
             }
         }
         

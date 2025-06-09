@@ -778,9 +778,9 @@
     "AllowedEntrances": [ "left1" ],
     "BossRoom": false,
     "NeededProgress": 0,
-    "ConditionalProgress": [],
+    "ConditionalProgress": [1, 128],
     "EasyNeededProgress": 1,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [128, 4]
   },
   {
     "Name": "Ruins2_06",
@@ -1065,7 +1065,7 @@
     "Name": "Fungus3_27",
     "AllowedEntrances": [ "left1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
+    "NeededProgress": 1,
     "ConditionalProgress": [],
     "EasyNeededProgress": 1,
     "EasyConditionalProgress": []

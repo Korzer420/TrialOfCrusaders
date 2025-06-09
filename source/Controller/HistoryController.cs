@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using MonoMod.Cil;
 using System;
 using System.Collections;
@@ -9,6 +10,7 @@ using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.Resources.Text;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -48,6 +50,7 @@ internal static class HistoryController
         LogManager.Log("Enable History controller");
         On.PlayMakerFSM.OnEnable += FsmEdits;
         IL.Breakable.Break += PreventTabletBreak;
+        ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         _active = true;
     }
 
@@ -59,6 +62,7 @@ internal static class HistoryController
         LogManager.Log("Disable History controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         IL.Breakable.Break -= PreventTabletBreak;
+        ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         _active = false;
     }
 
@@ -333,7 +337,7 @@ internal static class HistoryController
     {
         try
         {
-            HistoryData currentHistory = History.Count != 0 
+            HistoryData currentHistory = History.Count != 0
                 ? History[_pageIndex]
                 : new()
                 {
@@ -478,8 +482,12 @@ internal static class HistoryController
             {
                 if (self.transform.parent.parent.name == "Plaque_statue_02 (3)")
                 {
-                    self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
-                    self.GetState("Centre?").AdjustTransitions("Show History");
+                    History ??= [];
+                    if (History.Count != 0)
+                    {
+                        self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
+                        self.GetState("Centre?").AdjustTransitions("Show History");
+                    }
                     GameObject blocker = new("Blocker");
                     blocker.transform.position = new(22.85f, 17.39f);
                     blocker.layer = 8;
@@ -530,5 +538,12 @@ internal static class HistoryController
         }
         else
             LogManager.Log("Added entry to history");
+    }
+
+    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    {
+        if (key == "BELIEVE_TAB_04")
+            return LobbyDialog.HistoryEmpty;
+        return orig;
     }
 }

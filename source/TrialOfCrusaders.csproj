@@ -26,7 +26,7 @@
 			<HintPath>$(HollowKnightRefs)\Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="DebugMod">
-		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\DebugMod\DebugMod.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)\Mods\DebugMod\DebugMod.dll</HintPath>
 		</Reference>
 		<Reference Include="KorzUtils">
 			<HintPath>$(HollowKnightRefs)\Mods\KorzUtils\KorzUtils.dll</HintPath>
@@ -62,7 +62,7 @@
 			<HintPath>$(HollowKnightRefs)\UnityEngine.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.AnimationModule">
-		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)\UnityEngine.AnimationModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.AudioModule">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.AudioModule.dll</HintPath>
@@ -77,7 +77,7 @@
 		  <HintPath>$(HollowKnightRefs)\UnityEngine.Physics2DModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.TextRenderingModule">
-		  <HintPath>..\..\..\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)\UnityEngine.TextRenderingModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.UI">
 			<HintPath>$(HollowKnightRefs)\UnityEngine.UI.dll</HintPath>

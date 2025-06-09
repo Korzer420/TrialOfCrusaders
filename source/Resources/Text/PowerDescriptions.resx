@@ -139,7 +139,7 @@
     <value>Spells deal increased damage, but each cast lowers spell damage for the rest of the room.</value>
   </data>
   <data name="Caching" xml:space="preserve">
-    <value>Excessive soul may manifest in a soul sphere. Only one sphere can be active at a time.</value>
+    <value>Excessive soul may manifest in a soul sphere. Touching it will grant all stored soul. Only one sphere can be active at a time.</value>
   </data>
   <data name="CalmMind" xml:space="preserve">
     <value>While at full health, slowing regenerates soul.</value>
@@ -350,6 +350,9 @@
   </data>
   <data name="Longnail" xml:space="preserve">
     <value>Increases the range of your nail.</value>
+  </data>
+  <data name="LuckyCharm" xml:space="preserve">
+    <value>Increases the chance of obtaining bonus stats from abilities.</value>
   </data>
   <data name="MantisStyle" xml:space="preserve">
     <value>An attack after a parry does increased damage.</value>

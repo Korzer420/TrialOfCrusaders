@@ -72,7 +72,6 @@ internal static class StageController
         On.HeroController.FinishedEnteringScene += FinishedEnteringScene;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneAdjustments;
 
-        On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter += Block_Doors;
         CombatController.EnemiesCleared += OnEnemiesCleared;
         HistoryController.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
@@ -101,7 +100,6 @@ internal static class StageController
         On.TransitionPoint.Start -= ModifyTransitionPoint;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneAdjustments;
 
-        On.HutongGames.PlayMaker.Actions.BoolTest.OnEnter -= Block_Doors;
         CombatController.EnemiesCleared -= OnEnemiesCleared;
         HistoryController.CreateEntry -= PassHistoryData;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
@@ -399,20 +397,22 @@ internal static class StageController
 
     private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
-        if (self.FsmName == "Shiny Control" && self.gameObject.name.StartsWith("Shiny Item"))
+        try
         {
-            self.AddState("Grant Geo", () => HeroController.instance.AddGeo(50), FsmTransitionData.FromTargetState("Flash").WithEventName("FINISHED"));
-            self.GetState("Charm?").AdjustTransitions("Grant Geo");
-        }
-        else if (self.gameObject.name == "Ghost Warrior NPC" && (self.FsmName == "Appear" || self.FsmName == "Conversation Control"))
-            self.GetState("Init").AdjustTransitions("Inert");
-        else if (self.FsmName == "Vessel Fragment Control")
-        {
-            self.AddState("Grant Geo", () => { HeroController.instance.AddGeo(100); self.gameObject.SetActive(false); });
-            FsmState state = self.GetState("Get");
-            state.Actions =
-            [
-                state.Actions[0], // Audio Stop
+            if (self.FsmName == "Shiny Control" && self.gameObject.name.StartsWith("Shiny Item"))
+            {
+                self.AddState("Grant Geo", () => HeroController.instance.AddGeo(50), FsmTransitionData.FromTargetState("Flash").WithEventName("FINISHED"));
+                self.GetState("Charm?").AdjustTransitions("Grant Geo");
+            }
+            else if (self.gameObject.name == "Ghost Warrior NPC" && (self.FsmName == "Appear" || self.FsmName == "Conversation Control"))
+                self.GetState("Init").AdjustTransitions("Inert");
+            else if (self.FsmName == "Vessel Fragment Control")
+            {
+                self.AddState("Grant Geo", () => { HeroController.instance.AddGeo(100); self.gameObject.SetActive(false); });
+                FsmState state = self.GetState("Get");
+                state.Actions =
+                [
+                    state.Actions[0], // Audio Stop
                 state.Actions[1],
                 //state.Actions[2], FSM CANCEL
                 //state.Actions[3], Set invincibility
@@ -432,15 +432,15 @@ internal static class StageController
                 //state.Actions[17], Wait 0.6 seconds
                 //state.Actions[18], Set velocity
             ];
-            state.AdjustTransitions("Grant Geo");
-        }
-        else if (self.FsmName == "Heart Container Control")
-        {
-            self.AddState("Grant Geo", () => { HeroController.instance.AddGeo(100); self.gameObject.SetActive(false); });
-            FsmState state = self.GetState("Get");
-            state.Actions =
-            [
-                state.Actions[0],
+                state.AdjustTransitions("Grant Geo");
+            }
+            else if (self.FsmName == "Heart Container Control")
+            {
+                self.AddState("Grant Geo", () => { HeroController.instance.AddGeo(100); self.gameObject.SetActive(false); });
+                FsmState state = self.GetState("Get");
+                state.Actions =
+                [
+                    state.Actions[0],
                 //state.Actions[1], Set invincibility
                 state.Actions[2],
                 //state.Actions[3], Set PD
@@ -460,36 +460,51 @@ internal static class StageController
                 state.Actions[17]
                 //state.Actions[18], Wait
                 //state.Actions[18], Set velocity
-            ];
-            state.AdjustTransitions("Grant Geo");
-        }
-        else if (self.gameObject.name == "Bretta Dazed" && self.FsmName == "Conversation Control")
-        {
-            self.AddState("Grant Geo", () =>
+                ];
+                state.AdjustTransitions("Grant Geo");
+            }
+            else if (self.gameObject.name == "Bretta Dazed" && self.FsmName == "Conversation Control")
             {
-                HeroController.instance.AddGeo(250);
-                self.GetState("Idle").AdjustTransitions("Talk Finish");
-            }, FsmTransitionData.FromTargetState("Talk Finish").WithEventName("FINISHED"));
-            self.GetState("Idle").AdjustTransition("CONVO START", "Grant Geo");
+                self.AddState("Grant Geo", () =>
+                {
+                    HeroController.instance.AddGeo(250);
+                    self.GetState("Idle").AdjustTransitions("Talk Finish");
+                }, FsmTransitionData.FromTargetState("Talk Finish").WithEventName("FINISHED"));
+                self.GetState("Idle").AdjustTransition("CONVO START", "Grant Geo");
+            }
+            else if (self.FsmName == "Control" && self.gameObject.name == "Shiny Item Acid")
+            {
+                self.GetState("Stop Push").AdjustTransitions("Finish");
+                self.GetState("Regain Control").AddActions(() => HeroController.instance.AddGeo(50));
+            }
+            else if (self.FsmName == "Control" && self.gameObject.name == "Crystal Shaman")
+                self.GetState("Init").AdjustTransitions("Broken");
+            else if (self.FsmName == "Get Scream" && self.gameObject.name == "Scream Item")
+                self.GetState("Check").AdjustTransitions("Destroy");
+            else if (self.FsmName == "Door Control" && self.GetState("Idle") is FsmState state)
+                state.ClearTransitions();
         }
-        else if (self.FsmName == "Control" && self.gameObject.name == "Shiny Item Acid")
+        catch (Exception ex)
         {
-            self.GetState("Stop Push").AdjustTransitions("Finish");
-            self.GetState("Regain Control").AddActions(() => HeroController.instance.AddGeo(50));
+            LogManager.Log("Failed to modify fsm: ", ex);
         }
-        else if (self.FsmName == "Control" && self.gameObject.name == "Crystal Shaman")
-            self.GetState("Init").AdjustTransitions("Broken");
-        else if (self.FsmName == "Get Scream" && self.gameObject.name == "Scream Item")
-            self.GetState("Check").AdjustTransitions("Destroy");
         orig(self);
-        if (self.gameObject.name == "Shaman Meeting")
-            UnityEngine.Object.Destroy(self.gameObject);
-        else if (self.gameObject.name == "Station Bell")
-            UnityEngine.Object.Destroy(self.gameObject);
-        else if (self.FsmName == "Challenge Start" && self.gameObject.name == "Challenge Prompt" && self.transform.parent != null && self.transform.parent.name == "Mantis Battle")
-            self.gameObject.SetActive(false);
-        else if (self.FsmName == "Control" && self.gameObject.name == "Hornet Fountain Encounter")
-            UnityEngine.Object.Destroy(self.gameObject);
+        try
+        {
+            if (self.gameObject.name == "Shaman Meeting")
+                UnityEngine.Object.Destroy(self.gameObject);
+            else if (self.gameObject.name == "Station Bell")
+                UnityEngine.Object.Destroy(self.gameObject);
+            else if (self.FsmName == "Challenge Start" && self.gameObject.name == "Challenge Prompt" && self.transform.parent != null && self.transform.parent.name == "Mantis Battle")
+                self.gameObject.SetActive(false);
+            else if (self.FsmName == "Control" && self.gameObject.name == "Hornet Fountain Encounter")
+                UnityEngine.Object.Destroy(self.gameObject);
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("Failed to disable fsm object: " + ex);
+            throw;
+        }
     }
 
     private static PersistentBoolData ForceSceneFlags(On.SceneData.orig_FindMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
@@ -536,13 +551,6 @@ internal static class StageController
     }
 
     private static void PassHistoryData(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
-
-    private static void Block_Doors(On.HutongGames.PlayMaker.Actions.BoolTest.orig_OnEnter orig, BoolTest self)
-    {
-        if (self.IsCorrectContext("Door Control", null, "Can Enter?"))
-            self.boolVariable.Value = self.boolVariable.Value && FinishedEnemies && _specialTransitions.Count == 0;
-        orig(self);
-    }
 
     private static void OnEnemiesCleared()
     {

@@ -112,8 +112,7 @@ internal static class SetupManager
         int dashRoom, clawRoom, wingRoom, cDashRoom, tearRoom, shadeCloakRoom, lanternRoom;
         dashRoom = RngManager.GetRandom(2, 30);
         availableAbilityRooms.RemoveAll(x => x >= dashRoom - 3 && x <= dashRoom + 3);
-        // Claw should be forced fairly early (as it opens many rooms)
-        List<int> clawSelection = [.. availableAbilityRooms.Where(x => x <= 30)];
+        List<int> clawSelection = [.. availableAbilityRooms.Where(x => x <= 30 && x >= 20)];
         clawRoom = clawSelection[RngManager.GetRandom(0, clawSelection.Count - 1)];
         availableAbilityRooms.RemoveAll(x => x >= clawRoom - 3 && x <= clawRoom + 3);
         wingRoom = availableAbilityRooms[RngManager.GetRandom(0, availableAbilityRooms.Count - 1)];
