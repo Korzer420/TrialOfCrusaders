@@ -124,9 +124,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         //    CurrentSaveData = CurrentSaveData.GetFixedData();
         //else
         //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
-        if (HistoryController.History != null)
-            return new() { OldRunData = HistoryController.History };
-        return null;
+        if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
+            return null;
+        return new() { OldRunData = HistoryController.History };
     }
 
     #endregion

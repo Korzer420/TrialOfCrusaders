@@ -37,6 +37,8 @@ public static class PhaseController
         orig(self);
         if (CurrentPhase == Phase.Initialize)
             TransitionTo(Phase.Lobby);
+        else
+            TransitionTo(Phase.Inactive);
     }
 
     private static void SkipStartRoutine(ILContext il)

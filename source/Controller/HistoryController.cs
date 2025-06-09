@@ -171,7 +171,7 @@ internal static class HistoryController
             currentElement.Item1.transform.SetParent(board.transform);
             currentElement.Item1.transform.localPosition = new(-6.75f, -0.75f);
             currentElement.Item2.alignment = TextAlignmentOptions.Left;
-            currentElement.Item2.color = new(0.5f, 0f, 0.5f);
+            currentElement.Item2.color = new(0.957f, 0.012f, 0.988f);
             currentElement.Item2.fontSize = 3;
             Component.Destroy(currentElement.Item1);
 

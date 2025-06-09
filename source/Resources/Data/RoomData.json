@@ -147,8 +147,8 @@
     "Name": "Fungus1_29",
     "AllowedEntrances": [ "right1", "left1" ],
     "BossRoom": false,
-    "NeededProgress": 0,
-    "ConditionalProgress": [ 1, 128 ],
+    "NeededProgress": 128,
+    "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
   },
