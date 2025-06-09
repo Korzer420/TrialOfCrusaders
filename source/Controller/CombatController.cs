@@ -123,7 +123,6 @@ internal static class CombatController
         On.HeroController.FinishedEnteringScene += FinalizeEnemies;
         On.HeroController.Die += OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter += CheckForFailedRun;
-        ModHooks.OnEnableEnemyHook += ForceEnemiesActive;
         HistoryController.CreateEntry += PassHistoryData;
         // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
         IL.BossSequenceController.RestoreBindings += BlockHealthReset;
@@ -184,7 +183,6 @@ internal static class CombatController
         On.HeroController.FinishedEnteringScene -= FinalizeEnemies;
         On.HeroController.Die -= OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter -= CheckForFailedRun;
-        ModHooks.OnEnableEnemyHook -= ForceEnemiesActive;
         HistoryController.CreateEntry -= PassHistoryData;
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
@@ -529,8 +527,6 @@ internal static class CombatController
             LogManager.Log("Failed to finalize enemies", ex);
         }
     }
-
-    private static bool ForceEnemiesActive(GameObject enemy, bool isAlreadyDead) => false;
 
     private static IEnumerator ScanEnemies()
     {
@@ -1108,9 +1104,6 @@ internal static class CombatController
                         });
                 }
             }
-            // Prevent the small centipedes from moving away.
-            else if (self.FsmName == "Dig Away" && self.gameObject.name.Contains("Baby Centipede"))
-                self.GetState("Dig").RemoveFirstAction<SetFsmBool>();
         }
         catch (Exception ex)
         {
