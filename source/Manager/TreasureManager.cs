@@ -362,7 +362,7 @@ public static class TreasureManager
                 HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
         });
         fsm.GetState("Destroy").RemoveAllActions();
-        fsm.GetState("Destroy").AdjustTransitions("Fling?");
+        fsm.GetState("Destroy").AddTransition("FINISHED", "Fling?");
         shiny.SetActive(true);
         fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         shiny.transform.position = position;
@@ -411,7 +411,11 @@ public static class TreasureManager
                         i--;
                         continue;
                     }
-                    selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
+                    // Force treasure test code.
+                    //if (i == 0)
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(FuryOfTheFallen)));
+                    //else
+                        selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();

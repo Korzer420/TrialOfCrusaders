@@ -4,6 +4,7 @@ using System;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
 
@@ -60,8 +61,16 @@ public class ImprovedWeaversong : Power
 
     private void SetHP_OnEnter(On.SetHP.orig_OnEnter orig, SetHP self)
     {
-        if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GameObject.transform.parent?.name?.StartsWith("Weaverling") == true)
-            self.hp.Value -= 2 + Mathf.FloorToInt(CombatController.CombatLevel * 2.5f);
+        try
+        {
+            if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && 
+                self.Fsm.GameObject.transform.parent != null && self.Fsm.GameObject.transform.parent.name.StartsWith("Weaverling"))
+                self.hp.Value -= 2 + Mathf.FloorToInt(CombatController.CombatLevel * 2.5f);
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("failed to modify improved weaversong damage. ",ex);
+        }
         orig(self);
     }
 }

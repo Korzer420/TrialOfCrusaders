@@ -87,15 +87,22 @@ internal static class SetupManager
             availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 100))];
             roomList.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
             // Test specific boss.
-            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
-            //roomList.Insert(1, roomData);
+            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
+            //roomList.Insert(91, roomData);
             // Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Fungus1_29");
+            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Ruins1_03");
+            // Test room at start.
             //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
             //{
             //    Name = selectedRoomData.Name,
             //    SelectedTransition = x
             //}), .. roomList];
+            // Test room insert
+            //roomList.Insert(30, new RoomData()
+            //{
+            //    SelectedTransition = "right1",
+            //    Name = selectedRoomData.Name
+            //});
         }
         catch (Exception exception)
         {

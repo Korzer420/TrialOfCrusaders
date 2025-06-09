@@ -253,15 +253,16 @@ internal static class StageController
                     }
                     else
                     {
-#if DEBUG
-#endif
+                        //// Test for specific room index.
+                        //if (CurrentRoomIndex == 2)
+                        //    CurrentRoomIndex = 90;
+
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
                         if (QuietRoom)
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
