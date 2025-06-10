@@ -5,7 +5,7 @@ using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class FocusedEnergy : Power
+internal class ChannelledEnergy : Power
 {
     public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _) && (CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel) > 0;
 

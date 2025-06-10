@@ -1,6 +1,5 @@
 ﻿using GlobalEnums;
 using HutongGames.PlayMaker;
-using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
@@ -254,8 +253,8 @@ internal static class StageController
                     else
                     {
                         //// Test for specific room index.
-                        //if (CurrentRoomIndex == 2)
-                        //    CurrentRoomIndex = 90;
+                        //if (CurrentRoomIndex == 1)
+                        //    CurrentRoomIndex = 40;
 
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
@@ -485,6 +484,8 @@ internal static class StageController
                 self.GetState("Check").AdjustTransitions("Destroy");
             else if (self.FsmName == "Door Control" && self.GetState("Idle") is FsmState state)
                 state.ClearTransitions();
+            else if (self.FsmName == "Control" && self.gameObject.name == "Cam Lock Control" && self.gameObject.scene.name == "Fungus3_40")
+                self.GetState("Inactive").ClearTransitions();
         }
         catch (Exception ex)
         {

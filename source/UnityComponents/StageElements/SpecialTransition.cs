@@ -114,6 +114,8 @@ internal class SpecialTransition : MonoBehaviour
         CoroutineHelper.WaitFrames(() => { fsm.SendEvent("CONVO START"); }, true, 1);
         if (!LoadIntoDream)
             GameManager.instance.StartCoroutine(RemoveTransitionBlocker());
+        else
+            HeroController.instance.EnterWithoutInput(true);
         Destroy(gameObject);
     }
 

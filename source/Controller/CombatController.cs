@@ -932,7 +932,7 @@ internal static class CombatController
         int currentHealth = PDHelper.Health;
         try
         {
-            if (damageAmount != InstaKillDamage)
+            if (damageAmount != InstaKillDamage && damageAmount != 0)
             {
                 // Enemy scaling
                 if (hazardType == 1)
@@ -980,9 +980,8 @@ internal static class CombatController
                         damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
                 }
             }
-            else if (HasPower(out CheatDeath cheatDeath))
+            else if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))
                 cheatDeath.Cooldown = 10;
-
         }
         catch (Exception ex)
         {

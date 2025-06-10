@@ -22,7 +22,13 @@ internal class ImprovedFocus : Power
         {
             int leftoverSoul = PDHelper.MPCharge + PDHelper.MPReserve;
             int healAmount = (int)Math.Floor((float)leftoverSoul / 33);
-            HeroController.instance.TakeMP(healAmount * 33);
+            if (healAmount >= 2)
+            { 
+                HeroController.instance.TakeMP(66);
+                HeroController.instance.TakeReserveMP((healAmount - 2) * 33);
+            }
+            else
+                HeroController.instance.TakeMP(33);
             if (CharmHelper.EquippedCharm(CharmRef.DeepFocus))
                 healAmount *= 2;
             self.Fsm.Variables.FindFsmInt("Health Increase").Value += healAmount;

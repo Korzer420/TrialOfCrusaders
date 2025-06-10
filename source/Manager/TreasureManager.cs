@@ -83,7 +83,7 @@ public static class TreasureManager
         new BrutalStrikes(),
         new BurstingSoul(),
         new WeakenedHusk(),
-        new FocusedEnergy(),
+        new ChannelledEnergy(),
         new GroundSlam(),
         new Fade(),
         new MantisStyle(),
