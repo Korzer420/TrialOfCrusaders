@@ -33,6 +33,7 @@ internal static class CombatController
     private static ILHook _attackMethod;
     private static Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
+    public const int WeakenedDamageFlag = 250;
     private static int _stageTreasures = 0;
     public const string CombatStatColor = "#fa0000";
     public const string SpiritStatColor = "#f403fc";
@@ -106,35 +107,39 @@ internal static class CombatController
         LogManager.Log("Enable Combat Controller");
 
         // Setup hooks.
-        On.PlayMakerFSM.OnEnable += FsmEdits;
         ModHooks.GetPlayerIntHook += ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
+        ModHooks.AfterTakeDamageHook += ModifyDamageTaken;
+        ModHooks.SoulGainHook += ModifySoulGain;
+
         On.HealthManager.TakeDamage += ModifyDealtDamage;
         On.HealthManager.OnEnable += ModifyEnemy;
         On.HealthManager.Die += OnEnemyDeath;
-        IL.HeroController.Move += ModifyMovementSpeed;
-        IL.HeroController.Attack += ModifyAttackDuration;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += ModifyOtherDealtDamage;
-        ModHooks.SoulGainHook += ModifySoulGain;
-        On.HeroController.TakeDamage += ModifyTakenDamage;
+        On.HeroController.TakeDamage += OnTakeDamage;
         On.HeroController.AddGeo += ModifyGeoAdd;
-        IL.HeroController.MaxHealth += BlockCharmHeal;
         On.HeroController.CharmUpdate += FlagCharmHeal;
         On.HeroController.FinishedEnteringScene += FinalizeEnemies;
         On.HeroController.Die += OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter += CheckForFailedRun;
-        HistoryController.CreateEntry += PassHistoryData;
-        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
-        IL.BossSequenceController.RestoreBindings += BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter += AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter += MoveLifebloodInFront;
         On.BossSceneController.Start += TrackBosses;
-        _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
-        StageController.RoomEnded += StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter += PreventFullSoulSprite;
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter += ScaleSpellDamage;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += ControlExtraVesselSpawn;
+        On.PlayMakerFSM.OnEnable += FsmEdits;
         On.SetHP.OnEnter += ApplyHpScaling;
+
+        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
+        IL.BossSequenceController.RestoreBindings += BlockHealthReset;
+        IL.HeroController.MaxHealth += BlockCharmHeal;
+        IL.HeroController.Move += ModifyMovementSpeed;
+        IL.HeroController.Attack += ModifyAttackDuration;
+        _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
+
+        StageController.RoomEnded += StageController_RoomEnded;
+        HistoryController.CreateEntry += PassHistoryData;
 
         CreateExtraHudElements();
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
@@ -167,34 +172,41 @@ internal static class CombatController
         if (!_enabled)
             return;
         LogManager.Log("Disable Combat Controller");
-        On.PlayMakerFSM.OnEnable -= FsmEdits;
+
+        // Setup hooks.
         ModHooks.GetPlayerIntHook -= ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
+        ModHooks.AfterTakeDamageHook -= ModifyDamageTaken;
+        ModHooks.SoulGainHook -= ModifySoulGain;
+
         On.HealthManager.TakeDamage -= ModifyDealtDamage;
         On.HealthManager.OnEnable -= ModifyEnemy;
         On.HealthManager.Die -= OnEnemyDeath;
-        IL.HeroController.Move -= ModifyMovementSpeed;
-        IL.HeroController.Attack -= ModifyAttackDuration;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= ModifyOtherDealtDamage;
-        ModHooks.SoulGainHook -= ModifySoulGain;
-        On.HeroController.TakeDamage -= ModifyTakenDamage;
+        On.HeroController.TakeDamage -= OnTakeDamage;
         On.HeroController.AddGeo -= ModifyGeoAdd;
-        IL.HeroController.MaxHealth -= BlockCharmHeal;
         On.HeroController.CharmUpdate -= FlagCharmHeal;
         On.HeroController.FinishedEnteringScene -= FinalizeEnemies;
         On.HeroController.Die -= OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter -= CheckForFailedRun;
-        HistoryController.CreateEntry -= PassHistoryData;
-        IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
         On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.OnEnter -= AdjustLifebloodPosition;
         On.HutongGames.PlayMaker.Actions.SetPosition.OnEnter -= MoveLifebloodInFront;
         On.BossSceneController.Start -= TrackBosses;
-        _attackMethod?.Dispose();
-        StageController.RoomEnded -= StageController_RoomEnded;
         On.GGCheckBoundSoul.OnEnter -= PreventFullSoulSprite;
         On.HutongGames.PlayMaker.Actions.SetFsmInt.OnEnter -= ScaleSpellDamage;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= ControlExtraVesselSpawn;
+        On.PlayMakerFSM.OnEnable -= FsmEdits;
         On.SetHP.OnEnter -= ApplyHpScaling;
+
+        // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
+        IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
+        IL.HeroController.MaxHealth -= BlockCharmHeal;
+        IL.HeroController.Move -= ModifyMovementSpeed;
+        IL.HeroController.Attack -= ModifyAttackDuration;
+        _attackMethod?.Dispose();
+
+        StageController.RoomEnded -= StageController_RoomEnded;
+        HistoryController.CreateEntry -= PassHistoryData;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -927,58 +939,19 @@ internal static class CombatController
         return amount;
     }
 
-    private static void ModifyTakenDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+    private static void OnTakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
         int currentHealth = PDHelper.Health;
         try
         {
-            if (damageAmount != InstaKillDamage && damageAmount != 0)
+            if (damageAmount != InstaKillDamage && damageAmount != 0 && sourceObject != null)
             {
-                // Enemy scaling
-                if (hazardType == 1)
-                {
-                    if (StageController.CurrentRoomNumber < 20 || damageAmount == 1)
-                        damageAmount += StageController.CurrentRoomNumber / 20;
-                    else if (damageAmount == 2)
-                        damageAmount += Mathf.CeilToInt(StageController.CurrentRoomNumber / 20 * 1.5f);
-                }
-                else
-                    damageAmount += StageController.CurrentRoomNumber / 15;
-
-                if (HasPower<AchillesVerse>(out _))
-                {
-                    if (hazardType > 1 && hazardType < 5)
-                        damageAmount = InstaKillDamage;
-                    else
-                        damageAmount = damageAmount.LowerPositive(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
-                }
-
-                if (hazardType > 1 && hazardType < 5)
-                {
-                    if (HasPower<ImprovedCaringShell>(out _))
-                    {
-                        if (!InCombat)
-                            damageAmount = 0;
-                        else
-                            damageAmount = damageAmount.LowerPositive(2 + EnduranceLevel / 4);
-                    }
-                    else if (HasPower<CaringShell>(out _))
-                        damageAmount = damageAmount.LowerPositive(1);
-                }
-
-                if (HasPower<Sturdy>(out _))
-                    damageAmount = damageAmount.LowerPositive(1);
-
-                if (HasPower<ShiningBound>(out _))
-                    damageAmount = Mathf.CeilToInt(damageAmount / 2f);
-                if (sourceObject != null)
-                {
-                    HealthManager enemyObject = sourceObject.GetComponent<HealthManager>();
-                    if (enemyObject == null && sourceObject.transform.parent != null)
-                        enemyObject = sourceObject.GetComponentInParent<HealthManager>();
-                    if (enemyObject != null && enemyObject.GetComponent<WeakenedEffect>())
-                        damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
-                }
+                HealthManager enemyObject = sourceObject.GetComponent<HealthManager>();
+                if (enemyObject == null && sourceObject.transform.parent != null)
+                    enemyObject = sourceObject.GetComponentInParent<HealthManager>();
+                // To keep track of the weakened effect in the modhook, we assign a specific damage value.
+                if (enemyObject != null && enemyObject.GetComponent<WeakenedEffect>())
+                    damageAmount += WeakenedDamageFlag;
             }
             else if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))
                 cheatDeath.Cooldown = 10;
@@ -1032,6 +1005,72 @@ internal static class CombatController
             HeroController.instance.AddHealth(3 + EnduranceLevel / 2);
             HeroController.instance.StartCoroutine(UpdateUI());
         }
+    }
+
+    private static int ModifyDamageTaken(int hazardType, int damageAmount)
+    {
+        if (damageAmount != InstaKillDamage && damageAmount != 0)
+        {
+            if (HasPower(out PaleShell shell) && shell.Shielded)
+            {
+                shell.Shielded = false;
+                return 0;
+            }
+            // Weakened damage can be classified by a special damage amount, as we don't have access to the source of damage here.
+            bool isWeakenedDamage = damageAmount > WeakenedDamageFlag;
+            if (isWeakenedDamage)
+                damageAmount -= WeakenedDamageFlag;
+
+            // Enemy scaling
+            if (hazardType == 1)
+            {
+                if (StageController.CurrentRoomNumber < 20 || damageAmount == 1)
+                    damageAmount += StageController.CurrentRoomNumber / 20;
+                else if (damageAmount == 2)
+                    damageAmount += Mathf.CeilToInt(StageController.CurrentRoomNumber / 20 * 1.5f);
+            }
+            else
+            {
+                // Hazard scaling
+                damageAmount += StageController.CurrentRoomNumber / 10;
+                if (HasPower<ImprovedCaringShell>(out _))
+                {
+                    if (!InCombat)
+                        damageAmount = 0;
+                    else
+                        damageAmount -= 2 + EnduranceLevel / 5;
+                }
+                else if (HasPower<CaringShell>(out _))
+                    damageAmount -= 1 + EnduranceLevel / 8;
+                if (damageAmount == 0)
+                    return 0;
+            }
+
+            if (HasPower<AchillesVerse>(out _))
+            {
+                if (hazardType > 1 && hazardType < 5)
+                    damageAmount = InstaKillDamage;
+                else
+                    damageAmount = damageAmount.LowerPositive(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
+            }
+
+            if (damageAmount != InstaKillDamage)
+            {
+                if (HasPower<Sturdy>(out _))
+                    damageAmount = damageAmount.LowerPositive(1);
+
+                if (HasPower<ShiningBound>(out _))
+                    damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+
+                if (isWeakenedDamage)
+                    damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
+            }
+
+        }
+        // Prevent cheat death from triggering on instant kill effects.
+        if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))
+            cheatDeath.Cooldown = 10;
+        return damageAmount;
     }
 
     #endregion

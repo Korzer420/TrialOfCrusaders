@@ -413,7 +413,7 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(FuryOfTheFallen)));
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(CaringShell)));
                     //else
                         selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }

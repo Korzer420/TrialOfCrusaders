@@ -169,7 +169,10 @@ internal static class HubController
         try
         {
             if (arg1.name == "Room_Colosseum_01")
+            { 
                 SetupTransitions();
+                CoroutineHelper.WaitForHero(GameManager.instance.SaveGame, true);
+            }
             else if (arg1.name == "Deepnest_East_10")
             {
                 _seedTablets.Clear();
