@@ -75,7 +75,7 @@ public static class TreasureManager
         new Acrobat(),
         new Recklessness(),
         new Revenge(),
-        new DramaticEntrance(),
+        new IntimidatingShout(),
         new Versatility(),
         new CalmMind(),
         new Perfection(),
@@ -413,7 +413,7 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(CaringShell)));
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(IntimidatingShout)));
                     //else
                         selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
@@ -435,7 +435,7 @@ public static class TreasureManager
             if (selectedPowers.Count != 0)
             {
                 if (!rare)
-                    BadLuckProtection = Math.Min(BadLuckProtection + 8, 64);
+                    BadLuckProtection = Math.Min(BadLuckProtection + 4, 64);
                 for (int i = 0; i < selectedPowers.Count; i++)
                     fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value = string.IsNullOrEmpty(statBoni[i])
                             ? selectedPowers[i].Name
@@ -495,6 +495,8 @@ public static class TreasureManager
         for (int i = 0; i < optionAmount; i++)
             layer = CreateOption(i, powerOverlay.transform, fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value);
         CreateArrows(powerOverlay.transform, layer);
+
+        CreateForfeitOption(powerOverlay.transform);
 
         (SpriteRenderer, TextMeshPro) titleInfo = TextManager.CreateUIObject("Title");
         GameObject titleText = titleInfo.Item1.gameObject;
@@ -720,6 +722,17 @@ public static class TreasureManager
         rotateRightArrow.layer = layer;
     }
 
+    private static void CreateForfeitOption(Transform parent)
+    {
+        (SpriteRenderer, TextMeshPro) optionPair = TextManager.CreateUIObject("Forfeit power");
+        GameObject option = optionPair.Item2.gameObject;
+        option.transform.SetParent(parent);
+        GameObject.Destroy(optionPair.Item1);
+        optionPair.Item2.text = "Forfeit selection";
+        option.transform.position = new(-13.9f, -6f);
+        optionPair.Item2.fontSize = 3;
+    }
+
     private static IEnumerator SelectPower(GameObject powerSelector, PlayMakerFSM shinyFsm, int amount)
     {
         GameObject leftArrow = powerSelector.transform.Find("MoveLeft").gameObject;
@@ -735,7 +748,7 @@ public static class TreasureManager
             else if (InputHandler.Instance.inputActions.left.IsPressed)
             {
                 powerSlot--;
-                if (powerSlot <= -1)
+                if (powerSlot == -2)
                     powerSlot = amount - 1;
                 inputPause = true;
             }
@@ -743,11 +756,23 @@ public static class TreasureManager
             {
                 powerSlot++;
                 if (powerSlot >= amount)
-                    powerSlot = 0;
+                    powerSlot = -1;
                 inputPause = true;
             }
-            leftArrow.transform.localPosition = new(-9f + powerSlot * 8.5f, 1.7f);
-            rightArrow.transform.localPosition = new(-3.4f + powerSlot * 8.5f, 1.7f);
+            if (powerSlot != -1)
+            {
+                leftArrow.transform.localPosition = new(-9f + powerSlot * 8.5f, 1.7f);
+                rightArrow.transform.localPosition = new(-3.4f + powerSlot * 8.5f, 1.7f);
+                leftArrow.transform.localScale = new(3f, 3f);
+                rightArrow.transform.localScale = new(3f, 3f);
+            }
+            else
+            {
+                leftArrow.transform.localPosition = new(-15f, -5.2f);
+                rightArrow.transform.localPosition = new(-9.25f, -5.2f);
+                leftArrow.transform.localScale = new(1f, 1f);
+                rightArrow.transform.localScale = new(1f, 1f);
+            }
             if (inputPause)
             {
                 yield return new WaitForSeconds(0.3f);
@@ -755,39 +780,42 @@ public static class TreasureManager
             }
         }
         UnityEngine.Object.Destroy(leftArrow.transform.parent.gameObject);
-        string pickedValue = shinyFsm.FsmVariables.FindFsmString("Option " + (powerSlot + 1)).Value;
-        Power pickedPower = null;
-        string pickedStat = null;
-        if (pickedValue.Contains("_"))
+        if (powerSlot != -1)
         {
-            pickedPower = Powers.FirstOrDefault(x => x.Name == pickedValue.Split('_')[0]);
-            pickedStat = pickedValue.Split('_')[1];
-        }
-        else
-            pickedPower = Powers.FirstOrDefault(x => x.Name == pickedValue);
-
-        if (pickedPower == null)
-            pickedStat = pickedValue;
-        if (pickedStat != null)
-            switch (pickedStat)
+            string pickedValue = shinyFsm.FsmVariables.FindFsmString("Option " + (powerSlot + 1)).Value;
+            Power pickedPower = null;
+            string pickedStat = null;
+            if (pickedValue.Contains("_"))
             {
-                case "Combat":
-                    GrantCombatLevel();
-                    break;
-                case "Spirit":
-                    GrantSpiritLevel();
-                    break;
-                case "Endurance":
-                    GrantEnduranceLevel();
-                    break;
-                default:
-                    HeroController.instance.AddGeo(200);
-                    break;
+                pickedPower = Powers.FirstOrDefault(x => x.Name == pickedValue.Split('_')[0]);
+                pickedStat = pickedValue.Split('_')[1];
             }
-        if (pickedPower != null)
-        {
-            CombatController.ObtainedPowers.Add(pickedPower);
-            pickedPower.EnablePower();
+            else
+                pickedPower = Powers.FirstOrDefault(x => x.Name == pickedValue);
+
+            if (pickedPower == null)
+                pickedStat = pickedValue;
+            if (pickedStat != null)
+                switch (pickedStat)
+                {
+                    case "Combat":
+                        GrantCombatLevel();
+                        break;
+                    case "Spirit":
+                        GrantSpiritLevel();
+                        break;
+                    case "Endurance":
+                        GrantEnduranceLevel();
+                        break;
+                    default:
+                        HeroController.instance.AddGeo(200);
+                        break;
+                }
+            if (pickedPower != null)
+            {
+                CombatController.ObtainedPowers.Add(pickedPower);
+                pickedPower.EnablePower();
+            }
         }
         shinyFsm.SendEvent("CHARM");
         if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)

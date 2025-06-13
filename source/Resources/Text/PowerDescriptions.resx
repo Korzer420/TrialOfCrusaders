@@ -195,8 +195,8 @@
   <data name="Desperation" xml:space="preserve">
     <value>Focus speed increases with missing health.</value>
   </data>
-  <data name="DramaticEntrance" xml:space="preserve">
-    <value>Entering a room deals a bit of damage to all enemies.</value>
+  <data name="IntimidatingShout" xml:space="preserve">
+    <value>Entering a room applies weakened to all enemies.</value>
   </data>
   <data name="DreamNail" xml:space="preserve">
     <value>Unlocks the dream nail to gather soul from hit foes.</value>

@@ -2,10 +2,12 @@
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.UnityComponents.Debuffs;
 
 namespace TrialOfCrusaders.Powers.Common;
 
-internal class DramaticEntrance : Power
+internal class IntimidatingShout : Power
 {
     private MethodInfo _takeDamage;
 
@@ -24,18 +26,15 @@ internal class DramaticEntrance : Power
     private void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
-        HitInstance hitInstance = new()
+        try
         {
-            AttackType = AttackTypes.Generic,
-            Source = HeroController.instance?.gameObject,
-            Multiplier = 1,
-            IsExtraDamage = true,
-            DamageDealt = 10 + CombatController.CombatLevel * 2
-        };
-        foreach (HealthManager enemy in CombatController.ActiveEnemies)
+            for (int i = 0; i < CombatController.ActiveEnemies.Count; i++)
+                if (CombatController.ActiveEnemies[i] != null && CombatController.ActiveEnemies[i].gameObject.activeSelf)
+                    CombatController.ActiveEnemies[i].gameObject.AddComponent<WeakenedEffect>().Timer = 5 + CombatController.CombatLevel;
+        }
+        catch (System.Exception ex)
         {
-            if (enemy != null)
-                _takeDamage.Invoke(enemy, [hitInstance]);
+            LogManager.Log("Failed to setup weakened effect. ", ex);
         }
     }
 }

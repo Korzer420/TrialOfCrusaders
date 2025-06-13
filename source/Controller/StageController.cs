@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
@@ -26,6 +27,7 @@ internal static class StageController
     private static List<SpecialTransition> _specialTransitions = [];
     private static int _treasureRoomCooldown = 0;
     private static (string, string) _intendedDestination = new();
+    private static TextMeshPro _roomCounter;
 
     #region Properties
 
@@ -74,6 +76,13 @@ internal static class StageController
         CombatController.EnemiesCleared += OnEnemiesCleared;
         HistoryController.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
+        var textElement = TextManager.CreateUIObject("RoomCounter");
+        Component.Destroy(textElement.Item1);
+        _roomCounter = textElement.Item2;
+        _roomCounter.text = "Current room: 0";
+        _roomCounter.transform.position = new(-14.5f, -9);
+        _roomCounter.fontSize = 3;
+        GameObject.DontDestroyOnLoad(_roomCounter.transform.parent);
 
         _enabled = true;
     }
@@ -110,6 +119,7 @@ internal static class StageController
         _specialTransitions.Clear();
         CurrentRoomData.Clear();
         FinishedEnemies = false;
+        GameObject.Destroy(_roomCounter.gameObject);
         _enabled = false;
     }
 
@@ -277,16 +287,15 @@ internal static class StageController
                     // Not later than 115.
                     // Not earlier than 10.
                     // Not after/before a quiet room.
-                    // Not between 37-43 and 77-83 (40 and 80 could be rare treasure rooms if the spells there have been obtained already.)
-                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= CurrentRoomData.Count - 5 && (CurrentRoomNumber <= 37 || CurrentRoomNumber >= 43) && (CurrentRoomNumber <= 77 || CurrentRoomNumber >= 83)
+                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= CurrentRoomData.Count - 5
                         && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
                     {
-                        float chance = 0.5f;
+                        float chance = 1f;
                         if (CombatController.HasPower<Damocles>(out _))
-                            chance += 4.5f;
+                            chance += 6f;
                         if (CombatController.HasPower<TreasureHunter>(out _))
-                            chance += 2.5f;
-                        UpcomingTreasureRoom = chance >= RngManager.GetRandom(1f, 100f);
+                            chance += 2f;
+                        UpcomingTreasureRoom = chance >= RngManager.GetRandom(0f, 100f);
                         if (UpcomingTreasureRoom)
                             _treasureRoomCooldown = 6;
                     }
@@ -364,7 +373,6 @@ internal static class StageController
         // Already triggered, we skip this.
         if (_intendedDestination.Item1 == null)
             return;
-        LogManager.Log("Current room number: " + CurrentRoomNumber);
         //if (Spawner.ContinueSpawn)
         //    return;
         _intendedDestination.Item1 = null;
@@ -377,8 +385,11 @@ internal static class StageController
             if (marmuGate != null)
                 GameObject.Destroy(marmuGate);
         }
+        _roomCounter.text = $"Current room: {CurrentRoomNumber}";
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
+        else if (QuietRoom && !CurrentRoom.IsQuietRoom)
+            _roomCounter.text = "Treasure room";
         if (!CombatController.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");

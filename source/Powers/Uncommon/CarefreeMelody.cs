@@ -26,7 +26,6 @@ internal class CarefreeMelody : Power
         IL.HeroController.TakeDamage += HeroController_TakeDamage_IL;
         On.HeroController.TakeDamage += HeroController_TakeDamage;
         CharmHelper.EnsureEquipCharm(CharmRef.CarefreeMelody);
-        PDHelper.HasCharm = true;
     }
 
     protected override void Disable() 
