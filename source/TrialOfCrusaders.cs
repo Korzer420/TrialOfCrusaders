@@ -34,9 +34,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ("Tutorial_01", "_Props/Chest"),
         ("Deepnest_43", "Mantis Heavy Flyer"),
         ("Crossroads_ShamanTemple", "_Enemies/Zombie Runner"),
-        ("Ruins1_28", "Flamebearer Spawn"), // Small Ghost
-        ("RestingGrounds_06", "Flamebearer Spawn"), // Medium Ghost
-        ("Hive_03", "Flamebearer Spawn"), // Large Ghost
         ("Ruins1_24_boss", "Mage Lord"),
         ("Ruins1_23", "Mage"),
         ("Ruins1_23", "Inspect Region"),
@@ -157,7 +154,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         GameObject[] preloads =
         [
             // Power prefabs
-            ..LifebloodOmen.Ghosts,
             GroundSlam.Shockwave,
             GreaterMind.Orb,
             Caching.SoulCache,
@@ -189,21 +185,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
 
     private void SetupPowerPrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
     {
-        GameObject ghost = preloadedObjects["Ruins1_28"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
-        ghost = preloadedObjects["RestingGrounds_06"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
-        ghost = preloadedObjects["Hive_03"]["Flamebearer Spawn"]
-            .LocateMyFSM("Spawn Control").FsmVariables.FindFsmGameObject("Grimmkin Obj").Value;
-        GameObject.DontDestroyOnLoad(ghost);
-        LifebloodOmen.Ghosts.Add(ghost);
-
         GroundSlam.Shockwave = preloadedObjects["Ruins1_24_boss"]["Mage Lord"].LocateMyFSM("Mage Lord")
             .GetState("Quake Waves")
             .GetFirstAction<SpawnObjectFromGlobalPool>()

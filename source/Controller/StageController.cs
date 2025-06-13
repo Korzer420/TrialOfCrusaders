@@ -497,6 +497,17 @@ internal static class StageController
                 state.ClearTransitions();
             else if (self.FsmName == "Control" && self.gameObject.name == "Cam Lock Control" && self.gameObject.scene.name == "Fungus3_40")
                 self.GetState("Inactive").ClearTransitions();
+            else if (self.FsmName == "Bench Control Spider")
+            {
+                // Spawn secret shiny.
+                GameObject shiny = TreasureManager.SpawnShiny(TreasureType.RareOrb, new(64.04f, 113.4f), false);
+                self.GetState("Sit Start").AddActions(() =>
+                {
+                    if (shiny != null)
+                        GameObject.Destroy(shiny);
+                });
+            }
+            // 64.04, 113.4
         }
         catch (Exception ex)
         {
@@ -539,7 +550,8 @@ internal static class StageController
             || persistentBoolData.sceneName == "Deepnest_East_02" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass")
-            || persistentBoolData.id == "Flamebearer Spawn")
+            || persistentBoolData.id == "Flamebearer Spawn"
+            || persistentBoolData.sceneName == "Deepnest_Spider_Town" && persistentBoolData.id == "Collapser Small (12)")
         {
             persistentBoolData.activated = true;
             return persistentBoolData;
@@ -561,6 +573,8 @@ internal static class StageController
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
             return CurrentRoomNumber >= 50;
+        else if (name == nameof(PlayerData.spiderCapture))
+            return false;
         return orig;
     }
 

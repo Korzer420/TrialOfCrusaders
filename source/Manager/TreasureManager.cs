@@ -104,7 +104,6 @@ public static class TreasureManager
         new Vanish(),
         new Damocles(),
         new PolarityShift(),
-        new LifebloodOmen(),
         new DeepBreath(),
         new SeethingLifeblood(),
         new Hiveblood(),
@@ -189,7 +188,7 @@ public static class TreasureManager
         UnityEngine.Object.DontDestroyOnLoad(Shiny);
     }
 
-    internal static void SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
+    internal static GameObject SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
     {
         GameObject shiny = UnityEngine.Object.Instantiate(Shiny);
         GameObject glow = null;
@@ -367,6 +366,7 @@ public static class TreasureManager
         fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         shiny.transform.position = position;
         fsm.FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
+        return shiny;
     }
 
     private static int RollSelection(PlayMakerFSM fsm, TreasureType treasureType)
@@ -412,9 +412,9 @@ public static class TreasureManager
                         continue;
                     }
                     // Force treasure test code.
-                    //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(IntimidatingShout)));
-                    //else
+                    if (i == 0)
+                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Cocoon)));
+                    else
                         selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());

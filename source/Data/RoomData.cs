@@ -30,6 +30,8 @@ public class RoomData
     [JsonIgnore]
     public bool IsQuietRoom => SelectedTransition == "Warp";
 
+    public bool BigRoom { get; set; }
+
     #endregion
 
     #region Methods

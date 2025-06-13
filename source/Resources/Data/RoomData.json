@@ -15,7 +15,8 @@
     "NeededProgress": 2,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Cliffs_02",
@@ -1167,7 +1168,8 @@
     "NeededProgress": 2,
     "ConditionalProgress": [],
     "EasyNeededProgress": 5,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Deepnest_33",
@@ -1194,20 +1196,12 @@
     "NeededProgress": 130,
     "ConditionalProgress": [ 1, 128 ],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Deepnest_02",
     "AllowedEntrances": [ "left1", "left2" ],
-    "BossRoom": false,
-    "NeededProgress": 2,
-    "ConditionalProgress": [],
-    "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
-  },
-  {
-    "Name": "Deepnest_36",
-    "AllowedEntrances": [ "left1" ],
     "BossRoom": false,
     "NeededProgress": 2,
     "ConditionalProgress": [],
@@ -1232,15 +1226,6 @@
     "EasyNeededProgress": 129,
     "EasyConditionalProgress": []
   },
-  //{
-  //  "Name": "Abyss_03_c",
-  //  "AllowedEntrances": [ "top1" ],
-  //  "BossRoom": false,
-  //  "NeededProgress": 2,
-  //  "ConditionalProgress": [],
-  //  "EasyNeededProgress": 0,
-  //  "EasyConditionalProgress": []
-  //},
   {
     "Name": "Deepnest_East_01",
     "AllowedEntrances": [ "top1", "right1", "bot1" ],
@@ -1383,7 +1368,8 @@
     "NeededProgress": 130,
     "ConditionalProgress": [],
     "EasyNeededProgress": 1,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Deepnest_East_08",

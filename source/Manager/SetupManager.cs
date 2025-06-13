@@ -74,9 +74,8 @@ internal static class SetupManager
                     }
                 RoomData rolledRoom = reachableRooms[RngManager.GetRandom(0, reachableRooms.Count - 1)];
                 availableRooms.Remove(rolledRoom);
-                // Boss rooms are in the list twice to increase the chance of appearing, but we are only allow one of each.
-                // Therefore, we remove the duplicate as well.
-                if (rolledRoom.BossRoom)
+                // Boss rooms and big rooms can only appear once, but they are in the list to increase the chance.
+                if (rolledRoom.BossRoom || rolledRoom.BigRoom)
                     availableRooms.RemoveAll(x => x.Name == rolledRoom.Name);
                 lastRooms.Add(rolledRoom.Name);
                 roomList.Add(rolledRoom);
@@ -90,13 +89,13 @@ internal static class SetupManager
             //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
             //roomList.Insert(91, roomData);
             // Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Ruins1_03");
+            var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Deepnest_Spider_Town");
             // Test room at start.
-            //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
-            //{
-            //    Name = selectedRoomData.Name,
-            //    SelectedTransition = x
-            //}), .. roomList];
+            roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
+            {
+                Name = selectedRoomData.Name,
+                SelectedTransition = x
+            }), .. roomList];
             // Test room insert
             //roomList.Insert(30, new RoomData()
             //{

@@ -345,9 +345,6 @@
   <data name="Kingsoul" xml:space="preserve">
     <value>Slowly generates soul.</value>
   </data>
-  <data name="LifebloodOmen" xml:space="preserve">
-    <value>While in combat occusionally spawns a Grimm ghost temporarly. Killing it grants lifeblood.</value>
-  </data>
   <data name="Longnail" xml:space="preserve">
     <value>Increases the range of your nail.</value>
   </data>
