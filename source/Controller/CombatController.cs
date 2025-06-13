@@ -428,8 +428,6 @@ internal static class CombatController
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetRandom(0f, 100f);
-                    if (StageController.CurrentRoomNumber <= 10)
-                        rolled /= 2;
                     if (rolled <= 4f / (1 + _stageTreasures))
                     {
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
@@ -472,7 +470,7 @@ internal static class CombatController
         }
         catch (Exception ex)
         {
-            LogManager.Log("Error in HealthManager Die", ex);
+            LogManager.Log("Error in HealthManager Die ", ex);
         }
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
@@ -483,7 +481,7 @@ internal static class CombatController
         }
         catch (Exception ex)
         {
-            LogManager.Log("Error in HealthManager Die", ex);
+            LogManager.Log("Error in HealthManager Die ", ex);
         }
     }
 
@@ -1046,7 +1044,7 @@ internal static class CombatController
                     return 0;
             }
 
-            if (HasPower<AchillesVerse>(out _))
+            if (HasPower<AchillesHeel>(out _))
             {
                 if (hazardType > 1 && hazardType < 5)
                     damageAmount = InstaKillDamage;
@@ -1065,7 +1063,6 @@ internal static class CombatController
                 if (isWeakenedDamage)
                     damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
             }
-
         }
         // Prevent cheat death from triggering on instant kill effects.
         if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))

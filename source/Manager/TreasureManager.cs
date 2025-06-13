@@ -89,7 +89,7 @@ public static class TreasureManager
         new MantisStyle(),
         new Supreme(),
         new CaringShell(),
-        new AchillesVerse(),
+        new AchillesHeel(),
         new Charge(),
         new Shatter(),
         new BindingCircle(),

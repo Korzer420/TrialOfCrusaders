@@ -1,5 +1,4 @@
-﻿using Modding;
-using TrialOfCrusaders.Data;
+﻿using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine.SceneManagement;
@@ -21,5 +20,4 @@ internal class PaleShell : Power
     protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
 
     private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1) => Shielded = true;
-
 }

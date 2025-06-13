@@ -120,7 +120,7 @@
   <data name="AbyssShriek" xml:space="preserve">
     <value>Unlocks Abyss Shriek.</value>
   </data>
-  <data name="AchillesVerse" xml:space="preserve">
+  <data name="AchillesHeel" xml:space="preserve">
     <value>Enemies deal less damage. Hazards now kill you instantly.</value>
   </data>
   <data name="Acrobat" xml:space="preserve">
