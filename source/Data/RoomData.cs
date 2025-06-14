@@ -1,7 +1,7 @@
-﻿using KorzUtils.Helper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Data;
@@ -40,21 +40,21 @@ public class RoomData
     {
         if (BossRoom)
         {
-            if (currentRoom < 20)
+            if (currentRoom < (HubController.SelectedGameMode == GameMode.GrandCrusader ? 20 : 10))
                 return false;
             return NeededProgress switch
             {
                 Progress.None => true,
-                Progress.Dash => currentRoom > 30 && progress.HasFlag(Progress.Dash | Progress.Fireball) || progress.HasFlag(Progress.Dash | Progress.Quake),
-                Progress.Claw => currentRoom > 60 && progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Fireball) || progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Quake),
+                Progress.Dash => currentRoom > (HubController.SelectedGameMode == GameMode.GrandCrusader ? 30 : 15) && progress.HasFlag(Progress.Dash | Progress.Fireball) || progress.HasFlag(Progress.Dash | Progress.Quake),
+                Progress.Claw => currentRoom > (HubController.SelectedGameMode == GameMode.GrandCrusader ? 60 : 40) && progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Fireball) || progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Quake),
                 // Special flag for endboss (Radiance, Pure Vessel, NKG)
                 _ => false
             };
         }
         else
         {
-            // Each 20th room is guaranteed a boss.
-            if (currentRoom % 20 == 0 && currentRoom != 0)
+            // Force boss rooms at certain thresholds.
+            if (currentRoom % (HubController.SelectedGameMode == GameMode.GrandCrusader ? 20 : 12) == 0 && currentRoom != 0)
                 return false;
             bool available = progress.HasFlag(NeededProgress) && (ConditionalProgress?.Count == 0 || ConditionalProgress.Any(x => progress.HasFlag(x)));
             if (!easyMode)

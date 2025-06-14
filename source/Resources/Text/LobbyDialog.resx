@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ExplanationTrial" xml:space="preserve">
+  <data name="ExplanationTrialCrusader" xml:space="preserve">
+    <value>Kill all enemies in the room to continue. Combat all 50 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;You start with Isma's, Crystal heart and lantern.&lt;page&gt;Leave through the left door to begin.</value>
+  </data>
+  <data name="ExplanationTrialGrandCrusader" xml:space="preserve">
     <value>Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;Leave through the left door to begin.</value>
   </data>
   <data name="HistoryEmpty" xml:space="preserve">

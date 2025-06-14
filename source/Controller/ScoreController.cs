@@ -50,7 +50,10 @@ public static class ScoreController
         HistoryController.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += BlockPause;
         On.PlayerData.IncrementInt += CountGrubs;
-        Score = new();
+        Score = new()
+        { 
+            Mode = HubController.SelectedGameMode
+        };
         StartTimer();
         _enabled = true;
     }

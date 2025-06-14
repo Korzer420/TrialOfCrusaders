@@ -2,11 +2,13 @@
 
 public enum GameMode
 {
-    Normal,
+    /// <summary>
+    /// 50 rooms.
+    /// </summary>
+    Crusader,
 
-    Boss,
-
-    NormalSeeded,
-
-    BossSeeded
+    /// <summary>
+    /// 100 rooms.
+    /// </summary>
+    GrandCrusader,
 }

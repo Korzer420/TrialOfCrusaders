@@ -51,6 +51,7 @@ internal class Damocles : Power
             triggered = Random.Range(1, 1201) == 1;
         }
         yield return new WaitUntil(() => !PDHelper.IsInvincible);
-        HeroController.instance.TakeDamage(HeroController.instance.gameObject, GlobalEnums.CollisionSide.bottom, 500, 1);
+        GameHelper.DisplayMessage("Your time is up...");
+        HeroController.instance.TakeDamage(HeroController.instance.gameObject, GlobalEnums.CollisionSide.bottom, CombatController.InstaKillDamage, 1);
     }
 }

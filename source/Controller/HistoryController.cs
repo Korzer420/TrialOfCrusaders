@@ -378,7 +378,13 @@ internal static class HistoryController
             _elementLookUp["TotalCommonPowers"].Item2.text = $"Common powers: {currentHistory.CommonPowerAmount}";
             _elementLookUp["TotalUncommonPowers"].Item2.text = $"Uncommon powers: {currentHistory.UncommonPowerAmount}";
             _elementLookUp["TotalRarePowers"].Item2.text = $"Rare powers: {currentHistory.RarePowerAmount}";
-            _elementLookUp["Version"].Item2.text = $"Version: {currentHistory.ModVersion}";
+            string gameMode = currentHistory.Score.Mode switch
+            {
+                GameMode.Crusader => "Crusader",
+                GameMode.GrandCrusader => "Grand Crusader",
+                _ => "Unknown"
+            };
+            _elementLookUp["Version"].Item2.text = $"Version: {currentHistory.ModVersion} (Game Mode: {gameMode})";
             _elementLookUp["EntryNumber"].Item2.text = $"Entry number: ({_pageIndex + 1}/{History.Count})";
 
             _elementLookUp["Check"].Item1.gameObject.SetActive(!currentHistory.CheckRun());
@@ -528,7 +534,6 @@ internal static class HistoryController
         // Set the non-controller related data.
         TempEntry.ModVersion = TrialOfCrusaders.Instance.GetVersion();
         TempEntry.Result = result;
-        TempEntry.GameMode = GameMode.Normal;
         // In the case of completed runs the result is written seperately (as the crowd still throws missable geo).
         if (result != RunResult.Completed)
         {

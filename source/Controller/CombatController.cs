@@ -733,7 +733,7 @@ internal static class CombatController
                     hitInstance.DamageDealt += 2 + Mathf.FloorToInt(CombatLevel * 1.5f);
 
                 // Armor scaling
-                int armor = StageController.CurrentRoomNumber / 8;
+                int armor = StageController.CurrentRoomNumber / 5;
                 if (HasPower<BrutalStrikes>(out _))
                     if (hitInstance.Source?.name == "Great Slash" || hitInstance.Source?.name == "Dash Slash"
                         || hitInstance.Source?.name == "Hit L" || hitInstance.Source?.name == "Hit R")
@@ -1136,11 +1136,14 @@ internal static class CombatController
                 }
                 else if (self.FsmName == "Phase Control" && StageController.CurrentRoomNumber >= 20)
                 {
-                    int basePhase2 = self.FsmVariables.FindFsmInt("P2 Spike Waves").Value;
-                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
-                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(basePhase2 * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+                    int basePhaseHp = self.FsmVariables.FindFsmInt("P2 Spike Waves").Value;
+                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    basePhaseHp = self.FsmVariables.FindFsmInt("P3 A1 Rage").Value;
+                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    basePhaseHp = self.FsmVariables.FindFsmInt("P4 Stun1").Value;
+                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    basePhaseHp = self.FsmVariables.FindFsmInt("P5 Acend").Value;
+                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
                 }
             }
             else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss"

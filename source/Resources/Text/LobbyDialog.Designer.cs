@@ -61,11 +61,20 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 50 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;You start with Isma&apos;s, Crystal heart and lantern.&lt;page&gt;Leave through the left door to begin. ähnelt.
+        /// </summary>
+        internal static string ExplanationTrialCrusader {
+            get {
+                return ResourceManager.GetString("ExplanationTrialCrusader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 100 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;Leave through the left door to begin. ähnelt.
         /// </summary>
-        internal static string ExplanationTrial {
+        internal static string ExplanationTrialGrandCrusader {
             get {
-                return ResourceManager.GetString("ExplanationTrial", resourceCulture);
+                return ResourceManager.GetString("ExplanationTrialGrandCrusader", resourceCulture);
             }
         }
         

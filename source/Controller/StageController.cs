@@ -264,7 +264,7 @@ internal static class StageController
                     {
                         //// Test for specific room index.
                         //if (CurrentRoomIndex == 1)
-                        //    CurrentRoomIndex = 40;
+                        //    CurrentRoomIndex = 46;
 
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
@@ -575,7 +575,7 @@ internal static class StageController
             || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
-            return CurrentRoomNumber >= 50;
+            return CurrentRoomNumber >= CurrentRoomData.Count / 2;
         else if (name == nameof(PlayerData.spiderCapture))
             return false;
         return orig;

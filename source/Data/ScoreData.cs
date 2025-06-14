@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Data;
@@ -51,6 +52,8 @@ public class ScoreData
     // Currently not evaluated.
     public int TakenHits { get; set; }
 
+    public GameMode Mode { get; set; }
+
     #endregion
 
     public ScoreData Copy() => new()
@@ -64,7 +67,8 @@ public class ScoreData
         EssenceBonus = EssenceBonus,
         HitlessFinalBoss = HitlessFinalBoss,
         GrubBonus = GrubBonus,
-        TraverseBonus = TraverseBonus
+        TraverseBonus = TraverseBonus,
+        Mode = Mode
     };
 
     internal Dictionary<string, int> TransformToDictionary()
@@ -78,7 +82,7 @@ public class ScoreData
         List<(string, int)> scoreData =
         [
             new(ScoreField, Score),
-            new(TimeField, Math.Max(0, Mathf.CeilToInt(7200 - PassedTime))),
+            new(TimeField, Math.Max(0, Mathf.CeilToInt((Mode == GameMode.GrandCrusader ? 7200 : 3600) - PassedTime))),
             new(KillStreakField, KillStreakBonus * 5),
             new(EssenceField, EssenceBonus * 10),
             new(GrubField, GrubBonus * 50),

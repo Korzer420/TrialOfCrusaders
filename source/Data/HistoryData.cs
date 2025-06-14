@@ -12,8 +12,6 @@ public class HistoryData
 
     public RunResult Result { get; set; }
 
-    public GameMode GameMode { get; set; }
-
     public bool Seeded { get; set; }
 
     public int Seed { get; set; }

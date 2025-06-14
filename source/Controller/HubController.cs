@@ -24,6 +24,8 @@ internal static class HubController
 
     internal static GameObject InspectPrefab { get; set; }
 
+    internal static GameMode SelectedGameMode { get; set; }
+
     #region Setup
 
     internal static void Initialize()
@@ -141,20 +143,31 @@ internal static class HubController
                 int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
                 RngManager.Seeded = finalSeed != _rolledSeed;
                 RngManager.Seed = finalSeed;
-                StageController.CurrentRoomData = SetupManager.GenerateNormalRun();
+                StageController.CurrentRoomData = SetupManager.GenerateRun(SelectedGameMode);
                 StageController.CurrentRoomIndex = -1;
                 PhaseController.TransitionTo(Phase.Run);
-            }
-            else if (info.SceneName == "Room_Colosseum_Silver")
-            {
-                PDHelper.HasDreamNail = false;
-                info.SceneName = "Deepnest_East_10";
-                info.EntryGateName = "left1";
+                // Grants mode specific items.
+                if (SelectedGameMode == GameMode.Crusader)
+                {
+                    PDHelper.HasLantern = true;
+                    PDHelper.HasSuperDash = true;
+                    PDHelper.HasAcidArmour = true;
+                }
             }
             else if (info.SceneName == "Room_Colosseum_02")
             {
                 info.EntryGateName = "left1";
                 info.SceneName = "Dream_Room_Believer_Shrine";
+            }
+            else if (info.SceneName.StartsWith("Room_Colosseum") && info.SceneName != "Room_Colosseum_01")
+            {
+                if (info.SceneName.Contains("Silver"))
+                    SelectedGameMode = GameMode.Crusader;
+                else
+                    SelectedGameMode = GameMode.GrandCrusader;
+                PDHelper.HasDreamNail = false;
+                info.SceneName = "Deepnest_East_10";
+                info.EntryGateName = "left1";
             }
         }
         catch (System.Exception ex)
@@ -251,9 +264,16 @@ internal static class HubController
     private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "Explanation_Trial")
-            return $"{LobbyDialog.ExplanationTrial}<page>{LobbyDialog.SeededTutorial}";
+        {
+            if (SelectedGameMode == GameMode.GrandCrusader)
+                return $"{LobbyDialog.ExplanationTrialGrandCrusader}<page>{LobbyDialog.SeededTutorial}";
+            else
+                return $"{LobbyDialog.ExplanationTrialCrusader}<page>{LobbyDialog.SeededTutorial}";
+        }
         else if (key == "TRIAL_BOARD_SILVER")
             return "Begin Trial of the Crusader?";
+        else if (key == "TRIAL_BOARD_GOLD")
+            return "Begin Trial of the Grand Crusader?";
         else if (key == "LITTLE_FOOL_UNPAID")
             return "This trial is not available at the moment.";
         else if (key == "LITTLE_FOOL_DREAM")
