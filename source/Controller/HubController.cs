@@ -219,7 +219,8 @@ internal static class HubController
                     SeedTablet tablet = obstacleGameObject.AddComponent<SeedTablet>();
                     _seedTablets.Add(tablet);
                     tablet.Index = i;
-                    tablet.Number = int.Parse("" + _rolledSeed.ToString()[i]);
+                    tablet.InitialNumber = int.Parse("" + _rolledSeed.ToString()[i]);
+                    tablet.Number = tablet.InitialNumber;
 
                     GameObject abilitySprite = new("Ability Sprite");
                     abilitySprite.transform.SetParent(obstacleGameObject.transform);

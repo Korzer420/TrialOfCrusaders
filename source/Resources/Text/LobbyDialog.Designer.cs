@@ -61,7 +61,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 50 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;You start with Isma&apos;s, Crystal heart and lantern.&lt;page&gt;Leave through the left door to begin. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Kill all enemies in the room to continue. Combat all 50 rooms and then a final challenge to win. Receive powers to become stronger, but beware monster will become stronger over time... &lt;page&gt;You start with Isma&apos;s Tear, Crystal Heart and Lantern.&lt;page&gt;Leave through the left door to begin. ähnelt.
         /// </summary>
         internal static string ExplanationTrialCrusader {
             get {
