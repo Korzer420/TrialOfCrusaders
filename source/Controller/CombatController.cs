@@ -31,6 +31,7 @@ internal static class CombatController
 {
     private static bool _enabled;
     private static ILHook _attackMethod;
+    private static ILHook _blueHealthMethod;
     private static Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
     public const int WeakenedDamageFlag = 250;
@@ -136,7 +137,9 @@ internal static class CombatController
         IL.HeroController.MaxHealth += BlockCharmHeal;
         IL.HeroController.Move += ModifyMovementSpeed;
         IL.HeroController.Attack += ModifyAttackDuration;
+
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
+        _blueHealthMethod = new(typeof(PlayerData).GetMethod("orig_UpdateBlueHealth", BindingFlags.Public | BindingFlags.Instance), SkipBlueHealthReset);
 
         StageController.RoomEnded += StageController_RoomEnded;
         HistoryController.CreateEntry += PassHistoryData;
@@ -204,6 +207,7 @@ internal static class CombatController
         IL.HeroController.Move -= ModifyMovementSpeed;
         IL.HeroController.Attack -= ModifyAttackDuration;
         _attackMethod?.Dispose();
+        _blueHealthMethod?.Dispose();
 
         StageController.RoomEnded -= StageController_RoomEnded;
         HistoryController.CreateEntry -= PassHistoryData;
@@ -291,11 +295,17 @@ internal static class CombatController
         CharmUpdate = false;
     }
 
+    private static void SkipBlueHealthReset(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        cursor.Goto(0);
+        cursor.Emit(OpCodes.Ret);
+    }
+
     private static void BlockCharmHeal(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
-
         ILLabel label;
         cursor.GotoNext(x => x.MatchRet());
         label = cursor.MarkLabel();

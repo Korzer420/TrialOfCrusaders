@@ -233,10 +233,10 @@ internal static class StageController
                         entryPosition = GatePosition.door;
                     else
                         entryPosition = GatePosition.unknown;
-                    RoomEnded?.Invoke(QuietRoom, !QuietRoom && info.HeroLeaveDirection != null 
+                    RoomEnded?.Invoke(QuietRoom, !QuietRoom && info.HeroLeaveDirection != null
                         && info.HeroLeaveDirection != entryPosition && entryPosition != GatePosition.unknown);
                 }
-                
+
                 FinishedEnemies = false;
                 // Check for ending.
                 if (CurrentRoomNumber == CurrentRoomData.Count)
@@ -305,6 +305,9 @@ internal static class StageController
                 }
             }
             orig(self, info);
+            // Prevent auto walk if left through dive.
+            if (HeroController.instance != null)
+                HeroController.instance.exitedQuake = false;
         }
     }
 
@@ -590,8 +593,6 @@ internal static class StageController
     {
         if (arg1.name == "GG_Engine")
             UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
-        else if (arg1.name == "Fungus2_14")
-            UnityEngine.Object.Destroy(GameObject.Find("Mantis Lever (1)"));
         else if (arg1.name == "Ruins1_05")
             SpawnTeleporter(new(3.68f, 153.19f), new(3.68f, 142.4f));
         else if (arg1.name == "Hive_01")

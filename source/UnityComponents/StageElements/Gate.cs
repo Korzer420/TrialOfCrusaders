@@ -56,7 +56,9 @@ internal class Gate : MonoBehaviour
             return;
         else
         {
-            int realHeight = Mathf.CeilToInt(GetComponent<BoxCollider2D>().size.y * transform.localScale.y);
+            int realHeight = direction < 2 
+                ? Mathf.CeilToInt(GetComponent<BoxCollider2D>().size.x * transform.localScale.x) 
+                : Mathf.CeilToInt(GetComponent<BoxCollider2D>().size.y * transform.localScale.y);
             if (realHeight % 4 != 0)
                 realHeight += 4 - realHeight % 4;
             bool evenAmount = realHeight % 8 == 0;
