@@ -175,6 +175,7 @@ internal static class CombatController
                 soulVessel = 1;
             PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
+        PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
         _enabled = true;
     }
 
@@ -685,7 +686,7 @@ internal static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            return 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
+            return 3 + CombatLevel * 2 + (CombatLevel >= 19 ? CombatLevel - 18 : 0);
         else if (name == nameof(PlayerData.maxHealthCap))
             return 25;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))

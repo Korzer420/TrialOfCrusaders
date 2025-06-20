@@ -84,50 +84,23 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
+            { 
                 PhaseController.TransitionTo(Enums.Phase.Initialize);
+                LogManager.Log("Transitioned to initialize: " + saveData.OldRunData.Count);
+            }
             else
                 PhaseController.TransitionTo(Enums.Phase.Inactive);
         }
-        // ToDo: Support save inside a run.
-        //StageController.CurrentRoomIndex = CurrentSaveData.CurrentRoomNumber - 2;
-        //List<Power> powers = [];
-
-        //CombatController.ObtainedPowers = [.. CurrentSaveData.ObtainedPowers.Select(x => TreasureController.Powers.First(y => x == y.Name))];
-        //CombatController.CombatLevel = saveData.CombatLevel;
-        //CombatController.SpiritLevel = saveData.SpiritLevel;
-        //CombatController.EnduranceLevel = saveData.EnduranceLevel;
-        //StageController.CurrentRoomData = [..saveData.RoomList.Select(x => new RoomData()
-        //{
-        //    Name = x.Split('[')[0],
-        //    SelectedTransition = x.Split('[')[1].Split(']')[0]
-        //})];
-        //ScoreController.Score = saveData.Score.Copy();
-        //RngProvider.Seed = saveData.RandomSeed;
-        //PDHelper.HasDash = saveData.CurrentProgress.HasFlag(Progress.Dash);
-        //PDHelper.CanDash = PDHelper.HasDash;
-        //PDHelper.HasWalljump = saveData.CurrentProgress.HasFlag(Progress.Claw);
-        //PDHelper.HasDoubleJump = saveData.CurrentProgress.HasFlag(Progress.Wings);
-        //PDHelper.HasShadowDash = saveData.CurrentProgress.HasFlag(Progress.ShadeCloak);
-        //PDHelper.HasSuperDash = saveData.CurrentProgress.HasFlag(Progress.CrystalHeart);
-        //PDHelper.HasAcidArmour = saveData.CurrentProgress.HasFlag(Progress.Tear);
-        //PDHelper.HasLantern = saveData.CurrentProgress.HasFlag(Progress.Lantern);
     }
 
     LocalSaveData ILocalSettings<LocalSaveData>.OnSaveLocal()
     {
-        // ToDo: Support save inside a run.
-        // We have three save stages:
-        // In the lobby (CurrentRoomIndex is -2 or -1): Take only non-run data.
-        // In room 40 or 80 (in the normal run): Save ALL data.
-        // In any other room: Only save run fixed run data + power flags (all obtained powers and stats are kept from the old version).
-        //if (StageController.CurrentRoomIndex < 0)
-        //    CurrentSaveData = CurrentSaveData.GetLobbyData();
-        //else if (StageController.CurrentRoomNumber % 40 != 0)
-        //    CurrentSaveData = CurrentSaveData.GetFixedData();
-        //else
-        //    CurrentSaveData = CurrentSaveData.GetUpdatedData();
         if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
+        {
+            LogManager.Log("Not in correct mode. Return nothing");
             return null;
+        }
+        
         return new() { OldRunData = HistoryController.History };
     }
 
