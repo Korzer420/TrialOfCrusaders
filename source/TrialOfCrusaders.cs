@@ -1,6 +1,7 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
 using Modding;
+using SFCore;
 using System.Collections.Generic;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
@@ -46,6 +47,11 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         ("Ruins_Bathhouse", "Ghost NPC/Idle Pt")
     ];
 
+    public TrialOfCrusaders()
+    {
+        InventoryHelper.AddInventoryPage(InventoryPageType.Empty, "Trial Power", "ToCPowers", "ToCInventory", "ToCInventoryAvailable", InventoryController.CreateInventoryPage);
+    }
+
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
     {
         Instance = this;
@@ -64,7 +70,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
             HookDebug();
 
         MenuController.AddMode();
-
         PhaseController.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
     }

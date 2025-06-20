@@ -26,6 +26,9 @@ namespace TrialOfCrusaders.Manager;
 
 public static class TreasureManager
 {
+    internal static string UncommonTextColor = "#33cc33";
+    internal static string RareTextColor = "#00ffff";
+
     private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
     private static Sprite _backgroundSprite;
@@ -207,7 +210,7 @@ public static class TreasureManager
             case TreasureType.RareOrb:
             case TreasureType.PrismaticOrb:
                 ColorShifter shifter = shiny.AddComponent<ColorShifter>();
-                shifter.Rainbox = treasure == TreasureType.RareOrb;
+                shifter.Rainbow = treasure == TreasureType.RareOrb;
                 if (glow != null)
                     shifter.GlowSprite = glow.GetComponent<tk2dSprite>();
                 break;
@@ -820,6 +823,8 @@ public static class TreasureManager
             }
         }
         shinyFsm.SendEvent("CHARM");
+        InventoryController.UpdateStats();
+        InventoryController.UpdateList(-1);
         if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)
             TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
     }

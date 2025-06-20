@@ -8,7 +8,7 @@ internal class ColorShifter : MonoBehaviour
     private float _timePassed = 0f;
     private int _colorRotationIndex = 0;
 
-    public bool Rainbox { get; set; }
+    public bool Rainbow { get; set; }
 
     public tk2dSprite GlowSprite { get; set; }
 
@@ -17,30 +17,28 @@ internal class ColorShifter : MonoBehaviour
     void Update()
     {
         _timePassed += Time.deltaTime;
-        if (_timePassed > 0.25f)
+        if (Rainbow)
         {
-            if (Rainbox)
+            if (_timePassed > 1f)
+                _timePassed = 0f;
+            _spriteRenderer.color = Color.HSVToRGB(_timePassed, 1, 1);
+            if (GlowSprite != null)
+                GlowSprite.color = _spriteRenderer.color;
+        }
+        else if (_timePassed > 0.25f)
+        {
+            _colorRotationIndex++;
+            if (_colorRotationIndex == 3)
+                _colorRotationIndex = 0;
+            Color color = _colorRotationIndex switch
             {
-                _spriteRenderer.color = new(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-                if (GlowSprite != null)
-                    GlowSprite.color = _spriteRenderer.color;
-            }
-            else
-            {
-                _colorRotationIndex++;
-                if (_colorRotationIndex == 3)
-                    _colorRotationIndex = 0;
-                Color color = _colorRotationIndex switch
-                {
-                    0 => Color.red,
-                    1 => new(1f, 0f, 1f, 1f),
-                    _ => Color.green,
-                };
-                _spriteRenderer.color = color;
-                if (GlowSprite != null)
-                    GlowSprite.color = color;
-            }
-
+                0 => Color.red,
+                1 => new(1f, 0f, 1f, 1f),
+                _ => Color.green,
+            };
+            _spriteRenderer.color = color;
+            if (GlowSprite != null)
+                GlowSprite.color = color;
             _timePassed = 0f;
         }
     }

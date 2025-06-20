@@ -10,7 +10,7 @@ internal class SeedTablet : MonoBehaviour
     private float _cooldown = 0.25f;
     private SpriteRenderer _spriteRenderer;
     private SpriteRenderer _tabletSprite;
-    private static List<string> _seedSprites =
+    private static readonly List<string> _seedSprites =
     [
         "CrystalDash",
         "CycloneSlash",

@@ -289,7 +289,7 @@
     <value>Enemies hit by the cloud become weakened.</value>
   </data>
   <data name="ImprovedFocus" xml:space="preserve">
-    <value>Focus now consumes all soul energy.</value>
+    <value>Focus now consumes all soul energy to grant all masks immediately.</value>
   </data>
   <data name="ImprovedFuryOfTheFallen" xml:space="preserve">
     <value>The fury threshold is increased.</value>

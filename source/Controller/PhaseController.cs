@@ -113,6 +113,7 @@ public static class PhaseController
                         StageController.Initialize();
                         ScoreController.Initialize();
                         CombatController.Initialize();
+                        InventoryController.Initialize();
                         HistoryController.Unload();
                         CoroutineHelper.WaitUntil(() =>
                         {
@@ -146,6 +147,7 @@ public static class PhaseController
                         HistoryController.AddEntry(RunResult.Completed);
                         StageController.Unload();
                         CombatController.Unload();
+                        InventoryController.Unload();
                     }
                     else
                         LogManager.Log("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
@@ -158,6 +160,7 @@ public static class PhaseController
                     SpawnController.Unload();
                     HubController.Unload();
                     CombatController.Unload();
+                    InventoryController.Unload();
                     StageController.Unload();
                     ScoreController.Unload();
                     TrialOfCrusaders.Holder.StopAllCoroutines();
@@ -179,6 +182,7 @@ public static class PhaseController
                             HistoryController.AddEntry(RunResult.Failed);
                             CombatController.Unload();
                             StageController.Unload();
+                            InventoryController.Unload();
                         }
                         PDHelper.GeoPool = 0;
                         ScoreController.Unload();

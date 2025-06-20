@@ -59,6 +59,8 @@ internal static class CombatController
     // As this is called very frequently we store it in an extra value.
     internal static bool DebuffsStronger { get; set; }
 
+    public static int NailDamage => 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
+
     #endregion
 
     #region Events
@@ -84,6 +86,14 @@ internal static class CombatController
                 return true;
             }
         selectedPower = null;
+        return false;
+    }
+
+    public static bool HasPower(string powerTypeName)
+    {
+        foreach (Power power in ObtainedPowers)
+            if (power.GetType().Name == powerTypeName)
+                return true;
         return false;
     }
 
@@ -673,7 +683,7 @@ internal static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            orig = 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
+            return NailDamage;
         else if (name == nameof(PlayerData.maxHealthCap))
             return 25;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))

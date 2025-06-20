@@ -37,6 +37,7 @@ internal static class HubController
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneChanged;
         On.GameManager.BeginSceneTransition += ModifySceneTransition;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
+        On.HeroController.CanOpenInventory += BlockInventory;
         _enabled = true;
     }
 
@@ -49,6 +50,7 @@ internal static class HubController
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneChanged;
         On.GameManager.BeginSceneTransition -= ModifySceneTransition;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
+        On.HeroController.CanOpenInventory -= BlockInventory;
         _enabled = false;
     }
 
@@ -280,6 +282,12 @@ internal static class HubController
         else if (key == "LITTLE_FOOL_DREAM")
             return LittleFoolDialog.FoolDream;
         return orig;
+    }
+
+    private static bool BlockInventory(On.HeroController.orig_CanOpenInventory orig, HeroController self)
+    {
+        orig(self);
+        return false;
     }
 
     #endregion
