@@ -11,6 +11,7 @@ using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
+using TrialOfCrusaders.SaveData;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
@@ -40,6 +41,8 @@ internal static class HistoryController
     public static HistoryData TempEntry { get; set; } = new();
 
     internal static List<HistoryData> History { get; set; } = [];
+
+    public static GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50};
 
     #region Setup
 
@@ -537,8 +540,14 @@ internal static class HistoryController
         // In the case of completed runs the result is written seperately (as the crowd still throws missable geo).
         if (result != RunResult.Completed)
         {
-            TempEntry.RunId = TempEntry.GetRunId();
-            History.Add(TempEntry);
+            if ((result == RunResult.Failed && HistorySettings.TrackFailedRuns)
+                || (result == RunResult.Forfeited && HistorySettings.TrackForfeitedRuns))
+            {
+                TempEntry.RunId = TempEntry.GetRunId();
+                History.Add(TempEntry);
+                if (History.Count > HistorySettings.HistoryAmount)
+                    History.RemoveAt(0);
+            }
             TempEntry = null;
         }
         else

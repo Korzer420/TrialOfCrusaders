@@ -18,7 +18,7 @@ using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
 namespace TrialOfCrusaders;
 
-public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
+public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSettings<GlobalSaveData>, IMenuMod
 {
     private Dummy _coroutineHolder;
 
@@ -27,6 +27,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     public static TrialOfCrusaders Instance { get; set; }
 
     internal static Dummy Holder => Instance._coroutineHolder;
+
+    public bool ToggleButtonInsideMenu => throw new System.NotImplementedException();
 
     public override string GetVersion() => "0.0.1.0-beta1";
 
@@ -84,7 +86,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
-            { 
+            {
                 PhaseController.TransitionTo(Enums.Phase.Initialize);
                 LogManager.Log("Transitioned to initialize: " + saveData.OldRunData.Count);
             }
@@ -213,4 +215,44 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     {
         DebugModInterop.Initialize();
     }
+
+    public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
+    {
+        return new()
+        {
+            new(){ Name = "Track failed runs", Description = "If on, failed runs will appear in the history.", Values = ["On", "Off"],
+                Saver = x => HistoryController.HistorySettings.TrackFailedRuns = x == 0,
+                Loader = () => HistoryController.HistorySettings.TrackFailedRuns ? 0 : 1},
+            new(){ Name = "Track forfeited runs", Description = "If on, forfeited runs will appear in the history", Values = ["On", "Off"],
+                Saver = x => HistoryController.HistorySettings.TrackForfeitedRuns = x == 0,
+                Loader = () => HistoryController.HistorySettings.TrackForfeitedRuns ? 0 : 1},
+            new(){ Name = "History amount", Description = "Determine the amount of previous runs saved.", Values = ["1", "5", "10", "50", "100", "All"],
+                Saver = x =>
+                    {
+                        HistoryController.HistorySettings.HistoryAmount = x switch
+                        {
+                            0 => 1,
+                            1 => 5,
+                            2 => 10,
+                            3 => 50,
+                            4 => 100,
+                            _ => int.MaxValue
+                        };
+                    },
+                Loader = () =>
+                    HistoryController.HistorySettings.HistoryAmount switch
+                    {
+                        1 => 0,
+                        5 => 1,
+                        10 => 2,
+                        50 => 3,
+                        100 => 4,
+                        _ => 6
+                    }},
+        };
+    }
+
+    public void OnLoadGlobal(GlobalSaveData saveData) => HistoryController.HistorySettings = saveData;
+
+    public GlobalSaveData OnSaveGlobal() => HistoryController.HistorySettings;
 }

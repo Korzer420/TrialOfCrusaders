@@ -360,6 +360,8 @@ public static class ScoreController
             HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
             HistoryController.History ??= [];
             HistoryController.History.Add(HistoryController.TempEntry);
+            if (HistoryController.History.Count > HistoryController.HistorySettings.HistoryAmount)
+                HistoryController.History.RemoveAt(0);
             HistoryController.TempEntry = null;
             GameManager.instance.SaveGame();
             Unload();
