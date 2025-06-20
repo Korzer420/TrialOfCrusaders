@@ -641,12 +641,16 @@ internal static class CombatController
     {
         if (StageController.CurrentRoomNumber >= 20)
         {
-            float scaling = 0.1f;
-            // Pure Vessel and NKG receive a greater scaling than other bosses as an attempt to match the difficulty with Radiance.
-            // Scaling is halved for bigger enemies to make them not massive bullet sponges.
-            if (((StageController.CurrentRoomNumber != StageController.CurrentRoomData.Count || StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
-                && StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom)
-                || (enemy.hp > 50 && !StageController.CurrentRoom.BossRoom))
+            float scaling = 0.25f;
+            if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
+            {
+                if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
+                    scaling = 0.05f;
+                else
+                    scaling = 0.1f;
+            }
+            else if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom
+                || enemy.hp > 50)
                 scaling = 0.05f;
             enemy.hp = Mathf.CeilToInt(enemy.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
         }

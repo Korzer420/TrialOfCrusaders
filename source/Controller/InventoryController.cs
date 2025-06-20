@@ -102,7 +102,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerList.transform);
         currentElement.transform.localPosition = new(0f, 2.25f, -0.1f);
         currentElement.alignment = TextAlignmentOptions.Center;
-        currentElement.text = $"";
+        currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(FirstPowerSlot, new(null, currentElement));
 
@@ -111,7 +111,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerList.transform);
         currentElement.transform.localPosition = new(0f, 0.75f, -0.1f);
         currentElement.alignment = TextAlignmentOptions.Center;
-        currentElement.text = $"";
+        currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(SecondPowerSlot, new(null, currentElement));
 
@@ -120,7 +120,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerList.transform);
         currentElement.transform.localPosition = new(0f, -0.75f, -0.1f);
         currentElement.alignment = TextAlignmentOptions.Center;
-        currentElement.text = $"";
+        currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(ThirdPowerSlot, new(null, currentElement));
 
@@ -129,14 +129,14 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerList.transform);
         currentElement.transform.localPosition = new(0f, -2.25f, -0.1f);
         currentElement.alignment = TextAlignmentOptions.Center;
-        currentElement.text = $"";
+        currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(FourthPowerSlot, new(null, currentElement));
 
         GameObject selectorPrefab = parent.parent.Find("Journal/selector").gameObject;
         GameObject selector = GameObject.Instantiate(selectorPrefab, powerList.transform);
         selector.name = Selector;
-        selector.transform.localPosition = new(0f, -2.25f);
+        selector.transform.localPosition = new(0f, 2.25f);
         selector.transform.localScale = new Vector3(2.7f, 1.6f, -0.1f);
         _elementLookup.Add(Selector, new(selector.GetComponent<SpriteRenderer>(), null));
 
