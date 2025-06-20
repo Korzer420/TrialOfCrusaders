@@ -21,6 +21,8 @@ internal class EchoingScream : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability | DraftPool.Upgrade;
+
     public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
 
     public GameObject Scream

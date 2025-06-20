@@ -12,6 +12,8 @@ internal class DeepBreath : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Burst;
+
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
     protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;

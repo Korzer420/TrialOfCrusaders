@@ -10,6 +10,8 @@ internal class ImprovedCaringShell : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<CaringShell>();
 
     public override StatScaling Scaling => StatScaling.Endurance;

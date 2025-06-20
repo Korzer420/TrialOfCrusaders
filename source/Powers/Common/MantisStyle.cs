@@ -1,4 +1,5 @@
 ﻿using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -7,6 +8,8 @@ internal class MantisStyle : Power
     internal bool Parried { get; set; }
 
     public override (float, float, float) BonusRates => new(9f, 0f, 1f);
+
+    public override DraftPool Pools => DraftPool.Combat;
 
     protected override void Enable()
     {

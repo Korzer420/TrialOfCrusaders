@@ -12,6 +12,8 @@ internal class Versatility : Power
 
     public override StatScaling Scaling => StatScaling.Combat | StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Spirit;
+
     protected override void Enable()
     {
         CastedSpell = false;

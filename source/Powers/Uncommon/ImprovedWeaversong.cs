@@ -20,6 +20,8 @@ public class ImprovedWeaversong : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Combat;
+
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.Weaversong);

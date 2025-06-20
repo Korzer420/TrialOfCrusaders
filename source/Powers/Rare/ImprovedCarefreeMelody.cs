@@ -15,6 +15,8 @@ internal class ImprovedCarefreeMelody : Power
 
     public override bool CanAppear => CombatController.HasPower<CarefreeMelody>(out _);
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Upgrade | DraftPool.Charm;
+
     protected override void Enable() => IL.HeroController.TakeDamage += HeroController_TakeDamage;
     
     protected override void Disable() => IL.HeroController.TakeDamage -= HeroController_TakeDamage;

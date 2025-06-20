@@ -1,10 +1,10 @@
-﻿using KorzUtils.Helper;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -18,6 +18,8 @@ internal class Perfection : Power
     private readonly FieldInfo _largeGeo = typeof(HealthManager).GetField("largeGeoDrops", BindingFlags.Instance | BindingFlags.NonPublic);
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
+
+    public override DraftPool Pools => DraftPool.Wealth;
 
     protected override void Enable()
     {

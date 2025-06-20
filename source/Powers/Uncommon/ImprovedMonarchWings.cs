@@ -23,6 +23,8 @@ internal class ImprovedMonarchWings : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Ability | DraftPool.Upgrade | DraftPool.Debuff;
+
     protected override void Enable()
     {
         _wings = HeroController.instance.transform.Find("Effects/Double J Wings").gameObject;

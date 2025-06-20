@@ -14,6 +14,8 @@ internal class SoulEater : Power
 
     public override (float, float, float) BonusRates => new(0f, 40f, 0f);
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Charm | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<SoulCatcher>() && !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

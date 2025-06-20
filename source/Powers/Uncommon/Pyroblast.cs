@@ -18,6 +18,8 @@ internal class Pyroblast : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Spirit | DraftPool.Debuff;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
     
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;

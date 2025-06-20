@@ -14,6 +14,8 @@ internal class Grimmchild : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
+
     public override bool CanAppear => !HasPower<CarefreeMelody>() && !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

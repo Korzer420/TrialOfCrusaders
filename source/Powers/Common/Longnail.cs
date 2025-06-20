@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine;
@@ -13,6 +14,8 @@ internal class Longnail : Power
     public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(7.5f, 0f, 2.5f);
+
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

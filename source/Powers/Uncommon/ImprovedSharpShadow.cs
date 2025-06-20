@@ -16,6 +16,8 @@ internal class ImprovedSharpShadow : Power
 
     public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Ability | DraftPool.Combat | DraftPool.Endurance;
+
     protected override void Enable() => On.HealthManager.Die += HealthManager_Die;
 
     protected override void Disable() => On.HealthManager.Die -= HealthManager_Die;

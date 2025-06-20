@@ -13,6 +13,8 @@ internal class Mindblast : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Ability | DraftPool.Upgrade | DraftPool.Debuff;
+
     public override bool CanAppear => HasPower<DreamNail>();
 
     public override StatScaling Scaling => StatScaling.Spirit;

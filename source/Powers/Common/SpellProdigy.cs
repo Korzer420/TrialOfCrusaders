@@ -1,5 +1,6 @@
 ﻿using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -11,6 +12,8 @@ internal class SpellProdigy : Power
     public override bool CanAppear => CombatController.HasSpell();
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
+
+    public override DraftPool Pools => DraftPool.Treasure;
 
     protected override void Enable()
     {

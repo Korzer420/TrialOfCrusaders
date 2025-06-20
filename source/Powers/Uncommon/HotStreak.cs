@@ -25,6 +25,8 @@ internal class HotStreak : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat;
+
     #endregion
 
     #region Private Methods

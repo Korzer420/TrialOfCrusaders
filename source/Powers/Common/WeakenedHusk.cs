@@ -17,6 +17,8 @@ internal class WeakenedHusk : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Debuff | DraftPool.Upgrade;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
 
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;

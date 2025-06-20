@@ -16,6 +16,8 @@ internal class Acrobat : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Upgrade;
+
     protected override void Enable() => On.HeroController.FinishedDashing += HeroController_FinishedDashing;
 
     protected override void Disable() => On.HeroController.FinishedDashing -= HeroController_FinishedDashing;

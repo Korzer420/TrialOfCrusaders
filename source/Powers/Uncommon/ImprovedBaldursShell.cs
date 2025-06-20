@@ -24,6 +24,8 @@ internal class ImprovedBaldursShell : Power
 
     public override StatScaling Scaling => StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Upgrade | DraftPool.Charm | DraftPool.Ability;
+
     protected override void Enable()
     {
         _currentHitPoints = 10;

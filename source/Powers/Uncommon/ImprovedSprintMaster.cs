@@ -10,5 +10,7 @@ internal class ImprovedSprintmaster : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<Sprintmaster>();
 }

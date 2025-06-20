@@ -12,6 +12,8 @@ internal class ImprovedHiveblood : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Charm | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<Hiveblood>() && !HasPower<InUtterDarkness>();
 
     protected override void Enable()

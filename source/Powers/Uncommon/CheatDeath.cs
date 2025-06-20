@@ -13,6 +13,8 @@ internal class CheatDeath : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Burst;
+
     public override bool CanAppear => !HasPower<InUtterDarkness>();
 
     protected override void Enable()

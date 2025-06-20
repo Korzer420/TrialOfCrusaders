@@ -12,6 +12,8 @@ internal class ImprovedGatheringSwarm : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Wealth | DraftPool.Charm | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<GatheringSwarm>();
 
     protected override void Enable() => IL.GeoControl.FixedUpdate += GeoControl_FixedUpdate;

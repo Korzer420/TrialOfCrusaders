@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ internal class GrubberflysElegy : Power
     public override string Name => "Grubberfly's Elegy";
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
+
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

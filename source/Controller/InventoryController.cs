@@ -33,6 +33,20 @@ internal static class InventoryController
     private const string PowerListDown = "Power List Down";
     private const string PowerListUp = "Power List Up";
 
+    #region Draft Pool Text Color
+    
+    private const string WealthTextColor = "#ffdd00"; // Yellow
+    private const string InstantTextColor = "#ffffff"; // White
+    private const string RiskTextColor = "#ffa600"; // Orange
+    private const string TreasureTextColor = "#faefa7";
+    private const string AbilityTextColor = "#00ebe3"; // Cyan
+    private const string CharmTextColor = "#ff85fb"; // Pink
+    private const string UpgradeTextColor = "#b39b34"; // Beige
+    private const string BurstTextColor = "#00eba8";
+    private const string DebuffTextColor = "#694fff"; // Blue
+
+    #endregion
+
     private static Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookup = [];
     private static PlayMakerFSM _inventoryFsm;
     private static bool _enabled;
@@ -223,7 +237,7 @@ internal static class InventoryController
         currentElement = CreateTextElement();
         currentElement.name = PowerScaling;
         currentElement.transform.SetParent(powerDetails.transform);
-        currentElement.transform.localPosition = new(0f, -3.2f);
+        currentElement.transform.localPosition = new(0f, -4f);
         currentElement.text = $"";
         _elementLookup.Add(PowerScaling, new(null, currentElement));
 
@@ -301,8 +315,35 @@ internal static class InventoryController
                 else 
                     scalingText = scalingText.TrimEnd(',').TrimStart('\0');
                 _elementLookup[PowerScaling].Item2.text = $"Scaling: {scalingText}";
-                _elementLookup[PowerPool].Item2.text = "Category: None";
                 _elementLookup[MainSprite].Item1.sprite = selectedPower.Sprite;
+
+                string pool = string.Empty;
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Combat))
+                    pool += $"<color={CombatController.CombatStatColor}>Combat</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Spirit))
+                    pool += $" <color={CombatController.SpiritStatColor}>Spirit</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Endurance))
+                    pool += $" <color={CombatController.EnduranceStatColor}>Endurance</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Wealth))
+                    pool += $" <color={WealthTextColor}>Wealth</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Instant))
+                    pool += $" <color={InstantTextColor}>Instant</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Risk))
+                    pool += $" <color={RiskTextColor}>Risk</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Treasure))
+                    pool += $" <color={TreasureTextColor}>Treasure</color>,"; 
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Ability))
+                    pool += $" <color={AbilityTextColor}>Ability</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Charm))
+                    pool += $" <color={CharmTextColor}>Charm</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Upgrade))
+                    pool += $" <color={UpgradeTextColor}>Upgrade</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Burst))
+                    pool += $" <color={BurstTextColor}>Burst</color>,";
+                if (selectedPower.Pools.HasFlag(Enums.DraftPool.Debuff))
+                    pool += $" <color={DebuffTextColor}>Debuff</color>,";
+                pool = pool.Trim().Trim(',');
+                _elementLookup[PowerPool].Item2.text = $"Pools: {pool}";
             }
         }, FsmTransitionData.FromTargetState("L Arrow").WithEventName("UI LEFT"),
             FsmTransitionData.FromTargetState("R Arrow").WithEventName("UI RIGHT"));

@@ -12,6 +12,8 @@ internal class CalmMind : Power
 {
     private Coroutine _coroutine;
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Endurance;
+
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
     public override StatScaling Scaling => StatScaling.Spirit;

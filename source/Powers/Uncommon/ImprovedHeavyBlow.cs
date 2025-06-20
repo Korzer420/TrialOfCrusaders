@@ -11,6 +11,8 @@ internal class ImprovedHeavyBlow : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Endurance;
+
     public override bool CanAppear => HasPower<HeavyBlow>();
 
     protected override void Enable() => On.HealthManager.TakeDamage += HealthManager_TakeDamage;

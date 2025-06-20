@@ -16,6 +16,8 @@ internal class ImprovedGlowingWomb : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Upgrade | DraftPool.Charm;
+
     public FsmVariables HatchlingVariables => _hatchlingVariables ??= GameObject.Find("Charm Effects").LocateMyFSM("Hatchling Spawn").FsmVariables;
 
     public override bool CanAppear => HasPower<GlowingWomb>();

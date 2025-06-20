@@ -2,6 +2,7 @@
 using KorzUtils.Helper;
 using System.Collections;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -13,6 +14,8 @@ internal class DreamPortal : Power
     private GameObject _activeDreamGate;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
+
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Ability;
 
     protected override void Enable()
     {

@@ -22,6 +22,8 @@ internal class MercilessPursuit : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Combat;
+
     protected override void Enable()
     {
         _duration = 0.5f;

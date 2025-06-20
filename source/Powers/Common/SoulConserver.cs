@@ -12,6 +12,8 @@ internal class SoulConserver : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Spirit;
+
     protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;

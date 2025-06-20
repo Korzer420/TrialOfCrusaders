@@ -12,6 +12,8 @@ internal class QuickSlash : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
+
     public override bool CanAppear => !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

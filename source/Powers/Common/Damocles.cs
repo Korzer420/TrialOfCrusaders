@@ -2,6 +2,7 @@
 using System.Collections;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -13,6 +14,8 @@ internal class Damocles : Power
     public bool Triggered { get; set; }
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
+
+    public override DraftPool Pools => DraftPool.Risk | DraftPool.Treasure;
 
     protected override void Enable()
     {

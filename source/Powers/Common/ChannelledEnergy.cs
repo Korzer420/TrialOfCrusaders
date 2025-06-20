@@ -1,12 +1,15 @@
 ﻿using System;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
 
 internal class ChannelledEnergy : Power
 {
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Instant;
+    
     public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _) && (CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel) > 0;
 
     public bool Activated { get; set; }

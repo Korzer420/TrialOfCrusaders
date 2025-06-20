@@ -17,6 +17,8 @@ public class FragileSpirit : Power
 
     public bool SpiritActive { get; set; } = true;
 
+    public override DraftPool Pools => DraftPool.Spirit;
+
     public override bool CanAppear => !HasPower<PaleShell>() && CombatController.HasSpell();
 
     public override StatScaling Scaling => StatScaling.Spirit; 
@@ -29,6 +31,7 @@ public class FragileSpirit : Power
 
     protected override void Disable()
     {
+        SpiritActive = true;
         CombatController.TookDamage -= CombatController_TookDamage;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
     }

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using TrialOfCrusaders.Controller;
+﻿using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
@@ -9,17 +8,13 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class IntimidatingShout : Power
 {
-    private MethodInfo _takeDamage;
-
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
 
     public override StatScaling Scaling => StatScaling.Combat;
 
-    protected override void Enable()
-    {
-        _takeDamage = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.Instance | BindingFlags.NonPublic);
-        On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
-    }
+    public override DraftPool Pools => DraftPool.Burst | DraftPool.Endurance | DraftPool.Debuff;
+
+    protected override void Enable() => On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
 
     protected override void Disable() => On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
 

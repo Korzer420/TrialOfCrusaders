@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -9,6 +10,8 @@ internal class Vanish : Power
     private readonly static MethodInfo _invincibilityCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
     public override (float, float, float) BonusRates => new(8f, 0f, 2f);
+
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Endurance;
 
     protected override void Enable() => On.HealthManager.Die += HealthManager_Die;
     

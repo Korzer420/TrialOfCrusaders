@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -12,6 +13,8 @@ internal class NailProdigy : Power
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
     public override bool CanAppear => CombatController.CombatLevel < 20;
+
+    public override DraftPool Pools => DraftPool.Treasure;
 
     protected override void Enable()
     {

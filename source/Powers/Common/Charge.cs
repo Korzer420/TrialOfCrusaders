@@ -16,6 +16,8 @@ internal class Charge : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Burst;
+
     public bool Active { get; set; }
 
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;

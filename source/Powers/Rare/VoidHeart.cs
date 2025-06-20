@@ -18,5 +18,7 @@ internal class VoidHeart : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Risk;
+
     public override bool CanAppear => ScoreController.Score.KillStreakBonus > 30;
 }

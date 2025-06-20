@@ -12,6 +12,8 @@ internal class DreamWalker : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Ability;
+
     public override bool CanAppear => CombatController.HasPower<DreamNail>(out _);
 
     protected override void Enable()

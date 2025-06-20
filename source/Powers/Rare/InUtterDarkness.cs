@@ -1,5 +1,4 @@
-﻿using HutongGames.PlayMaker;
-using HutongGames.PlayMaker.Actions;
+﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Helper;
 using System.Collections.Generic;
 using TrialOfCrusaders.Data;
@@ -19,6 +18,8 @@ internal class InUtterDarkness : Power
     public override (float, float, float) BonusRates => new(50f, 50f, 0f);
 
     public override Rarity Tier => Rarity.Rare;
+
+    public override DraftPool Pools => DraftPool.Instant | DraftPool.Risk | DraftPool.Upgrade | DraftPool.Debuff;
 
     public bool EffectGranted { get; set; }
 

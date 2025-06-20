@@ -17,6 +17,8 @@ internal class CarefreeMelody : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Charm;
+
     public override bool CanAppear => !HasPower<Grimmchild>() && !HasPower<CarefreeMelody>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

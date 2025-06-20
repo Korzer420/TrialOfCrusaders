@@ -157,7 +157,7 @@
     <value>Prevents lethal hits... sometimes. Can only occur once per 10 cleared rooms. Does not work on instant kill effects.</value>
   </data>
   <data name="Cocoon" xml:space="preserve">
-    <value>Grants 6 lifeblood.</value>
+    <value>Grants 6 lifeblood. This power is in all draft pools.</value>
   </data>
   <data name="CullTheWeak" xml:space="preserve">
     <value>Status effects are stronger. Doesn't apply to shattered mind.</value>

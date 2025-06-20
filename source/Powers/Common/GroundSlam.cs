@@ -15,6 +15,8 @@ internal class GroundSlam : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat;
+
     protected override void Enable()
     {
         On.HeroController.DoHardLanding += HeroController_DoHardLanding;

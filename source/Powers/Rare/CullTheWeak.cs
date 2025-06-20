@@ -12,6 +12,8 @@ public class CullTheWeak : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Debuff;
+
     public override bool CanAppear => CombatController.HasPower<ImprovedDefendersCrest>(out _) || CombatController.HasPower<Pyroblast>(out _)
         || CombatController.HasPower<DeepCuts>(out _) || CombatController.HasPower<ScorchingGround>(out _) || CombatController.HasPower<BindingCircle>(out _)
         || CombatController.HasPower<InUtterDarkness>(out _) || CombatController.HasPower<FragileSpirit>(out _);

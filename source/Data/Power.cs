@@ -102,6 +102,11 @@ public abstract class Power : IEquatable<Power>
         }
     }
 
+    /// <summary>
+    /// Gets or sets the draft pools this power is in.
+    /// </summary>
+    public virtual DraftPool Pools => DraftPool.None;
+
     #endregion
 
     #region Methods

@@ -20,6 +20,8 @@ internal class ScorchingGround : Power
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
+    public override DraftPool Pools => DraftPool.Debuff | DraftPool.Upgrade | DraftPool.Ability | DraftPool.Spirit;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
 
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;

@@ -17,6 +17,8 @@ internal class ImprovedFuryOfTheFallen : Power
 
     public override bool CanAppear => CombatController.HasPower<FuryOfTheFallen>(out _);
 
+    public override DraftPool Pools => DraftPool.Risk | DraftPool.Combat | DraftPool.Upgrade | DraftPool.Charm;
+
     public bool FuryActive => PDHelper.Health <= Math.Max(1, Math.Ceiling((float)PDHelper.MaxHealth / 4));
 
     protected override void Enable()

@@ -3,6 +3,7 @@ using Modding;
 using System.Collections;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -13,6 +14,8 @@ internal class Fade : Power
     private Coroutine _routine;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
+
+    public override DraftPool Pools => DraftPool.Endurance;
 
     protected override void Enable()
     {

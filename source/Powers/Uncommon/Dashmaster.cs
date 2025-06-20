@@ -13,6 +13,8 @@ internal class Dashmaster : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Ability;
+
     public override bool CanAppear => PDHelper.HasDash && !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

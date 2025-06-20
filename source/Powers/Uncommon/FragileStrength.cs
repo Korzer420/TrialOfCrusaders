@@ -13,6 +13,8 @@ internal class FragileStrength : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Combat;
+
     public bool StrengthActive { get; set; } = true;
 
     public override bool CanAppear => !HasPower<PaleShell>();
@@ -21,7 +23,11 @@ internal class FragileStrength : Power
 
     protected override void Enable() => CombatController.TookDamage += CombatController_TookDamage;
 
-    protected override void Disable() => CombatController.TookDamage -= CombatController_TookDamage;
+    protected override void Disable()
+    {
+        StrengthActive = true;
+        CombatController.TookDamage -= CombatController_TookDamage;
+    }
 
     private void CombatController_TookDamage() => StrengthActive = false;
 

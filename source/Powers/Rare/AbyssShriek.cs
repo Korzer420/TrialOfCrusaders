@@ -13,6 +13,8 @@ internal class AbyssShriek : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Upgrade | DraftPool.Ability;
+
     public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

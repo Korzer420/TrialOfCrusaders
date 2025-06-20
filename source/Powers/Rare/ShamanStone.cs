@@ -13,6 +13,8 @@ internal class ShamanStone : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Spirit;
+
     public override bool CanAppear => !HasPower<ShiningBound>() && CombatController.HasSpell();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

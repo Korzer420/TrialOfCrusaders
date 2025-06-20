@@ -10,6 +10,8 @@ internal class DeepCuts : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Debuff | DraftPool.Combat;
+
     protected override void Enable() => On.HealthManager.TakeDamage += HealthManager_TakeDamage;
 
     protected override void Disable() => On.HealthManager.TakeDamage -= HealthManager_TakeDamage;

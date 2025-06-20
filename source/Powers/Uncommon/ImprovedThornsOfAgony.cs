@@ -11,6 +11,8 @@ internal class ImprovedThornsOfAgony : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Charm | DraftPool.Combat | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<ThornsOfAgony>();
 
     protected override void Enable()

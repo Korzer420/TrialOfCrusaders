@@ -12,6 +12,8 @@ internal class ImprovedFocus : Power
 
     public override Rarity Tier => Rarity.Rare;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Spirit | DraftPool.Upgrade | DraftPool.Ability;
+
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
     
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;

@@ -23,6 +23,8 @@ internal class ImprovedCrystalDash : Power
 
     public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Ability | DraftPool.Upgrade;
+
     protected override void Enable()
     {
         On.HutongGames.PlayMaker.Actions.SetBoolValue.OnEnter += SetBoolValue_OnEnter;

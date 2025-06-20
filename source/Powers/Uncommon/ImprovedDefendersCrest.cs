@@ -15,6 +15,8 @@ internal class ImprovedDefendersCrest : Power
 
     public override bool CanAppear => HasPower<DefendersCrest>();
 
+    public override DraftPool Pools => DraftPool.Debuff | DraftPool.Upgrade | DraftPool.Charm | DraftPool.Endurance;
+
     protected override void Enable()
     {
         CharmHelper.EnsureEquipCharm(KorzUtils.Enums.CharmRef.DefendersCrest);
@@ -27,13 +29,13 @@ internal class ImprovedDefendersCrest : Power
     {
         if (extraDamageType == ExtraDamageTypes.Dung || extraDamageType == ExtraDamageTypes.Dung2)
         {
-            bool afflictWeakness = UnityEngine.Random.Range(1, 101) <= 2;
+            bool afflictWeakness = UnityEngine.Random.Range(1, 101) <= 5;
             if (afflictWeakness)
             {
                 if (self.GetComponent<HealthManager>() != null)
-                    self.gameObject.GetOrAddComponent<WeakenedEffect>();
+                    self.gameObject.GetOrAddComponent<WeakenedEffect>().Timer += 3;
                 else if (self.transform.parent != null && self.transform.parent.GetComponent<HealthManager>() != null)
-                    self.transform.parent.gameObject.GetOrAddComponent<WeakenedEffect>();
+                    self.transform.parent.gameObject.GetOrAddComponent<WeakenedEffect>().Timer += 3;
             }
         }
         orig(self, extraDamageType);

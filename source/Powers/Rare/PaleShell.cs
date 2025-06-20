@@ -1,5 +1,6 @@
 ﻿using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +14,9 @@ internal class PaleShell : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    public override bool CanAppear => !HasPower<FragileStrength>() && !HasPower<FragileSpirit>() && !HasPower<FragileGreed>();
+    public override DraftPool Pools => DraftPool.Endurance;
+
+    public override bool CanAppear => !HasPower<FragileStrength>() && !HasPower<FragileSpirit>() && !HasPower<FragileGreed>() && !HasPower<Damocles>();
 
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 

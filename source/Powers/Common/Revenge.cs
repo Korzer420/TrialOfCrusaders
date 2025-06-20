@@ -12,6 +12,8 @@ internal class Revenge : Power
 
     public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Endurance;
+
     protected override void Enable()
     {
         On.HeroController.TakeDamage += HeroController_TakeDamage;

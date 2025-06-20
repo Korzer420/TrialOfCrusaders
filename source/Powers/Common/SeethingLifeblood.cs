@@ -13,6 +13,8 @@ internal class SeethingLifeblood : Power
 
     public override StatScaling Scaling => StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Endurance;
+
     protected override void Enable()
     {
         StageController.RoomEnded += StageController_RoomCleared;

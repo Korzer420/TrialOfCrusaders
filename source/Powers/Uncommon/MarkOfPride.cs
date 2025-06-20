@@ -14,6 +14,8 @@ internal class MarkOfPride : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Charm | DraftPool.Combat | DraftPool.Endurance;
+
     public override bool CanAppear => HasPower<Longnail>() && !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

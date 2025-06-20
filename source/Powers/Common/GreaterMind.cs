@@ -18,6 +18,8 @@ internal class GreaterMind : Power
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Burst;
+
     public override StatScaling Scaling => StatScaling.Spirit;
 
     protected override void Enable()

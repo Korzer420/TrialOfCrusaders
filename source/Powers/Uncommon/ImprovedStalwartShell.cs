@@ -22,6 +22,8 @@ internal class ImprovedStalwartShell : Power
 
     public override StatScaling Scaling => StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Endurance | DraftPool.Charm | DraftPool.Upgrade;
+
     protected override void Enable()
         => _hook = new(typeof(HeroController).GetMethod("StartRecoil", BindingFlags.NonPublic | BindingFlags.Instance).GetStateMachineTarget(), IL_StartRecoil);
 

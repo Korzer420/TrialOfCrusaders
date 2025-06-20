@@ -14,6 +14,8 @@ internal class Greed : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Wealth | DraftPool.Charm;
+
     public override bool CanAppear => !HasPower<ShiningBound>() && HasPower<Interest>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

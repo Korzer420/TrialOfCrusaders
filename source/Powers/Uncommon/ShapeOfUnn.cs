@@ -12,6 +12,8 @@ internal class ShapeOfUnn : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Ability | DraftPool.Charm;
+
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShapeOfUnn);

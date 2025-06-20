@@ -6,6 +6,8 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class Caching : Power
 {
+    public override DraftPool Pools => DraftPool.Spirit;
+
     public GameObject ActiveSoulCache { get; set; }
 
     public static GameObject SoulCache { get; set; }

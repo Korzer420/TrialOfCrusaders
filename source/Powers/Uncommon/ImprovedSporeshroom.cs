@@ -20,6 +20,8 @@ internal class ImprovedSporeshroom : Power
 
     public override Rarity Tier => Rarity.Uncommon;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm | DraftPool.Upgrade;
+
     public override bool CanAppear => HasPower<Sporeshroom>();
 
     public GameObject Cloud => _cloud ??= GameObject.Find("_GameManager")?.transform.Find("GlobalPool/Knight Spore Cloud(Clone)")?.gameObject;

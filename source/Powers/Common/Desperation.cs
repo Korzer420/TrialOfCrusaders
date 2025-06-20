@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -10,6 +11,8 @@ internal class Desperation : Power
     public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _);
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
+
+    public override DraftPool Pools => DraftPool.Spirit | DraftPool.Upgrade;
 
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.PlayerDataBoolTest.OnEnter += PlayerDataBoolTest_OnEnter;
 

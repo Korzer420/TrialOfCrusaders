@@ -15,6 +15,8 @@ internal class Grubsong : Power
 
     public override bool CanAppear => !HasPower<ShiningBound>();
 
+    public override DraftPool Pools => DraftPool.Charm;
+
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.Grubsong);

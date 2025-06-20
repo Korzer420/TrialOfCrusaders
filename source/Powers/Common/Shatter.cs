@@ -1,4 +1,5 @@
 ﻿using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 
 namespace TrialOfCrusaders.Powers.Common;
 
@@ -9,6 +10,8 @@ internal class Shatter : Power
     internal HealthManager LastEnemy { get; set; }
 
     public override (float, float, float) BonusRates => new(10f, 0f, 0f);
+
+    public override DraftPool Pools => DraftPool.Combat;
 
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 

@@ -14,6 +14,8 @@ internal class ImprovedGrimmchild : Power
 
     public override StatScaling Scaling => StatScaling.Combat;
 
+    public override DraftPool Pools => DraftPool.Combat | DraftPool.Upgrade | DraftPool.Charm;
+
     public override bool CanAppear => HasPower<ImprovedGrimmchild>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);

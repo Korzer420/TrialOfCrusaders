@@ -14,6 +14,8 @@ internal class Supreme : Power
 
     public override StatScaling Scaling => StatScaling.Combat | StatScaling.Endurance;
 
+    public override DraftPool Pools => DraftPool.Burst | DraftPool.Endurance;
+
     protected override void Enable()
     {
         _killedEnemies = 0;
