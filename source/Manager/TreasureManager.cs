@@ -857,4 +857,6 @@ public static class TreasureManager
         EnduranceHealthGrant = false;
         PlayMakerFSM.BroadcastEvent("MAX HP UP");
     }
+
+    internal static T GetPower<T>() where T : Power => Powers.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 }

@@ -436,6 +436,7 @@ internal static class InventoryController
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         UpdateList(0);
+        UpdateStats();
         _enabled = true;
     }
 

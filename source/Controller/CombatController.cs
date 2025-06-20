@@ -59,8 +59,6 @@ internal static class CombatController
     // As this is called very frequently we store it in an extra value.
     internal static bool DebuffsStronger { get; set; }
 
-    public static int NailDamage => 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
-
     #endregion
 
     #region Events
@@ -683,7 +681,7 @@ internal static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            return NailDamage;
+            return 3 + CombatLevel * 2 + (CombatLevel >= 19 ? 1 : 0);
         else if (name == nameof(PlayerData.maxHealthCap))
             return 25;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
@@ -983,8 +981,10 @@ internal static class CombatController
         {
             if (currentHealth != PDHelper.Health)
             {
-                if (HasPower(out FragileGreed greed) && greed.GreedActive || HasPower(out FragileSpirit spirit) && spirit.SpiritActive
-                    || HasPower(out FragileStrength strength) && strength.StrengthActive)
+                if (HasPower(out FragileGreed greed) && greed.GreedActive
+                    || HasPower(out FragileSpirit spirit) && spirit.SpiritActive
+                    || HasPower(out FragileStrength strength) && strength.StrengthActive
+                    || HasPower(out Damocles damocles) && !damocles.Triggered)
                     HeroController.instance.proxyFSM.GetState("Flower?").GetFirstAction<ActivateGameObject>().gameObject.GameObject.Value.SetActive(true);
                 TookDamage?.Invoke();
             }

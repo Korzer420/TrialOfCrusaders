@@ -48,7 +48,7 @@ internal static class SetupManager
                         // For none boss rooms ensure the same room cannot occur between 15 rooms of each other.
                         // For boss rooms ensure that no boss appear
                         if (!room.BossRoom && lastRooms.Contains(room.Name)
-                            || room.BossRoom && (roomList[roomList.Count - 1].BossRoom || roomList[roomList.Count - 2].BossRoom) && currentRoom % 20 != 12)
+                            || room.BossRoom && (roomList[roomList.Count - 1].BossRoom || roomList[roomList.Count - 2].BossRoom) && currentRoom % 12 != 0)
                             continue;
                         reachableRooms.Add(room);
                     }
