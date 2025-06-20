@@ -12,5 +12,7 @@ public enum Phase
 
     Run,
 
-    Result
+    Result,
+
+    WaitForSave
 }

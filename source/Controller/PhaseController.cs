@@ -87,7 +87,8 @@ public static class PhaseController
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
     {
-        TransitionTo(Phase.Inactive);
+        if (CurrentPhase != Phase.Inactive)
+            TransitionTo(Phase.WaitForSave);
         yield return orig(self);
         HistoryController.History = null;
     }
@@ -153,9 +154,6 @@ public static class PhaseController
                         LogManager.Log("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
                     break;
                 case Phase.Inactive:
-                    // Save forfeited run.
-                    if (CurrentPhase == Phase.Run)
-                        HistoryController.AddEntry(RunResult.Forfeited);
                     HistoryController.Unload();
                     SpawnController.Unload();
                     HubController.Unload();
@@ -189,6 +187,11 @@ public static class PhaseController
                     }
                     else
                         SpawnController.Initialize();
+                    break;
+                case Phase.WaitForSave:
+                    // Save forfeited run.
+                    if (CurrentPhase == Phase.Run)
+                        HistoryController.AddEntry(RunResult.Forfeited);
                     break;
                 default:
                     break;

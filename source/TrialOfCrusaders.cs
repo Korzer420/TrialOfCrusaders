@@ -96,12 +96,11 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>
     LocalSaveData ILocalSettings<LocalSaveData>.OnSaveLocal()
     {
         if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
-        {
-            LogManager.Log("Not in correct mode. Return nothing");
             return null;
-        }
-        
-        return new() { OldRunData = HistoryController.History };
+        LocalSaveData saveData = new() { OldRunData = HistoryController.History };
+        if (PhaseController.CurrentPhase == Enums.Phase.WaitForSave)
+            PhaseController.TransitionTo(Enums.Phase.Inactive);
+        return saveData;
     }
 
     #endregion
