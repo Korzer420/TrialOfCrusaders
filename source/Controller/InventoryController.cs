@@ -128,7 +128,7 @@ internal static class InventoryController
         currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(SecondPowerSlot, new(null, currentElement));
-
+        
         currentElement = CreateTextElement(true);
         currentElement.name = ThirdPowerSlot;
         currentElement.transform.SetParent(powerList.transform);

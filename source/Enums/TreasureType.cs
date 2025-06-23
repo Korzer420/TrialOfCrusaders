@@ -54,5 +54,7 @@ internal enum TreasureType
 
     Fireball,
 
-    Quake
+    Quake,
+
+    WellRested
 }

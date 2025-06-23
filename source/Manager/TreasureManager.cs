@@ -1,6 +1,7 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
+using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,11 +19,6 @@ using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
 namespace TrialOfCrusaders.Manager;
-
-/*
-    ToDo:
-- Check run id verifier.
- */
 
 public static class TreasureManager
 {
@@ -47,6 +43,8 @@ public static class TreasureManager
     public static Type TestPower => typeof(PolarityShift);
 
     public static GameObject Shiny { get; set; }
+
+    public static GameObject BigItemUI { get; set; }
 
     public static Power[] Powers =>
     [
@@ -189,6 +187,10 @@ public static class TreasureManager
         UnityEngine.Object.Destroy(Shiny.GetComponent<ObjectBounce>());
         UnityEngine.Object.Destroy(Shiny.GetComponent<PersistentBoolItem>());
         UnityEngine.Object.DontDestroyOnLoad(Shiny);
+        
+        BigItemUI = GameObject.Instantiate(Shiny.LocateMyFSM("Shiny Control").GetState("Dash").GetFirstAction<CreateUIMsgGetItem>().gameObject.Value);
+        BigItemUI.SetActive(false);
+        GameObject.DontDestroyOnLoad(BigItemUI);
     }
 
     internal static GameObject SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
@@ -234,6 +236,10 @@ public static class TreasureManager
             case TreasureType.Quake:
                 shiny.GetComponent<SpriteRenderer>().color = Color.yellow;
                 glow.GetComponent<tk2dSprite>().color = Color.yellow;
+                break;
+            case TreasureType.WellRested:
+                shiny.GetComponent<SpriteRenderer>().color = Color.cyan;
+                glow.GetComponent<tk2dSprite>().color = Color.cyan;
                 break;
             default:
                 break;
@@ -346,6 +352,9 @@ public static class TreasureManager
                     StageController.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
+                case TreasureType.WellRested:
+                    fsm.SendEvent("BIG");
+                    break;
                 default:
                     int amount = RollSelection(fsm, treasure);
                     TrialOfCrusaders.Holder.StartCoroutine(SelectPower(CreatePowerOverlay(fsm, amount), fsm, amount));
@@ -365,6 +374,31 @@ public static class TreasureManager
         });
         fsm.GetState("Destroy").RemoveAllActions();
         fsm.GetState("Destroy").AddTransition("FINISHED", "Fling?");
+
+        if ((int)treasure > 15)
+        {
+            fsm.GetState("Check Choice").AddTransition("BIG", "Big Get Flash");
+            fsm.AddState("Show major item", () =>
+            { 
+                var bigUI = GameObject.Instantiate(BigItemUI, Vector3.zero, Quaternion.identity);
+                bigUI.SetActive(true);
+                PlayMakerFSM fsm = bigUI.LocateMyFSM("Msg Control");
+                fsm.AddState("Prepare Item", () =>
+                {
+                    fsm.FsmVariables.FindFsmGameObject("Item Name").Value.GetComponent<TextMeshPro>().text = "Well Rested";
+                    fsm.FsmVariables.FindFsmGameObject("Item Name Prefix").Value.GetComponent<TextMeshPro>().text = "You unlocked:";
+
+                    fsm.FsmVariables.FindFsmGameObject("Press").Value.GetComponent<TextMeshPro>().text = "";
+                    fsm.FsmVariables.FindFsmGameObject("Button").Value.SetActive(false);
+                    fsm.FsmVariables.FindFsmGameObject("Msg 1").Value.GetComponent<TextMeshPro>().text = "You start each run with 1 in each stat. The stat cap is increased to 21.";
+                    fsm.FsmVariables.FindFsmGameObject("Msg 2").Value.GetComponent<TextMeshPro>().text = "This is a permanent upgrade.";
+
+                    fsm.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.QuickSlash");
+                }, FsmTransitionData.FromTargetState("Audio Player Actor").WithEventName("FINISHED"));
+                fsm.GetState("Init").AddTransition("FINISHED", "Prepare Item");
+            }, FsmTransitionData.FromTargetState("Trink Pause").WithEventName("GET ITEM MSG END"));
+                fsm.GetState("Big Get Flash").AdjustTransitions("Show major item");
+        }
         shiny.SetActive(true);
         fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         shiny.transform.position = position;
