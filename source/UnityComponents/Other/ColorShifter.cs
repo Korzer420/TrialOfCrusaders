@@ -5,6 +5,7 @@ namespace TrialOfCrusaders.UnityComponents.Other;
 internal class ColorShifter : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
+    private tk2dSprite _tk2dSprite;
     private float _timePassed = 0f;
     private int _colorRotationIndex = 0;
 
@@ -12,7 +13,12 @@ internal class ColorShifter : MonoBehaviour
 
     public tk2dSprite GlowSprite { get; set; }
 
-    void Start() => _spriteRenderer = GetComponent<SpriteRenderer>();
+    void Start()
+    { 
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null)
+            _tk2dSprite = GetComponent<tk2dSprite>();
+    }
 
     void Update()
     {
@@ -21,7 +27,10 @@ internal class ColorShifter : MonoBehaviour
         {
             if (_timePassed > 1f)
                 _timePassed = 0f;
-            _spriteRenderer.color = Color.HSVToRGB(_timePassed, 1, 1);
+            if (_spriteRenderer != null)
+                _spriteRenderer.color = Color.HSVToRGB(_timePassed, 1, 1);
+            if (_tk2dSprite != null)
+                _tk2dSprite.color = Color.HSVToRGB(_timePassed, 1, 1);
             if (GlowSprite != null)
                 GlowSprite.color = _spriteRenderer.color;
         }
@@ -36,7 +45,10 @@ internal class ColorShifter : MonoBehaviour
                 1 => new(1f, 0f, 1f, 1f),
                 _ => Color.green,
             };
-            _spriteRenderer.color = color;
+            if (_spriteRenderer != null)
+                _spriteRenderer.color = color;
+            if (_tk2dSprite != null)
+                _tk2dSprite.color = color;
             if (GlowSprite != null)
                 GlowSprite.color = color;
             _timePassed = 0f;

@@ -1,7 +1,6 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
-using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -542,6 +541,10 @@ public static class TreasureManager
 
         CreateForfeitOption(powerOverlay.transform);
 
+        TreasureType selectionType = (TreasureType)fsm.FsmVariables.FindFsmInt("Item Select").Value;
+        if (selectionType == TreasureType.NormalOrb || selectionType == TreasureType.RareOrb)
+            CreateRerollOption(powerOverlay.transform);
+
         (SpriteRenderer, TextMeshPro) titleInfo = TextManager.CreateUIObject("Title");
         GameObject titleText = titleInfo.Item1.gameObject;
         titleText.transform.SetParent(powerOverlay.transform);
@@ -777,13 +780,29 @@ public static class TreasureManager
         optionPair.Item2.fontSize = 3;
     }
 
+    private static void CreateRerollOption(Transform parent)
+    {
+        if (!SecretController.UnlockedHighRoller || SecretController.LeftRolls <= 0)
+            return;
+        (SpriteRenderer, TextMeshPro) optionPair = TextManager.CreateUIObject("Reroll power");
+        GameObject option = optionPair.Item2.gameObject;
+        option.transform.SetParent(parent);
+        GameObject.Destroy(optionPair.Item1);
+        optionPair.Item2.text = $"Reroll ({SecretController.LeftRolls} left)";
+        option.transform.position = new(-13.9f, -5f);
+        optionPair.Item2.fontSize = 3;
+    }
+
     private static IEnumerator SelectPower(GameObject powerSelector, PlayMakerFSM shinyFsm, int amount)
     {
+        // To prevent insta selections.
+        yield return new WaitUntil(() => !InputHandler.Instance.inputActions.jump.IsPressed && !InputHandler.Instance.inputActions.menuSubmit.IsPressed);
         GameObject leftArrow = powerSelector.transform.Find("MoveLeft").gameObject;
         GameObject rightArrow = powerSelector.transform.Find("MoveRight").gameObject;
         int powerSlot = 0;
         bool selected = false;
         bool inputPause = false;
+        bool canReroll = SecretController.LeftRolls > 0 && shinyFsm.FsmVariables.FindFsmInt("Item Select").Value < 2;
         while (!selected)
         {
             yield return null;
@@ -792,7 +811,7 @@ public static class TreasureManager
             else if (InputHandler.Instance.inputActions.left.IsPressed)
             {
                 powerSlot--;
-                if (powerSlot == -2)
+                if (powerSlot == -3 || (!canReroll && powerSlot == -2))
                     powerSlot = amount - 1;
                 inputPause = true;
             }
@@ -800,10 +819,10 @@ public static class TreasureManager
             {
                 powerSlot++;
                 if (powerSlot >= amount)
-                    powerSlot = -1;
+                    powerSlot = canReroll ? -2 : 1;
                 inputPause = true;
             }
-            if (powerSlot != -1)
+            if (powerSlot >= 0)
             {
                 leftArrow.transform.localPosition = new(-9f + powerSlot * 8.5f, 1.7f);
                 rightArrow.transform.localPosition = new(-3.4f + powerSlot * 8.5f, 1.7f);
@@ -812,19 +831,19 @@ public static class TreasureManager
             }
             else
             {
-                leftArrow.transform.localPosition = new(-15f, -5.2f);
-                rightArrow.transform.localPosition = new(-9.25f, -5.2f);
+                leftArrow.transform.localPosition = new(-15f, powerSlot == -2 ? -4.2f : -5.2f);
+                rightArrow.transform.localPosition = new(-9.25f, powerSlot == -2 ? -4.2f : -5.2f);
                 leftArrow.transform.localScale = new(1f, 1f);
                 rightArrow.transform.localScale = new(1f, 1f);
             }
             if (inputPause)
             {
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.1f);
                 inputPause = false;
             }
         }
         UnityEngine.Object.Destroy(leftArrow.transform.parent.gameObject);
-        if (powerSlot != -1)
+        if (powerSlot >= 0)
         {
             string pickedValue = shinyFsm.FsmVariables.FindFsmString("Option " + (powerSlot + 1)).Value;
             Power pickedPower = null;
@@ -864,12 +883,18 @@ public static class TreasureManager
             for (int i = 1; i < 4; i++)
                 HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, powerSlot + 1 == i);
         }
-        else
+        else if (powerSlot == -1)
         { 
             PowerSelected?.Invoke(null);
             for (int i = 1; i < 4; i++)
                 HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, false);
-            
+        }
+        else
+        {
+            SecretController.LeftRolls--;
+            amount = RollSelection(shinyFsm, (TreasureType)shinyFsm.FsmVariables.FindFsmInt("Item Select").Value);
+            TrialOfCrusaders.Holder.StartCoroutine(SelectPower(CreatePowerOverlay(shinyFsm, amount), shinyFsm, amount));
+            yield break;
         }
         shinyFsm.SendEvent("CHARM");
         shinyFsm.gameObject.GetComponent<LeftShinyFlag>().RemoveFlag();

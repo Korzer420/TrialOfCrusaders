@@ -70,14 +70,14 @@ internal static class SetupManager
             // Test specific boss.
             //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
             //roomList.Insert(91, roomData);
-            // Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Fungus2_14");
-            // Test room at start.
-            //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
-            //{
-            //    Name = selectedRoomData.Name,
-            //    SelectedTransition = x
-            //}), .. roomList];
+            //Test specific room.
+            var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Deepnest_East_16");
+            //Test room at start.
+            roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
+            {
+                Name = selectedRoomData.Name,
+                SelectedTransition = x
+            }), .. roomList];
             // Test room insert
             //roomList.Insert(30, new RoomData()
             //{

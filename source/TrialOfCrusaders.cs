@@ -85,13 +85,14 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
         HistoryController.SetupList(saveData);
+        SecretController.UnlockedSecretArchive = saveData?.UnlockedSecretArchive ?? false;
+        SecretController.UnlockedToughness = saveData?.UnlockedToughness ?? false;
+        SecretController.UnlockedStashedContraband = saveData?.UnlockedContraband ?? false;
+        SecretController.UnlockedHighRoller = saveData?.UnlockedHighRoller ?? false;
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
-            {
                 PhaseController.TransitionTo(Enums.Phase.Initialize);
-
-            }
             else
                 PhaseController.TransitionTo(Enums.Phase.Inactive);
         }
@@ -101,7 +102,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
     {
         if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
             return null;
-        LocalSaveData saveData = new() { OldRunData = HistoryController.History, Archive = HistoryController.Archive };
+        LocalSaveData saveData = new() 
+        { 
+            OldRunData = HistoryController.History,
+            Archive = HistoryController.Archive,
+            UnlockedContraband = SecretController.UnlockedStashedContraband,
+            UnlockedHighRoller = SecretController.UnlockedHighRoller,
+            UnlockedToughness = SecretController.UnlockedToughness,
+            UnlockedSecretArchive = SecretController.UnlockedSecretArchive,
+        };
         if (PhaseController.CurrentPhase == Enums.Phase.WaitForSave)
             PhaseController.TransitionTo(Enums.Phase.Inactive);
         return saveData;

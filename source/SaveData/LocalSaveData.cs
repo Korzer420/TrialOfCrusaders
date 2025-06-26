@@ -11,6 +11,14 @@ public class LocalSaveData
 
     public ArchiveData Archive { get; set; } = new();
 
+    public bool UnlockedSecretArchive { get; set; }
+
+    public bool UnlockedHighRoller { get; set; }
+
+    public bool UnlockedContraband { get; set; }
+
+    public bool UnlockedToughness { get; set; }
+
     #endregion
 
     // ToDo: Support save inside a run.

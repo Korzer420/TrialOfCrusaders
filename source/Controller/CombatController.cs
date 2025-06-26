@@ -19,6 +19,7 @@ using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Debuffs;
+using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
 
@@ -47,6 +48,13 @@ internal static class CombatController
     public static int SpiritLevel { get; set; }
 
     public static int EnduranceLevel { get; set; }
+
+    public static bool CombatCapped => CombatLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+
+    public static bool SpiritCapped => SpiritLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+
+    public static bool EnduranceCapped => EnduranceLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+
 
     public static bool CharmUpdate { get; set; }
 
@@ -153,6 +161,31 @@ internal static class CombatController
         HistoryController.CreateEntry += PassHistoryData;
 
         CreateExtraHudElements();
+        
+        // Permanent unlocks
+        if (SecretController.UnlockedToughness)
+        {
+            CombatLevel++;
+            SpiritLevel++;
+            EnduranceLevel++;
+        }
+        if (SecretController.UnlockedStashedContraband)
+        {
+            PDHelper.CanDash = true;
+            PDHelper.HasDash = true;
+        }
+        if (SecretController.UnlockedHighRoller)
+            SecretController.LeftRolls = 3;
+
+        // Secret seed handling
+        if (RngManager.Seed == 060060606)
+            HeroController.instance.gameObject.AddComponent<ColorShifter>().Rainbow = true;
+        else if (RngManager.Seed == 020220715)
+        {
+            CombatLevel += 3;
+            EnduranceLevel += 3;
+        }
+
         _enemyScanner = TrialOfCrusaders.Holder.StartCoroutine(ScanEnemies());
         GameCameras.instance.hudCanvas.gameObject.SetActive(true);
         CoroutineHelper.WaitUntil(() =>
@@ -164,17 +197,8 @@ internal static class CombatController
                 PDHelper.MaxHealth += intendedMaxHealth - PDHelper.MaxHealth;
                 HeroController.instance.MaxHealth();
             }
-
-            int maxMP = 33 + Math.Min(SpiritLevel, 18) * 8 + (SpiritLevel == 19 ? 10 : 0);
-            int soulVessel = 0;
-            if (maxMP >= 165)
-                soulVessel = 3;
-            else if (maxMP > 132)
-                soulVessel = 2;
-            else if (maxMP > 99)
-                soulVessel = 1;
-            PDHelper.MPReserveMax = soulVessel * 33;
         }, () => HeroController.instance?.acceptingInput == true, true);
+        
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
         _enabled = true;
     }
@@ -230,6 +254,12 @@ internal static class CombatController
         SpiritLevel = 0;
         EnduranceLevel = 0;
         _stageTreasures = 0;
+
+        if (HeroController.instance.GetComponent<ColorShifter>() is ColorShifter shifter)
+        { 
+            Component.Destroy(shifter);
+            HeroHelper.Sprite.color = Color.white;
+        }
         _enabled = false;
     }
 
@@ -246,7 +276,7 @@ internal static class CombatController
             GameObject healthPrefab = cameraObject.Find("HudCamera/Hud Canvas/Health/Health 11").gameObject;
             float space = healthPrefab.transform.localPosition.x - cameraObject.Find("HudCamera/Hud Canvas/Health/Health 10").localPosition.x;
 
-            for (int i = 1; i <= 14; i++)
+            for (int i = 1; i <= 15; i++)
             {
                 GameObject gameObject = UnityEngine.Object.Instantiate(healthPrefab, cameraObject.Find("HudCamera/Hud Canvas/Health"));
                 gameObject.name = "Health " + (i + 11);
@@ -686,24 +716,18 @@ internal static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            return 3 + CombatLevel * 2 + (CombatLevel >= 19 ? CombatLevel - 18 : 0);
+            return 5 + CombatLevel * 2;
         else if (name == nameof(PlayerData.maxHealthCap))
-            return 25;
+            return 26;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
             return 5 + EnduranceLevel;
         else if (name == nameof(PlayerData.maxMP))
             return Math.Min(99, 33 + SpiritLevel * 11);
         else if (name == nameof(PlayerData.MPReserveMax))
         {
-            // Each spirit level grants 11 soul (with the exception of level 10 and 20 which grant 16 and 17 respectivly).
             if (SpiritLevel <= 6)
                 return 0;
-            int soulCapacity = (SpiritLevel - 6) * 11;
-            if (SpiritLevel > 10)
-                soulCapacity += 5;
-            if (SpiritLevel == 20)
-                soulCapacity += 6;
-            return soulCapacity;
+            return (SpiritLevel - 6) * 11;
         }
         else if (name == nameof(PlayerData.MPReserveCap))
             return orig == 99 ? 165 : 5;
@@ -732,7 +756,7 @@ internal static class CombatController
                 {
                     self.gameObject.AddComponent<InitiativeEffect>();
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
-                    hitInstance.DamageDealt += 10 + CombatLevel * 2;
+                    hitInstance.DamageDealt += 10 + CombatLevel;
                 }
 
                 if (HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
@@ -776,7 +800,7 @@ internal static class CombatController
                 {
                     self.gameObject.AddComponent<InitiativeEffect>();
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
-                    hitInstance.DamageDealt += 10 + CombatLevel * 2;
+                    hitInstance.DamageDealt += 10 + CombatLevel;
                 }
             }
 

@@ -81,7 +81,7 @@ public static class PhaseController
             PDHelper.HegemolDefeated = true;
             HistoryController.History = [];
         }
-        else 
+        else
             HistoryController.History = null;
     }
 
@@ -116,6 +116,7 @@ public static class PhaseController
                         CombatController.Initialize();
                         InventoryController.Initialize();
                         HistoryController.Unload();
+                        SecretController.SkippedOrbs = [false, false, false];
                         CoroutineHelper.WaitUntil(() =>
                         {
                             PDHelper.HasDreamNail = false;
@@ -134,8 +135,13 @@ public static class PhaseController
                             pedestal.SetActive(true);
                             // Spawn two orbs at the start.
                             TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
-                            TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
-                            PhaseController.CurrentPhase = Phase.Run;
+                            if (RngManager.Seed == 000000206)
+                                TreasureManager.SpawnShiny(TreasureType.RareOrb, new(109f, 20.4f), false);
+                            else
+                                TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+
+                            if (RngManager.Seed == 000001225)
+                                TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(114f, 20.4f), false);
                             HubController.Unload();
                         }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
                     }
@@ -189,7 +195,7 @@ public static class PhaseController
                         ScoreController.Unload();
                     }
                     else
-                    { 
+                    {
                         SpawnController.Initialize();
                         SecretController.Initialize();
                     }

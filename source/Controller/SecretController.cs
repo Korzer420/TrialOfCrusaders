@@ -25,7 +25,7 @@ internal static class SecretController
 
     public static bool UnlockedStashedContraband { get; set; }
 
-    public static bool UnlockedArchive { get; set; }
+    public static bool UnlockedSecretArchive { get; set; }
 
     public static int LeftRolls { get; set; } = 3;
 
@@ -39,11 +39,11 @@ internal static class SecretController
     {
         if (_enabled) 
             return;
+        LogManager.Log("Enabled secret controller");
         SkippedOrbs = [false, false, false];
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         LeftShinyFlag.LeftShinyBehind += LeftShinyFlag_LeftShinyBehind;
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
-
         _enabled = true;
     }
 
@@ -51,6 +51,7 @@ internal static class SecretController
     {
         if (!_enabled)
             return;
+        LogManager.Log("Disabled secret controller");
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         LeftShinyFlag.LeftShinyBehind -= LeftShinyFlag_LeftShinyBehind;
         On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
@@ -81,7 +82,7 @@ internal static class SecretController
             case TreasureType.Archive:
                 itemName = SecretText.ArchiveTitle;
                 description = SecretText.ArchiveDesc;
-                UnlockedArchive = true;
+                UnlockedSecretArchive = true;
                 break;
             default:
                 itemName = "Unknown";
@@ -113,7 +114,7 @@ internal static class SecretController
         }
         else if (arg1.name == "Dream_Room_Believer_Shrine")
         {
-            if (!UnlockedArchive && HistoryController.History.Count > 0 && HistoryController.History.Last().Result == RunResult.Completed
+            if (!UnlockedSecretArchive && HistoryController.History.Count > 0 && HistoryController.History.Last().Result == RunResult.Completed
                 && HistoryController.History.Last().Powers.Contains(TreasureManager.GetPower<VoidHeart>().Name))
                 TreasureManager.SpawnShiny(TreasureType.Archive, new(26.15f, 47.4f), false);
         }
@@ -140,6 +141,7 @@ internal static class SecretController
                 if (!UnlockedHighRoller && !DummyHitSequence.Contains(-1))
                 {
                     DummyHitSequence.Add(self.FsmVariables.FindFsmFloat("Attack Direction").Value);
+                    LogManager.Log(DummyHitSequence.Last().ToString());
                     if (DummyHitSequence.Count > _dummySequence.Length)
                         DummyHitSequence.RemoveAt(0);
                     if (DummyHitSequence.SequenceEqual(_dummySequence))

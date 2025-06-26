@@ -652,7 +652,7 @@ internal static class HistoryController
                 string archiveText = ArchiveText.ResourceManager.GetString(key);
                 if (key == "BELIEVE_TAB_07")
                     archiveText = string.Format(archiveText, TreasureManager.Powers.Length);
-                if (SecretController.UnlockedArchive)
+                if (SecretController.UnlockedSecretArchive)
                 {
                     string secretText = ArchiveText.ResourceManager.GetString($"Secret_{key}");
                     archiveText += $"<page>{secretText}";
