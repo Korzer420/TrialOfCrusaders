@@ -15,7 +15,7 @@ internal class Mediocracy : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    public override bool CanAppear => CombatController.EnduranceLevel < 20;
+    public override bool CanAppear => !CombatController.EnduranceCapped;
 
     protected override void Enable()
     {
@@ -33,7 +33,7 @@ internal class Mediocracy : Power
         if (selectedPower != null && selectedPower.Tier == Rarity.Uncommon)
         {
             _uncommonRow++;
-            if (RngManager.GetRandom(1, 100) <= _uncommonRow * 2)
+            if (!CombatController.EnduranceCapped && RngManager.GetRandom(1, 100) <= _uncommonRow * 2)
                 TreasureManager.SpawnShiny(TreasureType.EnduranceOrb, HeroController.instance.transform.position);
         }
         else

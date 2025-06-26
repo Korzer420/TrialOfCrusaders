@@ -88,7 +88,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Highroller ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die High Roller ähnelt.
         /// </summary>
         internal static string HighrollerTitle {
             get {

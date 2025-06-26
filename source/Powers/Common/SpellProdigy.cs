@@ -9,7 +9,7 @@ internal class SpellProdigy : Power
 {
     private bool _nailUsed;
 
-    public override bool CanAppear => CombatController.HasSpell();
+    public override bool CanAppear => CombatController.HasSpell() && !CombatController.SpiritCapped;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
@@ -37,7 +37,7 @@ internal class SpellProdigy : Power
 
     private void CombatController_EnemiesCleared()
     {
-        if (!_nailUsed && CombatController.SpiritLevel < 20 && RngManager.GetRandom(1, 10) <= 2)
+        if (!_nailUsed && !CombatController.SpiritCapped && RngManager.GetRandom(1, 10) <= 2)
             TreasureManager.SpawnShiny(Enums.TreasureType.SpiritOrb, HeroController.instance.transform.position);
         _nailUsed = true;
     }

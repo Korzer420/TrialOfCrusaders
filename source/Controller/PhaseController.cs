@@ -117,6 +117,7 @@ public static class PhaseController
                         InventoryController.Initialize();
                         HistoryController.Unload();
                         SecretController.SkippedOrbs = [false, false, false];
+                        HistoryController.Archive.TotalRuns++;
                         CoroutineHelper.WaitUntil(() =>
                         {
                             PDHelper.HasDreamNail = false;

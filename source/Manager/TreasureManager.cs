@@ -466,11 +466,11 @@ public static class TreasureManager
                 int rolledBonus = RngManager.GetRandom(1, 100);
                 if (selectedPower.Tier != Rarity.Rare && CombatController.HasPower<LuckyCharm>(out _))
                     bonusChances = new(bonusChances.Item1 * 1.5f, bonusChances.Item2 * 1.5f, bonusChances.Item3 * 2);
-                if (rolledBonus <= bonusChances.Item1 && CombatController.CombatLevel < 20)
+                if (rolledBonus <= bonusChances.Item1 && !CombatController.CombatCapped)
                     statBoni.Add("Combat");
-                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 && CombatController.SpiritLevel < 20)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 && !CombatController.SpiritCapped)
                     statBoni.Add("Spirit");
-                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 + bonusChances.Item3 && CombatController.EnduranceLevel < 20)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 + bonusChances.Item3 && !CombatController.EnduranceCapped)
                     statBoni.Add("Endurance");
                 else
                     statBoni.Add(null);

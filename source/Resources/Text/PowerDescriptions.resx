@@ -474,4 +474,7 @@
   <data name="Weaversong" xml:space="preserve">
     <value>Spawns weavers that assist you in battle.</value>
   </data>
+  <data name="Mediocracy" xml:space="preserve">
+    <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
+  </data>
 </root>
