@@ -74,6 +74,7 @@ internal static class HistoryController
         On.PlayMakerFSM.OnEnable += FsmEdits;
         IL.Breakable.Break += PreventTabletBreak;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
+        ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         _active = true;
     }
 
@@ -86,6 +87,7 @@ internal static class HistoryController
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         IL.Breakable.Break -= PreventTabletBreak;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
+        ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         _active = false;
     }
 
@@ -541,9 +543,24 @@ internal static class HistoryController
                     archiveInspect.LocateMyFSM("inspect_region").FsmVariables.FindFsmString("Game Text Convo").Value = "ToC_TBA";
 
                     GameObject blocker = new("Blocker");
-                    blocker.transform.position = new(22.85f, 17.39f);
+                    blocker.transform.position = new(27.12f, 12.5f);
                     blocker.layer = 8;
-                    blocker.AddComponent<BoxCollider2D>().size = new(1f, 10f);
+                    blocker.AddComponent<BoxCollider2D>().size = new(10f, 1f);
+
+                    blocker = new("Blocker 2");
+                    blocker.transform.position = new(55.01f, 12.5f);
+                    blocker.layer = 8;
+                    blocker.AddComponent<BoxCollider2D>().size = new(11f, 1f);
+
+                    blocker = new("Blocker 3");
+                    blocker.transform.position = new(84f, 12.5f);
+                    blocker.layer = 8;
+                    blocker.AddComponent<BoxCollider2D>().size = new(11f, 1f);
+
+                    blocker = new("Blocker 3");
+                    blocker.transform.position = new(108.45f, 17.775f);
+                    blocker.layer = 8;
+                    blocker.AddComponent<BoxCollider2D>().size = new(1f, 30f);
                 }
                 else
                 {
@@ -665,6 +682,13 @@ internal static class HistoryController
             else
                 return string.Format(ArchiveText.LockedPrompt, ArchiveText.ResourceManager.GetString($"Locked_{key}"));
         }
+        return orig;
+    }
+
+    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.hasDash) || name == nameof(PlayerData.canDash) || name == nameof(PlayerData.hasWalljump))
+            return true;
         return orig;
     }
 

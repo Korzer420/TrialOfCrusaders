@@ -503,6 +503,8 @@ internal static class InventoryController
     {
         if (key == "ToCPowers")
             return "Trial Powers";
+        else if (key == "ABYSS_MAWLEK_ROYAL")
+            return string.Join(", ", Enumerable.Range(0, 9).Select(x => "MOTHWING CLOAK"));
         return orig;
     }
 }
