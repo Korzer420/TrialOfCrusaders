@@ -156,6 +156,7 @@ public static class PhaseController
                 case Phase.Inactive:
                     HistoryController.Unload();
                     SpawnController.Unload();
+                    SecretController.Unload();
                     HubController.Unload();
                     CombatController.Unload();
                     InventoryController.Unload();
@@ -168,7 +169,7 @@ public static class PhaseController
                     HistoryController.Initialize();
                     if (CurrentPhase != Phase.Inactive && CurrentPhase != Phase.Initialize)
                     {
-                        if (CurrentPhase == Phase.Run)
+                        if (CurrentPhase == Phase.Run || CurrentPhase == Phase.Result)
                         {
                             // Reset shade, save history entry and reset to hub control.
                             PDHelper.ShadeMapZone = string.Empty;
@@ -181,12 +182,17 @@ public static class PhaseController
                             CombatController.Unload();
                             StageController.Unload();
                             InventoryController.Unload();
+                            if (CurrentPhase == Phase.Result)
+                                ScoreController.Unload();
                         }
                         PDHelper.GeoPool = 0;
                         ScoreController.Unload();
                     }
                     else
+                    { 
                         SpawnController.Initialize();
+                        SecretController.Initialize();
+                    }
                     break;
                 case Phase.WaitForSave:
                     // Save forfeited run.

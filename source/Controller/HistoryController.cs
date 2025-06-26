@@ -1,4 +1,5 @@
-﻿using KorzUtils.Data;
+﻿using InControl;
+using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
 using MonoMod.Cil;
@@ -35,6 +36,21 @@ internal static class HistoryController
         "MothwingCloak",
         "VengefulSpirit"
     ];
+    private static readonly string[] _tabletKeys =
+    [
+        "BELIEVE_TAB_07",
+        "BELIEVE_TAB_24",
+        "BELIEVE_TAB_08",
+        "BELIEVE_TAB_36",
+        "BELIEVE_TAB_05",
+        "BELIEVE_TAB_01",
+        "BELIEVE_TAB_35",
+        "BELIEVE_TAB_57",
+        "BELIEVE_TAB_03",
+        "BELIEVE_TAB_06",
+        "BELIEVE_TAB_09",
+        "BELIEVE_TAB_02"
+    ];
 
     internal static event Action<HistoryData, RunResult> CreateEntry;
 
@@ -42,7 +58,11 @@ internal static class HistoryController
 
     internal static List<HistoryData> History { get; set; } = [];
 
-    public static GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50};
+    public static GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50 };
+
+    internal static GameObject ArchiveSprite { get; set; }
+
+    public static ArchiveData Archive { get; set; } = new();
 
     #region Setup
 
@@ -69,13 +89,17 @@ internal static class HistoryController
         _active = false;
     }
 
-    internal static void SetupList(List<HistoryData> history) => History = history;
+    internal static void SetupList(LocalSaveData saveData)
+    {
+        History = saveData?.OldRunData;
+        Archive = saveData?.Archive;
+    }
 
     #endregion
 
     #region History Page
 
-    private static IEnumerator ShowPage(PlayMakerFSM fsm)
+    private static IEnumerator ShowHistoryPage(PlayMakerFSM fsm)
     {
         GameObject board = new("History Board");
         try
@@ -483,6 +507,11 @@ internal static class HistoryController
 
     #endregion
 
+    #region Archive
+
+
+    #endregion
+
     private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
@@ -494,9 +523,23 @@ internal static class HistoryController
                     History ??= [];
                     if (History.Count != 0)
                     {
-                        self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
+                        self.AddState("Show History", () => TrialOfCrusaders.Holder.StartCoroutine(ShowHistoryPage(self)), FsmTransitionData.FromTargetState("Look Up End?").WithEventName("CONVO_FINISH"));
                         self.GetState("Centre?").AdjustTransitions("Show History");
                     }
+                    GameObject archiveTablet = GameObject.Instantiate(ArchiveSprite);
+                    archiveTablet.name = "Archive tablet";
+                    archiveTablet.SetActive(true);
+                    archiveTablet.transform.position = new(47.8f, 33.7f, 0.01f);
+                    // This causes the tablet to black out (idk why)
+                    archiveTablet.transform.localScale = new(1.2f, 1.1f);
+
+
+                    GameObject archiveInspect = GameObject.Instantiate(HubController.InspectPrefab);
+                    archiveInspect.name = "Archive Inspect";
+                    archiveInspect.SetActive(true);
+                    archiveInspect.transform.position = new(47.8f, 31.3f);
+                    archiveInspect.LocateMyFSM("inspect_region").FsmVariables.FindFsmString("Game Text Convo").Value = "ToC_TBA";
+
                     GameObject blocker = new("Blocker");
                     blocker.transform.position = new(22.85f, 17.39f);
                     blocker.layer = 8;
@@ -505,7 +548,9 @@ internal static class HistoryController
                 else
                 {
                     orig(self);
-                    GameObject.Destroy(self.transform.parent.parent.gameObject);
+                    if (self.transform.parent.parent.name.StartsWith("Plaque_statue_03") 
+                        || !_tabletKeys.Contains(self.FsmVariables.FindFsmString("Game Text Convo").Value))
+                        GameObject.Destroy(self.transform.parent.parent.gameObject);
                     return;
                 }
             }
@@ -529,7 +574,6 @@ internal static class HistoryController
     {
         TempEntry ??= new();
         CreateEntry?.Invoke(TempEntry, result);
-
         // Take RngProvider data
         TempEntry.Seed = RngManager.Seed;
         TempEntry.Seeded = RngManager.Seeded;
@@ -558,6 +602,92 @@ internal static class HistoryController
     {
         if (key == "BELIEVE_TAB_04")
             return LobbyDialog.HistoryEmpty;
+        else if (key == "ToC_TBA")
+            return "Whatever this might be, at the moment it has not been fully constructed yet. You might wanna come back later.";
+        else if (_tabletKeys.Contains(key))
+        {
+            bool unlocked = false;
+            switch (key)
+            {
+                case "BELIEVE_TAB_07":
+                    unlocked = Archive.FastestTrial != 0;
+                    break;
+                case "BELIEVE_TAB_24":
+                    unlocked = Archive.FastestGrandTrial != 0;
+                    break;
+                case "BELIEVE_TAB_08":
+                    unlocked = Archive.HighestTrialScore >= 5000 | Archive.HighestGrandTrialScore >= 5000;
+                    break;
+                case "BELIEVE_TAB_36":
+                    unlocked = Archive.HighestTrialScore >= 10000 | Archive.HighestGrandTrialScore >= 10000;
+                    break;
+                case "BELIEVE_TAB_05":
+                    unlocked = (Archive.FastestGrandTrial < 3600 && Archive.FastestGrandTrial > 0) | (Archive.FastestTrial < 3600 && Archive.FastestTrial > 0);
+                    break;
+                case "BELIEVE_TAB_01":
+                    unlocked = Archive.CommonOnlyRun;
+                    break;
+                case "BELIEVE_TAB_35":
+                    unlocked = Archive.GrubRecord >= 10;
+                    break;
+                case "BELIEVE_TAB_57":
+                    unlocked = Archive.EssenceRecord >= 50;
+                    break;
+                case "BELIEVE_TAB_03":
+                    unlocked = Archive.HighestTrialScore >= 15000 | Archive.HighestGrandTrialScore >= 15000;
+                    break;
+                case "BELIEVE_TAB_06":
+                    unlocked = Archive.FinishedSeededRun;
+                    break;
+                case "BELIEVE_TAB_09":
+                    unlocked = Archive.HighestTrialScore >= 20000 | Archive.HighestGrandTrialScore >= 20000;
+                    break;
+                case "BELIEVE_TAB_02":
+                    unlocked = Archive.PerfectFinalBoss;
+                    break;
+            }
+
+            if (unlocked)
+            {
+                string archiveText = ArchiveText.ResourceManager.GetString(key);
+                if (key == "BELIEVE_TAB_07")
+                    archiveText = string.Format(archiveText, TreasureManager.Powers.Length);
+                if (SecretController.UnlockedArchive)
+                {
+                    string secretText = ArchiveText.ResourceManager.GetString($"Secret_{key}");
+                    archiveText += $"<page>{secretText}";
+                    if (key == "BELIEVE_TAB_07")
+                        archiveText = string.Format(archiveText, TreasureManager.Powers.Count(x => x.Tier == Rarity.Common), 
+                            TreasureManager.Powers.Count(x => x.Tier == Rarity.Uncommon), TreasureManager.Powers.Count(x => x.Tier == Rarity.Rare));
+                }
+                return archiveText;
+            }
+            else
+                return string.Format(ArchiveText.LockedPrompt, ArchiveText.ResourceManager.GetString($"Locked_{key}"));
+        }
         return orig;
+    }
+
+    internal static void CheckArchiveUpdate()
+    {
+        Archive ??= new();
+        Archive.EssenceRecord = Math.Max(Archive.EssenceRecord, PDHelper.DreamOrbs);
+        Archive.GrubRecord = Math.Max(Archive.EssenceRecord, ScoreController.Score.GrubBonus);
+        // 2 uncommon powers (dive and fireball) are unavoidable, they will be excluded.
+        Archive.CommonOnlyRun = Archive.CommonOnlyRun
+            | (TempEntry.UncommonPowerAmount <= 2 && TempEntry.RarePowerAmount == 0);
+        Archive.FinishedSeededRun = Archive.FinishedSeededRun | RngManager.Seeded;
+        Archive.PerfectFinalBoss = ScoreController.Score.HitlessFinalBoss | Archive.PerfectFinalBoss;
+        Dictionary<string, int> scoreDictionary = ScoreController.Score.TransformToDictionary();
+        if (ScoreController.Score.Mode == GameMode.GrandCrusader)
+        {
+            Archive.FastestGrandTrial = Math.Min(Archive.FastestGrandTrial, ScoreController.Score.PassedTime);
+            Archive.HighestGrandTrialScore = Math.Max(Archive.HighestGrandTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
+        }
+        else
+        {
+            Archive.FastestTrial = Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime);
+            Archive.HighestTrialScore = Math.Max(Archive.HighestTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
+        }
     }
 }

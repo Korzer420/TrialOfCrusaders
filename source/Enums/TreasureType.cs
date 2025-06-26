@@ -1,6 +1,7 @@
 ﻿namespace TrialOfCrusaders.Enums;
 
-internal enum TreasureType
+
+public enum TreasureType
 {
     /// <summary>
     /// 3 power options, may be higher rarity.
@@ -56,5 +57,11 @@ internal enum TreasureType
 
     Quake,
 
-    WellRested
+    StashedContraband,
+
+    Toughness,
+
+    Highroller,
+
+    Archive
 }

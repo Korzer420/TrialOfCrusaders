@@ -309,8 +309,15 @@ public static class ScoreController
             else if (self.FsmName == "Geo Pool")
             {
                 PDHelper.ColosseumSilverCompleted = true;
-                // Each power decreases the final value. 2 are ignored as spells are forced by room 40 and 80.
-                self.FsmVariables.FindFsmInt("Starting Pool").Value = Math.Max(100, (CombatController.HasPower<VoidHeart>(out _) ? 5000 : 2500) - (CombatController.ObtainedPowers.Count - 2) * 50);
+                // Each power decreases the final value. 2 are ignored as spells are forced by certain rooms.
+                int baseGeoReward = HistoryController.TempEntry.Score.Mode == GameMode.GrandCrusader
+                    ? 2500
+                    : 1500;
+                baseGeoReward = Math.Max(100, baseGeoReward - (HistoryController.TempEntry.Powers.Count - 2) * 50);
+                if (HistoryController.TempEntry.Powers.Contains(typeof(VoidHeart).Name))
+                    baseGeoReward *= 2;
+
+                self.FsmVariables.FindFsmInt("Starting Pool").Value = baseGeoReward;
                 self.AddState("Wait for Result", () =>
                 {
                     PlayMakerFSM.BroadcastEvent("CROWD IDLE");
@@ -362,12 +369,10 @@ public static class ScoreController
             HistoryController.History.Add(HistoryController.TempEntry);
             if (HistoryController.History.Count > HistoryController.HistorySettings.HistoryAmount)
                 HistoryController.History.RemoveAt(0);
+            HistoryController.CheckArchiveUpdate();
             HistoryController.TempEntry = null;
             GameManager.instance.SaveGame();
-            Unload();
-            HubController.Initialize();
-            HistoryController.Initialize();
-            PhaseController.CurrentPhase = Phase.Lobby;
+            PhaseController.TransitionTo(Phase.Lobby);
             GameCameras.instance.hudCanvas.LocateMyFSM("Slide Out").SendEvent("IN");
             UnityEngine.Object.Destroy(inspect);
         });

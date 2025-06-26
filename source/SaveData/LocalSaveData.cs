@@ -9,6 +9,8 @@ public class LocalSaveData
 
     public List<HistoryData> OldRunData { get; set; } = [];
 
+    public ArchiveData Archive { get; set; } = new();
+
     #endregion
 
     // ToDo: Support save inside a run.

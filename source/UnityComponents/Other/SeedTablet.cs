@@ -19,8 +19,8 @@ internal class SeedTablet : MonoBehaviour
         "HowlingWraiths",
         "IsmasTear",
         "MantisClaw",
-        "MonarchWings",
         "MothwingCloak",
+        "MonarchWings",
         "VengefulSpirit"
     ];
 

@@ -779,9 +779,9 @@
     "AllowedEntrances": [ "left1" ],
     "BossRoom": false,
     "NeededProgress": 0,
-    "ConditionalProgress": [1, 128],
+    "ConditionalProgress": [ 1, 128 ],
     "EasyNeededProgress": 1,
-    "EasyConditionalProgress": [128, 4]
+    "EasyConditionalProgress": [ 128, 4 ]
   },
   {
     "Name": "Ruins2_06",
@@ -956,7 +956,7 @@
   },
   {
     "Name": "Abyss_19",
-    "AllowedEntrances": ["right1", "bot1" ],
+    "AllowedEntrances": [ "right1", "bot1" ],
     "BossRoom": false,
     "NeededProgress": 128,
     "ConditionalProgress": [],
@@ -1154,7 +1154,7 @@
   },
   {
     "Name": "Deepnest_41",
-    "AllowedEntrances": [ "left2"],
+    "AllowedEntrances": [ "left2" ],
     "BossRoom": false,
     "NeededProgress": 258,
     "ConditionalProgress": [],
@@ -2141,6 +2141,16 @@
     "AllowedEntrances": [],
     "BossRoom": true,
     "NeededProgress": 2,
+    "ConditionalProgress": [],
+    "EasyNeededProgress": 0,
+    "EasyConditionalProgress": []
+  },
+  {
+    "Name": "Deepnest_East_16",
+    "AllowedEntrances": [ "left1" ],
+    "BossRoom": false,
+    "NeededProgress": 0,
+    "BigRoom": true,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

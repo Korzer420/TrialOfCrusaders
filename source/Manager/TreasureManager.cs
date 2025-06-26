@@ -171,7 +171,8 @@ public static class TreasureManager
         new PaleShell(),
         new TreasureHunter(),
         new ShiningBound(),
-        new VoidHeart()
+        new Mediocracy(),
+        new VoidHeart(),
     ];
 
     public static int BadLuckProtection { get; set; } = 0;
@@ -179,6 +180,10 @@ public static class TreasureManager
     public static bool EnduranceHealthGrant { get; set; }
 
     public static bool SelectionActive { get; set; }
+
+    public static event Action<TreasureType, GameObject> SpawnedShiny;
+
+    public static event Action<Power> PowerSelected;
 
     internal static void SetupShiny(GameObject chest)
     {
@@ -237,7 +242,10 @@ public static class TreasureManager
                 shiny.GetComponent<SpriteRenderer>().color = Color.yellow;
                 glow.GetComponent<tk2dSprite>().color = Color.yellow;
                 break;
-            case TreasureType.WellRested:
+            case TreasureType.StashedContraband:
+            case TreasureType.Toughness:
+            case TreasureType.Highroller:
+            case TreasureType.Archive:
                 shiny.GetComponent<SpriteRenderer>().color = Color.cyan;
                 glow.GetComponent<tk2dSprite>().color = Color.cyan;
                 break;
@@ -352,7 +360,10 @@ public static class TreasureManager
                     StageController.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
-                case TreasureType.WellRested:
+                case TreasureType.StashedContraband:
+                case TreasureType.Toughness:
+                case TreasureType.Highroller:
+                case TreasureType.Archive:
                     fsm.SendEvent("BIG");
                     break;
                 default:
@@ -385,24 +396,18 @@ public static class TreasureManager
                 PlayMakerFSM fsm = bigUI.LocateMyFSM("Msg Control");
                 fsm.AddState("Prepare Item", () =>
                 {
-                    fsm.FsmVariables.FindFsmGameObject("Item Name").Value.GetComponent<TextMeshPro>().text = "Well Rested";
-                    fsm.FsmVariables.FindFsmGameObject("Item Name Prefix").Value.GetComponent<TextMeshPro>().text = "You unlocked:";
-
-                    fsm.FsmVariables.FindFsmGameObject("Press").Value.GetComponent<TextMeshPro>().text = "";
-                    fsm.FsmVariables.FindFsmGameObject("Button").Value.SetActive(false);
-                    fsm.FsmVariables.FindFsmGameObject("Msg 1").Value.GetComponent<TextMeshPro>().text = "You start each run with 1 in each stat. The stat cap is increased to 21.";
-                    fsm.FsmVariables.FindFsmGameObject("Msg 2").Value.GetComponent<TextMeshPro>().text = "This is a permanent upgrade.";
-
-                    fsm.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.QuickSlash");
+                    SecretController.SetupItemScreen(fsm, treasure);
                 }, FsmTransitionData.FromTargetState("Audio Player Actor").WithEventName("FINISHED"));
                 fsm.GetState("Init").AddTransition("FINISHED", "Prepare Item");
             }, FsmTransitionData.FromTargetState("Trink Pause").WithEventName("GET ITEM MSG END"));
                 fsm.GetState("Big Get Flash").AdjustTransitions("Show major item");
         }
         shiny.SetActive(true);
+        shiny.AddComponent<LeftShinyFlag>().Treasure = treasure;
         fsm.FsmVariables.FindFsmBool("Fling On Start").Value = fling;
         shiny.transform.position = position;
         fsm.FsmVariables.FindFsmInt("Item Select").Value = (int)treasure;
+        SpawnedShiny?.Invoke(treasure, shiny);
         return shiny;
     }
 
@@ -854,9 +859,20 @@ public static class TreasureManager
             {
                 CombatController.ObtainedPowers.Add(pickedPower);
                 pickedPower.EnablePower();
+                PowerSelected?.Invoke(pickedPower);
             }
+            for (int i = 1; i < 4; i++)
+                HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, powerSlot + 1 == i);
+        }
+        else
+        { 
+            PowerSelected?.Invoke(null);
+            for (int i = 1; i < 4; i++)
+                HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, false);
+            
         }
         shinyFsm.SendEvent("CHARM");
+        shinyFsm.gameObject.GetComponent<LeftShinyFlag>().RemoveFlag();
         InventoryController.UpdateStats();
         InventoryController.UpdateList(-1);
         if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)

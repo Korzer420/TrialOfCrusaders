@@ -262,9 +262,9 @@ internal static class StageController
                     }
                     else
                     {
-                        //// Test for specific room index.
-                        //if (CurrentRoomIndex == 1)
-                        //    CurrentRoomIndex = 46;
+                        // Test for specific room index.
+                        //if (CurrentRoomIndex == 2)
+                        //    CurrentRoomIndex = 47;
 
                         CurrentRoomIndex++;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;

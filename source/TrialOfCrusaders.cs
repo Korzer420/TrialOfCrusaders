@@ -39,6 +39,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         ("Crossroads_ShamanTemple", "_Enemies/Zombie Runner"),
         ("Ruins1_24_boss", "Mage Lord"),
         ("Ruins1_23", "Mage"),
+        ("Ruins1_23", "Glow Response Mage Computer"),
         ("Ruins1_23", "Inspect Region"),
         ("Ruins1_23", "Ruins Vial Empty (2)/Active/soul_cache (1)"),
         ("GG_Workshop", "GG_Statue_Vengefly/Inspect"),
@@ -73,6 +74,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
         MenuController.AddMode();
         PhaseController.Initialize();
+        SecretController.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
     }
 
@@ -82,13 +84,13 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
-        HistoryController.SetupList(saveData?.OldRunData);
+        HistoryController.SetupList(saveData);
         if (PhaseController.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
             {
                 PhaseController.TransitionTo(Enums.Phase.Initialize);
-                LogManager.Log("Transitioned to initialize: " + saveData.OldRunData.Count);
+
             }
             else
                 PhaseController.TransitionTo(Enums.Phase.Inactive);
@@ -99,7 +101,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
     {
         if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
             return null;
-        LocalSaveData saveData = new() { OldRunData = HistoryController.History };
+        LocalSaveData saveData = new() { OldRunData = HistoryController.History, Archive = HistoryController.Archive };
         if (PhaseController.CurrentPhase == Enums.Phase.WaitForSave)
             PhaseController.TransitionTo(Enums.Phase.Inactive);
         return saveData;
@@ -129,6 +131,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         HubController.InspectPrefab = preloadedObjects["Ruins1_23"]["Inspect Region"];
         Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
         Gate.Prefab.name = "Gate";
+        HistoryController.ArchiveSprite = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Glow Response Mage Computer"]);
 
         GameObject[] preloads =
         [
@@ -152,6 +155,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
             ScoreController.ScoreboardPrefab,
             SpecialTransition.TransitionPrefab,
             _coroutineHolder.gameObject,
+            HistoryController.ArchiveSprite
         ];
         foreach (GameObject gameObject in preloads)
         {
