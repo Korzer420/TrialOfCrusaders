@@ -13,7 +13,7 @@ internal class BindingCircle : Power
 
     public override bool CanAppear => HasPower<DreamNail>();
 
-    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Endurance;
+    public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Endurance | DraftPool.Debuff;
 
     protected override void Enable() => On.EnemyDreamnailReaction.RecieveDreamImpact += EnemyDreamnailReaction_RecieveDreamImpact;
 
