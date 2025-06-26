@@ -186,7 +186,8 @@ public static class PhaseController
                             PDHelper.ShadePositionY = 0;
                             PDHelper.SoulLimited = false;
                             ScoreController.Score.Score = PDHelper.GeoPool;
-                            HistoryController.AddEntry(RunResult.Failed);
+                            if (CurrentPhase == Phase.Run)
+                                HistoryController.AddEntry(RunResult.Failed);
                             CombatController.Unload();
                             StageController.Unload();
                             InventoryController.Unload();

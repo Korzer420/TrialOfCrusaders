@@ -705,12 +705,17 @@ internal static class HistoryController
         Dictionary<string, int> scoreDictionary = ScoreController.Score.TransformToDictionary();
         if (ScoreController.Score.Mode == GameMode.GrandCrusader)
         {
-            Archive.FastestGrandTrial = Math.Min(Archive.FastestGrandTrial, ScoreController.Score.PassedTime);
+            Archive.FastestGrandTrial = Archive.FastestGrandTrial == 0 
+                ? ScoreController.Score.PassedTime
+                : Math.Min(Archive.FastestGrandTrial, ScoreController.Score.PassedTime);
             Archive.HighestGrandTrialScore = Math.Max(Archive.HighestGrandTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
         }
         else
         {
-            Archive.FastestTrial = Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime);
+            Archive.FastestTrial = Archive.FastestTrial == 0 
+                ?  ScoreController.Score.PassedTime
+                : Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime)
+                ;
             Archive.HighestTrialScore = Math.Max(Archive.HighestTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
         }
     }
