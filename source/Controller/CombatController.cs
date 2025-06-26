@@ -161,7 +161,7 @@ internal static class CombatController
         HistoryController.CreateEntry += PassHistoryData;
 
         CreateExtraHudElements();
-        
+
         // Permanent unlocks
         if (SecretController.UnlockedToughness)
         {
@@ -192,13 +192,9 @@ internal static class CombatController
         {
             // Adjust max health and max mp.
             int intendedMaxHealth = 5 + EnduranceLevel;
-            if (PDHelper.MaxHealth != intendedMaxHealth)
-            {
-                PDHelper.MaxHealth += intendedMaxHealth - PDHelper.MaxHealth;
-                HeroController.instance.MaxHealth();
-            }
+            HeroController.instance.MaxHealth();
         }, () => HeroController.instance?.acceptingInput == true, true);
-        
+
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
         _enabled = true;
     }
@@ -256,7 +252,7 @@ internal static class CombatController
         _stageTreasures = 0;
 
         if (HeroController.instance.GetComponent<ColorShifter>() is ColorShifter shifter)
-        { 
+        {
             Component.Destroy(shifter);
             HeroHelper.Sprite.color = Color.white;
         }

@@ -17,6 +17,18 @@ internal static class SecretController
 
     private static readonly float[] _dummySequence = [ 0, 0, 0, 0, 0, 0, 270, 270, 270, 90, 90, 90, 90, 90, 90, 90, 90, 90, 180, 180, 180];
 
+    private static readonly Dictionary<int, string> _stageHints = new()
+    {
+        {4, "Skip" },
+        {13, "One" },
+        {25, "Of" },
+        {41, "Combat" },
+        {57, "Spirit" },
+        {70, "Endurance" },
+        {82, "For" },
+        {99, "Fortune" },
+    };
+
     #region Properties
 
     public static bool UnlockedToughness { get; set; }
@@ -99,6 +111,13 @@ internal static class SecretController
         fsm.FsmVariables.FindFsmGameObject("Item Name").Value.GetComponent<TextMeshPro>().text = itemName;
         fsm.FsmVariables.FindFsmGameObject("Msg 1").Value.GetComponent<TextMeshPro>().text = description;
         fsm.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>($"Sprites.Icons.{treasure}_Icon");
+    }
+
+    internal static string CheckForStageHints()
+    {
+        if (_stageHints.ContainsKey(StageController.CurrentRoomNumber))
+            return $" ({_stageHints[StageController.CurrentRoomNumber]})";
+        return "";
     }
 
     #region Eventhandler

@@ -71,13 +71,13 @@ internal static class SetupManager
             //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
             //roomList.Insert(91, roomData);
             //Test specific room.
-            var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Abyss_20");
+            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Abyss_20");
             //Test room at start.
-            roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
-            {
-                Name = selectedRoomData.Name,
-                SelectedTransition = x
-            }), .. roomList];
+            //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
+            //{
+            //    Name = selectedRoomData.Name,
+            //    SelectedTransition = x
+            //}), .. roomList];
             // Test room insert
             //roomList.Insert(30, new RoomData()
             //{

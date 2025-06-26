@@ -201,6 +201,9 @@ internal static class HubController
                 Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (1)"));
                 Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (2)"));
                 _rolledSeed = Random.Range(100000000, 1000000000);
+                // Prevent special seed from appearing.
+                while(_rolledSeed == 777777777)
+                    _rolledSeed = Random.Range(100000000, 1000000000);
                 float xPosition = 18.2f;
                 float yPosition = 9.5f;
                 for (int i = 0; i < 9; i++)

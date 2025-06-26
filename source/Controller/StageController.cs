@@ -389,6 +389,15 @@ internal static class StageController
                 GameObject.Destroy(marmuGate);
         }
         _roomCounter.text = $"Current room: {CurrentRoomNumber}";
+        if (!SecretController.UnlockedToughness)
+        {
+            string secretText = SecretController.CheckForStageHints();
+            if (!string.IsNullOrEmpty(secretText))
+            {
+                _roomCounter.text += secretText;
+                TrialOfCrusaders.Holder.StartCoroutine(CorrectCounter());
+            }
+        }
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
         else if (QuietRoom && !CurrentRoom.IsQuietRoom)
@@ -572,7 +581,8 @@ internal static class StageController
     private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
-            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
+            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37" 
+            || GameManager.instance.sceneName == "GG_Spa"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
             return CurrentRoomNumber >= CurrentRoomData.Count / 2;
@@ -605,7 +615,16 @@ internal static class StageController
             SpawnTeleporter(new(141.57f, 58.15f), new(124.06f, 21.3f));
         else if (arg1.name == "Abyss_19")
             SpawnTeleporter(new(90.1f, 3.4f), new(114.41f, 3.4f));
+        else if (arg1.name == "GG_Spa")
+            CoroutineHelper.WaitForHero(() =>
+                GameObject.Find("spa_pieces/atrium_NPC_trihead_sit").transform.Find("Dream Dialogue").gameObject.SetActive(true), true);
     }
 
     #endregion
+
+    private static IEnumerator CorrectCounter()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _roomCounter.text = $"Current room: {CurrentRoomNumber}";
+    }
 }

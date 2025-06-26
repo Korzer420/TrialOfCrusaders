@@ -111,6 +111,7 @@ public static class PhaseController
                 case Phase.Run:
                     if (CurrentPhase == Phase.Lobby)
                     {
+                        TreasureManager.SelectionCount = 0;
                         StageController.Initialize();
                         ScoreController.Initialize();
                         CombatController.Initialize();

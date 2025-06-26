@@ -34,7 +34,7 @@ internal static class InventoryController
     private const string PowerListUp = "Power List Up";
 
     #region Draft Pool Text Color
-    
+
     private const string WealthTextColor = "#ffdd00"; // Yellow
     private const string InstantTextColor = "#ffffff"; // White
     private const string RiskTextColor = "#ffa600"; // Orange
@@ -128,7 +128,7 @@ internal static class InventoryController
         currentElement.text = $"-";
         currentElement.fontSize = 3;
         _elementLookup.Add(SecondPowerSlot, new(null, currentElement));
-        
+
         currentElement = CreateTextElement(true);
         currentElement.name = ThirdPowerSlot;
         currentElement.transform.SetParent(powerList.transform);
@@ -297,9 +297,9 @@ internal static class InventoryController
                 _elementLookup[PowerName].Item2.text = selectedPower.Name;
                 _elementLookup[PowerDescription].Item2.text = selectedPower.Description;
                 _elementLookup[PowerRarity].Item2.text = selectedPower.Tier switch
-                { 
-                    Enums.Rarity.Rare =>  $"Rarity: <color={TreasureManager.RareTextColor}>Rare</color>",
-                    Enums.Rarity.Uncommon =>  $"Rarity: <color={TreasureManager.UncommonTextColor}>Uncommon</color>",
+                {
+                    Enums.Rarity.Rare => $"Rarity: <color={TreasureManager.RareTextColor}>Rare</color>",
+                    Enums.Rarity.Uncommon => $"Rarity: <color={TreasureManager.UncommonTextColor}>Uncommon</color>",
                     _ => $"Rarity: Common"
                 };
 
@@ -312,7 +312,7 @@ internal static class InventoryController
                     scalingText += $" <color={CombatController.EnduranceStatColor}>Endurance</color>,";
                 if (string.IsNullOrEmpty(scalingText))
                     scalingText = "-";
-                else 
+                else
                     scalingText = scalingText.TrimEnd(',').TrimStart('\0');
                 _elementLookup[PowerScaling].Item2.text = $"Scaling: {scalingText}";
                 _elementLookup[MainSprite].Item1.sprite = selectedPower.Sprite;
@@ -331,7 +331,7 @@ internal static class InventoryController
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Risk))
                     pool += $" <color={RiskTextColor}>Risk</color>,";
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Treasure))
-                    pool += $" <color={TreasureTextColor}>Treasure</color>,"; 
+                    pool += $" <color={TreasureTextColor}>Treasure</color>,";
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Ability))
                     pool += $" <color={AbilityTextColor}>Ability</color>,";
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Charm))
@@ -441,7 +441,7 @@ internal static class InventoryController
     public static void ResetList()
     {
         _inventoryFsm.FsmVariables.FindFsmInt("PowerIndex").Value = 0;
-        string[] elements = 
+        string[] elements =
         [
             FirstPowerSlot,
             SecondPowerSlot,
@@ -505,6 +505,18 @@ internal static class InventoryController
             return "Trial Powers";
         else if (key == "ABYSS_MAWLEK_ROYAL")
             return string.Join(", ", Enumerable.Range(0, 9).Select(x => "MOTHWING CLOAK"));
+        else if (key == "DREAM_DUMMY")
+            return "All arrows point towards me. Not once, not twice, but thrice.";
+        else if (key == "ATRIUM_NPC_DREAM_1" && (ScoreController.Score.Mode == Enums.GameMode.Crusader || ScoreController.Score.Mode == Enums.GameMode.GrandCrusader))
+        {
+            string text = StageController.CurrentRoomData.Last().Name switch
+            {
+                "GG_Radiance" => "The brightest light shines at the end of the trial.",
+                "GG_Grimm_Nightmare" => "Will the crusader be engulfed by the scarlet flames?",
+                _ => "The cloud darken in the distance..."
+            };
+            return text;
+        }
         return orig;
     }
 }

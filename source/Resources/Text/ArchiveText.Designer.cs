@@ -349,7 +349,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die It appears that there is only a single room in the trials which do not require combat. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The arrows may appear at certain crossroads, but that information is trying to deceive you. Their position at the crossroads however... ähnelt.
         /// </summary>
         internal static string Secret_BELIEVE_TAB_09 {
             get {

@@ -180,6 +180,8 @@ public static class TreasureManager
 
     public static bool SelectionActive { get; set; }
 
+    public static int SelectionCount { get; set; }
+
     public static event Action<TreasureType, GameObject> SpawnedShiny;
 
     public static event Action<Power> PowerSelected;
@@ -191,7 +193,7 @@ public static class TreasureManager
         UnityEngine.Object.Destroy(Shiny.GetComponent<ObjectBounce>());
         UnityEngine.Object.Destroy(Shiny.GetComponent<PersistentBoolItem>());
         UnityEngine.Object.DontDestroyOnLoad(Shiny);
-        
+
         BigItemUI = GameObject.Instantiate(Shiny.LocateMyFSM("Shiny Control").GetState("Dash").GetFirstAction<CreateUIMsgGetItem>().gameObject.Value);
         BigItemUI.SetActive(false);
         GameObject.DontDestroyOnLoad(BigItemUI);
@@ -264,6 +266,7 @@ public static class TreasureManager
             Transform glow = fsm.transform.Find("Glow");
             if (glow != null)
                 UnityEngine.Object.Destroy(glow.gameObject);
+            SelectionCount++;
             TreasureType treasure = (TreasureType)fsm.FsmVariables.FindFsmInt("Item Select").Value;
             switch (treasure)
             {
@@ -389,7 +392,7 @@ public static class TreasureManager
         {
             fsm.GetState("Check Choice").AddTransition("BIG", "Big Get Flash");
             fsm.AddState("Show major item", () =>
-            { 
+            {
                 var bigUI = GameObject.Instantiate(BigItemUI, Vector3.zero, Quaternion.identity);
                 bigUI.SetActive(true);
                 PlayMakerFSM fsm = bigUI.LocateMyFSM("Msg Control");
@@ -399,7 +402,7 @@ public static class TreasureManager
                 }, FsmTransitionData.FromTargetState("Audio Player Actor").WithEventName("FINISHED"));
                 fsm.GetState("Init").AddTransition("FINISHED", "Prepare Item");
             }, FsmTransitionData.FromTargetState("Trink Pause").WithEventName("GET ITEM MSG END"));
-                fsm.GetState("Big Get Flash").AdjustTransitions("Show major item");
+            fsm.GetState("Big Get Flash").AdjustTransitions("Show major item");
         }
         shiny.SetActive(true);
         shiny.AddComponent<LeftShinyFlag>().Treasure = treasure;
@@ -458,7 +461,7 @@ public static class TreasureManager
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(QuickFocus)));
                     //else
-                        selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
+                    selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
@@ -489,11 +492,11 @@ public static class TreasureManager
 
         int optionAmount = 3;
         List<string> options = [];
-        if (CombatController.CombatLevel != 20)
+        if (!CombatController.CombatCapped)
             options.Add("Combat");
-        if (CombatController.SpiritLevel != 20)
+        if (!CombatController.SpiritCapped)
             options.Add("Spirit");
-        if (CombatController.EnduranceLevel != 20)
+        if (!CombatController.EnduranceCapped)
             options.Add("Endurance");
         if (treasureType == TreasureType.CatchUpStat)
         {
@@ -819,7 +822,7 @@ public static class TreasureManager
             {
                 powerSlot++;
                 if (powerSlot >= amount)
-                    powerSlot = canReroll ? -2 : 1;
+                    powerSlot = canReroll ? -2 : -1;
                 inputPause = true;
             }
             if (powerSlot >= 0)
@@ -828,6 +831,23 @@ public static class TreasureManager
                 rightArrow.transform.localPosition = new(-3.4f + powerSlot * 8.5f, 1.7f);
                 leftArrow.transform.localScale = new(3f, 3f);
                 rightArrow.transform.localScale = new(3f, 3f);
+
+                if (!SecretController.UnlockedHighRoller)
+                    if (SelectionCount == 3 || SelectionCount == 7 || SelectionCount == 12 || SelectionCount == 18)
+                    {
+                        leftArrow.transform.SetRotation2D(0);
+                        rightArrow.transform.SetRotation2D(0);
+                        if (SelectionCount == 3 && powerSlot == 1)
+                            leftArrow.transform.SetRotation2D(180);
+                        else if (SelectionCount == 18 && powerSlot == 0)
+                            rightArrow.transform.SetRotation2D(180);
+                        else if (SelectionCount == 7 && powerSlot == 2)
+                            leftArrow.transform.SetRotation2D(90);
+                        else if (SelectionCount == 12 && powerSlot == 0)
+                            rightArrow.transform.SetRotation2D(90);
+                    }
+                    else
+                        leftArrow.GetComponent<SpriteRenderer>().flipX = true;
             }
             else
             {
@@ -838,7 +858,7 @@ public static class TreasureManager
             }
             if (inputPause)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.3f);
                 inputPause = false;
             }
         }
@@ -884,7 +904,7 @@ public static class TreasureManager
                 HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, powerSlot + 1 == i);
         }
         else if (powerSlot == -1)
-        { 
+        {
             PowerSelected?.Invoke(null);
             for (int i = 1; i < 4; i++)
                 HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, false);
@@ -908,7 +928,7 @@ public static class TreasureManager
 
     internal static void GrantCombatLevel()
     {
-        if (CombatController.CombatLevel >= 20)
+        if (CombatController.CombatCapped)
             return;
         CombatController.CombatLevel++;
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
@@ -916,7 +936,7 @@ public static class TreasureManager
 
     internal static void GrantSpiritLevel()
     {
-        if (CombatController.SpiritLevel >= 20)
+        if (CombatController.SpiritCapped)
             return;
         CombatController.SpiritLevel++;
         PlayMakerFSM.BroadcastEvent("NEW SOUL ORB");
@@ -924,7 +944,7 @@ public static class TreasureManager
 
     internal static void GrantEnduranceLevel()
     {
-        if (CombatController.EnduranceLevel >= 20)
+        if (CombatController.EnduranceCapped)
             return;
         CombatController.EnduranceLevel++;
         EnduranceHealthGrant = true;
