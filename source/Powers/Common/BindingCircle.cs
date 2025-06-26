@@ -1,5 +1,6 @@
 ﻿using KorzUtils.Helper;
 using Modding.Utils;
+using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.Debuffs;
@@ -10,7 +11,7 @@ internal class BindingCircle : Power
 {
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    public override bool CanAppear => PDHelper.HasDreamNail;
+    public override bool CanAppear => HasPower<DreamNail>();
 
     public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Endurance;
 

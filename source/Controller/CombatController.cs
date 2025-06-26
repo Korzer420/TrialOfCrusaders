@@ -55,7 +55,6 @@ internal static class CombatController
 
     public static bool EnduranceCapped => EnduranceLevel >= (SecretController.UnlockedToughness ? 21 : 20);
 
-
     public static bool CharmUpdate { get; set; }
 
     public static List<HealthManager> ActiveEnemies { get; set; } = [];
