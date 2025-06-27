@@ -1519,7 +1519,7 @@
     "Name": "Crossroads_50",
     "AllowedEntrances": [ "left1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 32,
+    "NeededProgress": 34,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": [ 1, 128 ]

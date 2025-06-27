@@ -457,11 +457,11 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Cocoon)));
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Grimmchild)));
                     //else if (i == 1)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(QuickFocus)));
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
                     //else
-                    selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
+                        selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();

@@ -68,8 +68,8 @@ internal static class SetupManager
             //roomList.Add(availableRooms.First(x => x.Name == "GG_Radiance"));
 
             // Test specific boss.
-            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
-            //roomList.Insert(91, roomData);
+            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
+            //roomList.Insert(1, roomData);
             //Test specific room.
             //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Crossroads_08");
             //Test room at start.
