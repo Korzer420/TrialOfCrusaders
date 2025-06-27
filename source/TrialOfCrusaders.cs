@@ -30,7 +30,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     public bool ToggleButtonInsideMenu => throw new System.NotImplementedException();
 
-    public override string GetVersion() => "0.0.1.0-beta1";
+    public override string GetVersion() => "0.0.2.0-beta1";
 
     public override List<(string, string)> GetPreloadNames() =>
     [

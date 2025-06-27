@@ -353,7 +353,7 @@
   },
   {
     "Name": "Crossroads_08",
-    "AllowedEntrances": [ "left2", "right2", "right1", "left1" ],
+    "AllowedEntrances": [ "right1", "left1" ],
     "BossRoom": false,
     "NeededProgress": 0,
     "ConditionalProgress": [],

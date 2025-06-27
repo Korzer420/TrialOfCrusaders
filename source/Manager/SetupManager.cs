@@ -64,14 +64,14 @@ internal static class SetupManager
             }
             // This should only leave NKG, Pure Vessel and Radiance which we use as end bosses.
             availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress, 100))];
-            //roomList.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
-            roomList.Add(availableRooms.First(x => x.Name == "GG_Radiance"));
+            roomList.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
+            //roomList.Add(availableRooms.First(x => x.Name == "GG_Radiance"));
 
             // Test specific boss.
             //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
             //roomList.Insert(91, roomData);
             //Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Abyss_20");
+            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Crossroads_08");
             //Test room at start.
             //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
             //{
