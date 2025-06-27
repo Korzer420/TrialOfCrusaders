@@ -1,7 +1,8 @@
 # Trial of Crusaders
 A Hollow Knight mod that adds a rogue-like mode. (Inspired by Dead Cells, Binding of Isaac and Blue Prince)
 
-Conquer the trials by killing all enemies in the room to continue. Pick up powers and stats to bolster your might but beware, enemies will also scale up in difficulty.
+Conquer the trials by killing all enemies in the room to continue. Pick up powers and stats to bolster your might.
+You'll need that, as enemies will also scale over course of the trial.
 
 This mod uses a special game mode that has to be selected while creating a new save file.
 
