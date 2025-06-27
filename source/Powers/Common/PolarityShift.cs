@@ -31,8 +31,6 @@ internal class PolarityShift : Power
                 self.integer1.Value = 1;
         }
         orig(self);
-        self.integer1.Value = 1;
-        self.integer2.Value = 2;
     }
 
     protected override void Disable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
