@@ -295,7 +295,7 @@
     <value>The fury threshold is increased.</value>
   </data>
   <data name="ImprovedGatheringSwarm" xml:space="preserve">
-    <value>Gathers geo more efficient.</value>
+    <value>Gathers geo more efficient. While not in combat, slowly moves orbs towards you.</value>
   </data>
   <data name="ImprovedGlowingWomb" xml:space="preserve">
     <value>Hatchlings cost way less soul. Damage and spawn rate is increased.</value>
@@ -476,5 +476,8 @@
   </data>
   <data name="Mediocracy" xml:space="preserve">
     <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
+  </data>
+  <data name="WaywardCompass" xml:space="preserve">
+    <value>While in combat, points to the nearest required enemy.</value>
   </data>
 </root>
