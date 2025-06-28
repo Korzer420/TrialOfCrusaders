@@ -133,6 +133,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die They say that there are six different afflictions that can be casted upon enemies. ähnelt.
+        /// </summary>
+        internal static string BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("BELIEVE_TAB_10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die They say that the watchers pity the unlucky in their desperate hour. ähnelt.
         /// </summary>
         internal static string BELIEVE_TAB_24 {
@@ -237,6 +246,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Locked_BELIEVE_TAB_09 {
             get {
                 return ResourceManager.GetString("Locked_BELIEVE_TAB_09", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Affliction Master ähnelt.
+        /// </summary>
+        internal static string Locked_BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("Locked_BELIEVE_TAB_10", resourceCulture);
             }
         }
         
@@ -354,6 +372,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Secret_BELIEVE_TAB_09 {
             get {
                 return ResourceManager.GetString("Secret_BELIEVE_TAB_09", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bleed causes enemies to suffer for a bit. A stronger nail applies more dangerous cuts.&lt;page&gt;Burn causes enemies to be scorched from the earth. Additional flames will re-ignite the already existing one and add to their power.&lt;page&gt;Weakened will exhaust the power of enemies for a bit, maybe even to the point of harmless.&lt;page&gt;Concussion will launch enemies further and allow you to bypass their armor more efficently.&lt;page&gt;Shattered Mind, the strongest of the all, will put them into a vulnerable state where eve [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        /// </summary>
+        internal static string Secret_BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("Secret_BELIEVE_TAB_10", resourceCulture);
             }
         }
         

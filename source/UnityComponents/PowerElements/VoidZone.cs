@@ -38,7 +38,7 @@ internal class VoidZone : MonoBehaviour
     {
         if (other.gameObject.layer == 11) // Enemy layer
         {
-            if (other.GetComponent<EnemyShield>() is not EnemyShield shield || shield.Type != 4)
+            if (other.GetComponent<EnemyShield>() == null)
             {
                 HealthManager enemy = other.gameObject.GetComponent<HealthManager>();
                 if (enemy != null)
@@ -83,7 +83,6 @@ internal class VoidZone : MonoBehaviour
                     }
                 }
                 other.gameObject.AddComponent<EnemyShield>().SetTimer(0.2f);
-                other.gameObject.GetComponent<EnemyShield>().SetType(4);
             }
         }
     }

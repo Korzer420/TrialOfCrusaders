@@ -472,6 +472,9 @@ internal static class CombatController
                 if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetRandom(0f, 100f);
+                    // Make shinies more likely in the early game.
+                    if (ScoreController.Score.Mode == GameMode.Crusader && StageController.CurrentRoomNumber <= 10)
+                        rolled *= 0.75f;
                     if (rolled <= 4f / (1 + _stageTreasures))
                     {
                         TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
@@ -770,24 +773,31 @@ internal static class CombatController
                     if (hitInstance.Source?.name == "Great Slash" || hitInstance.Source?.name == "Dash Slash"
                         || hitInstance.Source?.name == "Hit L" || hitInstance.Source?.name == "Hit R")
                         armor = 0;
-                if (armor > 0 && HasPower(out Shatter shatter))
+                if (armor > 0)
                 {
-                    if (shatter.LastEnemy == self)
-                        shatter.Stacks = Math.Min(10, shatter.Stacks + 1);
-                    else
+                    if (HasPower(out Shatter shatter))
                     {
-                        shatter.Stacks = 0;
-                        shatter.LastEnemy = self;
+                        if (shatter.LastEnemy == self)
+                            shatter.Stacks = Math.Min(10, shatter.Stacks + 1);
+                        else
+                        {
+                            shatter.Stacks = 0;
+                            shatter.LastEnemy = self;
+                        }
+                        armor = Math.Max(0, armor - shatter.Stacks);
                     }
-                    armor = Math.Max(0, armor - shatter.Stacks);
+                    // This is allowed to result in negative armor.
+                    if (self.GetComponent<ConcussionEffect>() != null)
+                        armor -= DebuffsStronger 
+                            ? 15 
+                            : 5;
                 }
                 hitInstance.DamageDealt = Math.Max(1, hitInstance.DamageDealt - armor);
 
                 if (self.GetComponent<ConcussionEffect>() != null)
-                {
-                    hitInstance.DamageDealt = Mathf.FloorToInt(hitInstance.DamageDealt * 1.25f);
-                    hitInstance.MagnitudeMultiplier *= 1.2f;
-                }
+                    hitInstance.MagnitudeMultiplier *= DebuffsStronger
+                        ? 1.6f
+                        : 1.2f;
             }
             else
             {
@@ -948,7 +958,7 @@ internal static class CombatController
     {
         try
         {
-            amount = Math.Max(1, amount - 8 + SpiritLevel / 2);
+            amount = Math.Max(1, amount - 8 + SpiritLevel);
             if (HasPower(out Versatility versatility) && versatility.CastedSpell)
                 amount += 2 + (SpiritLevel + CombatLevel) / 8;
             if (HasPower(out Powers.Common.Caching caching))

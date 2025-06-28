@@ -1,6 +1,5 @@
 ﻿using KorzUtils.Helper;
 using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents.Debuffs;
@@ -10,6 +9,7 @@ internal class BleedEffect : MonoBehaviour
     private float _leftDuration = 5f;
     private float _animationTimer = 0.25f;
     public const string TextColor = "#ff0303";
+    public const int BleedFlagDamage = 6083;
 
     private HealthManager _enemy;
 
@@ -36,9 +36,9 @@ internal class BleedEffect : MonoBehaviour
     }
     internal static void PreparePrefab(GameObject prefab)
     {
-        prefab.name = "Bleed Effect";
-        prefab.GetComponent<SpriteRenderer>().color = Color.red;
-        Prefab = prefab;
+        Prefab = GameObject.Instantiate(prefab);
+        Prefab.name = "Bleed Effect";
+        Prefab.GetComponent<SpriteRenderer>().color = Color.red;
         GameObject.DontDestroyOnLoad(Prefab);
     }
 

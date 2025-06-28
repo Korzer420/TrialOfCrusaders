@@ -40,8 +40,6 @@ public class RoomData
     {
         if (BossRoom)
         {
-            if (currentRoom < (HubController.SelectedGameMode == GameMode.GrandCrusader ? 20 : 10))
-                return false;
             return NeededProgress switch
             {
                 Progress.None => true,
@@ -53,9 +51,6 @@ public class RoomData
         }
         else
         {
-            // Force boss rooms at certain thresholds.
-            if (currentRoom % (HubController.SelectedGameMode == GameMode.GrandCrusader ? 20 : 12) == 0 && currentRoom != 0)
-                return false;
             bool available = progress.HasFlag(NeededProgress) && (ConditionalProgress?.Count == 0 || ConditionalProgress.Any(x => progress.HasFlag(x)));
             if (!easyMode)
                 return available;

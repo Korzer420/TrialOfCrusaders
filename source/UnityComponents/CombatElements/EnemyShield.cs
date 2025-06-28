@@ -2,11 +2,12 @@
 
 namespace TrialOfCrusaders.UnityComponents.CombatElements;
 
+/// <summary>
+/// Can be used to check for immunity of effects.
+/// </summary>
 internal class EnemyShield : MonoBehaviour
 {
     public float Timer { get; private set; }
-
-    public int Type { get; private set; }
 
     void FixedUpdate()
     {
@@ -18,12 +19,6 @@ internal class EnemyShield : MonoBehaviour
     internal EnemyShield SetTimer(float timer)
     {
         Timer = timer;
-        return this;
-    }
-
-    internal EnemyShield SetType(int type)
-    {
-        Type = type;
         return this;
     }
 }

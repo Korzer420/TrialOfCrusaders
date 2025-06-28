@@ -28,8 +28,7 @@ internal class EnemyHitbox : MonoBehaviour
         {
             _hitMethod.Invoke(manager, [Hit]);
             manager.gameObject.AddComponent<EnemyShield>()
-                .SetTimer(0.25f)
-                .SetType(1);
+                .SetTimer(0.25f);
         }
     }
 }

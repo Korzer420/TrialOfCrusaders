@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TrialOfCrusaders.Controller;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents.Debuffs;
@@ -38,7 +39,7 @@ internal class RootEffect : MonoBehaviour
         // This is used to let the enemy blink every 0.25 seconds.
         float blinkMilestone = 0f;
 
-        while (passedTime <= (PlayerData.instance.GetBool(nameof(PlayerData.instance.dreamNailUpgraded)) ? 6f : 3f))
+        while (passedTime <= (CombatController.DebuffsStronger ? 6f : 3f))
         {
             transform.position = _positionToHold;
             passedTime += Time.deltaTime;

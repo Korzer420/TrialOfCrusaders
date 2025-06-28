@@ -1,5 +1,4 @@
 ﻿using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Powers.Uncommon;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 

@@ -141,6 +141,9 @@
   <data name="BELIEVE_TAB_09" xml:space="preserve">
     <value>They say the misguided arrows are a sign from the higher beings.</value>
   </data>
+  <data name="BELIEVE_TAB_10" xml:space="preserve">
+    <value>They say that there are six different afflictions that can be casted upon enemies.</value>
+  </data>
   <data name="BELIEVE_TAB_24" xml:space="preserve">
     <value>They say that the watchers pity the unlucky in their desperate hour.</value>
   </data>
@@ -180,6 +183,9 @@
   <data name="Locked_BELIEVE_TAB_09" xml:space="preserve">
     <value>More than 20000</value>
   </data>
+  <data name="Locked_BELIEVE_TAB_10" xml:space="preserve">
+    <value>Affliction Master</value>
+  </data>
   <data name="Locked_BELIEVE_TAB_24" xml:space="preserve">
     <value>Conquer the grand trial</value>
   </data>
@@ -215,6 +221,9 @@
   </data>
   <data name="Secret_BELIEVE_TAB_09" xml:space="preserve">
     <value>The arrows may appear at certain crossroads, but that information is trying to deceive you. Their position at the crossroads however...</value>
+  </data>
+  <data name="Secret_BELIEVE_TAB_10" xml:space="preserve">
+    <value>Bleed causes enemies to suffer for a bit. A stronger nail applies more dangerous cuts.&lt;page&gt;Burn causes enemies to be scorched from the earth. Additional flames will re-ignite the already existing one and add to their power.&lt;page&gt;Weakened will exhaust the power of enemies for a bit, maybe even to the point of harmless.&lt;page&gt;Concussion will launch enemies further and allow you to bypass their armor more efficently.&lt;page&gt;Shattered Mind, the strongest of the all, will put them into a vulnerable state where even the smallest sting will hurt a lot more.</value>
   </data>
   <data name="Secret_BELIEVE_TAB_24" xml:space="preserve">
     <value>The gift shall lapse if one chooses any of the highest rank.</value>
