@@ -916,7 +916,8 @@
     "NeededProgress": 3,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Room_GG_Shortcut",
@@ -1123,7 +1124,8 @@
     "NeededProgress": 259,
     "ConditionalProgress": [],
     "EasyNeededProgress": 4,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Deepnest_45_v02",

@@ -11,6 +11,8 @@ using TMPro;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.Powers.Common;
+using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.SaveData;
 using UnityEngine;
@@ -49,8 +51,53 @@ internal static class HistoryController
         "BELIEVE_TAB_03",
         "BELIEVE_TAB_06",
         "BELIEVE_TAB_09",
-        "BELIEVE_TAB_02"
+        "BELIEVE_TAB_02",
+        "BELIEVE_TAB_10"
     ];
+
+    private static Vector3[] _tabletPositions = new Vector3[]
+    {
+        // Big platform bottom left.
+        new(34.405f, 14.41f),
+        new(40.7125f, 14.41f),
+        new(47.02f, 14.41f),
+        // Big platform bottom right
+        new(63.18f, 14.41f),
+        new(69,82f, 14.41f),
+        new(76.46f, 14.41f),
+        // Small right
+        new(101.56f, 25.08f),
+        // Second level left
+        new(16.8f, 30.41f),
+        new(24.435f, 30.41f),
+        new(32.07f, 30.41f),
+        // Second level right
+        new(76.135f, 30.41f),
+        new(82.135f, 30.41f),
+        new(89.135f, 30.41f),
+        // Small left
+        new(26.13f, 47.41f),
+        // Third level left
+        new(34.8f, 45.08f),
+        new(42.515f, 45.08f),
+        new(50.23f, 45.08f),
+        // Small middle
+        new(57.34f, 40.34f),
+        // Third level right
+        new(65.72f, 45.08f),
+        new(73.77f, 45.08f),
+        new(81.82f, 45.08f),
+        // Small top
+        new(87.88f, 56.09f),
+        // Fourth level left
+        new(32.12f, 61.41f),
+        new(39.86f, 61.41f),
+        new(47.6f, 61.41f),
+        // Fourth level right
+        new(62.8f, 61.41f),
+        new(70.52f, 61.41f),
+        new(78.24f, 61.41f)
+    };
 
     internal static event Action<HistoryData, RunResult> CreateEntry;
 
@@ -565,9 +612,11 @@ internal static class HistoryController
                 else
                 {
                     orig(self);
-                    if (self.transform.parent.parent.name.StartsWith("Plaque_statue_03") 
+                    if (self.transform.parent.parent.name.StartsWith("Plaque_statue_03")
                         || !_tabletKeys.Contains(self.FsmVariables.FindFsmString("Game Text Convo").Value))
                         GameObject.Destroy(self.transform.parent.parent.gameObject);
+                    else
+                        self.transform.parent.parent.position = _tabletPositions[Array.IndexOf(_tabletKeys, self.FsmVariables.FindFsmString("Game Text Convo").Value)] + new Vector3(0f, 1.3f, 0.1f);
                     return;
                 }
             }
@@ -662,6 +711,9 @@ internal static class HistoryController
                 case "BELIEVE_TAB_02":
                     unlocked = Archive.PerfectFinalBoss;
                     break;
+                case "BELIEVE_TAB_10":
+                    unlocked = Archive.DebuffsSeen.Count == 6;
+                    break;
             }
 
             if (unlocked)
@@ -702,6 +754,26 @@ internal static class HistoryController
             | (TempEntry.UncommonPowerAmount <= 2 && TempEntry.RarePowerAmount == 0);
         Archive.FinishedSeededRun = Archive.FinishedSeededRun | RngManager.Seeded;
         Archive.PerfectFinalBoss = ScoreController.Score.HitlessFinalBoss | Archive.PerfectFinalBoss;
+
+        if (TempEntry.Powers.Contains("Binding Circle") && !Archive.DebuffsSeen.Contains("Root"))
+            Archive.DebuffsSeen.Add("Root");
+        if ((TempEntry.Powers.Contains("Improved Monarch Wings") || TempEntry.Powers.Contains("Deep Cuts")) 
+            && !Archive.DebuffsSeen.Contains("Bleed"))
+            Archive.DebuffsSeen.Add("Bleed");
+        if ((TempEntry.Powers.Contains("Improved Monarch Wings") || TempEntry.Powers.Contains("Improved Heavy Blow"))
+            && !Archive.DebuffsSeen.Contains("Concussion"))
+            Archive.DebuffsSeen.Add("Concussion");
+        if (!Archive.DebuffsSeen.Contains("Burn") && (TempEntry.Powers.Contains("Scorching Ground") 
+            || TempEntry.Powers.Contains("Pyroblast") || TempEntry.Powers.Contains("Fragile Spirit")))
+            Archive.DebuffsSeen.Add("Burn");
+        if (!Archive.DebuffsSeen.Contains("Weakened") && 
+            (TempEntry.Powers.Contains(TreasureManager.GetPower<ImprovedDefendersCrest>().Name) 
+            || TempEntry.Powers.Contains(TreasureManager.GetPower<IntimidatingShout>().Name)))
+            Archive.DebuffsSeen.Add("Weakened");
+        if (!Archive.DebuffsSeen.Contains("Dreams") && 
+            (TempEntry.Powers.Contains("Weakened Husk") || TempEntry.Powers.Contains("Mindblast")))
+            Archive.DebuffsSeen.Add("Dreams");
+
         Dictionary<string, int> scoreDictionary = ScoreController.Score.TransformToDictionary();
         if (ScoreController.Score.Mode == GameMode.GrandCrusader)
         {
@@ -714,8 +786,7 @@ internal static class HistoryController
         {
             Archive.FastestTrial = Archive.FastestTrial == 0 
                 ?  ScoreController.Score.PassedTime
-                : Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime)
-                ;
+                : Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime);
             Archive.HighestTrialScore = Math.Max(Archive.HighestTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
         }
     }

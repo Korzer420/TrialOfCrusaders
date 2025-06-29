@@ -34,27 +34,14 @@ internal class InUtterDarkness : Power
         On.SetHP.OnEnter += SetHP_OnEnter;
     }
 
-    private void SetVector3Value_OnEnter(On.HutongGames.PlayMaker.Actions.SetVector3Value.orig_OnEnter orig, SetVector3Value self)
-    {
-        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*"))
-        {
-            int amount = self.Fsm.Variables.FindFsmInt("Health Increase").Value;
-            GameObject shade = Object.Instantiate(GameManager.instance.sm.hollowShadeObject);
-            shade.SetActive(true);
-            shade.name = "Void Shade";
-            shade.transform.position = HeroController.instance.transform.position + new Vector3(0f, 2f, 0f);
-            shade.GetComponent<BoxCollider2D>().enabled = false;
-            GameObject voidZone = Object.Instantiate(VoidZone.Ring, shade.transform);
-            voidZone.transform.SetParent(shade.transform);
-            voidZone.transform.localPosition = new(0f, 0f);
-            voidZone.transform.localScale = new(1f, 1f);
-            voidZone.AddComponent<VoidZone>().LeftTime = amount * 3;
-            voidZone.SetActive(true);
-        }
-        orig(self);
+    protected override void Disable()
+    { 
+        On.HeroController.AddHealth -= HeroController_AddHealth;
+        On.HutongGames.PlayMaker.Actions.SetVector3Value.OnEnter -= SetVector3Value_OnEnter;
+        On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
+        On.SetHP.OnEnter -= SetHP_OnEnter;
+        EffectGranted = false;
     }
-
-    protected override void Disable() => On.HeroController.AddHealth -= HeroController_AddHealth;
 
     private void SetHP_OnEnter(On.SetHP.orig_OnEnter orig, SetHP self)
     {
@@ -75,5 +62,25 @@ internal class InUtterDarkness : Power
         if (!TreasureManager.EnduranceHealthGrant)
             amount = 0;
         orig(self, amount);
+    }
+
+    private void SetVector3Value_OnEnter(On.HutongGames.PlayMaker.Actions.SetVector3Value.orig_OnEnter orig, SetVector3Value self)
+    {
+        if (self.IsCorrectContext("Spell Control", "Knight", "Focus Heal*"))
+        {
+            int amount = self.Fsm.Variables.FindFsmInt("Health Increase").Value;
+            GameObject shade = Object.Instantiate(GameManager.instance.sm.hollowShadeObject);
+            shade.SetActive(true);
+            shade.name = "Void Shade";
+            shade.transform.position = HeroController.instance.transform.position + new Vector3(0f, 2f, 0f);
+            shade.GetComponent<BoxCollider2D>().enabled = false;
+            GameObject voidZone = Object.Instantiate(VoidZone.Ring, shade.transform);
+            voidZone.transform.SetParent(shade.transform);
+            voidZone.transform.localPosition = new(0f, 0f);
+            voidZone.transform.localScale = new(1f, 1f);
+            voidZone.AddComponent<VoidZone>().LeftTime = amount * 3;
+            voidZone.SetActive(true);
+        }
+        orig(self);
     }
 }

@@ -107,7 +107,6 @@ public static class TreasureManager
         new DeepBreath(),
         new SeethingLifeblood(),
         new Hiveblood(),
-        // Uncommon
         new SoulEater(),
         new Dashmaster(),
         new Grubsong(),
@@ -149,7 +148,6 @@ public static class TreasureManager
         new MercilessPursuit(),
         new HotStreak(),
         new LuckyCharm(),
-        // Rare
         new InUtterDarkness(),
         new ShamanStone(),
         new QuickSlash(),
@@ -171,6 +169,7 @@ public static class TreasureManager
         new TreasureHunter(),
         new ShiningBound(),
         new Mediocracy(),
+        new WaywardCompass(),
         new VoidHeart(),
     ];
 

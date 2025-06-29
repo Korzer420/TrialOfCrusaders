@@ -30,6 +30,8 @@ public class ArchiveData
 
     public bool PerfectFinalBoss { get; set; }
 
+    public List<string> DebuffsSeen { get; set; } = new();
+
     #endregion
 
     public void AddPowerData(string powerName, bool picked)

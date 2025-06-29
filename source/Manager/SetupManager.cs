@@ -31,6 +31,7 @@ internal static class SetupManager
             Dictionary<int, Progress> progressItemRooms = RollAbilityRooms(GameMode.Crusader);
             // Used to prevent room repeats under 15 rooms.
             List<string> lastRooms = [];
+            int lastBossRoom = -1;
             for (int currentRoom = 0; currentRoom < 50; currentRoom++)
             {
                 // Ability rooms/treasure rooms are not part of the normal routine.
@@ -45,10 +46,9 @@ internal static class SetupManager
                 foreach (RoomData room in availableRooms)
                     if (room.Available(false, currentProgress, currentRoom))
                     {
-                        // For none boss rooms ensure the same room cannot occur between 15 rooms of each other.
-                        // For boss rooms ensure that no boss appear
-                        if (!room.BossRoom && lastRooms.Contains(room.Name)
-                            || room.BossRoom && (roomList[roomList.Count - 1].BossRoom || roomList[roomList.Count - 2].BossRoom) && currentRoom % 12 != 0)
+                        if (room.BossRoom && ((currentRoom <= lastBossRoom + 2 && currentRoom % 13 != 0) || currentRoom < 13))
+                            continue;
+                        else if ((!room.BossRoom && currentRoom % 13 == 0 && currentRoom != 0) || lastRooms.Contains(room.Name))
                             continue;
                         reachableRooms.Add(room);
                     }
@@ -59,6 +59,8 @@ internal static class SetupManager
                     availableRooms.RemoveAll(x => x.Name == rolledRoom.Name);
                 lastRooms.Add(rolledRoom.Name);
                 roomList.Add(rolledRoom);
+                if (rolledRoom.BossRoom)
+                    lastBossRoom = roomList.Count;
                 if (lastRooms.Count == 16)
                     lastRooms.RemoveAt(0);
             }
@@ -102,6 +104,7 @@ internal static class SetupManager
             Dictionary<int, Progress> progressItemRooms = RollAbilityRooms(GameMode.GrandCrusader);
             // Used to prevent room repeats under 15 rooms.
             List<string> lastRooms = [];
+            int lastBossRoom = -1;
             for (int currentRoom = 0; currentRoom < 100; currentRoom++)
             {
                 // Ability rooms/Treasure rooms are not part of the normal routine.
@@ -116,10 +119,9 @@ internal static class SetupManager
                 foreach (RoomData room in availableRooms)
                     if (room.Available(false, currentProgress, currentRoom))
                     {
-                        // For none boss rooms ensure the same room cannot occur between 15 rooms of each other.
-                        // For boss rooms ensure that no boss appear
-                        if (!room.BossRoom && lastRooms.Contains(room.Name)
-                            || room.BossRoom && (roomList[roomList.Count - 1].BossRoom || roomList[roomList.Count - 2].BossRoom) && currentRoom % 20 != 0)
+                        if (!room.BossRoom && (lastRooms.Contains(room.Name) || (currentRoom > 0 && currentRoom % 20 == 0)))
+                            continue;
+                        else if (room.BossRoom && (currentRoom < 20 || (currentRoom <= lastBossRoom + 2 && currentRoom % 20 != 0)))
                             continue;
                         reachableRooms.Add(room);
                     }
@@ -130,6 +132,8 @@ internal static class SetupManager
                     availableRooms.RemoveAll(x => x.Name == rolledRoom.Name);
                 lastRooms.Add(rolledRoom.Name);
                 roomList.Add(rolledRoom);
+                if (rolledRoom.BossRoom)
+                    lastBossRoom = roomList.Count;
                 if (lastRooms.Count == 16)
                     lastRooms.RemoveAt(0);
             }
@@ -246,8 +250,8 @@ internal static class SetupManager
             return new()
             {
                 { 4, Progress.Dash },
-                { 9, Progress.Claw },
-                { 14, fireballFirst ? Progress.Fireball : Progress.Quake },
+                { 9, fireballFirst ? Progress.Fireball : Progress.Quake },
+                { 14, Progress.Claw },
                 { 19, Progress.Wings },
                 { 29, fireballFirst ? Progress.Quake : Progress.Fireball },
                 { 39, Progress.ShadeCloak },

@@ -141,6 +141,9 @@
   <data name="BELIEVE_TAB_09" xml:space="preserve">
     <value>They say the misguided arrows are a sign from the higher beings.</value>
   </data>
+  <data name="BELIEVE_TAB_10" xml:space="preserve">
+    <value>They say that there are six different afflictions that can be casted upon enemies.</value>
+  </data>
   <data name="BELIEVE_TAB_24" xml:space="preserve">
     <value>They say that the watchers pity the unlucky in their desperate hour.</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="Locked_BELIEVE_TAB_09" xml:space="preserve">
     <value>More than 20000</value>
+  </data>
+  <data name="Locked_BELIEVE_TAB_10" xml:space="preserve">
+    <value>Affliction Master</value>
   </data>
   <data name="Locked_BELIEVE_TAB_24" xml:space="preserve">
     <value>Conquer the grand trial</value>

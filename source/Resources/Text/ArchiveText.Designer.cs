@@ -133,6 +133,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die They say that there are six different afflictions that can be casted upon enemies. ähnelt.
+        /// </summary>
+        internal static string BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("BELIEVE_TAB_10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die They say that the watchers pity the unlucky in their desperate hour. ähnelt.
         /// </summary>
         internal static string BELIEVE_TAB_24 {
@@ -237,6 +246,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string Locked_BELIEVE_TAB_09 {
             get {
                 return ResourceManager.GetString("Locked_BELIEVE_TAB_09", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Affliction Master ähnelt.
+        /// </summary>
+        internal static string Locked_BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("Locked_BELIEVE_TAB_10", resourceCulture);
             }
         }
         
