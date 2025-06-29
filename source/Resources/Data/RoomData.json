@@ -1217,7 +1217,8 @@
     "NeededProgress": 2,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Deepnest_38",

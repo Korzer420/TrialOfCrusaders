@@ -43,7 +43,9 @@ internal static class StageController
 
     public static bool FinishedEnemies { get; set; }
 
-    public static RoomData CurrentRoom => CurrentRoomIndex == -1 ? null : CurrentRoomData[CurrentRoomIndex];
+    public static RoomData CurrentRoom => CurrentRoomIndex == -1 || CurrentRoomIndex >= CurrentRoomData.Count 
+        ? null 
+        : CurrentRoomData[CurrentRoomIndex];
 
     #endregion
 
@@ -351,8 +353,7 @@ internal static class StageController
                 TreasureManager.SpawnShiny(RngManager.GetRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
             else
             {
-                // Special case for spells at 41 and 81. If they have been obtained already, they get replaced by a rare treasure guaranteed.
-                if (CurrentRoomNumber == 41 || CurrentRoomNumber == 81)
+                if (CurrentRoom?.Name == "Quake" || CurrentRoom?.Name == "Fireball")
                 {
                     TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoomData[CurrentRoomIndex].Name);
                     if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0 || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)

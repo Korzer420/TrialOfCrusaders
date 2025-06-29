@@ -5,6 +5,7 @@ using System;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
@@ -19,7 +20,7 @@ internal class CarefreeMelody : Power
 
     public override DraftPool Pools => DraftPool.Endurance | DraftPool.Charm;
 
-    public override bool CanAppear => !HasPower<Grimmchild>() && !HasPower<CarefreeMelody>();
+    public override bool CanAppear => !HasPower<Grimmchild>() && !HasPower<ShiningBound>();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

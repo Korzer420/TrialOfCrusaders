@@ -804,7 +804,7 @@ public static class TreasureManager
         int powerSlot = 0;
         bool selected = false;
         bool inputPause = false;
-        bool canReroll = SecretController.LeftRolls > 0 && shinyFsm.FsmVariables.FindFsmInt("Item Select").Value < 2;
+        bool canReroll = SecretController.LeftRolls > 0 && SecretController.UnlockedHighRoller && shinyFsm.FsmVariables.FindFsmInt("Item Select").Value < 2;
         while (!selected)
         {
             yield return null;
