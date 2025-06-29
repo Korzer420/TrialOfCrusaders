@@ -358,6 +358,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die &quot;Cull the Weak&quot; increases the duration of &quot;Root&quot;, the damage of &quot;Burn&quot; and &quot;Bleed&quot; and the power of &quot;Concussion&quot; and &quot;Weakened&quot;. ähnelt.
+        /// </summary>
+        internal static string Secret_BELIEVE_TAB_10 {
+            get {
+                return ResourceManager.GetString("Secret_BELIEVE_TAB_10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die The gift shall lapse if one chooses any of the highest rank. ähnelt.
         /// </summary>
         internal static string Secret_BELIEVE_TAB_24 {

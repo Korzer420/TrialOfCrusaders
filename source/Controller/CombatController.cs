@@ -669,15 +669,12 @@ internal static class CombatController
         {
             float scaling = 0.25f;
             if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
-            {
-                if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].Name == "GG_Radiance")
-                    scaling = 0.05f;
-                else
-                    scaling = 0.1f;
-            }
-            else if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom
-                || enemy.hp > 50)
                 scaling = 0.05f;
+            else if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom
+                || enemy.hp >= 50)
+                scaling = 0.05f;
+            else if (enemy.hp >= 20)
+                scaling = 0.15f;
             enemy.hp = Mathf.CeilToInt(enemy.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
         }
         else if (enemy.hp > 40 && !StageController.CurrentRoom.BossRoom)
@@ -1242,19 +1239,38 @@ internal static class CombatController
         orig(self);
         try
         {
-            if (self.IsCorrectContext("Set Damage", null, "Set Damage") && self.Fsm.GameObject.transform.parent != null)
+            if (self.IsCorrectContext("Set Damage", null, "Set Damage") && self.Fsm.GameObject.transform.parent != null
+                && (self.Fsm.GameObject.transform.parent.name == "Spells"
+                || (self.Fsm.GameObject.transform.parent.parent != null && self.Fsm.GameObject.transform.parent.parent.name == "Spells")))
             {
-                string parentName = self.Fsm.GameObject.transform.parent.name;
-                if (parentName == "Scr Heads" || parentName == "Scr Heads 2"
-                    || parentName == "Q Slam" || parentName == "Q Slam 2")
-                    self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = self.setValue.Value + SpiritLevel * 2;
+                bool isLevel2 = false;
+                if (self.Fsm.GameObject.transform.parent.name.Contains("Heads"))
+                    isLevel2 = PDHelper.ScreamLevel == 2;
+                else
+                    isLevel2 = PDHelper.QuakeLevel == 2;
+                self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = GetSpellDamage(20, isLevel2);
             }
             else if (self.IsCorrectContext("Fireball Control", null, "Set Damage"))
-                self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = self.setValue.Value + SpiritLevel * 2;
+            {
+                bool isShadeSoul = self.Fsm.GameObject.name.Contains("2");
+                self.Fsm.GameObject.LocateMyFSM("damages_enemy").FsmVariables.FindFsmInt("damageDealt").Value = GetSpellDamage(15, isShadeSoul);
+            }
         }
         catch (Exception ex)
         {
             LogManager.Log("Failed to set spell damage.", ex);
         }
+    }
+
+    private static int GetSpellDamage(int damage, bool levelTwo)
+    {
+        bool hasShamanStone = CharmHelper.EquippedCharm(KorzUtils.Enums.CharmRef.ShamanStone);
+        if (hasShamanStone && levelTwo)
+            damage += SpiritLevel * 6;
+        else if (hasShamanStone || levelTwo)
+            damage += 10 + SpiritLevel * 4;
+        else
+            damage += SpiritLevel * 2;
+        return damage;
     }
 }

@@ -216,6 +216,9 @@
   <data name="Secret_BELIEVE_TAB_09" xml:space="preserve">
     <value>The arrows may appear at certain crossroads, but that information is trying to deceive you. Their position at the crossroads however...</value>
   </data>
+  <data name="Secret_BELIEVE_TAB_10" xml:space="preserve">
+    <value>"Cull the Weak" increases the duration of "Root", the damage of "Burn" and "Bleed" and the power of "Concussion" and "Weakened".</value>
+  </data>
   <data name="Secret_BELIEVE_TAB_24" xml:space="preserve">
     <value>The gift shall lapse if one chooses any of the highest rank.</value>
   </data>
