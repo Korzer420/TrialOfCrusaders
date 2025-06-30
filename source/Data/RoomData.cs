@@ -43,7 +43,7 @@ public class RoomData
             return NeededProgress switch
             {
                 Progress.None => true,
-                Progress.Dash => currentRoom > (HubController.SelectedGameMode == GameMode.GrandCrusader ? 30 : 15) && progress.HasFlag(Progress.Dash | Progress.Fireball) || progress.HasFlag(Progress.Dash | Progress.Quake),
+                Progress.Dash => currentRoom > (HubController.SelectedGameMode == GameMode.GrandCrusader ? 30 : 20) && progress.HasFlag(Progress.Dash | Progress.Fireball) || progress.HasFlag(Progress.Dash | Progress.Quake),
                 Progress.Claw => currentRoom > (HubController.SelectedGameMode == GameMode.GrandCrusader ? 60 : 40) && progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Fireball) || progress.HasFlag(Progress.ShadeCloak | Progress.Wings | Progress.Quake),
                 // Special flag for endboss (Radiance, Pure Vessel, NKG)
                 _ => false

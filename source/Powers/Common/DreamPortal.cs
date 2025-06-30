@@ -3,6 +3,7 @@ using KorzUtils.Helper;
 using System.Collections;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Common;
@@ -19,16 +20,24 @@ internal class DreamPortal : Power
 
     protected override void Enable()
     {
-        _coroutine = StartRoutine(CheckForInput());
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         _dreamGatePrefab = HeroController.instance.gameObject.LocateMyFSM("Dream Nail")
             .GetState("Spawn Gate")
             .GetFirstAction<SpawnObjectFromGlobalPool>().gameObject.Value;
     }
 
-    protected override void Disable()
+    protected override void Disable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+
+    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
-        if (_coroutine != null)
-            StopRoutine(_coroutine);
+        if (arg1.name == "Crossroads_08" || arg1.name == "Fungus1_32" 
+            || arg1.name == "Fungus2_05" || arg1.name == "Ruins1_05"
+            || arg1.name == "Ruins2_09" || arg1.name == "Deepnest_33"
+            || arg1.name == "Fungus3_05" || arg1.name == "Fungus3_10"
+            || arg1.name == "Room_Fungus_Shaman")
+            return;
+        GameObject holder = new("Dream Portal");
+        holder.AddComponent<Dummy>().StartCoroutine(CheckForInput());
     }
 
     private IEnumerator CheckForInput()
@@ -39,13 +48,15 @@ internal class DreamPortal : Power
         float cooldown = 0f;
         while (true)
         {
+            if (HeroController.instance?.acceptingInput != true)
+                yield return new WaitUntil(() => HeroController.instance?.acceptingInput == true);
             if (InputHandler.Instance.inputActions.quickMap.WasPressed && cooldown <= 0f)
             {
                 amountPressed++;
                 repeatTime = 0.5f;
                 holdTime = 0f;
             }
-            else if (InputHandler.Instance.inputActions.quickMap.IsPressed)
+            else if (InputHandler.Instance.inputActions.quickMap.IsPressed && cooldown <= 0f)
                 holdTime += Time.deltaTime;
             else
                 holdTime = 0f;

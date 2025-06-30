@@ -668,6 +668,11 @@ internal static class CombatController
 
     private static void ScaleEnemy(HealthManager enemy)
     {
+        if (StageController.CurrentRoom.Name == "Fungus1_09")
+        {
+            enemy.hp = 1;
+            return;
+        }
         if (StageController.CurrentRoomNumber >= 20)
         {
             float scaling = 0.25f;
@@ -785,8 +790,8 @@ internal static class CombatController
                     }
                     // This is allowed to result in negative armor.
                     if (self.GetComponent<ConcussionEffect>() != null)
-                        armor -= DebuffsStronger 
-                            ? 15 
+                        armor -= DebuffsStronger
+                            ? 15
                             : 5;
                 }
                 hitInstance.DamageDealt = Math.Max(1, hitInstance.DamageDealt - armor);

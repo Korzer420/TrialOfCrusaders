@@ -142,10 +142,10 @@
     <value>Excessive soul may manifest in a soul sphere. Touching it will grant all stored soul. Only one sphere can be active at a time.</value>
   </data>
   <data name="CalmMind" xml:space="preserve">
-    <value>While at full health, slowing regenerates soul.</value>
+    <value>While at full health, slowly regenerates soul.</value>
   </data>
   <data name="CarefreeMelody" xml:space="preserve">
-    <value>Occusionally blocks damage. Doesn't work against instant kill damage.</value>
+    <value>Occasionally blocks damage. Doesn't work against instant kill damage.</value>
   </data>
   <data name="CaringShell" xml:space="preserve">
     <value>Hazards deal less damage.</value>
@@ -202,7 +202,7 @@
     <value>Unlocks the dream nail to gather soul from hit foes.</value>
   </data>
   <data name="DreamPortal" xml:space="preserve">
-    <value>Holding the quick map button spawns a portal. Quickly pressing same button teleports you the location. 15 seconds cooldown.</value>
+    <value>Holding the quick map button spawns a portal. Quickly pressing same button teleports you the location. 15 seconds cooldown. May not work in rooms with an arena.</value>
   </data>
   <data name="DreamShield" xml:space="preserve">
     <value>Spawns a rotating shield around you.</value>

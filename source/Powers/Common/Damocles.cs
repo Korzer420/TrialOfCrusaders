@@ -53,7 +53,7 @@ internal class Damocles : Power
                 yield break;
             triggered = Random.Range(1, 1201) == 1;
         }
-        yield return new WaitUntil(() => !PDHelper.IsInvincible);
+        yield return new WaitUntil(() => !PDHelper.IsInvincible && HeroController.instance?.acceptingInput == true);
         GameHelper.DisplayMessage("Your time is up...");
         HeroController.instance.TakeDamage(HeroController.instance.gameObject, GlobalEnums.CollisionSide.bottom, CombatController.InstaKillDamage, 1);
     }

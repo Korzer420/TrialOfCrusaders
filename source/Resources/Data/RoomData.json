@@ -6,7 +6,8 @@
     "NeededProgress": 0,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Cliffs_01",
@@ -88,7 +89,8 @@
     "NeededProgress": 163,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Fungus1_31",
@@ -1423,7 +1425,7 @@
     "Name": "Mines_30",
     "AllowedEntrances": [ "right1", "left1" ],
     "BossRoom": false,
-    "NeededProgress": 34,
+    "NeededProgress": 160,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

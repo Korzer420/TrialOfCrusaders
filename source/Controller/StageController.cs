@@ -564,7 +564,9 @@ internal static class StageController
             || persistentBoolData.sceneName == "Mines_25" && persistentBoolData.id == "Quake Floor"
             || persistentBoolData.sceneName == "Ruins1_30" && persistentBoolData.id.Contains("Quake Floor Glass")
             || persistentBoolData.id == "Flamebearer Spawn"
-            || persistentBoolData.sceneName == "Deepnest_Spider_Town" && persistentBoolData.id == "Collapser Small (12)")
+            || persistentBoolData.sceneName == "Deepnest_Spider_Town" && persistentBoolData.id == "Collapser Small (12)"
+            || persistentBoolData.sceneName == "Tutorial_01" && persistentBoolData.id == "Initial Fall Impact"
+            || persistentBoolData.sceneName == "Abyss_17" && persistentBoolData.id == "Quake Floor")
         {
             persistentBoolData.activated = true;
             return persistentBoolData;

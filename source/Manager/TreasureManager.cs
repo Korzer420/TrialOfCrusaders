@@ -456,7 +456,7 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Grimmchild)));
+                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(DreamPortal)));
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
                     //else
@@ -480,7 +480,7 @@ public static class TreasureManager
             if (selectedPowers.Count != 0)
             {
                 if (!rare)
-                    BadLuckProtection = Math.Min(BadLuckProtection + 4, 64);
+                    BadLuckProtection = Math.Min(BadLuckProtection + 2, 64);
                 for (int i = 0; i < selectedPowers.Count; i++)
                     fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value = string.IsNullOrEmpty(statBoni[i])
                             ? selectedPowers[i].Name
