@@ -748,7 +748,7 @@ internal static class HistoryController
     {
         Archive ??= new();
         Archive.EssenceRecord = Math.Max(Archive.EssenceRecord, PDHelper.DreamOrbs);
-        Archive.GrubRecord = Math.Max(Archive.EssenceRecord, ScoreController.Score.GrubBonus);
+        Archive.GrubRecord = Math.Max(Archive.GrubRecord, ScoreController.Score.GrubBonus);
         // 2 uncommon powers (dive and fireball) are unavoidable, they will be excluded.
         Archive.CommonOnlyRun = Archive.CommonOnlyRun
             | (TempEntry.UncommonPowerAmount <= 2 && TempEntry.RarePowerAmount == 0);
