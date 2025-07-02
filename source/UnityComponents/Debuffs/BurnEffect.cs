@@ -60,8 +60,9 @@ internal class BurnEffect : MonoBehaviour
         _initialDamage = true;
     }
 
-    internal static void PreparePrefab(GameObject prefab)
+    internal static void PreparePrefab(GameObject original)
     {
+        GameObject prefab = GameObject.Instantiate(original);
         prefab.name = "Burn Effect";
         ParticleSystem particle = prefab.GetComponent<ParticleSystem>();
         MainModule mainModule = particle.main;
@@ -72,6 +73,5 @@ internal class BurnEffect : MonoBehaviour
         mainModule.startColor = new(new Color(0.9f, 0.4f, 0f)); // Orange
         particle.emissionRate = 100f;
         Prefab = prefab;
-        GameObject.DontDestroyOnLoad(Prefab);
     }
 }

@@ -140,7 +140,7 @@ public static class ScoreController
 
     internal static void SetupScoreboard(GameObject prefab)
     {
-        GameObject scoreObject = prefab.LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value;
+        GameObject scoreObject = GameObject.Instantiate(prefab.LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value);
         scoreObject.name = "Scoreboard";
         UnityEngine.Object.Destroy(scoreObject.GetComponent<BossDoorChallengeUI>());
         GameObject buttonPrompt = scoreObject.transform.Find("Button Prompts").gameObject;
@@ -165,8 +165,7 @@ public static class ScoreController
 
     internal static void SetupResultInspect(GameObject prefab)
     {
-        ResultSequencePrefab = prefab;
-        GameObject.DontDestroyOnLoad(ResultSequencePrefab);
+        ResultSequencePrefab = GameObject.Instantiate(prefab);
     }
 
     internal static void DisplayScore()

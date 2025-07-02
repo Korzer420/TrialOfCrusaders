@@ -28,9 +28,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     internal static Dummy Holder => Instance._coroutineHolder;
 
-    public bool ToggleButtonInsideMenu => throw new System.NotImplementedException();
+    public bool ToggleButtonInsideMenu => false;
 
-    public override string GetVersion() => "0.2.3.0-beta";
+    public override string GetVersion() => "0.2.4.0-beta";
 
     public override List<(string, string)> GetPreloadNames() =>
     [
@@ -135,10 +135,10 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
         SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
         ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
-        HubController.Tink = preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect;
+        HubController.Tink = GameObject.Instantiate(preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect);
         HubController.Tink.name = "Tink Effect";
         HubController.InspectPrefab = preloadedObjects["Ruins1_23"]["Inspect Region"];
-        Gate.Prefab = preloadedObjects["Deepnest_East_10"]["Dream Gate"];
+        Gate.Prefab = GameObject.Instantiate(preloadedObjects["Deepnest_East_10"]["Dream Gate"]);
         Gate.Prefab.name = "Gate";
         HistoryController.ArchiveSprite = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Glow Response Mage Computer"]);
 
@@ -177,24 +177,20 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     private void SetupPowerPrefabs(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
     {
-        GroundSlam.Shockwave = preloadedObjects["Ruins1_24_boss"]["Mage Lord"].LocateMyFSM("Mage Lord")
+        GroundSlam.Shockwave = GameObject.Instantiate(preloadedObjects["Ruins1_24_boss"]["Mage Lord"].LocateMyFSM("Mage Lord")
             .GetState("Quake Waves")
             .GetFirstAction<SpawnObjectFromGlobalPool>()
-            .gameObject.Value;
+            .gameObject.Value);
         GroundSlam.Shockwave.name = "Shockwave";
-        GameObject.DontDestroyOnLoad(GroundSlam.Shockwave);
 
-        GreaterMind.Orb = preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab;
+        GreaterMind.Orb = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Mage"].GetComponent<PersonalObjectPool>().startupPool[0].prefab);
         GreaterMind.Orb.name = "Greater Mind Orb";
-        GameObject.DontDestroyOnLoad(GreaterMind.Orb);
 
-        Caching.SoulCache = preloadedObjects["Ruins1_23"]["Ruins Vial Empty (2)/Active/soul_cache (1)"];
+        Caching.SoulCache = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Ruins Vial Empty (2)/Active/soul_cache (1)"]);
         Caching.SoulCache.name = "Soul Cache";
-        GameObject.DontDestroyOnLoad(Caching.SoulCache);
 
-        VoidZone.Ring = preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"];
+        VoidZone.Ring = GameObject.Instantiate(preloadedObjects["GG_Hollow_Knight"]["Battle Scene/HK Prime/Focus Blast/focus_ring"]);
         VoidZone.Ring.name = "Void Ring";
-        GameObject.DontDestroyOnLoad(VoidZone.Ring);
     }
 
     private void SetupDebuffs(Dictionary<string, Dictionary<string, GameObject>> objects)

@@ -39,7 +39,5 @@ internal class BleedEffect : MonoBehaviour
         Prefab = GameObject.Instantiate(prefab);
         Prefab.name = "Bleed Effect";
         Prefab.GetComponent<SpriteRenderer>().color = Color.red;
-        GameObject.DontDestroyOnLoad(Prefab);
     }
-
 }

@@ -358,7 +358,7 @@
     <value>Increases the nail range significantly. Overwrites Longnail.</value>
   </data>
   <data name="MercilessPursuit" xml:space="preserve">
-    <value>Attacks in the same direction within half a second second grant stacking attack speed.</value>
+    <value>Attacks in the same direction within half a second grant stacking attack speed.</value>
   </data>
   <data name="Mindblast" xml:space="preserve">
     <value>Dream nail applies shattered mind.</value>

@@ -19,13 +19,13 @@ public class ShatteredMindEffect : MonoBehaviour
         _effectObject.SetActive(true);
     }
 
-    internal static void PreparePrefab(GameObject prefab)
+    internal static void PreparePrefab(GameObject original)
     {
+        GameObject prefab = GameObject.Instantiate(original);
         prefab.name = "Shattered Mind Effect";
         prefab.GetComponent<ParticleSystem>().enableEmission = true;
         prefab.GetComponent<ParticleSystem>().emissionRate = 10;
         prefab.GetComponent<ParticleSystem>().loop = true;
         Prefab = prefab;
-        GameObject.DontDestroyOnLoad(Prefab);
     }
 }

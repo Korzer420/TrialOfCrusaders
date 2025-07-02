@@ -79,6 +79,7 @@ public static class PhaseController
             PDHelper.InfectedKnightDreamDefeated = true;
             PDHelper.AbyssGateOpened = true;
             PDHelper.HegemolDefeated = true;
+            PlayerData.instance.corn_deepnestLeft = true;
             HistoryController.History = [];
         }
         else

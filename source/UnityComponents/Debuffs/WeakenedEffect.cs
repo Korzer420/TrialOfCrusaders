@@ -33,8 +33,9 @@ internal class WeakenedEffect : MonoBehaviour
         }
     }
 
-    internal static void PreparePrefab(GameObject prefab)
+    internal static void PreparePrefab(GameObject original)
     {
+        GameObject prefab = GameObject.Instantiate(original);
         foreach (Transform child in prefab.transform)
             GameObject.Destroy(child.gameObject);
         Component.Destroy(prefab.GetComponent<BoxCollider2D>());

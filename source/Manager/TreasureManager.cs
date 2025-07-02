@@ -187,7 +187,7 @@ public static class TreasureManager
 
     internal static void SetupShiny(GameObject chest)
     {
-        Shiny = chest.transform.Find("Item").GetChild(0).gameObject;
+        Shiny = GameObject.Instantiate(chest.transform.Find("Item").GetChild(0).gameObject);
         Shiny.name = "ToC Item";
         UnityEngine.Object.Destroy(Shiny.GetComponent<ObjectBounce>());
         UnityEngine.Object.Destroy(Shiny.GetComponent<PersistentBoolItem>());
