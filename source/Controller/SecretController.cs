@@ -39,6 +39,8 @@ internal static class SecretController
 
     public static bool UnlockedSecretArchive { get; set; }
 
+    public static int ShopLevel { get; set; } = 4;
+
     public static int LeftRolls { get; set; } = 3;
 
     public static bool[] SkippedOrbs { get; set; } = [false, false, false];

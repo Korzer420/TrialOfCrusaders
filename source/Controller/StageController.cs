@@ -522,7 +522,7 @@ internal static class StageController
             {
                 self.AddState("Show Shop", () =>
                 {
-                    self.GetComponent<ShopStock>().GenerateShopUI(self);
+                    self.GetComponent<ShopStock>().GenerateShopUI();
                 });
                 self.GetState("Title").AdjustTransitions("Show Shop");
             }

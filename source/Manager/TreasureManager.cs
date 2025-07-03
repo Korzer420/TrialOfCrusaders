@@ -13,6 +13,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
+using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
@@ -742,16 +743,16 @@ public static class TreasureManager
         {
             titleText.text = powerName switch
             {
-                "Combat" => "Combat Up",
-                "Spirit" => "Spirit Up",
-                "Endurance" => "Endurance Up",
+                "Combat" => ShopText.Stat_Combat_Title,
+                "Spirit" => ShopText.Stat_Spirit_Title,
+                "Endurance" => ShopText.Stat_Endurance_Title,
                 _ => "200 Geo"
             };
             description.text = powerName switch
             {
-                "Combat" => "Increases your nail damage. Abilities marked with (C) scale with your combat level.",
-                "Spirit" => "Increases the amount of soul you can have and receive. Also increases spell damage. Abilities marked with (S) scale with your spirit level.",
-                "Endurance" => "Increases your maximum and current health. Abilities marked with (E) scale with your endurance level.",
+                "Combat" => ShopText.Stat_Combat_Desc,
+                "Spirit" => ShopText.Stat_Spirit_Desc,
+                "Endurance" => ShopText.Stat_Endurance_Desc,
                 _ => "If nothing else, geo is always there."
             };
             option.GetComponent<SpriteRenderer>().sprite = powerName switch
