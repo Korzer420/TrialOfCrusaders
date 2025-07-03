@@ -47,7 +47,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         ("GG_Hollow_Knight", "Battle Scene/HK Prime/Focus Blast/focus_ring"),
         ("GG_Atrium", "GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"),
         ("Room_Fungus_Shaman", "Scream Control/Scream Item"),
-        ("Ruins_Bathhouse", "Ghost NPC/Idle Pt")
+        ("Ruins_Bathhouse", "Ghost NPC/Idle Pt"),
+        ("Waterways_03", "Alive_Tuk/Tuk NPC")
     ];
 
     public TrialOfCrusaders()
@@ -141,6 +142,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         Gate.Prefab = GameObject.Instantiate(preloadedObjects["Deepnest_East_10"]["Dream Gate"]);
         Gate.Prefab.name = "Gate";
         HistoryController.ArchiveSprite = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Glow Response Mage Computer"]);
+        ShopManager.Tuk = GameObject.Instantiate(preloadedObjects["Waterways_03"]["Alive_Tuk/Tuk NPC"]);
 
         GameObject[] preloads =
         [
@@ -164,7 +166,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
             ScoreController.ScoreboardPrefab,
             SpecialTransition.TransitionPrefab,
             _coroutineHolder.gameObject,
-            HistoryController.ArchiveSprite
+            HistoryController.ArchiveSprite,
+            ShopManager.Tuk
         ];
         foreach (GameObject gameObject in preloads)
         {

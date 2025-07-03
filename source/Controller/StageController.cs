@@ -15,6 +15,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
+using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ internal static class StageController
     private static bool _enabled;
     private static List<TransitionPoint> _transitionPoints = [];
     private static List<SpecialTransition> _specialTransitions = [];
-    private static int _treasureRoomCooldown = 0;
+    private static int _specialRoomCooldown = 0;
     private static (string, string) _intendedDestination = new();
     private static TextMeshPro _roomCounter;
 
@@ -34,6 +35,8 @@ internal static class StageController
     public static bool QuietRoom { get; set; } = true;
 
     public static bool UpcomingTreasureRoom { get; set; }
+
+    public static bool UpcomingShop { get; set; }
 
     public static int CurrentRoomIndex { get; set; } = 0;
 
@@ -249,18 +252,18 @@ internal static class StageController
                     info.EntryGateName = "left1";
                     info.SceneName = "Room_Colosseum_Bronze";
                     PhaseController.TransitionTo(Phase.Result);
-                    info.Visualization = GameManager.SceneLoadVisualizations.Colosseum;
+                    info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
                 }
                 else
                 {
-
-                    if (UpcomingTreasureRoom)
+                    if (UpcomingTreasureRoom || UpcomingShop)
                     {
                         info.SceneName = "GG_Engine";
                         QuietRoom = true;
                         UpcomingTreasureRoom = false;
+                        UpcomingShop = false;
                     }
                     else
                     {
@@ -274,35 +277,57 @@ internal static class StageController
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
+                        info.SceneName = "GG_Engine_Prime";
+                        QuietRoom = true;
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
                         info.EntryGateName = "door_dreamEnter";
                     else
                         info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
-
+                    
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom || CurrentRoom.BossRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom || CurrentRoom.BossRoom;
 
-                    // Treasure rooms can only appear under these conditions:
-                    // Not later than 115.
-                    // Not earlier than 10.
-                    // Not after/before a quiet room.
-                    if (_treasureRoomCooldown == 0 && !UpcomingTreasureRoom && CurrentRoomNumber >= 10 && CurrentRoomNumber <= CurrentRoomData.Count - 5
-                        && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
+
+                    if (_specialRoomCooldown == 0)
                     {
-                        float chance = 1f;
-                        if (CombatController.HasPower<Damocles>(out _))
-                            chance += 6f;
-                        if (CombatController.HasPower<TreasureHunter>(out _))
-                            chance += 2f;
-                        UpcomingTreasureRoom = chance >= RngManager.GetRandom(0f, 100f);
-                        if (UpcomingTreasureRoom)
-                            _treasureRoomCooldown = 6;
-                    }
+                        if (!UpcomingTreasureRoom && !UpcomingShop
+                            && CurrentRoomNumber >= 10 && CurrentRoomNumber <= CurrentRoomData.Count - 5
+                            && !CurrentRoomData[CurrentRoomIndex - 1].IsQuietRoom
+                            && !CurrentRoomData[CurrentRoomIndex].IsQuietRoom
+                            && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
+                        {
+                            float treasureChance = 5f;
+                            float shopChance = 5f;
+                            if (CurrentRoomNumber % 10 == 7)
+                            {
+                                shopChance += 3f;
+                                treasureChance -= 3f;
+                            }
+                            else if (CurrentRoomNumber % 10 == 4)
+                            {
+                                shopChance -= 3f;
+                                treasureChance += 3f;
+                            }
+
+                            if (CombatController.HasPower<Damocles>(out _))
+                                treasureChance += 10f;
+                            if (CombatController.HasPower<TreasureHunter>(out _))
+                                treasureChance += 5f;
+
+                            float rolled = RngManager.GetRandom(0f, 100f);
+                            if (rolled < treasureChance)
+                                UpcomingTreasureRoom = true;
+                            else if (rolled < shopChance + treasureChance)
+                                UpcomingShop = true;
+                            if (UpcomingTreasureRoom || UpcomingShop)
+                                _specialRoomCooldown = 5;
+                        }
+                    } 
                     else
-                        _treasureRoomCooldown = _treasureRoomCooldown.Lower(1);
+                        _specialRoomCooldown = _specialRoomCooldown.Lower(1);
                     _intendedDestination = new(info.SceneName, info.EntryGateName);
                 }
             }
@@ -340,35 +365,6 @@ internal static class StageController
             transition.VanillaTransition = self;
             _specialTransitions.Add(transition);
         }
-        if (QuietRoom && CurrentRoomIndex != -1 && self.name == "right1")
-        {
-            GameObject pedestal = new("Pedestal");
-            pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
-            pedestal.transform.position = new(94.23f, 14.8f, -0.1f);
-            pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
-            pedestal.layer = 8; // Terrain layer
-            pedestal.SetActive(true);
-            // If we are in a quiet room even though the room flag isn't set, we are in a treasure room instead.
-            if (!CurrentRoomData[CurrentRoomIndex].IsQuietRoom)
-                TreasureManager.SpawnShiny(RngManager.GetRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
-            else
-            {
-                if (CurrentRoom?.Name == "Quake" || CurrentRoom?.Name == "Fireball")
-                {
-                    TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoomData[CurrentRoomIndex].Name);
-                    if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0 || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)
-                    {
-                        TreasureManager.SpawnShiny(TreasureType.RareOrb, new(94.23f, 16.4f), false);
-                        return;
-                    }
-                    else
-                        _specialTransitions.Last().WaitForItem = true;
-                }
-                else
-                    _specialTransitions.Last().WaitForItem = true;
-                TreasureManager.SpawnShiny((TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoomData[CurrentRoomIndex].Name), new(94.23f, 16.4f), false);
-            }
-        }
     }
 
     private static void FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
@@ -402,7 +398,9 @@ internal static class StageController
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
         else if (QuietRoom && !CurrentRoom.IsQuietRoom)
-            _roomCounter.text = "Treasure room";
+            _roomCounter.text = GameManager.instance.sceneName == "GG_Engine" 
+                ? "Treasure room"
+                : "Shop";
         if (!CombatController.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
@@ -520,6 +518,14 @@ internal static class StageController
                         GameObject.Destroy(shiny);
                 });
             }
+            else if (self.FsmName == "Conversation Control" && self.gameObject.name == "Tuk Shop")
+            {
+                self.AddState("Show Shop", () =>
+                {
+                    self.GetComponent<ShopStock>().GenerateShopUI(self);
+                });
+                self.GetState("Title").AdjustTransitions("Show Shop");
+            }
             // 64.04, 113.4
         }
         catch (Exception ex)
@@ -605,7 +611,9 @@ internal static class StageController
     public static void SceneAdjustments(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "GG_Engine")
-            UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
+            TreasureManager.PrepareTreasureRoom(CurrentRoom, _specialTransitions.Last());
+        else if (arg1.name == "GG_Engine_Prime")
+            ShopManager.PrepareShopScene();
         else if (arg1.name == "Ruins1_05")
             SpawnTeleporter(new(3.68f, 153.19f), new(3.68f, 142.4f));
         else if (arg1.name == "Hive_01")

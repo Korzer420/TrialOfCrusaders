@@ -14,6 +14,7 @@ using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.UnityComponents.Other;
+using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 
@@ -196,6 +197,38 @@ public static class TreasureManager
         BigItemUI = GameObject.Instantiate(Shiny.LocateMyFSM("Shiny Control").GetState("Dash").GetFirstAction<CreateUIMsgGetItem>().gameObject.Value);
         BigItemUI.SetActive(false);
         GameObject.DontDestroyOnLoad(BigItemUI);
+    }
+
+    internal static void PrepareTreasureRoom(RoomData currentRoom, SpecialTransition exitTransition)
+    {
+        UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
+        GameObject pedestal = new("Pedestal");
+        pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+        pedestal.transform.position = new(94.23f, 14.8f, -0.1f);
+        pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+        pedestal.layer = 8; // Terrain layer
+        pedestal.SetActive(true);
+        // If we are in a quiet room even though the room flag isn't set, we are in a treasure or shop room instead.
+        if (!currentRoom.IsQuietRoom)
+            TreasureManager.SpawnShiny(RngManager.GetRandom(0, 100) < 10 ? TreasureType.RareOrb : TreasureType.NormalOrb, new(94.23f, 16.4f), false);
+        else
+        {
+            if (currentRoom.Name == "Quake" || currentRoom.Name == "Fireball")
+            {
+                TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), currentRoom.Name);
+                if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0 
+                    || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)
+                {
+                    TreasureManager.SpawnShiny(TreasureType.RareOrb, new(94.23f, 16.4f), false);
+                    return;
+                }
+                else
+                    exitTransition.WaitForItem = true;
+            }
+            else
+                exitTransition.WaitForItem = true;
+            TreasureManager.SpawnShiny((TreasureType)Enum.Parse(typeof(TreasureType), currentRoom.Name), new(94.23f, 16.4f), false);
+        }
     }
 
     internal static GameObject SpawnShiny(TreasureType treasure, Vector3 position, bool fling = true)
