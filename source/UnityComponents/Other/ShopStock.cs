@@ -50,6 +50,10 @@ internal class ShopStock : MonoBehaviour
         EnduranceStatStock
     ];
 
+    private string SelectedItemName => _stock[_itemIndex].Item1;
+
+    private int SelectedItemCost => _stock[_itemIndex].Item2;
+
     void Start()
     {
         _tukFsm = gameObject.LocateMyFSM("Conversation Control");
@@ -113,12 +117,12 @@ internal class ShopStock : MonoBehaviour
                     }
                 }
             }
-            else if (rolled < 30f && (possibleCombatStat < 20 || possibleSpiritStat < 20 || possibleEnduranceStat < 20))
+            else if (rolled < 40f && (possibleCombatStat < 20 || possibleSpiritStat < 20 || possibleEnduranceStat < 20))
             {
                 int chosenStat = 1;
-                if (rolled <= 16.67f && possibleCombatStat < 20)
+                if (rolled <= 20f && possibleCombatStat < 20)
                     chosenStat = 1;
-                else if (rolled <= 23.33f && possibleSpiritStat < 20)
+                else if (rolled <= 30f && possibleSpiritStat < 20)
                     chosenStat = 2;
                 else if (possibleEnduranceStat < 20)
                     chosenStat = 3;
@@ -148,7 +152,7 @@ internal class ShopStock : MonoBehaviour
 
             // Determine consumable.
             rolled = RngManager.GetRandom(1, 5);
-            price = RngManager.GetRandom(10, 100);
+            price = RngManager.GetRandom(50, 200);
             price -= (price % 10);
             switch (rolled)
             {
@@ -202,16 +206,72 @@ internal class ShopStock : MonoBehaviour
             }
             else if (InputHandler.Instance.inputActions.menuSubmit.IsPressed || InputHandler.Instance.inputActions.jump.IsPressed)
             {
-                _cooldown = 0.7f;
-                if (_stock[_itemIndex].Item2 == -1)
+                _cooldown = 0.6f;
+                if (SelectedItemCost == -1)
                     return;
-                if (PDHelper.Geo < _stock[_itemIndex].Item2)
+                if (PDHelper.Geo < SelectedItemCost)
                     StartCoroutine(FlickerSelection());
                 else
                 {
-                    PDHelper.Geo -= _stock[_itemIndex].Item2;
-                    _stock[_itemIndex] = new(_stock[_itemIndex].Item1, -1);
+                    HeroController.instance.TakeGeo(SelectedItemCost);
+                    _stock[_itemIndex] = new(SelectedItemName, -1);
+                    _elementLookup["Stock Price " + (_itemIndex + 1)].GetComponent<TextMeshPro>().text = "-";
+
+                    if (_statGroup.Contains(SelectedItemName))
+                        switch (SelectedItemName)
+                        {
+                            case CombatStatStock:
+                                TreasureManager.GrantCombatLevel();
+                                break;
+                            case SpiritStatStock:
+                                TreasureManager.GrantSpiritLevel();
+                                break;
+                            default:
+                                TreasureManager.GrantEnduranceLevel();
+                                break;
+                        }
+                    else if (_consumableGroup.Contains(SelectedItemName))
+                    {
+                        if (SelectedItemName == NailStock)
+                        {
+                            ConsumableController.EmpoweredHits += 5;
+                            PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+                        }
+                        else if (SelectedItemName == SealStock)
+                            ConsumableController.RerollSeals++;
+                        else if (SelectedItemName == TeaStock)
+                            ConsumableController.TeaSpell += 10;
+                        else if (SelectedItemName == LifebloodStock)
+                        {
+                            for (int i = 0; i < ConsumableController.LifebloodHeal; i++)
+                                EventRegister.SendEvent("ADD BLUE HEALTH");
+                            ConsumableController.UsedLifeblood++;
+                        }
+                        else
+                        {
+                            HeroController.instance.AddHealth(Math.Max(5, 25 - ConsumableController.UsedEggs * 5));
+                            ConsumableController.UsedEggs++;
+                        }
+                    }
+                    else
+                    {
+                        Power pickedPower = TreasureManager.Powers.First(x => x.GetType().Name == SelectedItemName);
+                        if (pickedPower.CanAppear)
+                        {
+                            CombatController.ObtainedPowers.Add(pickedPower);
+                            pickedPower.EnablePower();
+                        }
+                    }
+                    InventoryController.UpdateList(0);
+                    InventoryController.UpdateStats();
+                    UpdateSelection(_itemIndex);
                 }
+            }
+            else if (InputHandler.Instance.inputActions.menuCancel.IsPressed || InputHandler.Instance.inputActions.focus.IsPressed)
+            {
+                GameObject.Destroy(_shopUI);
+                _tukFsm.SendEvent("CONVO_FINISH");
+                _itemIndex = 0;
             }
         }
     }
@@ -224,7 +284,7 @@ internal class ShopStock : MonoBehaviour
         {
             layer = 5
         };
-        shopUI.transform.position = new(0f, 0f);
+        shopUI.transform.position = new(7f, 0f);
 
         GameObject viewBlocker = new("View Blocker");
         viewBlocker.layer = 5;
@@ -275,7 +335,7 @@ internal class ShopStock : MonoBehaviour
             if (_stock[i - 1].Item2 == -1)
                 currentElement.Item2.text = $"-";
             else
-                currentElement.Item2.text = PDHelper.Geo < _stock[i - 1].Item2 
+                currentElement.Item2.text = PDHelper.Geo < _stock[i - 1].Item2
                     ? $"<color=#fa0000>{_stock[i - 1].Item2}</color>"
                     : $"{_stock[i - 1].Item2}";
             _elementLookup.Add("Stock Price " + i, currentElement.Item2.gameObject);
@@ -307,6 +367,17 @@ internal class ShopStock : MonoBehaviour
         description.textContainer.size = new(8f, 10f);
         description.transform.localPosition = new(-4.5f, -7f);
         _elementLookup.Add(SelectionDescription, description.gameObject);
+
+        description = InventoryController.CreateTextElement(true);
+        description.text = "NOT AVAILABLE";
+        description.color = Color.red;
+        description.fontSize = 9;
+        description.transform.SetParent(_elementLookup[SelectionSprite].transform);
+        description.alignment = TextAlignmentOptions.Top;
+        description.textContainer.size = new(8f, 10f);
+        description.transform.localPosition = new(0f, -4.7f);
+        description.gameObject.SetActive(false);
+        _elementLookup.Add(SelectionSold, description.gameObject);
 
         _shopUI = shopUI;
         UpdateSelection(0);
@@ -346,7 +417,11 @@ internal class ShopStock : MonoBehaviour
         if (_consumableGroup.Contains(itemName) || _statGroup.Contains(itemName))
         {
             _elementLookup[SelectionTitle].GetComponent<TextMeshPro>().text = ShopText.ResourceManager.GetString(itemName + "_Title");
-            _elementLookup[SelectionDescription].GetComponent<TextMeshPro>().text = ShopText.ResourceManager.GetString(itemName + "_Desc");
+            _elementLookup[SelectionDescription].GetComponent<TextMeshPro>().text = itemName == EggStock
+                ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableController.EggHeal)
+                : itemName == LifebloodStock
+                    ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableController.LifebloodHeal)
+                    : ShopText.ResourceManager.GetString(itemName + "_Desc");
         }
         else
         {
@@ -355,13 +430,14 @@ internal class ShopStock : MonoBehaviour
             _elementLookup[SelectionDescription].GetComponent<TextMeshPro>().text = power.Description;
         }
         _elementLookup["Selector"].transform.localPosition = new(3.8f, 7.4f - index * 2f);
+        _elementLookup[SelectionSold].SetActive(SelectedItemCost == -1);
     }
 
     private IEnumerator FlickerSelection()
     {
         float time = 0f;
         int steps = 0;
-        while(steps <= 5)
+        while (steps <= 5)
         {
             time += Time.deltaTime;
             if (time >= 0.1f)

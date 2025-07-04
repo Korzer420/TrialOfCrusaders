@@ -716,7 +716,7 @@ internal static class CombatController
     private static int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            return 5 + CombatLevel * 2;
+            return 5 + CombatLevel * 2 + (ConsumableController.EmpoweredHits > 0 ? 10 : 0);
         else if (name == nameof(PlayerData.maxHealthCap))
             return 26;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
@@ -1280,12 +1280,20 @@ internal static class CombatController
     private static int GetSpellDamage(int damage, bool levelTwo)
     {
         bool hasShamanStone = CharmHelper.EquippedCharm(KorzUtils.Enums.CharmRef.ShamanStone);
-        if (hasShamanStone && levelTwo)
-            damage += SpiritLevel * 6;
-        else if (hasShamanStone || levelTwo)
-            damage += 10 + SpiritLevel * 4;
-        else
-            damage += SpiritLevel * 2;
+        bool teaActive = ConsumableController.TeaSpell > 0;
+
+        int multiplier = 2;
+        if (hasShamanStone)
+            multiplier += 2;
+        if (levelTwo)
+        { 
+            multiplier += 2;
+            damage += 10;
+        }
+        if (teaActive)
+            multiplier += 2;
+        
+        damage += SpiritLevel * multiplier;
         return damage;
     }
 }

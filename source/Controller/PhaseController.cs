@@ -117,6 +117,7 @@ public static class PhaseController
                         ScoreController.Initialize();
                         CombatController.Initialize();
                         InventoryController.Initialize();
+                        ConsumableController.Initialize();
                         HistoryController.Unload();
                         SecretController.SkippedOrbs = [false, false, false];
                         HistoryController.Archive.TotalRuns++;
@@ -158,6 +159,7 @@ public static class PhaseController
                         StageController.Unload();
                         CombatController.Unload();
                         InventoryController.Unload();
+                        ConsumableController.Unload();
                     }
                     else
                         LogManager.Log("Invalid transition. " + CurrentPhase + " -> " + targetPhase);
@@ -171,6 +173,7 @@ public static class PhaseController
                     InventoryController.Unload();
                     StageController.Unload();
                     ScoreController.Unload();
+                    ConsumableController.Unload();
                     TrialOfCrusaders.Holder.StopAllCoroutines();
                     break;
                 case Phase.Lobby:
@@ -191,6 +194,7 @@ public static class PhaseController
                                 HistoryController.AddEntry(RunResult.Failed);
                             CombatController.Unload();
                             StageController.Unload();
+                            ConsumableController.Unload();
                             InventoryController.Unload();
                             if (CurrentPhase == Phase.Result)
                                 ScoreController.Unload();

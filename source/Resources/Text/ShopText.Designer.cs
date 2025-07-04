@@ -97,7 +97,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Increase your nail damage by 10 for the next 50 strikes (regardless of if they hit anything). Further consumptions will increase the left strikes by 25. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Increase your nail damage by 10 for the next 50 strikes (regardless of if they hit anything). Further consumptions will increase the left strikes by 50. ähnelt.
         /// </summary>
         internal static string Consumable_Nail_Desc {
             get {
@@ -133,7 +133,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The next 5 spells you cast do not cost soul and their spirit scaling is doubled. Further consumptions increase the spell counter. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The next 10 spells you cast do not cost soul and their spirit scaling is doubled. Further consumptions increase the spell counter. Only works on quick cast. ähnelt.
         /// </summary>
         internal static string Consumable_Tea_Desc {
             get {

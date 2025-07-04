@@ -130,7 +130,7 @@
     <value>Grants {0} lifeblood. For the rest of the runs further lifeblood badges grant additional lifeblood.</value>
   </data>
   <data name="Consumable_Nail_Desc" xml:space="preserve">
-    <value>Increase your nail damage by 10 for the next 50 strikes (regardless of if they hit anything). Further consumptions will increase the left strikes by 25.</value>
+    <value>Increase your nail damage by 10 for the next 50 strikes (regardless of if they hit anything). Further consumptions will increase the left strikes by 50.</value>
   </data>
   <data name="Consumable_Nail_Title" xml:space="preserve">
     <value>Brittle Nail</value>
@@ -142,7 +142,7 @@
     <value>Royal Seal</value>
   </data>
   <data name="Consumable_Tea_Desc" xml:space="preserve">
-    <value>The next 5 spells you cast do not cost soul and their spirit scaling is doubled. Further consumptions increase the spell counter.</value>
+    <value>The next 10 spells you cast do not cost soul and their spirit scaling is doubled. Further consumptions increase the spell counter. Only works on quick cast.</value>
   </data>
   <data name="Consumable_Tea_Title" xml:space="preserve">
     <value>Calming Tea</value>

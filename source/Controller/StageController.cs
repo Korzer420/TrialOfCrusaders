@@ -523,7 +523,7 @@ internal static class StageController
                 self.AddState("Show Shop", () =>
                 {
                     self.GetComponent<ShopStock>().GenerateShopUI();
-                });
+                }, FsmTransitionData.FromTargetState("Talk Finish").WithEventName("CONVO_FINISH"));
                 self.GetState("Title").AdjustTransitions("Show Shop");
             }
             // 64.04, 113.4
