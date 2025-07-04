@@ -30,7 +30,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     public bool ToggleButtonInsideMenu => false;
 
-    public override string GetVersion() => "0.2.4.0-beta";
+    public override string GetVersion() => "0.2.5.0-beta";
 
     public override List<(string, string)> GetPreloadNames() =>
     [
