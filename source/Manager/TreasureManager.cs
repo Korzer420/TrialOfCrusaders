@@ -24,7 +24,7 @@ public static class TreasureManager
     internal static string UncommonTextColor = "#33cc33";
     internal static string RareTextColor = "#00ffff";
 
-    private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
+    internal static MethodInfo InvulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
     private static Sprite _backgroundSprite;
 
@@ -382,7 +382,7 @@ public static class TreasureManager
             SelectionActive = false;
             // To prevent situation where the player takes unavoidable damage, we grant 2 seconds of invincibility.
             if (!StageController.QuietRoom)
-                HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
+                HeroController.instance.StartCoroutine((IEnumerator)InvulnerableCall.Invoke(HeroController.instance, [2f]));
         });
         fsm.GetState("Destroy").RemoveAllActions();
         fsm.GetState("Destroy").AddTransition("FINISHED", "Fling?");
@@ -455,11 +455,11 @@ public static class TreasureManager
                         continue;
                     }
                     // Force treasure test code.
-                    //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(DreamPortal)));
+                    if (i == 0)
+                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(WaywardCompass)));
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
-                    //else
+                    else
                         selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());

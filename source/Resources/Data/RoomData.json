@@ -961,7 +961,7 @@
     "Name": "Abyss_19",
     "AllowedEntrances": [ "right1", "bot1" ],
     "BossRoom": false,
-    "NeededProgress": 128,
+    "NeededProgress": 130, // ToDo: Move Claw to easy items.
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -1024,7 +1024,7 @@
     "Name": "Fungus3_25",
     "AllowedEntrances": [ "left1", "right1" ],
     "BossRoom": false,
-    "NeededProgress": 18,
+    "NeededProgress": 146,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []

@@ -1,4 +1,5 @@
 ﻿using TrialOfCrusaders.Controller;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -32,22 +33,31 @@ internal class BurnEffect : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Prevent destroying the component if the first damage has not been applied yet.
-        if (!_initialDamage)
-            return;
-        // Check if a second barrier has been passed.
-        if (_leftDuration != 10f && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f))
+        try
         {
-            int modifier = (int)_leftDuration + 1;
-            int damage = Mathf.CeilToInt(LeftDamage / modifier);
-            // Respect invinciblity
-            if (!_enemy.IsInvincible && _enemy != null && _enemy.hp > 0)
-                _enemy.ApplyExtraDamage(CombatController.DebuffsStronger ? Mathf.FloorToInt(damage * 1.5f) : damage);
-            LeftDamage -= damage;
+            // Prevent destroying the component if the first damage has not been applied yet.
+            if (!_initialDamage)
+                return;
+            // Check if a second barrier has been passed.
+            if (_leftDuration != 10f && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f))
+            {
+                int modifier = (int)_leftDuration + 1;
+                int damage = Mathf.CeilToInt(LeftDamage / modifier);
+                // Respect invinciblity
+                if (_enemy != null && _enemy.hp > 0)
+                    _enemy.ApplyExtraDamage(CombatController.DebuffsStronger ? Mathf.FloorToInt(damage * 1.5f) : damage);
+                LeftDamage -= damage;
+            }
+            _leftDuration -= Time.deltaTime;
+            if (_leftDuration <= 0 || _enemy.isDead || LeftDamage <= 0)
+            {
+                Destroy(_flameParticle);
+                Destroy(this);
+            }
         }
-        _leftDuration -= Time.deltaTime;
-        if (_leftDuration <= 0 || _enemy.isDead || LeftDamage <= 0)
+        catch (System.Exception ex)
         {
+            LogManager.Log("Error in burn update: ", ex);
             Destroy(_flameParticle);
             Destroy(this);
         }

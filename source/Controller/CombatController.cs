@@ -675,12 +675,12 @@ internal static class CombatController
         }
         if (StageController.CurrentRoomNumber >= 20)
         {
-            float scaling = 0.25f;
+            float scaling = 0.2f;
             if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
                 scaling = 0.05f;
             else if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom
                 || enemy.hp >= 50)
-                scaling = 0.05f;
+                scaling = 0.075f;
             else if (enemy.hp >= 20)
                 scaling = 0.15f;
             enemy.hp = Mathf.CeilToInt(enemy.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
