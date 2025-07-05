@@ -15,7 +15,7 @@ namespace TrialOfCrusaders.UnityComponents.Other;
 
 internal class ShopStock : MonoBehaviour
 {
-    private List<(string, int)> _stock = [];
+    private List<(string, int, StockState)> _stock = [];
     private GameObject _shopUI;
     private Dictionary<string, GameObject> _elementLookup = [];
     private PlayMakerFSM _tukFsm;
@@ -57,123 +57,7 @@ internal class ShopStock : MonoBehaviour
     void Start()
     {
         _tukFsm = gameObject.LocateMyFSM("Conversation Control");
-        // Maximal 1 ability (+1 pro 2 shop level)
-        // Minimum 1 ability.
-        // Ab Stufe 2 -> 1 Item, 50% Discount.
-        // Ab Stufe 4 -> Special Delivery Function.
-        // 10% Ability chance (Wird zu consumable falls nicht verfügbar)
-        // 20% Stat chance (Wird zu consumable falls nicht verfügbar)
-        // 70% Consumable
-
-        int abilityCount = 0;
-        SecretController.ShopLevel = 4;
-        int maxAbility = 1 + SecretController.ShopLevel / 2;
-        int stockAmount = 3 + SecretController.ShopLevel;
-
-        int possibleCombatStat = CombatController.CombatLevel;
-        int possibleSpiritStat = CombatController.SpiritLevel;
-        int possibleEnduranceStat = CombatController.EnduranceLevel;
-
-        List<string> availablePowerNames = [.. TreasureManager.Powers.Where(x => x.CanAppear).Select(x => x.Name)];
-        List<string> obtainedPowerNames = [.. CombatController.ObtainedPowers.Select(x => x.Name)];
-        availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
-        List<Power> availablePowers = [];
-        foreach (string powerName in availablePowerNames)
-            availablePowers.Add(TreasureManager.Powers.First(x => x.Name == powerName));
-
-        for (int i = 1; i <= stockAmount; i++)
-        {
-            float rolled = RngManager.GetRandom(0f, 100f);
-            int price = 0;
-            if (rolled < 10f || (i == stockAmount && abilityCount == 0))
-            {
-                if (abilityCount < maxAbility)
-                {
-                    int currentAbilityCount = abilityCount;
-                    abilityCount++;
-                    List<Power> powers = [];
-                    Rarity selectedRarity = Rarity.Common;
-                    if (rolled <= 1)
-                        selectedRarity = Rarity.Rare;
-                    else if (rolled <= 4f)
-                        selectedRarity = Rarity.Uncommon;
-                    foreach (Power power in availablePowers)
-                        if (power.Tier == selectedRarity)
-                            powers.Add(power);
-
-                    if (powers.Count != 0)
-                    {
-                        Power selectedPower = powers[RngManager.GetRandom(0, powers.Count - 1)];
-                        price = selectedPower.Tier switch
-                        {
-                            Rarity.Rare => RngManager.GetRandom(500, 1000),
-                            Rarity.Uncommon => RngManager.GetRandom(250, 500),
-                            _ => RngManager.GetRandom(100, 300)
-                        };
-                        price -= (price % 10);
-                        _stock.Add(new(selectedPower.GetType().Name, price));
-                        availablePowers.RemoveAll(x => x.GetType().Name == selectedPower.GetType().Name);
-                        continue;
-                    }
-                }
-            }
-            else if (rolled < 40f && (possibleCombatStat < 20 || possibleSpiritStat < 20 || possibleEnduranceStat < 20))
-            {
-                int chosenStat = 1;
-                if (rolled <= 20f && possibleCombatStat < 20)
-                    chosenStat = 1;
-                else if (rolled <= 30f && possibleSpiritStat < 20)
-                    chosenStat = 2;
-                else if (possibleEnduranceStat < 20)
-                    chosenStat = 3;
-                else if (possibleSpiritStat < 20)
-                    chosenStat = 2;
-
-                price = RngManager.GetRandom(100, 250);
-                price -= (price % 10);
-                // We add 20 to prevent the mod from rolling the same stat twice (unless the stat is 0).
-                switch (chosenStat)
-                {
-                    case 1:
-                        _stock.Add(new(CombatStatStock, price));
-                        possibleCombatStat += 20;
-                        break;
-                    case 2:
-                        _stock.Add(new(SpiritStatStock, price));
-                        possibleSpiritStat += 20;
-                        break;
-                    default:
-                        _stock.Add(new(EnduranceStatStock, price));
-                        possibleSpiritStat += 20;
-                        break;
-                }
-                continue;
-            }
-
-            // Determine consumable.
-            rolled = RngManager.GetRandom(1, 5);
-            price = RngManager.GetRandom(50, 200);
-            price -= (price % 10);
-            switch (rolled)
-            {
-                case 1:
-                    _stock.Add(new(NailStock, price));
-                    break;
-                case 2:
-                    _stock.Add(new(LifebloodStock, price));
-                    break;
-                case 3:
-                    _stock.Add(new(EggStock, price));
-                    break;
-                case 4:
-                    _stock.Add(new(TeaStock, price));
-                    break;
-                default:
-                    price *= 3;
-                    _stock.Add(new(SealStock, price));
-                    break;
-            }
-        }
+        GenerateStock();
     }
 
     void Update()
@@ -188,7 +72,7 @@ internal class ShopStock : MonoBehaviour
         }
         else
         {
-            if (InputHandler.Instance.inputActions.down.IsPressed)
+            if (InputHandler.Instance.inputActions.down.IsPressed && _itemIndex >= 0)
             {
                 _cooldown = 0.25f;
                 _itemIndex++;
@@ -196,82 +80,46 @@ internal class ShopStock : MonoBehaviour
                     _itemIndex = 0;
                 UpdateSelection(_itemIndex);
             }
-            else if (InputHandler.Instance.inputActions.up.IsPressed)
+            else if (InputHandler.Instance.inputActions.up.IsPressed && _itemIndex >= 0)
             {
                 _cooldown = 0.25f;
                 _itemIndex--;
                 if (_itemIndex == -1)
                     _itemIndex = 2 + SecretController.ShopLevel;
+
                 UpdateSelection(_itemIndex);
             }
-            else if (InputHandler.Instance.inputActions.menuSubmit.IsPressed || InputHandler.Instance.inputActions.jump.IsPressed)
+            else if (InputHandler.Instance.inputActions.menuSubmit.WasPressed || InputHandler.Instance.inputActions.jump.WasPressed)
             {
-                _cooldown = 0.6f;
-                if (SelectedItemCost == -1)
-                    return;
-                if (PDHelper.Geo < SelectedItemCost)
-                    StartCoroutine(FlickerSelection());
-                else
+                if (_itemIndex >= 0)
+                    Purchase();
+                else if (_itemIndex == -1)
                 {
-                    HeroController.instance.TakeGeo(SelectedItemCost);
-                    _stock[_itemIndex] = new(SelectedItemName, -1);
-                    _elementLookup["Stock Price " + (_itemIndex + 1)].GetComponent<TextMeshPro>().text = "-";
-
-                    if (_statGroup.Contains(SelectedItemName))
-                        switch (SelectedItemName)
-                        {
-                            case CombatStatStock:
-                                TreasureManager.GrantCombatLevel();
-                                break;
-                            case SpiritStatStock:
-                                TreasureManager.GrantSpiritLevel();
-                                break;
-                            default:
-                                TreasureManager.GrantEnduranceLevel();
-                                break;
-                        }
-                    else if (_consumableGroup.Contains(SelectedItemName))
-                    {
-                        if (SelectedItemName == NailStock)
-                        {
-                            ConsumableController.EmpoweredHits += 5;
-                            PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
-                        }
-                        else if (SelectedItemName == SealStock)
-                            ConsumableController.RerollSeals++;
-                        else if (SelectedItemName == TeaStock)
-                            ConsumableController.TeaSpell += 10;
-                        else if (SelectedItemName == LifebloodStock)
-                        {
-                            for (int i = 0; i < ConsumableController.LifebloodHeal; i++)
-                                EventRegister.SendEvent("ADD BLUE HEALTH");
-                            ConsumableController.UsedLifeblood++;
-                        }
-                        else
-                        {
-                            HeroController.instance.AddHealth(Math.Max(5, 25 - ConsumableController.UsedEggs * 5));
-                            ConsumableController.UsedEggs++;
-                        }
-                    }
-                    else
-                    {
-                        Power pickedPower = TreasureManager.Powers.First(x => x.GetType().Name == SelectedItemName);
-                        if (pickedPower.CanAppear)
-                        {
-                            CombatController.ObtainedPowers.Add(pickedPower);
-                            pickedPower.EnablePower();
-                        }
-                    }
-                    InventoryController.UpdateList(0);
-                    InventoryController.UpdateStats();
+                    GenerateStock(true);
+                    UpdatePrices();
                     UpdateSelection(_itemIndex);
                 }
             }
-            else if (InputHandler.Instance.inputActions.menuCancel.IsPressed || InputHandler.Instance.inputActions.focus.IsPressed)
+            else if (InputHandler.Instance.inputActions.menuCancel.WasPressed || InputHandler.Instance.inputActions.focus.WasPressed)
             {
                 GameObject.Destroy(_shopUI);
                 _tukFsm.SendEvent("CONVO_FINISH");
                 _itemIndex = 0;
+            }
+            else if (InputHandler.Instance.inputActions.left.IsPressed || InputHandler.Instance.inputActions.right.IsPressed)
+            {
+                _cooldown = 0.25f;
+                if (_itemIndex >= 0)
+                {
+                    _itemIndex = -1;
+                    _elementLookup["Selector"].transform.localPosition = new(-6f, -3.8f);
+                    _elementLookup["Selector"].transform.localScale = new(2.5f, 0.9f);
+                }
+                else
+                {
+                    _itemIndex = 0;
+                    UpdateSelection(_itemIndex);
+                }
             }
         }
     }
@@ -332,12 +180,6 @@ internal class ShopStock : MonoBehaviour
             currentElement = TextManager.CreateUIObject("Stock Price " + i);
             currentElement.Item1.transform.SetParent(stock.Item1.transform);
             currentElement.Item1.transform.localPosition = new(2.5f, 0f);
-            if (_stock[i - 1].Item2 == -1)
-                currentElement.Item2.text = $"-";
-            else
-                currentElement.Item2.text = PDHelper.Geo < _stock[i - 1].Item2
-                    ? $"<color=#fa0000>{_stock[i - 1].Item2}</color>"
-                    : $"{_stock[i - 1].Item2}";
             _elementLookup.Add("Stock Price " + i, currentElement.Item2.gameObject);
         }
 
@@ -379,8 +221,19 @@ internal class ShopStock : MonoBehaviour
         description.gameObject.SetActive(false);
         _elementLookup.Add(SelectionSold, description.gameObject);
 
+        description = InventoryController.CreateTextElement();
+        description.gameObject.SetActive(true);
+        description.text = "RESTOCK (+20%)";
+        description.fontSize = 4;
+        description.fontStyle = FontStyles.Bold;
+        description.transform.SetParent(shopUI.transform);
+        description.alignment = TextAlignmentOptions.Top;
+        description.textContainer.size = new(8f, 10f);
+        description.transform.localPosition = new(-4.5f, -9.75f);
+
         _shopUI = shopUI;
         UpdateSelection(0);
+        UpdatePrices();
     }
 
     private Sprite GenerateSprite(int index)
@@ -406,8 +259,9 @@ internal class ShopStock : MonoBehaviour
         }
     }
 
-    private void UpdateSelection(int index)
+    private void UpdateSelection(int itemIndex)
     {
+        int index = Math.Max(0, itemIndex);
         string itemName = _stock[index].Item1;
 
         // Update sprite
@@ -429,8 +283,15 @@ internal class ShopStock : MonoBehaviour
             _elementLookup[SelectionTitle].GetComponent<TextMeshPro>().text = power.Name;
             _elementLookup[SelectionDescription].GetComponent<TextMeshPro>().text = power.Description;
         }
-        _elementLookup["Selector"].transform.localPosition = new(3.8f, 7.4f - index * 2f);
-        _elementLookup[SelectionSold].SetActive(SelectedItemCost == -1);
+
+        if (itemIndex >= 0)
+        {
+            _elementLookup["Selector"].transform.localPosition = new(3.8f, 7.4f - index * 2f);
+            _elementLookup["Selector"].transform.localScale = new(2.5f, 1.8f);
+            _elementLookup[SelectionSold].SetActive(SelectedItemCost == -1);
+        }
+        else
+            _elementLookup[SelectionSold].SetActive(_stock[0].Item2 == -1);
     }
 
     private IEnumerator FlickerSelection()
@@ -452,5 +313,261 @@ internal class ShopStock : MonoBehaviour
             yield return null;
         }
         _elementLookup["Selector"].GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    internal void UpdatePrices()
+    {
+        for (int i = 0; i < _stock.Count; i++)
+        {
+            TextMeshPro currentElement = _elementLookup["Stock Price " + (i + 1)].GetComponent<TextMeshPro>();
+            if (_stock[i].Item2 == -1)
+                currentElement.text = $"-";
+            else if (PDHelper.Geo < _stock[i].Item2)
+                currentElement.text = $"<color=#fa0000>{_stock[i].Item2}</color>";
+            else
+            {
+                currentElement.text = $"{_stock[i].Item2}";
+                switch (_stock[i].Item3)
+                {
+                    case StockState.Cheaper:
+                        currentElement.text = $"<color=#03fc52>{currentElement.text}</color>";
+                        break;
+                    case StockState.Expensive:
+                        currentElement.text = $"<color=#f59505>{currentElement.text}</color>";
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+    }
+
+    private void Purchase()
+    {
+        _cooldown = 0.6f;
+        if (SelectedItemCost == -1)
+            return;
+        if (PDHelper.Geo < SelectedItemCost)
+            StartCoroutine(FlickerSelection());
+        else
+        {
+            HeroController.instance.TakeGeo(SelectedItemCost);
+            _stock[_itemIndex] = new(SelectedItemName, -1, StockState.Normal);
+            _elementLookup["Stock Price " + (_itemIndex + 1)].GetComponent<TextMeshPro>().text = "-";
+
+            if (_statGroup.Contains(SelectedItemName))
+                switch (SelectedItemName)
+                {
+                    case CombatStatStock:
+                        TreasureManager.GrantCombatLevel();
+                        break;
+                    case SpiritStatStock:
+                        TreasureManager.GrantSpiritLevel();
+                        break;
+                    default:
+                        TreasureManager.GrantEnduranceLevel();
+                        break;
+                }
+            else if (_consumableGroup.Contains(SelectedItemName))
+            {
+                if (SelectedItemName == NailStock)
+                {
+                    ConsumableController.EmpoweredHits += 5;
+                    PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
+                }
+                else if (SelectedItemName == SealStock)
+                    ConsumableController.RerollSeals++;
+                else if (SelectedItemName == TeaStock)
+                    ConsumableController.TeaSpell += 10;
+                else if (SelectedItemName == LifebloodStock)
+                {
+                    for (int i = 0; i < ConsumableController.LifebloodHeal; i++)
+                        EventRegister.SendEvent("ADD BLUE HEALTH");
+                    ConsumableController.UsedLifeblood++;
+                }
+                else
+                {
+                    HeroController.instance.AddHealth(Math.Max(5, 25 - ConsumableController.UsedEggs * 5));
+                    ConsumableController.UsedEggs++;
+                }
+            }
+            else
+            {
+                Power pickedPower = TreasureManager.Powers.First(x => x.GetType().Name == SelectedItemName);
+                if (pickedPower.CanAppear)
+                {
+                    CombatController.ObtainedPowers.Add(pickedPower);
+                    pickedPower.EnablePower();
+                }
+            }
+            InventoryController.UpdateList(0);
+            InventoryController.UpdateStats();
+            UpdateSelection(_itemIndex);
+            UpdatePrices();
+        }
+    }
+
+    private void GenerateStock(bool restock = false)
+    {
+        // Create a copy for availability purposes.
+        List<Power> obtainedPowers = [.. CombatController.ObtainedPowers];
+        try
+        {
+            List<Power> shopPowers = [];
+            int abilityCount = 0;
+            SecretController.ShopLevel = 4;
+            int maxAbility = 1 + SecretController.ShopLevel / 2;
+            int stockAmount = 3 + SecretController.ShopLevel;
+
+            int possibleCombatStat = CombatController.CombatLevel;
+            int possibleSpiritStat = CombatController.SpiritLevel;
+            int possibleEnduranceStat = CombatController.EnduranceLevel;
+
+            List<string> availablePowerNames = [.. TreasureManager.Powers.Where(x => x.CanAppear).Select(x => x.Name)];
+            List<string> obtainedPowerNames = [.. obtainedPowers.Select(x => x.Name)];
+            availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
+            List<Power> availablePowers = [];
+            foreach (string powerName in availablePowerNames)
+                availablePowers.Add(TreasureManager.Powers.First(x => x.Name == powerName));
+
+            for (int i = 1; i <= stockAmount; i++)
+            {
+                if (restock && (_stock[i - 1].Item2 == -1 || _stock[i - 1].Item2 > PDHelper.Geo))
+                    continue;
+                float rolled = RngManager.GetRandom(0f, 100f);
+                int price = 0;
+                string itemName = null;
+                if (rolled < 10f && abilityCount < maxAbility || (i == stockAmount && abilityCount == 0))
+                {
+                    int currentAbilityCount = abilityCount;
+                    abilityCount++;
+                    List<Power> powers = [];
+                    Rarity selectedRarity = Rarity.Common;
+                    if (rolled <= 1)
+                        selectedRarity = Rarity.Rare;
+                    else if (rolled <= 4f)
+                        selectedRarity = Rarity.Uncommon;
+                    foreach (Power power in availablePowers)
+                    {
+                        if (power.Tier != selectedRarity)
+                            continue;
+                        // This should ensure that powers can only be added to the shop if they:
+                        // Don't restrict other appearing powers in the shop.
+                        // Are not reliant on another power in the shop.
+                        if (shopPowers.Count > 0)
+                        {
+                            CombatController.ObtainedPowers.AddRange(shopPowers);
+                            bool canAppear = power.CanAppear;
+                            CombatController.ObtainedPowers.Add(power);
+                            canAppear = shopPowers.All(x => x.CanAppear);
+                            // Reset powers
+                            CombatController.ObtainedPowers = [.. obtainedPowers];
+                            if (!canAppear)
+                                continue;
+                        }
+                        powers.Add(power);
+                    }
+
+                    if (powers.Count != 0)
+                    {
+                        Power selectedPower = powers[RngManager.GetRandom(0, powers.Count - 1)];
+                        price = restock
+                            ? Mathf.RoundToInt(_stock[i - 1].Item2 * 1.2f)
+                            : selectedPower.Tier switch
+                            {
+                                Rarity.Rare => RngManager.GetRandom(500, 1000),
+                                Rarity.Uncommon => RngManager.GetRandom(250, 500),
+                                _ => RngManager.GetRandom(100, 300)
+                            };
+                        itemName = selectedPower.GetType().Name;
+                        shopPowers.Add(selectedPower);
+                        availablePowers.RemoveAll(x => x.GetType().Name == itemName);
+                    }
+                }
+
+                if (price == 0)
+                {
+                    if (rolled < 40f && (possibleCombatStat < 20 || possibleSpiritStat < 20 || possibleEnduranceStat < 20))
+                    {
+                        int chosenStat = 1;
+                        if (rolled <= 20f && possibleCombatStat < 20)
+                            chosenStat = 1;
+                        else if (rolled <= 30f && possibleSpiritStat < 20)
+                            chosenStat = 2;
+                        else if (possibleEnduranceStat < 20)
+                            chosenStat = 3;
+                        else if (possibleSpiritStat < 20)
+                            chosenStat = 2;
+
+                        price = restock
+                            ? Mathf.RoundToInt(_stock[i - 1].Item2 * 1.2f)
+                            : RngManager.GetRandom(100, 250);
+                        price -= (price % 10);
+                        // We add 20 to prevent the mod from rolling the same stat twice (unless the stat is 0).
+                        switch (chosenStat)
+                        {
+                            case 1:
+                                itemName = CombatStatStock;
+                                possibleCombatStat += 20;
+                                break;
+                            case 2:
+                                itemName = SpiritStatStock;
+                                possibleSpiritStat += 20;
+                                break;
+                            default:
+                                itemName = EnduranceStatStock;
+                                possibleEnduranceStat += 20;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // Determine consumable.
+                        rolled = RngManager.GetRandom(1, 5);
+                        itemName = rolled switch
+                        {
+                            1 => NailStock,
+                            2 => LifebloodStock,
+                            3 => EggStock,
+                            4 => TeaStock,
+                            _ => SealStock
+                        };
+                        
+                        price = restock
+                            ? Mathf.RoundToInt(_stock[i - 1].Item2 * 1.2f)
+                            : RngManager.GetRandom(50, 200);
+
+                        if (!restock && rolled == 5)
+                            price *= 3;
+                    }
+                }
+
+                price -= (price % 10);
+                
+                if (!restock)
+                    _stock.Add(new(itemName, price, StockState.Normal));
+                else
+                    _stock[i - 1] = new(itemName, price, StockState.Expensive);
+            }
+
+            if (stockAmount >= 5 && !restock)
+            {
+                int rolledDiscount = RngManager.GetRandom(1, stockAmount);
+                _stock[rolledDiscount - 1] = new(_stock[rolledDiscount - 1].Item1, _stock[rolledDiscount - 1].Item2 / 2, StockState.Cheaper);
+            }
+
+            if (restock)
+                for (int i = 1; i <= stockAmount; i++)
+                    _elementLookup["Stock Price " + i].transform.parent.parent.GetComponent<SpriteRenderer>().sprite = GenerateSprite(i);
+        }
+        catch (Exception ex)
+        {
+            LogManager.Log("Error setting up the shop", ex);
+        }
+        finally
+        {
+            CombatController.ObtainedPowers = obtainedPowers;
+        }
     }
 }

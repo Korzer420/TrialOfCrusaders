@@ -102,9 +102,9 @@ internal static class CombatController
         return false;
     }
 
-    public static bool HasNailArt() => PDHelper.HasDashSlash || PDHelper.HasUpwardSlash || PDHelper.HasCyclone;
+    public static bool HasNailArt() => HasPower<DashSlash>(out _) || HasPower<GreatSlash>(out _) || HasPower<CycloneSlash>(out _);
 
-    public static bool HasSpell() => PDHelper.FireballLevel + PDHelper.QuakeLevel + PDHelper.ScreamLevel > 0;
+    public static bool HasSpell() => HasPower<VengefulSpirit>(out _) || HasPower<HowlingWraiths>(out _) || HasPower<DesolateDive>(out _);
 
     internal static void DisablePowers()
     {

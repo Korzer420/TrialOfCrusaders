@@ -127,7 +127,7 @@
     <value>Lifeblood Badge</value>
   </data>
   <data name="Consumable_Lifeblood_Desc" xml:space="preserve">
-    <value>Grants {0} lifeblood. For the rest of the runs further lifeblood badges grant additional lifeblood.</value>
+    <value>Grants {0} lifeblood. For the rest of this trial further lifeblood badges grant additional lifeblood.</value>
   </data>
   <data name="Consumable_Nail_Desc" xml:space="preserve">
     <value>Increase your nail damage by 10 for the next 50 strikes (regardless of if they hit anything). Further consumptions will increase the left strikes by 50.</value>

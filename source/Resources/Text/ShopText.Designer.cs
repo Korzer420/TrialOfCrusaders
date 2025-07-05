@@ -79,7 +79,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Grants {0} lifeblood. For the rest of the runs further lifeblood badges grant additional lifeblood. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Grants {0} lifeblood. For the rest of this trial further lifeblood badges grant additional lifeblood. ähnelt.
         /// </summary>
         internal static string Consumable_Lifeblood_Desc {
             get {
