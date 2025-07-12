@@ -14,11 +14,11 @@ public class CullTheWeak : Power
 
     public override DraftPool Pools => DraftPool.Debuff;
 
-    public override bool CanAppear => CombatController.HasPower<ImprovedDefendersCrest>(out _) || CombatController.HasPower<Pyroblast>(out _)
-        || CombatController.HasPower<DeepCuts>(out _) || CombatController.HasPower<ScorchingGround>(out _) || CombatController.HasPower<BindingCircle>(out _)
-        || CombatController.HasPower<InUtterDarkness>(out _) || CombatController.HasPower<FragileSpirit>(out _);
+    public override bool CanAppear => CombatRef.HasPower<ImprovedDefendersCrest>(out _) || CombatRef.HasPower<Pyroblast>(out _)
+        || CombatRef.HasPower<DeepCuts>(out _) || CombatRef.HasPower<ScorchingGround>(out _) || CombatRef.HasPower<BindingCircle>(out _)
+        || CombatRef.HasPower<InUtterDarkness>(out _) || CombatRef.HasPower<FragileSpirit>(out _);
 
-    protected override void Enable() => CombatController.DebuffsStronger = true;
+    protected override void Enable() => CombatRef.DebuffsStronger = true;
 
-    protected override void Disable() => CombatController.DebuffsStronger = false;
+    protected override void Disable() => CombatRef.DebuffsStronger = false;
 }

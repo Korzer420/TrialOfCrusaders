@@ -18,48 +18,48 @@ using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class StageController
+public class StageController : BaseController
 {
-    private static bool _enabled;
-    private static List<TransitionPoint> _transitionPoints = [];
-    private static List<SpecialTransition> _specialTransitions = [];
-    private static int _specialRoomCooldown = 0;
-    private static (string, string) _intendedDestination = new();
-    private static TextMeshPro _roomCounter;
+    private List<TransitionPoint> _transitionPoints = [];
+    private List<SpecialTransition> _specialTransitions = [];
+    private int _specialRoomCooldown = 0;
+    private (string, string) _intendedDestination = new();
+    private TextMeshPro _roomCounter;
 
     #region Properties
 
-    public static bool QuietRoom { get; set; } = true;
+    public bool QuietRoom { get; set; } = true;
 
-    public static bool UpcomingTreasureRoom { get; set; }
+    public bool UpcomingTreasureRoom { get; set; }
 
-    public static bool UpcomingShop { get; set; }
+    public bool UpcomingShop { get; set; }
 
-    public static int CurrentRoomIndex { get; set; } = 0;
+    public int CurrentRoomIndex { get; set; } = 0;
 
-    public static int CurrentRoomNumber => CurrentRoomIndex + 1;
+    public int CurrentRoomNumber => CurrentRoomIndex + 1;
 
-    public static List<RoomData> CurrentRoomData { get; set; } = [];
+    public List<RoomData> CurrentRoomData { get; set; } = [];
 
-    public static bool FinishedEnemies { get; set; }
+    public bool FinishedEnemies { get; set; }
 
-    public static RoomData CurrentRoom => CurrentRoomIndex == -1 || CurrentRoomIndex >= CurrentRoomData.Count 
+    public RoomData CurrentRoom => CurrentRoomIndex == -1 || CurrentRoomIndex >= CurrentRoomData.Count 
         ? null 
         : CurrentRoomData[CurrentRoomIndex];
 
     #endregion
 
-    public static event Action<bool, bool> RoomEnded;
+    public event Action<bool, bool> RoomEnded;
 
     #region Setup
 
-    internal static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enable Stage Controller");
         QuietRoom = true;
         On.PlayMakerFSM.OnEnable += FsmEdits;
@@ -78,8 +78,8 @@ internal static class StageController
         On.HeroController.FinishedEnteringScene += FinishedEnteringScene;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneAdjustments;
 
-        CombatController.EnemiesCleared += OnEnemiesCleared;
-        HistoryController.CreateEntry += PassHistoryData;
+        CombatRef.EnemiesCleared += OnEnemiesCleared;
+        HistoryRef.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         var textElement = TextManager.CreateUIObject("RoomCounter");
         Component.Destroy(textElement.Item1);
@@ -88,14 +88,10 @@ internal static class StageController
         _roomCounter.transform.position = new(-14.5f, -9);
         _roomCounter.fontSize = 3;
         GameObject.DontDestroyOnLoad(_roomCounter.transform.parent);
-
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Stage Controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         On.RestBench.Start -= RemoveBenches;
@@ -113,8 +109,8 @@ internal static class StageController
         On.TransitionPoint.Start -= ModifyTransitionPoint;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneAdjustments;
 
-        CombatController.EnemiesCleared -= OnEnemiesCleared;
-        HistoryController.CreateEntry -= PassHistoryData;
+        CombatRef.EnemiesCleared -= OnEnemiesCleared;
+        HistoryRef.CreateEntry -= PassHistoryData;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
 
         // Reset data.
@@ -125,14 +121,13 @@ internal static class StageController
         CurrentRoomData.Clear();
         FinishedEnemies = false;
         GameObject.Destroy(_roomCounter.gameObject);
-        _enabled = false;
     }
 
     #endregion
 
     #region Methods
 
-    private static void SpawnTeleporter(Vector3 source, Vector3 target)
+    private void SpawnTeleporter(Vector3 source, Vector3 target)
     {
         GameObject firstLift = new("Trial Lift");
         Lift first = firstLift.AddComponent<Lift>();
@@ -144,7 +139,7 @@ internal static class StageController
         first.Partner = secondLift.GetComponent<Lift>();
     }
 
-    internal static void ClearExit()
+    internal void ClearExit()
     {
         if (!CurrentRoomData[CurrentRoomIndex].BossRoom)
         {
@@ -156,7 +151,7 @@ internal static class StageController
         }
     }
 
-    internal static void EnableExit()
+    internal void EnableExit()
     {
         if (_specialTransitions.Count > 0)
         {
@@ -165,7 +160,7 @@ internal static class StageController
         }
     }
 
-    public static void PlayClearSound(bool room = true)
+    public void PlayClearSound(bool room = true)
     {
         GameObject audioObject = new("Trial Room Clear");
         audioObject.SetActive(false);
@@ -183,9 +178,9 @@ internal static class StageController
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => UnityEngine.Object.Destroy(audioObject), () => source == null || !source.isPlaying));
     }
 
-    internal static List<RoomData> LoadRoomData() => ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
+    internal List<RoomData> LoadRoomData() => ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
 
-    internal static IEnumerator WaitForTransition()
+    internal IEnumerator WaitForTransition()
     {
         HeroController.instance.RelinquishControl();
         float passedTime = 0f;
@@ -207,7 +202,7 @@ internal static class StageController
 
     #region Transition Handling
 
-    private static void InitiateTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
+    private void InitiateTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
         _transitionPoints.Clear();
         _specialTransitions.Clear();
@@ -221,7 +216,7 @@ internal static class StageController
             }
             else
             {
-                CombatController.ActiveEnemies.Clear();
+                CombatRef.ActiveEnemies.Clear();
                 if (CurrentRoomNumber > 0)
                 {
                     GatePosition entryPosition;
@@ -251,7 +246,7 @@ internal static class StageController
                     QuietRoom = true;
                     info.EntryGateName = "left1";
                     info.SceneName = "Room_Colosseum_Bronze";
-                    PhaseController.TransitionTo(Phase.Result);
+                    PhaseManager.TransitionTo(Phase.Result);
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom;
@@ -312,9 +307,9 @@ internal static class StageController
                                 treasureChance += 3f;
                             }
 
-                            if (CombatController.HasPower<Damocles>(out _))
+                            if (CombatRef.HasPower<Damocles>(out _))
                                 treasureChance += 10f;
-                            if (CombatController.HasPower<TreasureHunter>(out _))
+                            if (CombatRef.HasPower<TreasureHunter>(out _))
                                 treasureChance += 5f;
 
                             float rolled = RngManager.GetRandom(0f, 100f);
@@ -338,7 +333,7 @@ internal static class StageController
         }
     }
 
-    private static void ModifyTransitionPoint(On.TransitionPoint.orig_Start orig, TransitionPoint self)
+    private void ModifyTransitionPoint(On.TransitionPoint.orig_Start orig, TransitionPoint self)
     {
         orig(self);
         _transitionPoints.Add(self);
@@ -367,7 +362,7 @@ internal static class StageController
         }
     }
 
-    private static void FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    private void FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
         // Already triggered, we skip this.
@@ -386,9 +381,9 @@ internal static class StageController
                 GameObject.Destroy(marmuGate);
         }
         _roomCounter.text = $"Current room: {CurrentRoomNumber}";
-        if (!SecretController.UnlockedToughness)
+        if (!PhaseManager.GetController<SecretController>().UnlockedToughness)
         {
-            string secretText = SecretController.CheckForStageHints();
+            string secretText = PhaseManager.GetController<SecretController>().CheckForStageHints();
             if (!string.IsNullOrEmpty(secretText))
             {
                 _roomCounter.text += secretText;
@@ -401,7 +396,7 @@ internal static class StageController
             _roomCounter.text = GameManager.instance.sceneName == "GG_Engine" 
                 ? "Treasure room"
                 : "Shop";
-        if (!CombatController.HasPower<DreamNail>(out _)
+        if (!CombatRef.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
     }
@@ -410,7 +405,7 @@ internal static class StageController
 
     #region Other Eventhandler
 
-    private static void RemoveBenches(On.RestBench.orig_Start orig, RestBench self)
+    private void RemoveBenches(On.RestBench.orig_Start orig, RestBench self)
     {
         orig(self);
         // To ensure other mods are running correctly, we just move the bench out of bounce.
@@ -418,7 +413,7 @@ internal static class StageController
             self.transform.position = new(-4000f, -4000f);
     }
 
-    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
         {
@@ -551,7 +546,7 @@ internal static class StageController
         }
     }
 
-    private static PersistentBoolData ForceSceneFlags(On.SceneData.orig_FindMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
+    private PersistentBoolData ForceSceneFlags(On.SceneData.orig_FindMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
     {
         if (persistentBoolData.sceneName == "Fungus1_21" && persistentBoolData.id == "Vine Platform (2)"
             || persistentBoolData.sceneName == "Fungus1_31" && persistentBoolData.id == "Toll Gate Machine"
@@ -580,14 +575,14 @@ internal static class StageController
         return orig(self, persistentBoolData);
     }
 
-    private static void SkipSceneDataSave(ILContext il)
+    private void SkipSceneDataSave(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
         cursor.Emit(OpCodes.Ret);
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
             || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37" 
@@ -600,15 +595,15 @@ internal static class StageController
         return orig;
     }
 
-    private static void PassHistoryData(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
+    private void PassHistoryData(HistoryData entry, RunResult result) => entry.FinalRoomNumber = CurrentRoomNumber;
 
-    private static void OnEnemiesCleared()
+    private void OnEnemiesCleared()
     {
         FinishedEnemies = true;
         ClearExit();
     }
 
-    public static void SceneAdjustments(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    public void SceneAdjustments(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "GG_Engine")
             TreasureManager.PrepareTreasureRoom(CurrentRoom, _specialTransitions.Last());
@@ -633,7 +628,7 @@ internal static class StageController
 
     #endregion
 
-    private static IEnumerator CorrectCounter()
+    private IEnumerator CorrectCounter()
     {
         yield return new WaitForSeconds(0.5f);
         _roomCounter.text = $"Current room: {CurrentRoomNumber}";

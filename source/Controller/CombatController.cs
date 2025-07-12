@@ -22,67 +22,67 @@ using TrialOfCrusaders.UnityComponents.Debuffs;
 using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Handles everything related to the combat and powers.
 /// </summary>
-internal static class CombatController
+public class CombatController : BaseController
 {
-    private static bool _enabled;
-    private static ILHook _attackMethod;
-    private static ILHook _blueHealthMethod;
-    private static Coroutine _enemyScanner;
+    private ILHook _attackMethod;
+    private ILHook _blueHealthMethod;
+    private Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
     public const int WeakenedDamageFlag = 250;
-    private static int _stageTreasures = 0;
+    private int _stageTreasures = 0;
     public const string CombatStatColor = "#fa0000";
     public const string SpiritStatColor = "#f403fc";
     public const string EnduranceStatColor = "#4fff61";
 
     #region Properties
 
-    public static int CombatLevel { get; set; }
+    public int CombatLevel { get; set; }
 
-    public static int SpiritLevel { get; set; }
+    public int SpiritLevel { get; set; }
 
-    public static int EnduranceLevel { get; set; }
+    public int EnduranceLevel { get; set; }
 
-    public static bool CombatCapped => CombatLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+    public bool CombatCapped => CombatLevel >= (SecretRef.UnlockedToughness ? 21 : 20);
 
-    public static bool SpiritCapped => SpiritLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+    public bool SpiritCapped => SpiritLevel >= (SecretRef.UnlockedToughness ? 21 : 20);
 
-    public static bool EnduranceCapped => EnduranceLevel >= (SecretController.UnlockedToughness ? 21 : 20);
+    public bool EnduranceCapped => EnduranceLevel >= (SecretRef.UnlockedToughness ? 21 : 20);
 
-    public static bool CharmUpdate { get; set; }
+    public bool CharmUpdate { get; set; }
 
-    public static List<HealthManager> ActiveEnemies { get; set; } = [];
+    public List<HealthManager> ActiveEnemies { get; set; } = [];
 
-    public static List<Power> ObtainedPowers { get; set; } = [];
+    public List<Power> ObtainedPowers { get; set; } = [];
 
-    public static bool InCombat { get; set; }
+    public bool InCombat { get; set; }
 
     // As this is called very frequently we store it in an extra value.
-    internal static bool DebuffsStronger { get; set; }
+    internal bool DebuffsStronger { get; set; }
 
     #endregion
 
     #region Events
 
-    public static event Action TookDamage;
+    public event Action TookDamage;
 
-    public static event Action EnemiesCleared;
+    public event Action EnemiesCleared;
 
-    public static event Action<HealthManager> EnemyKilled;
+    public event Action<HealthManager> EnemyKilled;
 
-    public static event Action BeginCombat;
+    public event Action BeginCombat;
 
     #endregion
 
     #region Power Utils
 
-    public static bool HasPower<T>(out T selectedPower) where T : Power
+    public bool HasPower<T>(out T selectedPower) where T : Power
     {
         foreach (Power power in ObtainedPowers)
             if (power.GetType() == typeof(T))
@@ -94,7 +94,7 @@ internal static class CombatController
         return false;
     }
 
-    public static bool HasPower(string powerTypeName)
+    public bool HasPower(string powerTypeName)
     {
         foreach (Power power in ObtainedPowers)
             if (power.GetType().Name == powerTypeName)
@@ -102,11 +102,11 @@ internal static class CombatController
         return false;
     }
 
-    public static bool HasNailArt() => HasPower<DashSlash>(out _) || HasPower<GreatSlash>(out _) || HasPower<CycloneSlash>(out _);
+    public bool HasNailArt() => HasPower<DashSlash>(out _) || HasPower<GreatSlash>(out _) || HasPower<CycloneSlash>(out _);
 
-    public static bool HasSpell() => HasPower<VengefulSpirit>(out _) || HasPower<HowlingWraiths>(out _) || HasPower<DesolateDive>(out _);
+    public bool HasSpell() => HasPower<VengefulSpirit>(out _) || HasPower<HowlingWraiths>(out _) || HasPower<DesolateDive>(out _);
 
-    internal static void DisablePowers()
+    internal void DisablePowers()
     {
         foreach (Power power in ObtainedPowers)
             power.DisablePower();
@@ -116,10 +116,8 @@ internal static class CombatController
 
     #region Setup
 
-    public static void Initialize()
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enable Combat Controller");
 
         // Setup hooks.
@@ -156,25 +154,25 @@ internal static class CombatController
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
         _blueHealthMethod = new(typeof(PlayerData).GetMethod("orig_UpdateBlueHealth", BindingFlags.Public | BindingFlags.Instance), SkipBlueHealthReset);
 
-        StageController.RoomEnded += StageController_RoomEnded;
-        HistoryController.CreateEntry += PassHistoryData;
+        StageRef.RoomEnded += StageController_RoomEnded;
+        HistoryRef.CreateEntry += PassHistoryData;
 
         CreateExtraHudElements();
 
         // Permanent unlocks
-        if (SecretController.UnlockedToughness)
+        if (SecretRef.UnlockedToughness)
         {
             CombatLevel++;
             SpiritLevel++;
             EnduranceLevel++;
         }
-        if (SecretController.UnlockedStashedContraband)
+        if (SecretRef.UnlockedStashedContraband)
         {
             PDHelper.CanDash = true;
             PDHelper.HasDash = true;
         }
-        if (SecretController.UnlockedHighRoller)
-            SecretController.LeftRolls = 3;
+        if (SecretRef.UnlockedHighRoller)
+            SecretRef.LeftRolls = 3;
 
         // Secret seed handling
         if (RngManager.Seed == 060060606)
@@ -195,13 +193,10 @@ internal static class CombatController
         }, () => HeroController.instance?.acceptingInput == true, true);
 
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
-        _enabled = true;
     }
 
-    public static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Combat Controller");
 
         // Setup hooks.
@@ -237,8 +232,8 @@ internal static class CombatController
         _attackMethod?.Dispose();
         _blueHealthMethod?.Dispose();
 
-        StageController.RoomEnded -= StageController_RoomEnded;
-        HistoryController.CreateEntry -= PassHistoryData;
+        StageRef.RoomEnded -= StageController_RoomEnded;
+        HistoryRef.CreateEntry -= PassHistoryData;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
@@ -255,14 +250,15 @@ internal static class CombatController
             Component.Destroy(shifter);
             HeroHelper.Sprite.color = Color.white;
         }
-        _enabled = false;
     }
+
+    public override Phase[] GetActivePhases() => [Phase.Run];
 
     #endregion
 
     #region Health Setup
 
-    private static void CreateExtraHudElements()
+    private void CreateExtraHudElements()
     {
         Transform cameraObject = GameObject.Find("_GameCameras").transform;
         if (cameraObject.Find("HudCamera/Hud Canvas/Health/Health 12") == null)
@@ -321,7 +317,7 @@ internal static class CombatController
         }
     }
 
-    private static void FlagCharmHeal(On.HeroController.orig_CharmUpdate orig, HeroController self)
+    private void FlagCharmHeal(On.HeroController.orig_CharmUpdate orig, HeroController self)
     {
         // Flag the charm update so the heal can be blocked.
         CharmUpdate = true;
@@ -329,14 +325,14 @@ internal static class CombatController
         CharmUpdate = false;
     }
 
-    private static void SkipBlueHealthReset(ILContext il)
+    private void SkipBlueHealthReset(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
         cursor.Emit(OpCodes.Ret);
     }
 
-    private static void BlockCharmHeal(ILContext il)
+    private void BlockCharmHeal(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
@@ -348,7 +344,7 @@ internal static class CombatController
         cursor.Emit(OpCodes.Brtrue, label);
     }
 
-    private static IEnumerator UpdateUI()
+    private IEnumerator UpdateUI()
     {
         yield return new WaitForSeconds(.2f);
         try
@@ -361,30 +357,30 @@ internal static class CombatController
         }
     }
 
-    private static void CheckForFailedRun(On.HutongGames.PlayMaker.Actions.IntSwitch.orig_OnEnter orig, IntSwitch self)
+    private void CheckForFailedRun(On.HutongGames.PlayMaker.Actions.IntSwitch.orig_OnEnter orig, IntSwitch self)
     {
         if (self.IsCorrectContext("Hero Death Anim", "Hero Death", "Check MP"))
         {
             self.Fsm.Variables.FindFsmBool("Soul Cracked").Value = false;
-            PhaseController.TransitionTo(Phase.Lobby);
+            PhaseManager.TransitionTo(Phase.Lobby);
         }
         orig(self);
     }
 
-    private static void BlockHealthReset(ILContext il)
+    private void BlockHealthReset(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Emit(OpCodes.Ret);
     }
 
-    private static void MoveLifebloodInFront(On.HutongGames.PlayMaker.Actions.SetPosition.orig_OnEnter orig, SetPosition self)
+    private void MoveLifebloodInFront(On.HutongGames.PlayMaker.Actions.SetPosition.orig_OnEnter orig, SetPosition self)
     {
         if (self.IsCorrectContext("blue_health_display", null, "Init"))
             self.z.Value -= 0.1f;
         orig(self);
     }
 
-    private static void AdjustLifebloodPosition(On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.orig_OnEnter orig, ConvertIntToFloat self)
+    private void AdjustLifebloodPosition(On.HutongGames.PlayMaker.Actions.ConvertIntToFloat.orig_OnEnter orig, ConvertIntToFloat self)
     {
         orig(self);
         if (self.IsCorrectContext("Blue Health Control", "Health", "Add Blue Health"))
@@ -395,9 +391,9 @@ internal static class CombatController
 
     #region Enemy Control
 
-    private static int _bossCounter = 0;
+    private int _bossCounter = 0;
 
-    private static void ModifyEnemy(On.HealthManager.orig_OnEnable orig, HealthManager self)
+    private void ModifyEnemy(On.HealthManager.orig_OnEnable orig, HealthManager self)
     {
         try
         {
@@ -407,7 +403,7 @@ internal static class CombatController
                 && self.gameObject.name != "Cap Hit" && !self.gameObject.name.Contains("Baby Centipede Spawner")
                 && !self.gameObject.name.Contains("Zombie Spider") && !self.gameObject.name.Contains("Hiveling Spawner"))
             {
-                if (self.hp >= 190f && StageController.CurrentRoom.BossRoom)
+                if (self.hp >= 190f && StageRef.CurrentRoom.BossRoom)
                     self.gameObject.AddComponent<BossFlag>();
                 if (!InCombat)
                     ActiveEnemies.Add(self);
@@ -425,7 +421,7 @@ internal static class CombatController
         orig(self);
     }
 
-    private static void OnEnemyDeath(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
+    private void OnEnemyDeath(On.HealthManager.orig_Die orig, HealthManager self, float? attackDirection, AttackTypes attackType, bool ignoreEvasion)
     {
         bool contained = false;
         try
@@ -469,11 +465,11 @@ internal static class CombatController
                             Component.Destroy(enemy.GetComponent<RoyalMark>());
                     }
                 }
-                if (!enemyFlag.NoLoot && !StageController.CurrentRoom.BossRoom)
+                if (!enemyFlag.NoLoot && !StageRef.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetRandom(0f, 100f);
                     // Make shinies more likely in the early game.
-                    if (ScoreController.Score.Mode == GameMode.Crusader && StageController.CurrentRoomNumber <= 10)
+                    if (ScoreRef.Score.Mode == GameMode.Crusader && StageRef.CurrentRoomNumber <= 10)
                         rolled *= 0.75f;
                     if (rolled <= 4f / (1 + _stageTreasures))
                     {
@@ -522,8 +518,8 @@ internal static class CombatController
         orig(self, attackDirection, attackType, ignoreEvasion);
         try
         {
-            if (ActiveEnemies.Count == 0 && !StageController.QuietRoom && contained
-                && !StageController.CurrentRoom.BossRoom)
+            if (ActiveEnemies.Count == 0 && !StageRef.QuietRoom && contained
+                && !StageRef.CurrentRoom.BossRoom)
                 FireEnemiesCleared();
         }
         catch (Exception ex)
@@ -532,7 +528,7 @@ internal static class CombatController
         }
     }
 
-    private static void FinalizeEnemies(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    private void FinalizeEnemies(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
         try
@@ -544,16 +540,16 @@ internal static class CombatController
             foreach (HealthManager item in ActiveEnemies)
                 if (item != null && item.gameObject != null && item.gameObject.scene != null && item.gameObject.scene.name == GameManager.instance.sceneName)
                 {
-                    if (StageController.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
+                    if (StageRef.CurrentRoom.BossRoom && item.GetComponent<BossFlag>())
                         item.OnDeath += BossDeathHandling;
                     newEnemies.Add(item);
                 }
             ActiveEnemies = newEnemies;
-            if (!StageController.QuietRoom)
+            if (!StageRef.QuietRoom)
             {
                 InCombat = true;
                 LogManager.Log("Required enemy amount: " + ActiveEnemies.Count);
-                if (StageController.CurrentRoom.BossRoom)
+                if (StageRef.CurrentRoom.BossRoom)
                     _bossCounter = GameManager.instance.sceneName switch
                     {
                         "GG_Watcher_Knights" => 6,
@@ -576,24 +572,24 @@ internal static class CombatController
         }
     }
 
-    private static IEnumerator ScanEnemies()
+    private IEnumerator ScanEnemies()
     {
         // I really, really, really, really, really, really, really, really, really, really, really wanted to avoid doing shit like this
         // But since the enemy system in this game is so fucking scuffed, we unfortunately have to do this to prevent issues.
         while (true)
         {
             yield return new WaitForSeconds(1f);
-            if (StageController.QuietRoom || !InCombat)
-                yield return new WaitUntil(() => InCombat && !StageController.QuietRoom);
+            if (StageRef.QuietRoom || !InCombat)
+                yield return new WaitUntil(() => InCombat && !StageRef.QuietRoom);
             UpdateEnemies();
         }
     }
 
-    private static void UpdateEnemies()
+    private void UpdateEnemies()
     {
         try
         {
-            if (ActiveEnemies != null && StageController.CurrentRoomIndex >= 0)
+            if (ActiveEnemies != null && StageRef.CurrentRoomIndex >= 0)
             {
                 int currentCount = ActiveEnemies.Count;
                 // Unity doesn't like the "?" operator.
@@ -604,7 +600,7 @@ internal static class CombatController
                         ActiveEnemies.RemoveAt(i);
                         i--;
                     }
-                if (ActiveEnemies.Count == 0 && !StageController.CurrentRoom.BossRoom)
+                if (ActiveEnemies.Count == 0 && !StageRef.CurrentRoom.BossRoom)
                     FireEnemiesCleared();
             }
         }
@@ -614,7 +610,7 @@ internal static class CombatController
         }
     }
 
-    private static IEnumerator TrackBosses(On.BossSceneController.orig_Start orig, BossSceneController self)
+    private IEnumerator TrackBosses(On.BossSceneController.orig_Start orig, BossSceneController self)
     {
         try
         {
@@ -635,7 +631,7 @@ internal static class CombatController
         yield return orig(self);
     }
 
-    private static void BossDeathHandling()
+    private void BossDeathHandling()
     {
         try
         {
@@ -643,10 +639,10 @@ internal static class CombatController
             if (_bossCounter == 0)
             {
                 InCombat = false;
-                if (StageController.CurrentRoomIndex == StageController.CurrentRoomData.Count - 1)
+                if (StageRef.CurrentRoomIndex == StageRef.CurrentRoomData.Count - 1)
                 {
                     if (GameManager.instance.sceneName == "GG_Hollow_Knight")
-                        TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
+                        TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
                 }
                 else
                 {
@@ -666,41 +662,41 @@ internal static class CombatController
         }
     }
 
-    private static void ScaleEnemy(HealthManager enemy)
+    private void ScaleEnemy(HealthManager enemy)
     {
-        if (StageController.CurrentRoom.Name == "Fungus1_09")
+        if (StageRef.CurrentRoom.Name == "Fungus1_09")
         {
             enemy.hp = 1;
             return;
         }
-        if (StageController.CurrentRoomNumber >= 20)
+        if (StageRef.CurrentRoomNumber >= 20)
         {
             float scaling = 0.25f;
-            if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
+            if (StageRef.CurrentRoomNumber == StageRef.CurrentRoomData.Count)
                 scaling = 0.05f;
-            else if (StageController.CurrentRoomData[StageController.CurrentRoomIndex].BossRoom
+            else if (StageRef.CurrentRoomData[StageRef.CurrentRoomIndex].BossRoom
                 || enemy.hp >= 50)
                 scaling = 0.05f;
             else if (enemy.hp >= 20)
                 scaling = 0.15f;
-            enemy.hp = Mathf.CeilToInt(enemy.hp * (1 + (StageController.CurrentRoomNumber - 20) * scaling));
+            enemy.hp = Mathf.CeilToInt(enemy.hp * (1 + (StageRef.CurrentRoomNumber - 20) * scaling));
         }
-        else if (enemy.hp > 40 && !StageController.CurrentRoom.BossRoom)
+        else if (enemy.hp > 40 && !StageRef.CurrentRoom.BossRoom)
             enemy.hp /= 2;
     }
 
-    private static void ApplyHpScaling(On.SetHP.orig_OnEnter orig, SetHP self)
+    private void ApplyHpScaling(On.SetHP.orig_OnEnter orig, SetHP self)
     {
-        if (StageController.CurrentRoomNumber >= 20 && self.IsCorrectContext("hp_scaler", null, null))
+        if (StageRef.CurrentRoomNumber >= 20 && self.IsCorrectContext("hp_scaler", null, null))
         {
-            self.hp.Value = Mathf.CeilToInt(self.hp.Value * (1 + (StageController.CurrentRoomNumber - 20) * 0.1f));
+            self.hp.Value = Mathf.CeilToInt(self.hp.Value * (1 + (StageRef.CurrentRoomNumber - 20) * 0.1f));
             if (!self.Fsm.GameObjectName.Contains("Sentry"))
                 LogManager.Log("Applied hp scaling to unknown enemy: " + self.Fsm.GameObjectName + " please report this to the mod developer.");
         }
         orig(self);
     }
 
-    internal static void FireEnemiesCleared()
+    internal void FireEnemiesCleared()
     {
         if (!InCombat)
             return;
@@ -713,10 +709,10 @@ internal static class CombatController
 
     #region Global Event Handler
 
-    private static int ModHooks_GetPlayerIntHook(string name, int orig)
+    private int ModHooks_GetPlayerIntHook(string name, int orig)
     {
         if (name == nameof(PlayerData.instance.nailDamage))
-            return 5 + CombatLevel * 2 + (ConsumableController.EmpoweredHits > 0 ? 10 : 0);
+            return 5 + CombatLevel * 2 + (ConsumableRef.EmpoweredHits > 0 ? 10 : 0);
         else if (name == nameof(PlayerData.maxHealthCap))
             return 26;
         else if (name == nameof(PlayerData.maxHealthBase) || name == nameof(PlayerData.maxHealth))
@@ -734,7 +730,7 @@ internal static class CombatController
         return orig;
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.overcharmed))
             return HasPower<VoidHeart>(out _);
@@ -743,7 +739,7 @@ internal static class CombatController
         return orig;
     }
 
-    private static void ModifyDealtDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
+    private void ModifyDealtDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
     {
         try
         {
@@ -770,7 +766,7 @@ internal static class CombatController
                     hitInstance.DamageDealt += 2 + Mathf.FloorToInt(CombatLevel * 1.5f);
 
                 // Armor scaling
-                int armor = StageController.CurrentRoomNumber / 5;
+                int armor = StageRef.CurrentRoomNumber / 5;
                 if (HasPower<BrutalStrikes>(out _))
                     if (hitInstance.Source?.name == "Great Slash" || hitInstance.Source?.name == "Dash Slash"
                         || hitInstance.Source?.name == "Hit L" || hitInstance.Source?.name == "Hit R")
@@ -825,7 +821,7 @@ internal static class CombatController
         orig(self, hitInstance);
     }
 
-    private static void ModifyMovementSpeed(ILContext il)
+    private void ModifyMovementSpeed(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
@@ -862,7 +858,7 @@ internal static class CombatController
         });
     }
 
-    private static void ModifyAttackSpeed(ILContext context)
+    private void ModifyAttackSpeed(ILContext context)
     {
         ILCursor cursor = new(context);
         cursor.Goto(0);
@@ -886,7 +882,7 @@ internal static class CombatController
         });
     }
 
-    private static void ModifyAttackDuration(ILContext il)
+    private void ModifyAttackDuration(ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
@@ -912,7 +908,7 @@ internal static class CombatController
         });
     }
 
-    private static void ModifyOtherDealtDamage(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, TakeDamage self)
+    private void ModifyOtherDealtDamage(On.HutongGames.PlayMaker.Actions.TakeDamage.orig_OnEnter orig, TakeDamage self)
     {
         int vanillaDamage = self.DamageDealt.Value;
         bool isNailArtModifier = false;
@@ -956,7 +952,7 @@ internal static class CombatController
         }
     }
 
-    private static int ModifySoulGain(int amount)
+    private int ModifySoulGain(int amount)
     {
         try
         {
@@ -991,7 +987,7 @@ internal static class CombatController
         return amount;
     }
 
-    private static void OnTakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+    private void OnTakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
         int currentHealth = PDHelper.Health;
         try
@@ -1031,7 +1027,7 @@ internal static class CombatController
         }
     }
 
-    private static void ModifyGeoAdd(On.HeroController.orig_AddGeo orig, HeroController self, int amount)
+    private void ModifyGeoAdd(On.HeroController.orig_AddGeo orig, HeroController self, int amount)
     {
         try
         {
@@ -1048,7 +1044,7 @@ internal static class CombatController
         orig(self, amount);
     }
 
-    private static IEnumerator OnPlayerDeath(On.HeroController.orig_Die orig, HeroController self)
+    private IEnumerator OnPlayerDeath(On.HeroController.orig_Die orig, HeroController self)
     {
         if (!HasPower(out CheatDeath cheatDeath) || cheatDeath.Cooldown != 0 && RngManager.GetRandom(1, 21) >= EnduranceLevel + 1)
             yield return orig(self);
@@ -1061,7 +1057,7 @@ internal static class CombatController
         }
     }
 
-    private static int ModifyDamageTaken(int hazardType, int damageAmount)
+    private int ModifyDamageTaken(int hazardType, int damageAmount)
     {
         if (damageAmount != InstaKillDamage && damageAmount != 0)
         {
@@ -1078,15 +1074,15 @@ internal static class CombatController
             // Enemy scaling
             if (hazardType == 1)
             {
-                if (StageController.CurrentRoomNumber < 20 || damageAmount == 1)
-                    damageAmount += StageController.CurrentRoomNumber / 20;
+                if (StageRef.CurrentRoomNumber < 20 || damageAmount == 1)
+                    damageAmount += StageRef.CurrentRoomNumber / 20;
                 else if (damageAmount == 2)
-                    damageAmount += Mathf.CeilToInt(StageController.CurrentRoomNumber / 20 * 1.5f);
+                    damageAmount += Mathf.CeilToInt(StageRef.CurrentRoomNumber / 20 * 1.5f);
             }
             else
             {
                 // Hazard scaling
-                damageAmount += StageController.CurrentRoomNumber / 10;
+                damageAmount += StageRef.CurrentRoomNumber / 10;
                 if (HasPower<ImprovedCaringShell>(out _))
                 {
                     if (!InCombat)
@@ -1128,7 +1124,7 @@ internal static class CombatController
 
     #endregion
 
-    private static void PassHistoryData(HistoryData entry, Enums.RunResult state)
+    private void PassHistoryData(HistoryData entry, Enums.RunResult state)
     {
         entry.FinalCombatLevel = CombatLevel;
         entry.FinalSpiritLevel = SpiritLevel;
@@ -1139,7 +1135,7 @@ internal static class CombatController
         entry.Powers = [.. ObtainedPowers.Select(x => x.Name)];
     }
 
-    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
         {
@@ -1180,16 +1176,16 @@ internal static class CombatController
                         });
                     });
                 }
-                else if (self.FsmName == "Phase Control" && StageController.CurrentRoomNumber >= 20)
+                else if (self.FsmName == "Phase Control" && StageRef.CurrentRoomNumber >= 20)
                 {
                     int basePhaseHp = self.FsmVariables.FindFsmInt("P2 Spike Waves").Value;
-                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P2 Spike Waves").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageRef.CurrentRoomNumber - 20) * 0.05f));
                     basePhaseHp = self.FsmVariables.FindFsmInt("P3 A1 Rage").Value;
-                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P3 A1 Rage").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageRef.CurrentRoomNumber - 20) * 0.05f));
                     basePhaseHp = self.FsmVariables.FindFsmInt("P4 Stun1").Value;
-                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.05f));
+                    self.FsmVariables.FindFsmInt("P4 Stun1").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageRef.CurrentRoomNumber - 20) * 0.05f));
                     basePhaseHp = self.FsmVariables.FindFsmInt("P5 Acend").Value;
-                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageController.CurrentRoomNumber - 20) * 0.002f));
+                    self.FsmVariables.FindFsmInt("P5 Acend").Value = Mathf.CeilToInt(basePhaseHp * (1 + (StageRef.CurrentRoomNumber - 20) * 0.002f));
                 }
             }
             else if (self.gameObject.name == "Brothers" || self.gameObject.name == "Nightmare Grimm Boss"
@@ -1206,8 +1202,8 @@ internal static class CombatController
                     else
                         self.GetState("Send NPC Event").AddActions(() =>
                         {
-                            if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
-                                TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
+                            if (StageRef.CurrentRoomNumber == StageRef.CurrentRoomData.Count)
+                                TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
                             else
                             {
                                 GameObject crowd = GameObject.Find("Godseeker Crowd");
@@ -1224,16 +1220,16 @@ internal static class CombatController
         orig(self);
     }
 
-    private static void StageController_RoomEnded(bool obj, bool traversed) => _stageTreasures = 0;
+    private void StageController_RoomEnded(bool obj, bool traversed) => _stageTreasures = 0;
 
-    private static void PreventFullSoulSprite(On.GGCheckBoundSoul.orig_OnEnter orig, GGCheckBoundSoul self)
+    private void PreventFullSoulSprite(On.GGCheckBoundSoul.orig_OnEnter orig, GGCheckBoundSoul self)
     {
         orig(self);
         if (self.IsCorrectContext("Soul Orb Control", "Soul Orb", "MP Full") && SpiritLevel < 6)
             self.Fsm.Event("FINISHED");
     }
 
-    private static void ControlExtraVesselSpawn(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, IntCompare self)
+    private void ControlExtraVesselSpawn(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, IntCompare self)
     {
         if (self.IsCorrectContext("vessel_orb", "Vessel*", "Appear?"))
             if (self.Fsm.GameObjectName.Contains("1"))
@@ -1249,7 +1245,7 @@ internal static class CombatController
         orig(self);
     }
 
-    private static void ScaleSpellDamage(On.HutongGames.PlayMaker.Actions.SetFsmInt.orig_OnEnter orig, SetFsmInt self)
+    private void ScaleSpellDamage(On.HutongGames.PlayMaker.Actions.SetFsmInt.orig_OnEnter orig, SetFsmInt self)
     {
         orig(self);
         try
@@ -1277,10 +1273,10 @@ internal static class CombatController
         }
     }
 
-    private static int GetSpellDamage(int damage, bool levelTwo)
+    private int GetSpellDamage(int damage, bool levelTwo)
     {
         bool hasShamanStone = CharmHelper.EquippedCharm(KorzUtils.Enums.CharmRef.ShamanStone);
-        bool teaActive = ConsumableController.TeaSpell > 0;
+        bool teaActive = ConsumableRef.TeaSpell > 0;
 
         int multiplier = 2;
         if (hasShamanStone)

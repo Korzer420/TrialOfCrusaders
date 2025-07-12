@@ -1,8 +1,6 @@
-﻿using KorzUtils.Helper;
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
 using System;
 using System.Collections;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
@@ -52,12 +50,12 @@ internal class ImprovedGatheringSwarm : Power
 
     private static IEnumerator MoveShiny(GameObject shiny)
     {
-        if (StageController.CurrentRoom.BossRoom)
+        if (StageRef.CurrentRoom.BossRoom)
             yield break;
         Rigidbody2D rigidbody = shiny.GetComponent<Rigidbody2D>();
         while(shiny != null)
         {
-            if (!HeroController.instance.acceptingInput || CombatController.InCombat)
+            if (!HeroController.instance.acceptingInput || CombatRef.InCombat)
             {
                 yield return null;
                 continue;

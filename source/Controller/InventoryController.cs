@@ -3,18 +3,18 @@ using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
-using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class InventoryController
+public class InventoryController : BaseController
 {
     private const string CombatStat = "Combat Stat";
     private const string SpiritStat = "Spirit Stat";
@@ -49,7 +49,6 @@ internal static class InventoryController
 
     internal static Dictionary<string, (SpriteRenderer, TextMeshPro)> ElementLookup = [];
     private static PlayMakerFSM _inventoryFsm;
-    private static bool _enabled;
 
     #region Inventory setup
 
@@ -80,7 +79,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, 1f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatController.CombatLevel}</color>";
+        currentElement.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatRef.CombatLevel}</color>";
         currentElement.fontSize = 3;
         ElementLookup.Add(CombatStat, new(null, currentElement));
 
@@ -89,7 +88,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, 0f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatController.SpiritLevel}</color>";
+        currentElement.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatRef.SpiritLevel}</color>";
         currentElement.fontSize = 3;
         ElementLookup.Add(SpiritStat, new(null, currentElement));
 
@@ -98,7 +97,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, -1f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatController.EnduranceLevel}</color>";
+        currentElement.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatRef.EnduranceLevel}</color>";
         currentElement.fontSize = 3;
         ElementLookup.Add(EnduranceStat, new(null, currentElement));
     }
@@ -286,14 +285,14 @@ internal static class InventoryController
             int index = fsm.FsmVariables.FindFsmInt("PowerIndex").Value;
             int powerIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
             ElementLookup[PowerListUp].Item1.gameObject.SetActive(powerIndex != 0);
-            ElementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < CombatController.ObtainedPowers.Count);
+            ElementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < CombatRef.ObtainedPowers.Count);
             index = powerIndex + index;
-            if (index >= CombatController.ObtainedPowers.Count)
+            if (index >= CombatRef.ObtainedPowers.Count)
                 LogManager.Log("Indexed power slot out of range.", KorzUtils.Enums.LogType.Error);
             else
             {
                 ElementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f - (index - powerIndex) * 1.5f);
-                Power selectedPower = CombatController.ObtainedPowers[index];
+                Power selectedPower = CombatRef.ObtainedPowers[index];
                 ElementLookup[PowerName].Item2.text = selectedPower.Name;
                 ElementLookup[PowerDescription].Item2.text = selectedPower.Description;
                 ElementLookup[PowerRarity].Item2.text = selectedPower.Tier switch
@@ -358,7 +357,7 @@ internal static class InventoryController
 
         fsm.AddState("Check from left", () =>
         {
-            if (CombatController.ObtainedPowers.Count == 0)
+            if (CombatRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI RIGHT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
@@ -368,7 +367,7 @@ internal static class InventoryController
 
         fsm.AddState("Check from right", () =>
         {
-            if (CombatController.ObtainedPowers.Count == 0)
+            if (CombatRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI LEFT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
@@ -397,13 +396,13 @@ internal static class InventoryController
             int currentFirstIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
             if (currentIndex < 3)
             {
-                if (currentIndex + 1 >= CombatController.ObtainedPowers.Count)
+                if (currentIndex + 1 >= CombatRef.ObtainedPowers.Count)
                     return;
                 fsm.FsmVariables.FindFsmInt("PowerIndex").Value++;
             }
             else
             {
-                if (currentFirstIndex >= CombatController.ObtainedPowers.Count - 4)
+                if (currentFirstIndex >= CombatRef.ObtainedPowers.Count - 4)
                     return;
                 currentFirstIndex++;
                 UpdateList(currentFirstIndex);
@@ -432,9 +431,9 @@ internal static class InventoryController
         ];
         for (int i = 0; i < 4; i++)
         {
-            if (firstPowerIndex + i >= CombatController.ObtainedPowers.Count)
+            if (firstPowerIndex + i >= CombatRef.ObtainedPowers.Count)
                 break;
-            ElementLookup[elementNames[i]].Item2.text = CombatController.ObtainedPowers[firstPowerIndex + i].Name;
+            ElementLookup[elementNames[i]].Item2.text = CombatRef.ObtainedPowers[firstPowerIndex + i].Name;
         }
     }
 
@@ -462,44 +461,40 @@ internal static class InventoryController
 
     public static void UpdateStats()
     {
-        ElementLookup[CombatStat].Item2.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatController.CombatLevel}</color>";
-        ElementLookup[SpiritStat].Item2.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatController.SpiritLevel}</color>";
-        ElementLookup[EnduranceStat].Item2.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatController.EnduranceLevel}</color>";
+        ElementLookup[CombatStat].Item2.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatRef.CombatLevel}</color>";
+        ElementLookup[SpiritStat].Item2.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatRef.SpiritLevel}</color>";
+        ElementLookup[EnduranceStat].Item2.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatRef.EnduranceLevel}</color>";
     }
 
     #endregion
 
-    internal static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enabled inventory controller");
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         UpdateList(0);
         UpdateStats();
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disabled inventory controller");
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         ResetList();
-        _enabled = false;
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == "ToCInventoryAvailable")
-            return true;//return PhaseController.CurrentPhase == Enums.Phase.Run;
+            return true;
         return orig;
     }
 
-    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "ToCPowers")
             return "Trial Powers";
@@ -507,9 +502,9 @@ internal static class InventoryController
             return string.Join(", ", Enumerable.Range(0, 9).Select(x => "MOTHWING CLOAK"));
         else if (key == "DREAM_DUMMY")
             return "All arrows point towards me. Not once, not twice, but thrice.";
-        else if (key == "ATRIUM_NPC_DREAM_1" && (ScoreController.Score.Mode == Enums.GameMode.Crusader || ScoreController.Score.Mode == Enums.GameMode.GrandCrusader))
+        else if (key == "ATRIUM_NPC_DREAM_1" && (ScoreRef.Score.Mode == Enums.GameMode.Crusader || ScoreRef.Score.Mode == Enums.GameMode.GrandCrusader))
         {
-            string text = StageController.CurrentRoomData.Last().Name switch
+            string text = StageRef.CurrentRoomData.Last().Name switch
             {
                 "GG_Radiance" => "The brightest light shines at the end of the trial.",
                 "GG_Grimm_Nightmare" => "Will the crusader be engulfed by the scarlet flames?",

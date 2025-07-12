@@ -52,7 +52,7 @@ internal class Fade : Power
                     || InputHandler.Instance.inputActions.focus.IsPressed || InputHandler.Instance.inputActions.cast.IsPressed
                     || InputHandler.Instance.inputActions.quickMap.IsPressed || !HeroController.instance.acceptingInput)
                     break;
-                if (StageController.CurrentRoom.BossRoom || GameManager.instance.IsGamePaused())
+                if (StageRef.CurrentRoom.BossRoom || GameManager.instance.IsGamePaused())
                     passedTime = 0f;
             }
             if (passedTime >= 5f)

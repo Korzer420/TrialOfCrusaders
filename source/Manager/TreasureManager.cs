@@ -18,6 +18,7 @@ using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Manager;
 
@@ -31,6 +32,20 @@ public static class TreasureManager
     private static Sprite _backgroundSprite;
 
     private static GameObject _glow;
+
+    #region Initialize
+
+    static TreasureManager() => PhaseManager.PhaseChanged += PhaseManager_PhaseChanged;
+
+    private static void PhaseManager_PhaseChanged(Phase currentPhase, Phase newPhase)
+    {
+        if (newPhase == Phase.Run)
+            SelectionCount = 0;
+    }
+
+    #endregion
+
+    #region Properties
 
     internal static Sprite BackgroundSprite
     {
@@ -185,7 +200,9 @@ public static class TreasureManager
 
     public static event Action<TreasureType, GameObject> SpawnedShiny;
 
-    public static event Action<Power> PowerSelected;
+    public static event Action<Power> PowerSelected; 
+
+    #endregion
 
     internal static void SetupShiny(GameObject chest)
     {
@@ -329,7 +346,7 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_DASH";
                     PDHelper.CanDash = true;
                     PDHelper.HasDash = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Claw:
@@ -337,7 +354,7 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_WALLJUMP";
                     PDHelper.HasWalljump = true;
                     PDHelper.CanWallJump = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.CrystalHeart:
@@ -345,21 +362,21 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SUPERDASH";
                     PDHelper.HasSuperDash = true;
                     PDHelper.CanSuperDash = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Wings:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Wings_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_DOUBLEJUMP";
                     PDHelper.HasDoubleJump = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Tear:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Tear_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_ACIDARMOUR";
                     PDHelper.HasAcidArmour = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.ShadeCloak:
@@ -367,32 +384,32 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SHADOWDASH";
                     PDHelper.HasShadowDash = true;
                     PDHelper.CanShadowDash = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Lantern:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Lantern_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_LANTERN";
                     PDHelper.HasLantern = true;
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Fireball:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Vengeful_Spirit_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_FIREBALL1";
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
-                    CombatController.ObtainedPowers.Add(fireball);
+                    CombatRef.ObtainedPowers.Add(fireball);
                     fireball.EnablePower();
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.Quake:
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Desolate_Dive_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_QUAKE1";
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
-                    CombatController.ObtainedPowers.Add(quake);
+                    CombatRef.ObtainedPowers.Add(quake);
                     quake.EnablePower();
-                    StageController.EnableExit();
+                    StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
                     break;
                 case TreasureType.StashedContraband:
@@ -415,7 +432,7 @@ public static class TreasureManager
         {
             SelectionActive = false;
             // To prevent situation where the player takes unavoidable damage, we grant 2 seconds of invincibility.
-            if (!StageController.QuietRoom)
+            if (!StageRef.QuietRoom)
                 HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
         });
         fsm.GetState("Destroy").RemoveAllActions();
@@ -431,7 +448,7 @@ public static class TreasureManager
                 PlayMakerFSM fsm = bigUI.LocateMyFSM("Msg Control");
                 fsm.AddState("Prepare Item", () =>
                 {
-                    SecretController.SetupItemScreen(fsm, treasure);
+                    SecretRef.SetupItemScreen(fsm, treasure);
                 }, FsmTransitionData.FromTargetState("Audio Player Actor").WithEventName("FINISHED"));
                 fsm.GetState("Init").AddTransition("FINISHED", "Prepare Item");
             }, FsmTransitionData.FromTargetState("Trink Pause").WithEventName("GET ITEM MSG END"));
@@ -454,7 +471,7 @@ public static class TreasureManager
             List<Power> selectedPowers = [];
             List<string> statBoni = [];
             List<string> availablePowerNames = [.. Powers.Where(x => x.CanAppear).Select(x => x.Name)];
-            List<string> obtainedPowerNames = [.. CombatController.ObtainedPowers.Select(x => x.Name)];
+            List<string> obtainedPowerNames = [.. CombatRef.ObtainedPowers.Select(x => x.Name)];
             availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
             List<Power> availablePowers = [];
             foreach (string powerName in availablePowerNames)
@@ -500,13 +517,13 @@ public static class TreasureManager
                 Power selectedPower = selectedPowers.Last();
                 (float, float, float) bonusChances = selectedPower.BonusRates;
                 int rolledBonus = RngManager.GetRandom(1, 100);
-                if (selectedPower.Tier != Rarity.Rare && CombatController.HasPower<LuckyCharm>(out _))
+                if (selectedPower.Tier != Rarity.Rare && CombatRef.HasPower<LuckyCharm>(out _))
                     bonusChances = new(bonusChances.Item1 * 1.5f, bonusChances.Item2 * 1.5f, bonusChances.Item3 * 2);
-                if (rolledBonus <= bonusChances.Item1 && !CombatController.CombatCapped)
+                if (rolledBonus <= bonusChances.Item1 && !CombatRef.CombatCapped)
                     statBoni.Add("Combat");
-                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 && !CombatController.SpiritCapped)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 && !CombatRef.SpiritCapped)
                     statBoni.Add("Spirit");
-                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 + bonusChances.Item3 && !CombatController.EnduranceCapped)
+                else if (rolledBonus <= bonusChances.Item1 + bonusChances.Item2 + bonusChances.Item3 && !CombatRef.EnduranceCapped)
                     statBoni.Add("Endurance");
                 else
                     statBoni.Add(null);
@@ -525,22 +542,22 @@ public static class TreasureManager
 
         int optionAmount = 3;
         List<string> options = [];
-        if (!CombatController.CombatCapped)
+        if (!CombatRef.CombatCapped)
             options.Add("Combat");
-        if (!CombatController.SpiritCapped)
+        if (!CombatRef.SpiritCapped)
             options.Add("Spirit");
-        if (!CombatController.EnduranceCapped)
+        if (!CombatRef.EnduranceCapped)
             options.Add("Endurance");
         if (treasureType == TreasureType.CatchUpStat)
         {
-            int[] amounts = [CombatController.CombatLevel, CombatController.SpiritLevel, CombatController.EnduranceLevel];
+            int[] amounts = [CombatRef.CombatLevel, CombatRef.SpiritLevel, CombatRef.EnduranceLevel];
             int max = amounts.Max();
             if (amounts.Count(x => x == max) == 1)
             {
                 optionAmount = 2;
-                if (CombatController.CombatLevel == max)
+                if (CombatRef.CombatLevel == max)
                     options.Remove("Combat");
-                else if (CombatController.SpiritLevel == max)
+                else if (CombatRef.SpiritLevel == max)
                     options.Remove("Spirit");
                 else
                     options.Remove("Endurance");
@@ -555,8 +572,6 @@ public static class TreasureManager
     }
 
     #region Selection Handling
-
-    //private static int _powerSet = 32;
 
     internal static GameObject CreatePowerOverlay(PlayMakerFSM fsm, int optionAmount)
     {
@@ -613,7 +628,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color={CombatController.CombatStatColor}>Combat: {CombatController.CombatLevel}</color>";
+        text.text = $"<color={CombatController.CombatStatColor}>Combat: {CombatRef.CombatLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statInfo = TextManager.CreateUIObject("Spirit Stat");
@@ -626,7 +641,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color={CombatController.SpiritStatColor}>Spirit: {CombatController.SpiritLevel}</color>";
+        text.text = $"<color={CombatController.SpiritStatColor}>Spirit: {CombatRef.SpiritLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statInfo = TextManager.CreateUIObject("Endurance Stat");
@@ -639,7 +654,7 @@ public static class TreasureManager
         text.fontSize = 2f;
         text.enableWordWrapping = true;
         text.textContainer.size = new(3f, 1f);
-        text.text = $"<color={CombatController.EnduranceStatColor}>Endurance: {CombatController.EnduranceLevel}</color>";
+        text.text = $"<color={CombatController.EnduranceStatColor}>Endurance: {CombatRef.EnduranceLevel}</color>";
         text.alignment = TextAlignmentOptions.Left;
 
         statObject = new("Upper stat boarder")
@@ -818,13 +833,13 @@ public static class TreasureManager
 
     private static void CreateRerollOption(Transform parent)
     {
-        if (!SecretController.UnlockedHighRoller || SecretController.LeftRolls <= 0)
+        if (!SecretRef.UnlockedHighRoller || SecretRef.LeftRolls <= 0)
             return;
         (SpriteRenderer, TextMeshPro) optionPair = TextManager.CreateUIObject("Reroll power");
         GameObject option = optionPair.Item2.gameObject;
         option.transform.SetParent(parent);
         GameObject.Destroy(optionPair.Item1);
-        optionPair.Item2.text = $"Reroll ({SecretController.LeftRolls} left)";
+        optionPair.Item2.text = $"Reroll ({SecretRef.LeftRolls} left)";
         option.transform.position = new(-13.9f, -5f);
         optionPair.Item2.fontSize = 3;
     }
@@ -838,7 +853,7 @@ public static class TreasureManager
         int powerSlot = 0;
         bool selected = false;
         bool inputPause = false;
-        bool canReroll = SecretController.LeftRolls > 0 && SecretController.UnlockedHighRoller && shinyFsm.FsmVariables.FindFsmInt("Item Select").Value < 2;
+        bool canReroll = SecretRef.LeftRolls > 0 && SecretRef.UnlockedHighRoller && shinyFsm.FsmVariables.FindFsmInt("Item Select").Value < 2;
         while (!selected)
         {
             yield return null;
@@ -865,7 +880,7 @@ public static class TreasureManager
                 leftArrow.transform.localScale = new(3f, 3f);
                 rightArrow.transform.localScale = new(3f, 3f);
 
-                if (!SecretController.UnlockedHighRoller)
+                if (!SecretRef.UnlockedHighRoller)
                     if (SelectionCount == 3 || SelectionCount == 7 || SelectionCount == 12 || SelectionCount == 18)
                     {
                         leftArrow.transform.SetRotation2D(0);
@@ -929,22 +944,22 @@ public static class TreasureManager
                 }
             if (pickedPower != null)
             {
-                CombatController.ObtainedPowers.Add(pickedPower);
+                CombatRef.ObtainedPowers.Add(pickedPower);
                 pickedPower.EnablePower();
                 PowerSelected?.Invoke(pickedPower);
             }
             for (int i = 1; i < 4; i++)
-                HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, powerSlot + 1 == i);
+                HistoryRef.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, powerSlot + 1 == i);
         }
         else if (powerSlot == -1)
         {
             PowerSelected?.Invoke(null);
             for (int i = 1; i < 4; i++)
-                HistoryController.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, false);
+                HistoryRef.Archive.AddPowerData(shinyFsm.FsmVariables.FindFsmString("Option " + i).Value, false);
         }
         else
         {
-            SecretController.LeftRolls--;
+            SecretRef.LeftRolls--;
             amount = RollSelection(shinyFsm, (TreasureType)shinyFsm.FsmVariables.FindFsmInt("Item Select").Value);
             TrialOfCrusaders.Holder.StartCoroutine(SelectPower(CreatePowerOverlay(shinyFsm, amount), shinyFsm, amount));
             yield break;
@@ -953,33 +968,33 @@ public static class TreasureManager
         shinyFsm.gameObject.GetComponent<LeftShinyFlag>().RemoveFlag();
         InventoryController.UpdateStats();
         InventoryController.UpdateList(-1);
-        if (StageController.CurrentRoomNumber >= 1 && StageController.CurrentRoom.BossRoom && !StageController.QuietRoom)
-            TrialOfCrusaders.Holder.StartCoroutine(StageController.WaitForTransition());
+        if (StageRef.CurrentRoomNumber >= 1 && StageRef.CurrentRoom.BossRoom && !StageRef.QuietRoom)
+            TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
     }
 
     #endregion
 
     internal static void GrantCombatLevel()
     {
-        if (CombatController.CombatCapped)
+        if (CombatRef.CombatCapped)
             return;
-        CombatController.CombatLevel++;
+        CombatRef.CombatLevel++;
         PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
     }
 
     internal static void GrantSpiritLevel()
     {
-        if (CombatController.SpiritCapped)
+        if (CombatRef.SpiritCapped)
             return;
-        CombatController.SpiritLevel++;
+        CombatRef.SpiritLevel++;
         PlayMakerFSM.BroadcastEvent("NEW SOUL ORB");
     }
 
     internal static void GrantEnduranceLevel()
     {
-        if (CombatController.EnduranceCapped)
+        if (CombatRef.EnduranceCapped)
             return;
-        CombatController.EnduranceLevel++;
+        CombatRef.EnduranceLevel++;
         EnduranceHealthGrant = true;
         HeroController.instance.AddHealth(1);
         EnduranceHealthGrant = false;

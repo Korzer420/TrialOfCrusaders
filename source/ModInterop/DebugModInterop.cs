@@ -1,8 +1,7 @@
 ﻿using DebugMod;
-using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.ModInterop;
 
@@ -20,17 +19,17 @@ public static class DebugModInterop
     [BindableMethod(name = "Open Gates", category = "TrialOfCrusaders")]
     public static void OpenGates()
     {
-        if (PhaseController.CurrentPhase != Enums.Phase.Run)
+        if (PhaseManager.CurrentPhase != Enums.Phase.Run)
         {
             Console.AddLine("Can't open gates (the game is not in the correct phase.)");
             return;
         }
-        else if (StageController.CurrentRoom?.BossRoom == true)
+        else if (StageRef.CurrentRoom?.BossRoom == true)
         {
             Console.AddLine("Gate function not available in boss scenes. Spawn a shiny to initiate a transition.");
             return;
         }
-        CombatController.FireEnemiesCleared();
+        CombatRef.FireEnemiesCleared();
         Console.AddLine("Open Gates");
     }
 
@@ -58,30 +57,30 @@ public static class DebugModInterop
     [BindableMethod(name = "Print Enemies", category = "TrialOfCrusaders")]
     public static void PrintEnemies()
     {
-        if (PhaseController.CurrentPhase != Phase.Run)
+        if (PhaseManager.CurrentPhase != Phase.Run)
         {
             Console.AddLine("Wrong phase. Cannot print enemies.");
             return;
         }
         Console.AddLine("Print enemies:");
-        foreach (HealthManager enemy in CombatController.ActiveEnemies)
+        foreach (HealthManager enemy in CombatRef.ActiveEnemies)
             Console.AddLine("Enemy name: " + enemy.name);
     }
 
     [BindableMethod(name = "Remove Treasure Gates", category = "TrialOfCrusaders")]
     public static void RemoveTreasureGates()
     {
-        if (PhaseController.CurrentPhase != Phase.Run)
+        if (PhaseManager.CurrentPhase != Phase.Run)
         {
             Console.AddLine("Wrong phase. Cannot open treasure gates.");
             return;
         }
-        StageController.EnableExit();
+        StageRef.EnableExit();
     }
 
     private static void SpawnShiny(TreasureType type)
     {
-        if (PhaseController.CurrentPhase != Phase.Run)
+        if (PhaseManager.CurrentPhase != Phase.Run)
         {
             Console.AddLine("Cannot spawn shiny outside an active trial.");
             return;

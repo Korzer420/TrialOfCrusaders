@@ -1,5 +1,4 @@
-﻿using InControl;
-using KorzUtils.Data;
+﻿using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
 using MonoMod.Cil;
@@ -16,16 +15,16 @@ using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.SaveData;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class HistoryController
+public class HistoryController : BaseController, ISaveData
 {
-    private static bool _active;
-    private static int _pageIndex = 0;
-    private static int _powerPageIndex = 0;
-    private static Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookUp = [];
-    private static readonly List<string> _seedSprites =
+    private int _pageIndex = 0;
+    private int _powerPageIndex = 0;
+    private Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookUp = [];
+    private readonly List<string> _seedSprites =
     [
         "CrystalDash",
         "CycloneSlash",
@@ -38,7 +37,7 @@ internal static class HistoryController
         "MothwingCloak",
         "VengefulSpirit"
     ];
-    private static readonly string[] _tabletKeys =
+    private readonly string[] _tabletKeys =
     [
         "BELIEVE_TAB_07",
         "BELIEVE_TAB_24",
@@ -55,7 +54,7 @@ internal static class HistoryController
         "BELIEVE_TAB_10"
     ];
 
-    private static Vector3[] _tabletPositions = new Vector3[]
+    private Vector3[] _tabletPositions = new Vector3[]
     {
         // Big platform bottom left.
         new(34.405f, 14.41f),
@@ -99,50 +98,51 @@ internal static class HistoryController
         new(78.24f, 61.41f)
     };
 
-    internal static event Action<HistoryData, RunResult> CreateEntry;
+    internal event Action<HistoryData, RunResult> CreateEntry;
 
-    public static HistoryData TempEntry { get; set; } = new();
+    public HistoryData TempEntry { get; set; } = new();
 
-    internal static List<HistoryData> History => SaveManager.CurrentSaveData.OldRunData;
+    internal List<HistoryData> History { get; set; } = [];
 
-    public static GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50 };
+    public GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50 };
 
-    internal static GameObject ArchiveSprite { get; set; }
+    internal GameObject ArchiveSprite { get; set; }
 
-    public static ArchiveData Archive => SaveManager.CurrentSaveData.Archive;
+    public ArchiveData Archive { get; set; } = new();
 
     #region Setup
 
-    internal static void Initialize()
+    public HistoryController()
     {
-        if (_active)
-            return;
+        PhaseManager.PhaseChanged += CheckForResult;
+    }
+
+    public override Phase[] GetActivePhases() => [Phase.Lobby];
+
+    protected override void Enable()
+    {
         LogManager.Log("Enable History controller");
         On.PlayMakerFSM.OnEnable += FsmEdits;
         IL.Breakable.Break += PreventTabletBreak;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
-        _active = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
         TempEntry = null;
-        if (!_active)
-            return;
         LogManager.Log("Disable History controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         IL.Breakable.Break -= PreventTabletBreak;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
-        _active = false;
     }
 
     #endregion
 
     #region History Page
 
-    private static IEnumerator ShowHistoryPage(PlayMakerFSM fsm)
+    private IEnumerator ShowHistoryPage(PlayMakerFSM fsm)
     {
         GameObject board = new("History Board");
         try
@@ -403,7 +403,7 @@ internal static class HistoryController
         GameObject.Destroy(board);
     }
 
-    private static void UpdatePage()
+    private void UpdatePage()
     {
         try
         {
@@ -467,7 +467,7 @@ internal static class HistoryController
         }
     }
 
-    private static void UpdatePowerList(bool down, bool setup = false)
+    private void UpdatePowerList(bool down, bool setup = false)
     {
         try
         {
@@ -555,7 +555,7 @@ internal static class HistoryController
 
     #endregion
 
-    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
         {
@@ -577,7 +577,7 @@ internal static class HistoryController
                     archiveTablet.transform.localScale = new(1.2f, 1.1f);
 
 
-                    GameObject archiveInspect = GameObject.Instantiate(HubController.InspectPrefab);
+                    GameObject archiveInspect = GameObject.Instantiate(HubRef.InspectPrefab);
                     archiveInspect.name = "Archive Inspect";
                     archiveInspect.SetActive(true);
                     archiveInspect.transform.position = new(47.8f, 31.3f);
@@ -622,7 +622,7 @@ internal static class HistoryController
         orig(self);
     }
 
-    private static void PreventTabletBreak(MonoMod.Cil.ILContext il)
+    private void PreventTabletBreak(MonoMod.Cil.ILContext il)
     {
         ILCursor cursor = new(il);
         cursor.Goto(0);
@@ -630,7 +630,7 @@ internal static class HistoryController
         cursor.EmitDelegate<Func<bool, bool>>(x => x || GameManager.instance.sceneName == "Dream_Room_Believer_Shrine");
     }
 
-    internal static void AddEntry(RunResult result)
+    internal void AddEntry(RunResult result)
     {
         TempEntry ??= new();
         CreateEntry?.Invoke(TempEntry, result);
@@ -658,7 +658,7 @@ internal static class HistoryController
             LogManager.Log("Added entry to history");
     }
 
-    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "BELIEVE_TAB_04")
             return LobbyDialog.HistoryEmpty;
@@ -715,7 +715,7 @@ internal static class HistoryController
                 string archiveText = ArchiveText.ResourceManager.GetString(key);
                 if (key == "BELIEVE_TAB_07")
                     archiveText = string.Format(archiveText, TreasureManager.Powers.Length);
-                if (SecretController.UnlockedSecretArchive)
+                if (SecretRef.UnlockedSecretArchive)
                 {
                     string secretText = ArchiveText.ResourceManager.GetString($"Secret_{key}");
                     archiveText += $"<page>{secretText}";
@@ -731,23 +731,45 @@ internal static class HistoryController
         return orig;
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.hasDash) || name == nameof(PlayerData.canDash) || name == nameof(PlayerData.hasWalljump))
             return true;
         return orig;
     }
 
-    internal static void CheckArchiveUpdate()
+    private void CheckForResult(Phase currentPhase, Phase newPhase)
+    {
+        if (currentPhase == Phase.Run && newPhase == Phase.WaitForSave)
+            AddEntry(RunResult.Forfeited);
+        else if (currentPhase == Phase.Run && newPhase == Phase.Result)
+            AddEntry(RunResult.Completed);
+        else if (currentPhase == Phase.Lobby && newPhase == Phase.Run)
+            Archive.TotalRuns++;
+        else if (currentPhase == Phase.Run && newPhase == Phase.Lobby)
+        {
+            ScoreRef.Score.Score = PDHelper.GeoPool;
+            AddEntry(RunResult.Failed);
+            PDHelper.GeoPool = 0;
+            // Reset shade data
+            PDHelper.ShadeMapZone = string.Empty;
+            PDHelper.ShadeScene = string.Empty;
+            PDHelper.ShadePositionX = 0;
+            PDHelper.ShadePositionY = 0;
+            PDHelper.SoulLimited = false;
+        }
+    }
+
+    internal void CheckArchiveUpdate()
     {
         Archive ??= new();
         Archive.EssenceRecord = Math.Max(Archive.EssenceRecord, PDHelper.DreamOrbs);
-        Archive.GrubRecord = Math.Max(Archive.GrubRecord, ScoreController.Score.GrubBonus);
+        Archive.GrubRecord = Math.Max(Archive.GrubRecord, ScoreRef.Score.GrubBonus);
         // 2 uncommon powers (dive and fireball) are unavoidable, they will be excluded.
         Archive.CommonOnlyRun = Archive.CommonOnlyRun
             | (TempEntry.UncommonPowerAmount <= 2 && TempEntry.RarePowerAmount == 0);
         Archive.FinishedSeededRun = Archive.FinishedSeededRun | RngManager.Seeded;
-        Archive.PerfectFinalBoss = ScoreController.Score.HitlessFinalBoss | Archive.PerfectFinalBoss;
+        Archive.PerfectFinalBoss = ScoreRef.Score.HitlessFinalBoss | Archive.PerfectFinalBoss;
 
         if (TempEntry.Powers.Contains("Binding Circle") && !Archive.DebuffsSeen.Contains("Root"))
             Archive.DebuffsSeen.Add("Root");
@@ -768,20 +790,32 @@ internal static class HistoryController
             (TempEntry.Powers.Contains("Weakened Husk") || TempEntry.Powers.Contains("Mindblast")))
             Archive.DebuffsSeen.Add("Dreams");
 
-        Dictionary<string, int> scoreDictionary = ScoreController.Score.TransformToDictionary();
-        if (ScoreController.Score.Mode == GameMode.GrandCrusader)
+        Dictionary<string, int> scoreDictionary = ScoreRef.Score.TransformToDictionary();
+        if (ScoreRef.Score.Mode == GameMode.GrandCrusader)
         {
             Archive.FastestGrandTrial = Archive.FastestGrandTrial == 0 
-                ? ScoreController.Score.PassedTime
-                : Math.Min(Archive.FastestGrandTrial, ScoreController.Score.PassedTime);
+                ? ScoreRef.Score.PassedTime
+                : Math.Min(Archive.FastestGrandTrial, ScoreRef.Score.PassedTime);
             Archive.HighestGrandTrialScore = Math.Max(Archive.HighestGrandTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
         }
         else
         {
             Archive.FastestTrial = Archive.FastestTrial == 0 
-                ?  ScoreController.Score.PassedTime
-                : Math.Min(Archive.FastestTrial, ScoreController.Score.PassedTime);
+                ?  ScoreRef.Score.PassedTime
+                : Math.Min(Archive.FastestTrial, ScoreRef.Score.PassedTime);
             Archive.HighestTrialScore = Math.Max(Archive.HighestTrialScore, scoreDictionary[ScoreData.FinalScoreField]);
         }
+    }
+
+    public void ReceiveSaveData(LocalSaveData saveData)
+    {
+        History = saveData.OldRunData ?? [];
+        Archive = saveData.Archive ?? new();
+    }
+
+    public void UpdateSaveData(LocalSaveData saveData)
+    {
+        saveData.OldRunData = History;
+        saveData.Archive = Archive;
     }
 }

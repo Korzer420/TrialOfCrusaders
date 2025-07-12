@@ -3,22 +3,21 @@ using KorzUtils.Helper;
 using System;
 using TMPro;
 using TrialOfCrusaders.Data;
-using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.Enums;
 using UnityEngine;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class ConsumableController
+public class ConsumableController : BaseController
 {
-    private static bool _enabled;
-    private static TMP_Text _freeSpellCounter;
-    private static int _teaSpell = 0;
+    private TMP_Text _freeSpellCounter;
+    private int _teaSpell = 0;
 
-    public static int UsedEggs { get; set; }
+    public int UsedEggs { get; set; }
 
-    public static int UsedLifeblood { get; set; }
+    public int UsedLifeblood { get; set; }
 
-    public static int TeaSpell
+    public int TeaSpell
     {
         get => _teaSpell;
         set
@@ -51,37 +50,32 @@ internal static class ConsumableController
         }
     }
 
-    public static int EmpoweredHits { get; set; }
+    public int EmpoweredHits { get; set; }
 
-    public static int RerollSeals { get; set; }
+    public int RerollSeals { get; set; }
 
-    public static int EggHeal => Math.Max(5, 25 - 5 * UsedEggs);
+    public int EggHeal => Math.Max(5, 25 - 5 * UsedEggs);
 
-    public static int LifebloodHeal => Math.Min(3, 3 + UsedLifeblood * 2);
+    public int LifebloodHeal => Math.Min(3, 3 + UsedLifeblood * 2);
 
-    internal static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         On.HeroController.DoAttack += HeroController_DoAttack;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter += SendMessage_OnEnter;
-
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         On.HeroController.DoAttack -= HeroController_DoAttack;
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;
         TeaSpell = 0;
-        _enabled = false;
     }
 
-    private static void HeroController_DoAttack(On.HeroController.orig_DoAttack orig, HeroController self)
+    private void HeroController_DoAttack(On.HeroController.orig_DoAttack orig, HeroController self)
     {
         orig(self);
         if (EmpoweredHits > 0)
@@ -105,14 +99,14 @@ internal static class ConsumableController
         }
     }
 
-    private static void IntCompare_OnEnter(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, HutongGames.PlayMaker.Actions.IntCompare self)
+    private void IntCompare_OnEnter(On.HutongGames.PlayMaker.Actions.IntCompare.orig_OnEnter orig, HutongGames.PlayMaker.Actions.IntCompare self)
     {
         if (self.IsCorrectContext("Spell Control", "Knight", "Can Cast? QC") && TeaSpell > 0)
             self.integer1.Value = self.integer2.Value;
         orig(self);
     }
 
-    private static void SendMessage_OnEnter(On.HutongGames.PlayMaker.Actions.SendMessage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SendMessage self)
+    private void SendMessage_OnEnter(On.HutongGames.PlayMaker.Actions.SendMessage.orig_OnEnter orig, HutongGames.PlayMaker.Actions.SendMessage self)
     {
         if (self.IsCorrectContext("Spell Control", "Knight", null) && TeaSpell > 0 && self.functionCall.FunctionName == "TakeMP")
         {

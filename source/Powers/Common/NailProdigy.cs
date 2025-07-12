@@ -12,7 +12,7 @@ internal class NailProdigy : Power
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
-    public override bool CanAppear => !CombatController.CombatCapped;
+    public override bool CanAppear => !CombatRef.CombatCapped;
 
     public override DraftPool Pools => DraftPool.Treasure;
 
@@ -21,14 +21,14 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter += SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter += Tk2dPlayFrame_OnEnter;
-        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
+        CombatRef.EnemiesCleared += CombatController_EnemiesCleared;
     }
 
     private void CombatController_EnemiesCleared()
     {
         if (!_spellUsed)
         {
-            if (!CombatController.CombatCapped && !StageController.CurrentRoom.BossRoom && RngManager.GetRandom(1, 20) == 1)
+            if (!CombatRef.CombatCapped && !StageRef.CurrentRoom.BossRoom && RngManager.GetRandom(1, 20) == 1)
                 TreasureManager.SpawnShiny(Enums.TreasureType.CombatOrb, HeroController.instance.transform.position);
             _spellUsed = true;
         }
@@ -53,7 +53,7 @@ internal class NailProdigy : Power
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         On.HutongGames.PlayMaker.Actions.SetVelocity2d.OnEnter -= SetVelocity2d_OnEnter;
         On.HutongGames.PlayMaker.Actions.Tk2dPlayFrame.OnEnter -= Tk2dPlayFrame_OnEnter;
-        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
+        CombatRef.EnemiesCleared += CombatController_EnemiesCleared;
     }
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1) => _spellUsed = false;

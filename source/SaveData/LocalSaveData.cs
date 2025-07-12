@@ -91,35 +91,35 @@ public class LocalSaveData
     //    Score = Score.Copy(),
     //    // All these values are updated even though the rest isn't.
     //    // This is to prevent cheese by resetting the game upon loosing one of these one time effects.
-    //    CocoonUsed = CombatController.HasPower<Cocoon>(out _),
-    //    DamoclesUsed = CombatController.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatController.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatController.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatController.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatController.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatController.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    CocoonUsed = CombatRef.HasPower<Cocoon>(out _),
+    //    DamoclesUsed = CombatRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = CombatRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = CombatRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !CombatRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !CombatRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !CombatRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //public LocalSaveData GetUpdatedData() => new()
     //{
     //    OldRunData = OldRunData,
-    //    CurrentRoomNumber = StageController.CurrentRoomNumber,
-    //    RoomList = [.. StageController.CurrentRoomData.Select(x => $"{x.Name}{x.SelectedTransition}")],
-    //    ObtainedPowers = [.. CombatController.ObtainedPowers.Select(x => x.Name)],
-    //    CombatLevel = CombatController.CombatLevel,
-    //    SpiritLevel = CombatController.SpiritLevel,
-    //    EnduranceLevel = CombatController.EnduranceLevel,
+    //    CurrentRoomNumber = StageRef.CurrentRoomNumber,
+    //    RoomList = [.. StageRef.CurrentRoomData.Select(x => $"{x.Name}{x.SelectedTransition}")],
+    //    ObtainedPowers = [.. CombatRef.ObtainedPowers.Select(x => x.Name)],
+    //    CombatLevel = CombatRef.CombatLevel,
+    //    SpiritLevel = CombatRef.SpiritLevel,
+    //    EnduranceLevel = CombatRef.EnduranceLevel,
     //    CurrentHealth = PDHelper.Health,
     //    RandomSeed = RngProvider.Seed,
     //    CurrentProgress = DetermineProgress(),
-    //    Score = ScoreController.Score.Copy(),
-    //    CocoonUsed = CombatController.HasPower(out Cocoon cocoon),
-    //    DamoclesUsed = CombatController.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatController.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatController.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatController.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatController.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatController.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    Score = ScoreRef.Score.Copy(),
+    //    CocoonUsed = CombatRef.HasPower(out Cocoon cocoon),
+    //    DamoclesUsed = CombatRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = CombatRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = CombatRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !CombatRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !CombatRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !CombatRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //#endregion

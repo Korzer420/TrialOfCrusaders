@@ -15,6 +15,7 @@ using TrialOfCrusaders.UnityComponents.PowerElements;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders;
 
@@ -73,9 +74,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         if (ModHooks.GetMod("DebugMod") is Mod)
             HookDebug();
 
-        MenuController.AddMode();
-        PhaseController.Initialize();
-        SecretController.Initialize();
+        MenuManager.AddMode();
+        PhaseManager.Initialize();
         On.GameManager.GetStatusRecordInt += EnsureSteelSoul;
     }
 
@@ -83,40 +83,39 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     #region Save management
 
-    
-
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
         SaveManager.CurrentSaveData = saveData;
-        SecretController.UnlockedSecretArchive = saveData?.UnlockedSecretArchive ?? false;
-        SecretController.UnlockedToughness = saveData?.UnlockedToughness ?? false;
-        SecretController.UnlockedStashedContraband = saveData?.UnlockedContraband ?? false;
-        SecretController.UnlockedHighRoller = saveData?.UnlockedHighRoller ?? false;
-        if (PhaseController.CurrentPhase == Enums.Phase.Listening)
+        SecretRef.UnlockedSecretArchive = saveData?.UnlockedSecretArchive ?? false;
+        SecretRef.UnlockedToughness = saveData?.UnlockedToughness ?? false;
+        SecretRef.UnlockedStashedContraband = saveData?.UnlockedContraband ?? false;
+        SecretRef.UnlockedHighRoller = saveData?.UnlockedHighRoller ?? false;
+        if (PhaseManager.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
-                PhaseController.TransitionTo(Enums.Phase.Initialize);
+                PhaseManager.TransitionTo(Enums.Phase.Initialize);
             else
-                PhaseController.TransitionTo(Enums.Phase.Inactive);
+                PhaseManager.TransitionTo(Enums.Phase.Inactive);
         }
     }
 
     LocalSaveData ILocalSettings<LocalSaveData>.OnSaveLocal()
     {
-        if (PhaseController.CurrentPhase == Enums.Phase.Inactive || PhaseController.CurrentPhase == Enums.Phase.Listening)
+        if (PhaseManager.CurrentPhase == Enums.Phase.Inactive || PhaseManager.CurrentPhase == Enums.Phase.Listening)
             return null;
-        LocalSaveData saveData = new() 
-        { 
-            OldRunData = HistoryController.History,
-            Archive = HistoryController.Archive,
-            UnlockedContraband = SecretController.UnlockedStashedContraband,
-            UnlockedHighRoller = SecretController.UnlockedHighRoller,
-            UnlockedToughness = SecretController.UnlockedToughness,
-            UnlockedSecretArchive = SecretController.UnlockedSecretArchive,
-        };
-        if (PhaseController.CurrentPhase == Enums.Phase.WaitForSave)
-            PhaseController.TransitionTo(Enums.Phase.Inactive);
-        return saveData;
+        PhaseManager.CollectSaveData(SaveManager.CurrentSaveData);
+        //LocalSaveData saveData = new() 
+        //{ 
+        //    OldRunData = HistoryRef.History,
+        //    Archive = HistoryRef.Archive,
+        //    UnlockedContraband = SecretRef.UnlockedStashedContraband,
+        //    UnlockedHighRoller = SecretRef.UnlockedHighRoller,
+        //    UnlockedToughness = SecretRef.UnlockedToughness,
+        //    UnlockedSecretArchive = SecretRef.UnlockedSecretArchive,
+        //};
+        if (PhaseManager.CurrentPhase == Enums.Phase.WaitForSave)
+            PhaseManager.TransitionTo(Enums.Phase.Inactive);
+        return SaveManager.CurrentSaveData;
     }
 
     #endregion
@@ -135,15 +134,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         SetupPowerPrefabs(preloadedObjects);
         SetupDebuffs(preloadedObjects);
         TreasureManager.SetupShiny(preloadedObjects["Tutorial_01"]["_Props/Chest"]);
-        ScoreController.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
+        ScoreRef.SetupScoreboard(preloadedObjects["GG_Atrium"]["GG_Challenge_Door (1)/Door/Unlocked Set/Inspect"]);
         SpecialTransition.SetupPrefab(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
-        ScoreController.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
-        HubController.Tink = GameObject.Instantiate(preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect);
-        HubController.Tink.name = "Tink Effect";
-        HubController.InspectPrefab = preloadedObjects["Ruins1_23"]["Inspect Region"];
+        ScoreRef.SetupResultInspect(preloadedObjects["GG_Workshop"]["GG_Statue_Vengefly/Inspect"]);
+        HubRef.Tink = GameObject.Instantiate(preloadedObjects["Deepnest_43"]["Mantis Heavy Flyer"].GetComponent<PersonalObjectPool>().startupPool[0].prefab.GetComponent<TinkEffect>().blockEffect);
+        HubRef.Tink.name = "Tink Effect";
+        HubRef.InspectPrefab = preloadedObjects["Ruins1_23"]["Inspect Region"];
         Gate.Prefab = GameObject.Instantiate(preloadedObjects["Deepnest_East_10"]["Dream Gate"]);
         Gate.Prefab.name = "Gate";
-        HistoryController.ArchiveSprite = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Glow Response Mage Computer"]);
+        HistoryRef.ArchiveSprite = GameObject.Instantiate(preloadedObjects["Ruins1_23"]["Glow Response Mage Computer"]);
         ShopManager.Tuk = GameObject.Instantiate(preloadedObjects["Waterways_03"]["Alive_Tuk/Tuk NPC"]);
 
         GameObject[] preloads =
@@ -160,15 +159,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
             BleedEffect.Prefab,
             BurnEffect.Prefab,
             // Other
-            HubController.Tink,
-            HubController.InspectPrefab,
+            HubRef.Tink,
+            HubRef.InspectPrefab,
             Gate.Prefab,
             TreasureManager.Shiny,
-            ScoreController.ResultSequencePrefab,
-            ScoreController.ScoreboardPrefab,
+            ScoreRef.ResultSequencePrefab,
+            ScoreRef.ScoreboardPrefab,
             SpecialTransition.TransitionPrefab,
             _coroutineHolder.gameObject,
-            HistoryController.ArchiveSprite,
+            HistoryRef.ArchiveSprite,
             ShopManager.Tuk
         ];
         foreach (GameObject gameObject in preloads)
@@ -235,15 +234,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         return new()
         {
             new(){ Name = "Track failed runs", Description = "If on, failed runs will appear in the history.", Values = ["On", "Off"],
-                Saver = x => HistoryController.HistorySettings.TrackFailedRuns = x == 0,
-                Loader = () => HistoryController.HistorySettings.TrackFailedRuns ? 0 : 1},
+                Saver = x => HistoryRef.HistorySettings.TrackFailedRuns = x == 0,
+                Loader = () => HistoryRef.HistorySettings.TrackFailedRuns ? 0 : 1},
             new(){ Name = "Track forfeited runs", Description = "If on, forfeited runs will appear in the history", Values = ["On", "Off"],
-                Saver = x => HistoryController.HistorySettings.TrackForfeitedRuns = x == 0,
-                Loader = () => HistoryController.HistorySettings.TrackForfeitedRuns ? 0 : 1},
+                Saver = x => HistoryRef.HistorySettings.TrackForfeitedRuns = x == 0,
+                Loader = () => HistoryRef.HistorySettings.TrackForfeitedRuns ? 0 : 1},
             new(){ Name = "History amount", Description = "Determine the amount of previous runs saved.", Values = ["1", "5", "10", "50", "100", "All"],
                 Saver = x =>
                     {
-                        HistoryController.HistorySettings.HistoryAmount = x switch
+                        HistoryRef.HistorySettings.HistoryAmount = x switch
                         {
                             0 => 1,
                             1 => 5,
@@ -254,7 +253,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
                         };
                     },
                 Loader = () =>
-                    HistoryController.HistorySettings.HistoryAmount switch
+                    HistoryRef.HistorySettings.HistoryAmount switch
                     {
                         1 => 0,
                         5 => 1,
@@ -266,7 +265,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         };
     }
 
-    public void OnLoadGlobal(GlobalSaveData saveData) => HistoryController.HistorySettings = saveData;
+    public void OnLoadGlobal(GlobalSaveData saveData) => HistoryRef.HistorySettings = saveData;
 
-    public GlobalSaveData OnSaveGlobal() => HistoryController.HistorySettings;
+    public GlobalSaveData OnSaveGlobal() => HistoryRef.HistorySettings;
 }

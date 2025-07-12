@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Data;
-using TrialOfCrusaders.SaveData;
+﻿using TrialOfCrusaders.SaveData;
 
 namespace TrialOfCrusaders.Manager;
 
@@ -10,5 +7,5 @@ namespace TrialOfCrusaders.Manager;
 /// </summary>
 internal static class SaveManager
 {
-    internal static LocalSaveData CurrentSaveData { get; set; }
+    internal static LocalSaveData CurrentSaveData { get; set; } = new();
 }

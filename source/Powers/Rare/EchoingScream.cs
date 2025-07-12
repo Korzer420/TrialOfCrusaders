@@ -23,7 +23,7 @@ internal class EchoingScream : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability | DraftPool.Upgrade;
 
-    public override bool CanAppear => CombatController.HasPower<HowlingWraiths>(out _);
+    public override bool CanAppear => CombatRef.HasPower<HowlingWraiths>(out _);
 
     public GameObject Scream
     {
@@ -67,7 +67,7 @@ internal class EchoingScream : Power
         bool echo;
         do
         {
-            echo = Random.Range(1, 41) < CombatController.SpiritLevel;
+            echo = Random.Range(1, 41) < CombatRef.SpiritLevel;
             scream.SetActive(false);
             scream.SetActive(true);
             yield return new WaitForSeconds(Random.Range(3, 6));

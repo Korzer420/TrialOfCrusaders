@@ -9,7 +9,7 @@ internal class SpellProdigy : Power
 {
     private bool _nailUsed;
 
-    public override bool CanAppear => CombatController.HasSpell() && !CombatController.SpiritCapped;
+    public override bool CanAppear => CombatRef.HasSpell() && !CombatRef.SpiritCapped;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
@@ -18,14 +18,14 @@ internal class SpellProdigy : Power
     protected override void Enable()
     {
         On.HeroController.Attack += HeroController_Attack;
-        CombatController.EnemiesCleared += CombatController_EnemiesCleared;
+        CombatRef.EnemiesCleared += CombatController_EnemiesCleared;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
 
     protected override void Disable()
     {
         On.HeroController.Attack -= HeroController_Attack;
-        CombatController.EnemiesCleared -= CombatController_EnemiesCleared;
+        CombatRef.EnemiesCleared -= CombatController_EnemiesCleared;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
     }
 
@@ -37,7 +37,7 @@ internal class SpellProdigy : Power
 
     private void CombatController_EnemiesCleared()
     {
-        if (!_nailUsed && !CombatController.SpiritCapped && RngManager.GetRandom(1, 10) <= 2)
+        if (!_nailUsed && !CombatRef.SpiritCapped && RngManager.GetRandom(1, 10) <= 2)
             TreasureManager.SpawnShiny(Enums.TreasureType.SpiritOrb, HeroController.instance.transform.position);
         _nailUsed = true;
     }

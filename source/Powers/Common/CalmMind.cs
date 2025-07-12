@@ -32,7 +32,7 @@ internal class CalmMind : Power
         {
             yield return new WaitForSeconds(3f);
             if (PDHelper.Health == PDHelper.MaxHealth)
-                HeroController.instance.AddMPCharge(Math.Max(3, CombatController.SpiritLevel / 2));
+                HeroController.instance.AddMPCharge(Math.Max(3, CombatRef.SpiritLevel / 2));
         }
     }
 }

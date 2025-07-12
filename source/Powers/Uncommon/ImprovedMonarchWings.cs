@@ -41,7 +41,7 @@ internal class ImprovedMonarchWings : Power
         _leftHitbox.AddComponent<BoxCollider2D>().isTrigger = true;
         Component.Destroy(_leftHitbox.LocateMyFSM("set_thorn_damage"));
         PlayMakerFSM fsm = _leftHitbox.LocateMyFSM("damages_enemy");
-        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatController.CombatLevel * 2;
+        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatRef.CombatLevel * 2;
         fsm.FsmVariables.FindFsmFloat("magnitudeMult").Value = 4;
         fsm.FsmVariables.FindFsmFloat("direction").Value = 270;
 
@@ -62,7 +62,7 @@ internal class ImprovedMonarchWings : Power
         _rightHitbox.AddComponent<BoxCollider2D>().isTrigger = true;
         Component.Destroy(_rightHitbox.LocateMyFSM("set_thorn_damage"));
         fsm = _rightHitbox.LocateMyFSM("damages_enemy");
-        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatController.CombatLevel * 2;
+        fsm.FsmVariables.FindFsmInt("damageDealt").Value = 50 + CombatRef.CombatLevel * 2;
         fsm.FsmVariables.FindFsmFloat("magnitudeMult").Value = 4;
         fsm.FsmVariables.FindFsmFloat("direction").Value = 270;
 

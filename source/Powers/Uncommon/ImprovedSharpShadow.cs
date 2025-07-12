@@ -26,6 +26,6 @@ internal class ImprovedSharpShadow : Power
     {
         orig(self, attackDirection, attackType, ignoreEvasion);
         if (attackType == AttackTypes.SharpShadow)
-            HeroController.instance.AddHealth(1 + (CombatController.EnduranceLevel + (CombatController.CombatLevel / 2)) / 4);
+            HeroController.instance.AddHealth(1 + (CombatRef.EnduranceLevel + (CombatRef.CombatLevel / 2)) / 4);
     }
 }

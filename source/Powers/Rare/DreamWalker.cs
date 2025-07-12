@@ -14,7 +14,7 @@ internal class DreamWalker : Power
 
     public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Ability;
 
-    public override bool CanAppear => CombatController.HasPower<DreamNail>(out _);
+    public override bool CanAppear => CombatRef.HasPower<DreamNail>(out _);
 
     protected override void Enable()
     {

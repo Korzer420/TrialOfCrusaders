@@ -17,7 +17,7 @@ internal class PolarityShift : Power
 
     public override DraftPool Pools => DraftPool.Spirit;
 
-    public override bool CanAppear => CombatController.HasSpell();
+    public override bool CanAppear => CombatRef.HasSpell();
 
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
 
@@ -25,9 +25,9 @@ internal class PolarityShift : Power
     {
         if (self.IsCorrectContext("Spell Control", null, null) && self.State.Name.StartsWith("Level Check"))
         {
-            if (self.integer1.Value == 1 && UnityEngine.Random.Range(1, 41) <= CombatController.SpiritLevel + 1)
+            if (self.integer1.Value == 1 && UnityEngine.Random.Range(1, 41) <= CombatRef.SpiritLevel + 1)
                 self.integer1.Value = 2;
-            else if (self.integer1.Value == 2 && UnityEngine.Random.Range(1, 41 - CombatController.SpiritLevel) >= 16)
+            else if (self.integer1.Value == 2 && UnityEngine.Random.Range(1, 41 - CombatRef.SpiritLevel) >= 16)
                 self.integer1.Value = 1;
         }
         orig(self);

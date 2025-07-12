@@ -10,7 +10,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class GlowingWomb : Power
 {
-    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(2f, 8f, 0f);
 

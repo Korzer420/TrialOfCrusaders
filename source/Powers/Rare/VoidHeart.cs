@@ -1,5 +1,4 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using UnityEngine;
@@ -20,5 +19,5 @@ internal class VoidHeart : Power
 
     public override DraftPool Pools => DraftPool.Risk;
 
-    public override bool CanAppear => ScoreController.Score.KillStreakBonus > 30;
+    public override bool CanAppear => ScoreRef.Score.KillStreakBonus > 30;
 }

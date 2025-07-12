@@ -1,14 +1,13 @@
-﻿using GlobalEnums;
-using HutongGames.PlayMaker;
+﻿using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
 using System.Collections;
 using System.Linq;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Manager;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.StageElements;
 
@@ -32,7 +31,7 @@ internal class SpecialTransition : MonoBehaviour
         if (VanillaTransition == null)
             return;
         BoxCollider2D collider = gameObject.AddComponent<BoxCollider2D>();
-        collider.isTrigger = StageController.QuietRoom;
+        collider.isTrigger = StageRef.QuietRoom;
         collider.size = VanillaTransition.GetComponent<BoxCollider2D>().size;
         transform.localScale = VanillaTransition.transform.localScale;
         VanillaTransition.GetComponent<BoxCollider2D>().enabled = false;

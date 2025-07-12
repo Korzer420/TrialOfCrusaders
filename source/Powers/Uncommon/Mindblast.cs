@@ -27,6 +27,6 @@ internal class Mindblast : Power
     {
         orig(self);
         ShatteredMindEffect mindBlast = self.gameObject.GetOrAddComponent<ShatteredMindEffect>();
-        mindBlast.ExtraDamage += 20 + CombatController.SpiritLevel * 5;
+        mindBlast.ExtraDamage += 20 + CombatRef.SpiritLevel * 5;
     }
 }

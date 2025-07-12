@@ -39,7 +39,7 @@ public class ImprovedWeaversong : Power
 
     private void ModifyWeaverSize(FsmStateAction self)
     {
-        float weaverScale = 1.1f + (Math.Min(0.9f, CombatController.CombatLevel * 0.05f));
+        float weaverScale = 1.1f + (Math.Min(0.9f, CombatRef.CombatLevel * 0.05f));
 
         self.Fsm.Variables.FindFsmFloat("Scale").Value = weaverScale;
         self.Fsm.Variables.FindFsmFloat("Neg Scale").Value = weaverScale * -1f;
@@ -67,7 +67,7 @@ public class ImprovedWeaversong : Power
         {
             if (self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && 
                 self.Fsm.GameObject.transform.parent != null && self.Fsm.GameObject.transform.parent.name.StartsWith("Weaverling"))
-                self.hp.Value -= 2 + Mathf.FloorToInt(CombatController.CombatLevel * 2.5f);
+                self.hp.Value -= 2 + Mathf.FloorToInt(CombatRef.CombatLevel * 2.5f);
         }
         catch (Exception ex)
         {

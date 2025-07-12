@@ -53,7 +53,7 @@ internal class HotStreak : Power
 
         if (_hasHitEnemy)
         {
-            if (_damageStacks < 5 + CombatController.CombatLevel * 2)
+            if (_damageStacks < 5 + CombatRef.CombatLevel * 2)
                 _damageStacks++;
         }
         else

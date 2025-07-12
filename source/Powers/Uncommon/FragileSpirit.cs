@@ -19,20 +19,20 @@ public class FragileSpirit : Power
 
     public override DraftPool Pools => DraftPool.Spirit;
 
-    public override bool CanAppear => !HasPower<PaleShell>() && CombatController.HasSpell();
+    public override bool CanAppear => !HasPower<PaleShell>() && CombatRef.HasSpell();
 
     public override StatScaling Scaling => StatScaling.Spirit; 
 
     protected override void Enable()
     {
-        CombatController.TookDamage += CombatController_TookDamage;
+        CombatRef.TookDamage += CombatController_TookDamage;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += TakeDamage_OnEnter;
     }
 
     protected override void Disable()
     {
         SpiritActive = true;
-        CombatController.TookDamage -= CombatController_TookDamage;
+        CombatRef.TookDamage -= CombatController_TookDamage;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= TakeDamage_OnEnter;
     }
 
@@ -43,6 +43,6 @@ public class FragileSpirit : Power
         orig(self);
         if (SpiritActive && self.IsCorrectContext("damages_enemy", null, "Send Event") && self.AttackType.Value == 2)
             if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false)
-                self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatController.SpiritLevel);
+                self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatRef.SpiritLevel);
     }
 }

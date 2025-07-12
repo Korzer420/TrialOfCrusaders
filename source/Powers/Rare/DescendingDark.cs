@@ -15,7 +15,7 @@ internal class DescendingDark : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability | DraftPool.Upgrade;
 
-    public override bool CanAppear => CombatController.HasPower<DesolateDive>(out _);
+    public override bool CanAppear => CombatRef.HasPower<DesolateDive>(out _);
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

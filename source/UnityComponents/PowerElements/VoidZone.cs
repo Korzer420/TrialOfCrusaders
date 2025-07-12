@@ -1,9 +1,9 @@
 ﻿using Modding.Utils;
 using System.Reflection;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
@@ -47,7 +47,7 @@ internal class VoidZone : MonoBehaviour
                     {
                         AttackType = AttackTypes.SharpShadow,
                         Source = gameObject,
-                        DamageDealt = 5 + CombatController.CombatLevel + CombatController.SpiritLevel + CombatController.EnduranceLevel,
+                        DamageDealt = 5 + CombatRef.CombatLevel + CombatRef.SpiritLevel + CombatRef.EnduranceLevel,
                         Multiplier = 1f
                     }]);
                     if (Random.Range(0, 10) < 1)
@@ -65,7 +65,7 @@ internal class VoidZone : MonoBehaviour
                                 break;
                             // Burn
                             case 2:
-                                enemy.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(CombatController.SpiritLevel);
+                                enemy.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(CombatRef.SpiritLevel);
                                 break;
                             // Bleed
                             case 3:
@@ -77,7 +77,7 @@ internal class VoidZone : MonoBehaviour
                                 break;
                             // Shattered mind
                             default:
-                                enemy.gameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatController.SpiritLevel / 5;
+                                enemy.gameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatRef.SpiritLevel / 5;
                                 break;
                         }
                     }

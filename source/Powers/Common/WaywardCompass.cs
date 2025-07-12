@@ -17,13 +17,13 @@ internal class WaywardCompass : Power
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.WaywardCompass");
 
-    protected override void Enable() => CombatController.BeginCombat += CombatController_BeginCombat;
+    protected override void Enable() => CombatRef.BeginCombat += CombatController_BeginCombat;
 
-    protected override void Disable() => CombatController.BeginCombat -= CombatController_BeginCombat;
+    protected override void Disable() => CombatRef.BeginCombat -= CombatController_BeginCombat;
 
     private void CombatController_BeginCombat()
     {
-        if (StageController.CurrentRoom.BossRoom)
+        if (StageRef.CurrentRoom.BossRoom)
             return;
         GameObject compass = new("Compass");
         compass.layer = 5;

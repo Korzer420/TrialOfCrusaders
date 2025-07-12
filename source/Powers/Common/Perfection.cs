@@ -24,16 +24,16 @@ internal class Perfection : Power
     protected override void Enable()
     {
         IL.HealthManager.Die += HealthManager_Die;
-        StageController.RoomEnded += StageController_RoomCleared;
-        CombatController.TookDamage += CombatController_TookDamage;
+        StageRef.RoomEnded += StageController_RoomCleared;
+        CombatRef.TookDamage += CombatController_TookDamage;
         _hit = false;
     }
 
     protected override void Disable()
     { 
         IL.HealthManager.Die -= HealthManager_Die;
-        StageController.RoomEnded -= StageController_RoomCleared;
-        CombatController.TookDamage -= CombatController_TookDamage;
+        StageRef.RoomEnded -= StageController_RoomCleared;
+        CombatRef.TookDamage -= CombatController_TookDamage;
     }
 
     private void HealthManager_Die(ILContext il)

@@ -17,7 +17,7 @@ internal class Revenge : Power
     protected override void Enable()
     {
         On.HeroController.TakeDamage += HeroController_TakeDamage;
-        CombatController.EnemyKilled += CombatController_EnemyKilled;
+        CombatRef.EnemyKilled += CombatController_EnemyKilled;
     }
 
     private void CombatController_EnemyKilled(HealthManager enemy)
@@ -25,7 +25,7 @@ internal class Revenge : Power
         if (enemy.GetComponent<RevengeEffect>() is RevengeEffect revengeEffect)
         {
             Object.Destroy(revengeEffect);
-            HeroController.instance.AddHealth(1 + (CombatController.CombatLevel + CombatController.EnduranceLevel) / 8);
+            HeroController.instance.AddHealth(1 + (CombatRef.CombatLevel + CombatRef.EnduranceLevel) / 8);
         }
     }
 
@@ -42,6 +42,6 @@ internal class Revenge : Power
     protected override void Disable()
     {
         On.HeroController.TakeDamage -= HeroController_TakeDamage;
-        CombatController.EnemyKilled -= CombatController_EnemyKilled;
+        CombatRef.EnemyKilled -= CombatController_EnemyKilled;
     }
 }

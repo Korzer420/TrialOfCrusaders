@@ -10,6 +10,7 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.Other;
 
@@ -76,7 +77,7 @@ internal class ShopStock : MonoBehaviour
             {
                 _cooldown = 0.25f;
                 _itemIndex++;
-                if (_itemIndex == 3 + SecretController.ShopLevel)
+                if (_itemIndex == 3 + SecretRef.ShopLevel)
                     _itemIndex = 0;
                 UpdateSelection(_itemIndex);
             }
@@ -85,7 +86,7 @@ internal class ShopStock : MonoBehaviour
                 _cooldown = 0.25f;
                 _itemIndex--;
                 if (_itemIndex == -1)
-                    _itemIndex = 2 + SecretController.ShopLevel;
+                    _itemIndex = 2 + SecretRef.ShopLevel;
 
                 UpdateSelection(_itemIndex);
             }
@@ -272,9 +273,9 @@ internal class ShopStock : MonoBehaviour
         {
             _elementLookup[SelectionTitle].GetComponent<TextMeshPro>().text = ShopText.ResourceManager.GetString(itemName + "_Title");
             _elementLookup[SelectionDescription].GetComponent<TextMeshPro>().text = itemName == EggStock
-                ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableController.EggHeal)
+                ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableRef.EggHeal)
                 : itemName == LifebloodStock
-                    ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableController.LifebloodHeal)
+                    ? string.Format(ShopText.ResourceManager.GetString(itemName + "_Desc"), ConsumableRef.LifebloodHeal)
                     : ShopText.ResourceManager.GetString(itemName + "_Desc");
         }
         else
@@ -373,23 +374,23 @@ internal class ShopStock : MonoBehaviour
             {
                 if (SelectedItemName == NailStock)
                 {
-                    ConsumableController.EmpoweredHits += 5;
+                    ConsumableRef.EmpoweredHits += 5;
                     PlayMakerFSM.BroadcastEvent("UPDATE NAIL DAMAGE");
                 }
                 else if (SelectedItemName == SealStock)
-                    ConsumableController.RerollSeals++;
+                    ConsumableRef.RerollSeals++;
                 else if (SelectedItemName == TeaStock)
-                    ConsumableController.TeaSpell += 10;
+                    ConsumableRef.TeaSpell += 10;
                 else if (SelectedItemName == LifebloodStock)
                 {
-                    for (int i = 0; i < ConsumableController.LifebloodHeal; i++)
+                    for (int i = 0; i < ConsumableRef.LifebloodHeal; i++)
                         EventRegister.SendEvent("ADD BLUE HEALTH");
-                    ConsumableController.UsedLifeblood++;
+                    ConsumableRef.UsedLifeblood++;
                 }
                 else
                 {
-                    HeroController.instance.AddHealth(Math.Max(5, 25 - ConsumableController.UsedEggs * 5));
-                    ConsumableController.UsedEggs++;
+                    HeroController.instance.AddHealth(Math.Max(5, 25 - ConsumableRef.UsedEggs * 5));
+                    ConsumableRef.UsedEggs++;
                 }
             }
             else
@@ -397,7 +398,7 @@ internal class ShopStock : MonoBehaviour
                 Power pickedPower = TreasureManager.Powers.First(x => x.GetType().Name == SelectedItemName);
                 if (pickedPower.CanAppear)
                 {
-                    CombatController.ObtainedPowers.Add(pickedPower);
+                    CombatRef.ObtainedPowers.Add(pickedPower);
                     pickedPower.EnablePower();
                 }
             }
@@ -411,18 +412,18 @@ internal class ShopStock : MonoBehaviour
     private void GenerateStock(bool restock = false)
     {
         // Create a copy for availability purposes.
-        List<Power> obtainedPowers = [.. CombatController.ObtainedPowers];
+        List<Power> obtainedPowers = [.. CombatRef.ObtainedPowers];
         try
         {
             List<Power> shopPowers = [];
             int abilityCount = 0;
-            SecretController.ShopLevel = 4;
-            int maxAbility = 1 + SecretController.ShopLevel / 2;
-            int stockAmount = 3 + SecretController.ShopLevel;
+            SecretRef.ShopLevel = 4;
+            int maxAbility = 1 + SecretRef.ShopLevel / 2;
+            int stockAmount = 3 + SecretRef.ShopLevel;
 
-            int possibleCombatStat = CombatController.CombatLevel;
-            int possibleSpiritStat = CombatController.SpiritLevel;
-            int possibleEnduranceStat = CombatController.EnduranceLevel;
+            int possibleCombatStat = CombatRef.CombatLevel;
+            int possibleSpiritStat = CombatRef.SpiritLevel;
+            int possibleEnduranceStat = CombatRef.EnduranceLevel;
 
             List<string> availablePowerNames = [.. TreasureManager.Powers.Where(x => x.CanAppear).Select(x => x.Name)];
             List<string> obtainedPowerNames = [.. obtainedPowers.Select(x => x.Name)];
@@ -457,12 +458,12 @@ internal class ShopStock : MonoBehaviour
                         // Are not reliant on another power in the shop.
                         if (shopPowers.Count > 0)
                         {
-                            CombatController.ObtainedPowers.AddRange(shopPowers);
+                            CombatRef.ObtainedPowers.AddRange(shopPowers);
                             bool canAppear = power.CanAppear;
-                            CombatController.ObtainedPowers.Add(power);
+                            CombatRef.ObtainedPowers.Add(power);
                             canAppear = shopPowers.All(x => x.CanAppear);
                             // Reset powers
-                            CombatController.ObtainedPowers = [.. obtainedPowers];
+                            CombatRef.ObtainedPowers = [.. obtainedPowers];
                             if (!canAppear)
                                 continue;
                         }
@@ -567,7 +568,7 @@ internal class ShopStock : MonoBehaviour
         }
         finally
         {
-            CombatController.ObtainedPowers = obtainedPowers;
+            CombatRef.ObtainedPowers = obtainedPowers;
         }
     }
 }

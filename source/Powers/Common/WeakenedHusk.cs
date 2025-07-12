@@ -13,7 +13,7 @@ internal class WeakenedHusk : Power
 {
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    public override bool CanAppear => CombatController.HasSpell();
+    public override bool CanAppear => CombatRef.HasSpell();
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
@@ -34,8 +34,8 @@ internal class WeakenedHusk : Power
                 || (gameObjectName == "Hit U" && (parentName == "Scr Heads" || parentName == "Scr Heads 2"))
                 || ((gameObjectName == "Hit R" || gameObjectName == "Hit L") && (parentName == "Q Slam" || parentName == "Q Slam 2" || parentName == "Q Mega" || parentName == "Scr Heads" || parentName == "Scr Heads 2")))
             {
-                if (RngManager.GetRandom(0, 100) <= Mathf.CeilToInt(CombatController.SpiritLevel * 1.5f))
-                    self.Fsm.GameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatController.SpiritLevel;
+                if (RngManager.GetRandom(0, 100) <= Mathf.CeilToInt(CombatRef.SpiritLevel * 1.5f))
+                    self.Fsm.GameObject.GetOrAddComponent<ShatteredMindEffect>().ExtraDamage += CombatRef.SpiritLevel;
             }
         }
         orig(self);

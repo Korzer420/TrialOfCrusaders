@@ -10,7 +10,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class Sporeshroom : Power
 {
-    public override bool CanAppear => !CombatController.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(0f, 6f, 4f);
 

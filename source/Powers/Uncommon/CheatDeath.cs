@@ -20,10 +20,10 @@ internal class CheatDeath : Power
     protected override void Enable()
     {
         Cooldown = 0;
-        StageController.RoomEnded += StageController_RoomCleared;
+        StageRef.RoomEnded += StageController_RoomCleared;
     }
 
-    protected override void Disable() => StageController.RoomEnded -= StageController_RoomCleared;
+    protected override void Disable() => StageRef.RoomEnded -= StageController_RoomCleared;
     
     private void StageController_RoomCleared(bool quietRoom, bool traversed) => Cooldown = Cooldown.Lower(quietRoom ? 0 : 1);
 }

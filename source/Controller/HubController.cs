@@ -8,57 +8,58 @@ using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Controls everything outside the actual runs inside the lobby.
 /// </summary>
-internal static class HubController
+public class HubController : BaseController
 {
-    private static bool _enabled;
-    private static int _rolledSeed;
-    private static List<SeedTablet> _seedTablets = [];
+    private int _rolledSeed;
+    private List<SeedTablet> _seedTablets = [];
 
-    internal static GameObject Tink { get; set; }
+    internal GameObject Tink { get; set; }
 
-    internal static GameObject InspectPrefab { get; set; }
+    internal GameObject InspectPrefab { get; set; }
 
-    internal static GameMode SelectedGameMode { get; set; }
+    public GameMode SelectedGameMode { get; set; }
 
     #region Setup
 
-    internal static void Initialize()
+    public HubController()
     {
-        if (_enabled)
-            return;
+        PhaseManager.PhaseChanged += SetupStartRoom;
+    }
+
+    public override Phase[] GetActivePhases() => [Phase.Lobby];
+
+    protected override void Enable()
+    {
         LogManager.Log("Enable Hub Controller");
         On.PlayMakerFSM.OnEnable += FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneChanged;
         On.GameManager.BeginSceneTransition += ModifySceneTransition;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory += BlockInventory;
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Hub Controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneChanged;
         On.GameManager.BeginSceneTransition -= ModifySceneTransition;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory -= BlockInventory;
-        _enabled = false;
     }
 
     #endregion
 
     #region Private Methods
 
-    private static void SetupTransitions()
+    private void SetupTransitions()
     {
         try
         {
@@ -99,7 +100,7 @@ internal static class HubController
         {
             LogManager.Log("Failed to setup hub transitions.", ex);
         }
-    } 
+    }
 
     #endregion
 
@@ -108,7 +109,7 @@ internal static class HubController
     /// <summary>
     /// Controls all FSM related modifications.
     /// </summary>
-    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
         {
@@ -129,7 +130,7 @@ internal static class HubController
         orig(self);
     }
 
-    private static void ModifySceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
+    private void ModifySceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
         try
         {
@@ -145,9 +146,9 @@ internal static class HubController
                 int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
                 RngManager.Seeded = finalSeed != _rolledSeed;
                 RngManager.Seed = finalSeed;
-                StageController.CurrentRoomData = SetupManager.GenerateRun(SelectedGameMode);
-                StageController.CurrentRoomIndex = -1;
-                PhaseController.TransitionTo(Phase.Run);
+                StageRef.CurrentRoomData = SetupManager.GenerateRun(SelectedGameMode);
+                StageRef.CurrentRoomIndex = -1;
+                PhaseManager.TransitionTo(Phase.Run);
                 // Grants mode specific items.
                 if (SelectedGameMode == GameMode.Crusader)
                 {
@@ -179,12 +180,12 @@ internal static class HubController
         orig(self, info);
     }
 
-    private static void SceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    private void SceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         try
         {
             if (arg1.name == "Room_Colosseum_01")
-            { 
+            {
                 SetupTransitions();
                 CoroutineHelper.WaitForHero(GameManager.instance.SaveGame, true);
             }
@@ -202,7 +203,7 @@ internal static class HubController
                 Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (2)"));
                 _rolledSeed = Random.Range(100000000, 1000000000);
                 // Prevent special seed from appearing.
-                while(_rolledSeed == 777777777)
+                while (_rolledSeed == 777777777)
                     _rolledSeed = Random.Range(100000000, 1000000000);
                 float xPosition = 18.2f;
                 float yPosition = 9.5f;
@@ -267,7 +268,7 @@ internal static class HubController
         }
     }
 
-    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "Explanation_Trial")
         {
@@ -287,10 +288,41 @@ internal static class HubController
         return orig;
     }
 
-    private static bool BlockInventory(On.HeroController.orig_CanOpenInventory orig, HeroController self)
+    private bool BlockInventory(On.HeroController.orig_CanOpenInventory orig, HeroController self)
     {
         orig(self);
         return false;
+    }
+
+    private void SetupStartRoom(Phase currentPhase, Phase newPhase)
+    {
+        if (currentPhase == Phase.Lobby && newPhase == Phase.Run)
+            CoroutineHelper.WaitUntil(() =>
+            {
+                PDHelper.HasDreamNail = false;
+                GameObject pedestal = new("Pedestal");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                pedestal.transform.position = new(104.68f, 15.4f, 0);
+                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                pedestal.layer = 8; // Terrain layer
+                pedestal.SetActive(true);
+
+                pedestal = new("Pedestal2");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                pedestal.transform.position = new(109f, 15.4f, 0);
+                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                pedestal.layer = 8; // Terrain layer
+                pedestal.SetActive(true);
+                // Spawn two orbs at the start.
+                TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
+                if (RngManager.Seed == 000000206)
+                    TreasureManager.SpawnShiny(TreasureType.RareOrb, new(109f, 20.4f), false);
+                else
+                    TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+
+                if (RngManager.Seed == 000001225)
+                    TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(114f, 20.4f), false);
+            }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
     }
 
     #endregion

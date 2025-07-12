@@ -12,7 +12,7 @@ internal class GreaterMind : Power
 {
     private int _spendSoul = 0;
 
-    public int SpendThreshold => 160 - CombatController.SpiritLevel * 3;
+    public int SpendThreshold => 160 - CombatRef.SpiritLevel * 3;
 
     public static GameObject Orb { get; set; }
 
@@ -64,7 +64,7 @@ internal class GreaterMind : Power
             AttackType = AttackTypes.Spell,
             MagnitudeMultiplier = 0f,
             Multiplier = 1f,
-            DamageDealt = CombatController.SpiritLevel * 3
+            DamageDealt = CombatRef.SpiritLevel * 3
         };
         orb.layer = 17;
         orb.SetActive(true);

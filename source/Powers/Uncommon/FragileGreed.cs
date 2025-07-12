@@ -21,11 +21,11 @@ internal class FragileGreed : Power
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
-    protected override void Enable() => CombatController.TookDamage += CombatController_TookDamage;
+    protected override void Enable() => CombatRef.TookDamage += CombatController_TookDamage;
 
     protected override void Disable()
     { 
-        CombatController.TookDamage -= CombatController_TookDamage;
+        CombatRef.TookDamage -= CombatController_TookDamage;
         GreedActive = true;
     }
 

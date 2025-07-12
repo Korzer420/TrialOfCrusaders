@@ -37,7 +37,7 @@ internal class ImprovedGrimmchild : Power
         int normalDamage = self.Fsm.Variables.FindFsmInt("Damage").Value;
         bool correctContext = self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GetState("Send Impact") != null;
         if (correctContext)
-            self.Fsm.Variables.FindFsmInt("Damage").Value = 15 + (CombatController.CombatLevel * 10);
+            self.Fsm.Variables.FindFsmInt("Damage").Value = 15 + (CombatRef.CombatLevel * 10);
         orig(self);
         if (correctContext)
             self.Fsm.Variables.FindFsmInt("Damage").Value = normalDamage;

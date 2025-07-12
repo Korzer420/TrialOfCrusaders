@@ -70,7 +70,7 @@ internal class ImprovedBaldursShell : Power
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         _passedScenes++;
-        if (_currentHitPoints < 10 && _passedScenes >= 10 - Mathf.CeilToInt((float)CombatController.EnduranceLevel / 3))
+        if (_currentHitPoints < 10 && _passedScenes >= 10 - Mathf.CeilToInt((float)CombatRef.EnduranceLevel / 3))
         {
             _passedScenes = 0;
             _currentHitPoints++;

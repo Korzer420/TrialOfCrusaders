@@ -1,7 +1,7 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
@@ -25,15 +25,15 @@ internal class Compass : MonoBehaviour
     {
         try
         {
-            if (!CombatController.InCombat || StageController.CurrentRoom.BossRoom)
+            if (!CombatRef.InCombat || StageRef.CurrentRoom.BossRoom)
                 GameObject.Destroy(gameObject);
             else
             {
                 Vector3 nearestLocation = Vector3.zero;
                 Vector3 heroPosition = HeroController.instance.transform.position;
                 float nearestDistance = float.MaxValue;
-                if (CombatController.ActiveEnemies.Count > 0)
-                    foreach (HealthManager enemy in CombatController.ActiveEnemies)
+                if (CombatRef.ActiveEnemies.Count > 0)
+                    foreach (HealthManager enemy in CombatRef.ActiveEnemies)
                     {
                         if (enemy == null || enemy.gameObject == null 
                             || enemy.isDead || !enemy.gameObject.activeSelf || enemy.GetComponent<BaseEnemy>() == null)

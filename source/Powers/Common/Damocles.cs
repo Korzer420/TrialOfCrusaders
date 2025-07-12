@@ -21,14 +21,14 @@ internal class Damocles : Power
     {
         if (Triggered)
             _coroutine = StartRoutine(Tick());
-        CombatController.TookDamage += CombatController_TookDamage;
+        CombatRef.TookDamage += CombatController_TookDamage;
     }
 
     protected override void Disable()
     {
         if (_coroutine != null)
             StopRoutine(_coroutine);
-        CombatController.TookDamage -= CombatController_TookDamage;
+        CombatRef.TookDamage -= CombatController_TookDamage;
     }
 
     private void CombatController_TookDamage()

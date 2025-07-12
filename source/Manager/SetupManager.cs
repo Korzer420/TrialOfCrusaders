@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Manager;
 
@@ -70,10 +70,10 @@ internal static class SetupManager
             //roomList.Add(availableRooms.First(x => x.Name == "GG_Radiance"));
 
             // Test specific boss.
-            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
+            //var roomData = StageRef.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
             //roomList.Insert(1, roomData);
             //Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Tutorial_01");
+            //var selectedRoomData = StageRef.LoadRoomData().First(x => x.Name == "Tutorial_01");
             //Test room at start.
             //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
             //{
@@ -142,10 +142,10 @@ internal static class SetupManager
             roomList.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
 
             // Test specific boss.
-            //var roomData = StageController.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
+            //var roomData = StageRef.LoadRoomData().First(x => x.Name == "GG_Dung_Defender");
             //roomList.Insert(91, roomData);
             // Test specific room.
-            //var selectedRoomData = StageController.LoadRoomData().First(x => x.Name == "Fungus2_14");
+            //var selectedRoomData = StageRef.LoadRoomData().First(x => x.Name == "Fungus2_14");
             // Test room at start.
             //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
             //{
@@ -174,7 +174,7 @@ internal static class SetupManager
     {
         // Add each normal room 5 times so each one has the same probability regardless of available entrances.
         // For bosses we only take two (although they only can appear once).
-        return [..StageController.LoadRoomData()
+        return [..StageRef.LoadRoomData()
                 .SelectMany(x =>
         {
             if (x.BossRoom)

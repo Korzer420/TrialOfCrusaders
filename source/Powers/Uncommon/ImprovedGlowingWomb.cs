@@ -44,7 +44,7 @@ internal class ImprovedGlowingWomb : Power
     private void HatchlingSpawn(On.KnightHatchling.orig_OnEnable orig, KnightHatchling self)
     {
         orig(self);
-        self.normalDetails.damage = 25 + CombatController.SpiritLevel * 2 + CombatController.CombatLevel;
-        self.dungDetails.damage = 40 + CombatController.SpiritLevel * 2 + CombatController.CombatLevel;
+        self.normalDetails.damage = 25 + CombatRef.SpiritLevel * 2 + CombatRef.CombatLevel;
+        self.dungDetails.damage = 40 + CombatRef.SpiritLevel * 2 + CombatRef.CombatLevel;
     }
 }
