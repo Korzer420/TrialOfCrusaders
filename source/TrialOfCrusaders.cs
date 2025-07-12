@@ -83,9 +83,11 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     #region Save management
 
+    
+
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
-        HistoryController.SetupList(saveData);
+        SaveManager.CurrentSaveData = saveData;
         SecretController.UnlockedSecretArchive = saveData?.UnlockedSecretArchive ?? false;
         SecretController.UnlockedToughness = saveData?.UnlockedToughness ?? false;
         SecretController.UnlockedStashedContraband = saveData?.UnlockedContraband ?? false;

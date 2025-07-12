@@ -72,5 +72,10 @@ public enum DraftPool
     /// <summary>
     /// Related to debuffs.
     /// </summary>
-    Debuff = 2048
+    Debuff = 2048,
+
+    /// <summary>
+    /// Related to an ability that works beyond the current trial.
+    /// </summary>
+    Retain = 4096,
 }

@@ -103,13 +103,13 @@ internal static class HistoryController
 
     public static HistoryData TempEntry { get; set; } = new();
 
-    internal static List<HistoryData> History { get; set; } = [];
+    internal static List<HistoryData> History => SaveManager.CurrentSaveData.OldRunData;
 
     public static GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50 };
 
     internal static GameObject ArchiveSprite { get; set; }
 
-    public static ArchiveData Archive { get; set; } = new();
+    public static ArchiveData Archive => SaveManager.CurrentSaveData.Archive;
 
     #region Setup
 
@@ -136,12 +136,6 @@ internal static class HistoryController
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         _active = false;
-    }
-
-    internal static void SetupList(LocalSaveData saveData)
-    {
-        History = saveData?.OldRunData;
-        Archive = saveData?.Archive;
     }
 
     #endregion

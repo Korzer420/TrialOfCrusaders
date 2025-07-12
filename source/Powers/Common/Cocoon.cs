@@ -11,7 +11,7 @@ internal class Cocoon : Power
 
     public override bool CanAppear => !CombatController.HasPower<InUtterDarkness>(out _);
 
-    public override DraftPool Pools => (DraftPool)((int)DraftPool.Debuff * 2 - 1); // All pools
+    public override DraftPool Pools => (DraftPool)((int)DraftPool.Retain * 2 - 1); // All pools
 
     protected override void Enable()
     {
