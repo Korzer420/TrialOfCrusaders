@@ -10,7 +10,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class DefendersCrest : Power
 {
-    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<ShiningBound>(out _);
 
     public override string Name => "Defender's Crest";
 

@@ -17,7 +17,7 @@ internal class PolarityShift : Power
 
     public override DraftPool Pools => DraftPool.Spirit;
 
-    public override bool CanAppear => CombatRef.HasSpell();
+    public override bool CanAppear => PowerRef.HasSpell();
 
     protected override void Enable() => On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter += IntCompare_OnEnter;
 

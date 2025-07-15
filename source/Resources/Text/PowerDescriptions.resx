@@ -480,4 +480,7 @@
   <data name="WaywardCompass" xml:space="preserve">
     <value>While in combat, points to the nearest required enemy.</value>
   </data>
+  <data name="Banish" xml:space="preserve">
+    <value>Holding the quick map button for 5 seconds will PERMANENTLY remove the current room from the room selection. Can only be used once per run. Trying to banish a room while another is already banished will replace it instead.</value>
+  </data>
 </root>

@@ -19,7 +19,7 @@ public class FragileSpirit : Power
 
     public override DraftPool Pools => DraftPool.Spirit;
 
-    public override bool CanAppear => !HasPower<PaleShell>() && CombatRef.HasSpell();
+    public override bool CanAppear => !HasPower<PaleShell>() && PowerRef.HasSpell();
 
     public override StatScaling Scaling => StatScaling.Spirit; 
 

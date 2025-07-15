@@ -10,7 +10,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class ThornsOfAgony : Power
 {
-    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(2f, 0f, 8f);
 

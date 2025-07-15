@@ -39,7 +39,7 @@ internal class RootEffect : MonoBehaviour
         // This is used to let the enemy blink every 0.25 seconds.
         float blinkMilestone = 0f;
 
-        while (passedTime <= (CombatRef.DebuffsStronger ? 6f : 3f))
+        while (passedTime <= (PowerRef.DebuffsStronger ? 6f : 3f))
         {
             transform.position = _positionToHold;
             passedTime += Time.deltaTime;

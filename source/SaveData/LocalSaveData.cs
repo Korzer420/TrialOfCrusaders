@@ -5,8 +5,6 @@ namespace TrialOfCrusaders.SaveData;
 
 public class LocalSaveData
 {
-    #region Non-Run Data
-
     public List<HistoryData> OldRunData { get; set; } = [];
 
     public ArchiveData Archive { get; set; } = new();
@@ -19,7 +17,10 @@ public class LocalSaveData
 
     public bool UnlockedToughness { get; set; }
 
-    #endregion
+    /// <summary>
+    /// A dictionary of data which can be used for "retain" effects.
+    /// </summary>
+    public Dictionary<string, string> RetainData { get; set; } = [];
 
     // ToDo: Support save inside a run.
     //#region Stage Data
@@ -91,13 +92,13 @@ public class LocalSaveData
     //    Score = Score.Copy(),
     //    // All these values are updated even though the rest isn't.
     //    // This is to prevent cheese by resetting the game upon loosing one of these one time effects.
-    //    CocoonUsed = CombatRef.HasPower<Cocoon>(out _),
-    //    DamoclesUsed = CombatRef.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatRef.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatRef.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatRef.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatRef.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    CocoonUsed = PowerRef.HasPower<Cocoon>(out _),
+    //    DamoclesUsed = PowerRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = PowerRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = PowerRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !PowerRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !PowerRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !PowerRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //public LocalSaveData GetUpdatedData() => new()
@@ -105,7 +106,7 @@ public class LocalSaveData
     //    OldRunData = OldRunData,
     //    CurrentRoomNumber = StageRef.CurrentRoomNumber,
     //    RoomList = [.. StageRef.CurrentRoomData.Select(x => $"{x.Name}{x.SelectedTransition}")],
-    //    ObtainedPowers = [.. CombatRef.ObtainedPowers.Select(x => x.Name)],
+    //    ObtainedPowers = [.. PowerRef.ObtainedPowers.Select(x => x.Name)],
     //    CombatLevel = CombatRef.CombatLevel,
     //    SpiritLevel = CombatRef.SpiritLevel,
     //    EnduranceLevel = CombatRef.EnduranceLevel,
@@ -113,13 +114,13 @@ public class LocalSaveData
     //    RandomSeed = RngProvider.Seed,
     //    CurrentProgress = DetermineProgress(),
     //    Score = ScoreRef.Score.Copy(),
-    //    CocoonUsed = CombatRef.HasPower(out Cocoon cocoon),
-    //    DamoclesUsed = CombatRef.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatRef.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatRef.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatRef.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatRef.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    CocoonUsed = PowerRef.HasPower(out Cocoon cocoon),
+    //    DamoclesUsed = PowerRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = PowerRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = PowerRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !PowerRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !PowerRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !PowerRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //#endregion

@@ -11,12 +11,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Powers.Uncommon;
+using TrialOfCrusaders.SaveData;
 using TrialOfCrusaders.UnityComponents.CombatElements;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using TrialOfCrusaders.UnityComponents.Other;
@@ -32,7 +34,6 @@ namespace TrialOfCrusaders.Controller;
 public class CombatController : BaseController
 {
     private ILHook _attackMethod;
-    private ILHook _blueHealthMethod;
     private Coroutine _enemyScanner;
     public const int InstaKillDamage = 500;
     public const int WeakenedDamageFlag = 250;
@@ -55,16 +56,9 @@ public class CombatController : BaseController
 
     public bool EnduranceCapped => EnduranceLevel >= (SecretRef.UnlockedToughness ? 21 : 20);
 
-    public bool CharmUpdate { get; set; }
-
     public List<HealthManager> ActiveEnemies { get; set; } = [];
 
-    public List<Power> ObtainedPowers { get; set; } = [];
-
     public bool InCombat { get; set; }
-
-    // As this is called very frequently we store it in an extra value.
-    internal bool DebuffsStronger { get; set; }
 
     #endregion
 
@@ -80,40 +74,6 @@ public class CombatController : BaseController
 
     #endregion
 
-    #region Power Utils
-
-    public bool HasPower<T>(out T selectedPower) where T : Power
-    {
-        foreach (Power power in ObtainedPowers)
-            if (power.GetType() == typeof(T))
-            {
-                selectedPower = (T)power;
-                return true;
-            }
-        selectedPower = null;
-        return false;
-    }
-
-    public bool HasPower(string powerTypeName)
-    {
-        foreach (Power power in ObtainedPowers)
-            if (power.GetType().Name == powerTypeName)
-                return true;
-        return false;
-    }
-
-    public bool HasNailArt() => HasPower<DashSlash>(out _) || HasPower<GreatSlash>(out _) || HasPower<CycloneSlash>(out _);
-
-    public bool HasSpell() => HasPower<VengefulSpirit>(out _) || HasPower<HowlingWraiths>(out _) || HasPower<DesolateDive>(out _);
-
-    internal void DisablePowers()
-    {
-        foreach (Power power in ObtainedPowers)
-            power.DisablePower();
-    }
-
-    #endregion
-
     #region Setup
 
     protected override void Enable()
@@ -124,15 +84,13 @@ public class CombatController : BaseController
         ModHooks.GetPlayerIntHook += ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         ModHooks.AfterTakeDamageHook += ModifyDamageTaken;
-        ModHooks.SoulGainHook += ModifySoulGain;
-
+        
         On.HealthManager.TakeDamage += ModifyDealtDamage;
         On.HealthManager.OnEnable += ModifyEnemy;
         On.HealthManager.Die += OnEnemyDeath;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter += ModifyOtherDealtDamage;
         On.HeroController.TakeDamage += OnTakeDamage;
-        On.HeroController.AddGeo += ModifyGeoAdd;
-        On.HeroController.CharmUpdate += FlagCharmHeal;
+        
         On.HeroController.FinishedEnteringScene += FinalizeEnemies;
         On.HeroController.Die += OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter += CheckForFailedRun;
@@ -147,12 +105,11 @@ public class CombatController : BaseController
 
         // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
         IL.BossSequenceController.RestoreBindings += BlockHealthReset;
-        IL.HeroController.MaxHealth += BlockCharmHeal;
-        IL.HeroController.Move += ModifyMovementSpeed;
+        
         IL.HeroController.Attack += ModifyAttackDuration;
 
         _attackMethod = new(typeof(HeroController).GetMethod("orig_DoAttack", BindingFlags.NonPublic | BindingFlags.Instance), ModifyAttackSpeed);
-        _blueHealthMethod = new(typeof(PlayerData).GetMethod("orig_UpdateBlueHealth", BindingFlags.Public | BindingFlags.Instance), SkipBlueHealthReset);
+        
 
         StageRef.RoomEnded += StageController_RoomEnded;
         HistoryRef.CreateEntry += PassHistoryData;
@@ -203,15 +160,12 @@ public class CombatController : BaseController
         ModHooks.GetPlayerIntHook -= ModHooks_GetPlayerIntHook;
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         ModHooks.AfterTakeDamageHook -= ModifyDamageTaken;
-        ModHooks.SoulGainHook -= ModifySoulGain;
 
         On.HealthManager.TakeDamage -= ModifyDealtDamage;
         On.HealthManager.OnEnable -= ModifyEnemy;
         On.HealthManager.Die -= OnEnemyDeath;
         On.HutongGames.PlayMaker.Actions.TakeDamage.OnEnter -= ModifyOtherDealtDamage;
         On.HeroController.TakeDamage -= OnTakeDamage;
-        On.HeroController.AddGeo -= ModifyGeoAdd;
-        On.HeroController.CharmUpdate -= FlagCharmHeal;
         On.HeroController.FinishedEnteringScene -= FinalizeEnemies;
         On.HeroController.Die -= OnPlayerDeath;
         On.HutongGames.PlayMaker.Actions.IntSwitch.OnEnter -= CheckForFailedRun;
@@ -226,19 +180,15 @@ public class CombatController : BaseController
 
         // This is called upon leaving a godhome room and would restore the health + remove lifeblood.
         IL.BossSequenceController.RestoreBindings -= BlockHealthReset;
-        IL.HeroController.MaxHealth -= BlockCharmHeal;
-        IL.HeroController.Move -= ModifyMovementSpeed;
         IL.HeroController.Attack -= ModifyAttackDuration;
         _attackMethod?.Dispose();
-        _blueHealthMethod?.Dispose();
 
         StageRef.RoomEnded -= StageController_RoomEnded;
         HistoryRef.CreateEntry -= PassHistoryData;
 
         if (_enemyScanner != null)
             TrialOfCrusaders.Holder.StopCoroutine(_enemyScanner);
-        DisablePowers();
-        ObtainedPowers.Clear();
+        
         ActiveEnemies.Clear();
         CombatLevel = 0;
         SpiritLevel = 0;
@@ -315,33 +265,6 @@ public class CombatController : BaseController
             fsm.GetState("Particle Check").AddTransition("5", "5");
             fsm.GetState("Particle Check").AddActions(() => fsm.SendEvent("5"));
         }
-    }
-
-    private void FlagCharmHeal(On.HeroController.orig_CharmUpdate orig, HeroController self)
-    {
-        // Flag the charm update so the heal can be blocked.
-        CharmUpdate = true;
-        orig(self);
-        CharmUpdate = false;
-    }
-
-    private void SkipBlueHealthReset(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        cursor.Goto(0);
-        cursor.Emit(OpCodes.Ret);
-    }
-
-    private void BlockCharmHeal(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        cursor.Goto(0);
-        ILLabel label;
-        cursor.GotoNext(x => x.MatchRet());
-        label = cursor.MarkLabel();
-        cursor.Goto(0);
-        cursor.EmitDelegate(() => CharmUpdate);
-        cursor.Emit(OpCodes.Brtrue, label);
     }
 
     private IEnumerator UpdateUI()
@@ -432,39 +355,6 @@ public class CombatController : BaseController
             if (contained && self.GetComponent<BaseEnemy>() is BaseEnemy enemyFlag)
             {
                 EnemyKilled?.Invoke(self);
-                if (HasPower<RoyalDecree>(out _))
-                {
-                    LogManager.Log("Check royal decree target");
-                    if (self.GetComponent<RoyalMark>() is RoyalMark mark)
-                    {
-                        LogManager.Log("Killed enemy had mark.");
-                        if (ActiveEnemies.Count == 0)
-                        {
-                            LogManager.Log("No enemies left. Grant reward.");
-                            int rolled = RngManager.GetRandom(1, 100);
-                            if (rolled <= 2)
-                                TreasureManager.SpawnShiny(TreasureType.RareOrb, self.transform.position);
-                            else if (rolled <= 10)
-                                TreasureManager.SpawnShiny(TreasureType.NormalOrb, self.transform.position);
-                            else if (rolled <= 35)
-                                TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, self.transform.position);
-                            else
-                                HeroController.instance.AddGeo(100);
-                        }
-                        else
-                        {
-                            LogManager.Log("Find new enemy target");
-                            mark.CorrectPosition(ActiveEnemies[RngManager.GetRandom(0, ActiveEnemies.Count - 1)]);
-                            LogManager.Log("New enemy is: " + mark.AttachedEnemy.name);
-                        }
-                    }
-                    else
-                    {
-                        HealthManager enemy = ActiveEnemies.FirstOrDefault(x => x.GetComponent<RoyalMark>());
-                        if (enemy != null)
-                            Component.Destroy(enemy.GetComponent<RoyalMark>());
-                    }
-                }
                 if (!enemyFlag.NoLoot && !StageRef.CurrentRoom.BossRoom)
                 {
                     float rolled = RngManager.GetRandom(0f, 100f);
@@ -556,13 +446,6 @@ public class CombatController : BaseController
                         "GG_Soul_Master" or "GG_Oblobbles" or "GG_Soul_Tyrant" or "GG_Vengefly_V" => 2,
                         _ => 1
                     };
-                else if (HasPower<RoyalDecree>(out _) && ActiveEnemies.Count > 0)
-                {
-                    GameObject royalMark = new("Royal Decree");
-                    royalMark.SetActive(false);
-                    royalMark.AddComponent<RoyalMark>().CorrectPosition(ActiveEnemies[UnityEngine.Random.Range(0, ActiveEnemies.Count)]);
-                    royalMark.SetActive(true);
-                }
                 BeginCombat?.Invoke();
             }
         }
@@ -707,7 +590,9 @@ public class CombatController : BaseController
 
     #endregion
 
-    #region Global Event Handler
+    #region Eventhandler
+
+    #region Damage Control
 
     private int ModHooks_GetPlayerIntHook(string name, int orig)
     {
@@ -733,7 +618,7 @@ public class CombatController : BaseController
     private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.overcharmed))
-            return HasPower<VoidHeart>(out _);
+            return PowerRef.HasPower<VoidHeart>(out _);
         else if (name == nameof(PlayerData.isInvincible))
             return orig || TreasureManager.SelectionActive;
         return orig;
@@ -745,35 +630,35 @@ public class CombatController : BaseController
         {
             if (hitInstance.AttackType == AttackTypes.Nail)
             {
-                if (HasPower(out FragileStrength strength) && strength.StrengthActive)
+                if (PowerRef.HasPower(out FragileStrength strength) && strength.StrengthActive)
                     hitInstance.DamageDealt *= 3;
 
-                if (HasPower<Initiative>(out _) && self.GetComponent<InitiativeEffect>() == null)
+                if (PowerRef.HasPower<Initiative>(out _) && self.GetComponent<InitiativeEffect>() == null)
                 {
                     self.gameObject.AddComponent<InitiativeEffect>();
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
                     hitInstance.DamageDealt += 10 + CombatLevel;
                 }
 
-                if (HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
+                if (PowerRef.HasPower(out MantisStyle mantisStyle) && mantisStyle.Parried)
                 {
                     mantisStyle.Parried = false;
                     hitInstance.DamageDealt += 40 + CombatLevel;
                 }
 
                 // Nail art: Hit L, Hit R, Great Slash, Dash Slash
-                if (HasPower(out Acrobat acrobat) && acrobat.Buff)
+                if (PowerRef.HasPower(out Acrobat acrobat) && acrobat.Buff)
                     hitInstance.DamageDealt += 2 + Mathf.FloorToInt(CombatLevel * 1.5f);
 
                 // Armor scaling
                 int armor = StageRef.CurrentRoomNumber / 5;
-                if (HasPower<BrutalStrikes>(out _))
+                if (PowerRef.HasPower<BrutalStrikes>(out _))
                     if (hitInstance.Source?.name == "Great Slash" || hitInstance.Source?.name == "Dash Slash"
                         || hitInstance.Source?.name == "Hit L" || hitInstance.Source?.name == "Hit R")
                         armor = 0;
                 if (armor > 0)
                 {
-                    if (HasPower(out Shatter shatter))
+                    if (PowerRef.HasPower(out Shatter shatter))
                     {
                         if (shatter.LastEnemy == self)
                             shatter.Stacks = Math.Min(10, shatter.Stacks + 1);
@@ -786,20 +671,20 @@ public class CombatController : BaseController
                     }
                     // This is allowed to result in negative armor.
                     if (self.GetComponent<ConcussionEffect>() != null)
-                        armor -= DebuffsStronger
+                        armor -= PowerRef.DebuffsStronger
                             ? 15
                             : 5;
                 }
                 hitInstance.DamageDealt = Math.Max(1, hitInstance.DamageDealt - armor);
 
                 if (self.GetComponent<ConcussionEffect>() != null)
-                    hitInstance.MagnitudeMultiplier *= DebuffsStronger
+                    hitInstance.MagnitudeMultiplier *= PowerRef.DebuffsStronger
                         ? 1.6f
                         : 1.2f;
             }
             else
             {
-                if (HasPower<Initiative>(out _) && self.GetComponent<InitiativeEffect>() == null)
+                if (PowerRef.HasPower<Initiative>(out _) && self.GetComponent<InitiativeEffect>() == null)
                 {
                     self.gameObject.AddComponent<InitiativeEffect>();
                     HeroController.instance.AddMPCharge(Math.Max(2, SpiritLevel / 2));
@@ -814,48 +699,7 @@ public class CombatController : BaseController
         {
             LogManager.Log("Failed to modify dealt damage.", ex);
         }
-
-#if DEBUG
-        //hitInstance.DamageDealt = Math.Max(100, hitInstance.DamageDealt);
-#endif
         orig(self, hitInstance);
-    }
-
-    private void ModifyMovementSpeed(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        cursor.Goto(0);
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED_CH_COMBO)));
-        cursor.EmitDelegate<Func<float, float>>(x =>
-        {
-            if (HasPower(out Charge charge) && charge.Active)
-                x *= 2f;
-            if (HasPower<EscapeArtist>(out _) && PDHelper.IsInvincible)
-                x += EnduranceLevel / 4f;
-            if (HasPower<ImprovedSprintmaster>(out _))
-                x += 3f;
-            return x;
-        });
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED_CH)));
-        cursor.EmitDelegate<Func<float, float>>(x =>
-        {
-            if (HasPower(out Charge charge) && charge.Active)
-                x *= 2f;
-            if (HasPower<EscapeArtist>(out _) && PDHelper.IsInvincible)
-                x += EnduranceLevel / 4f;
-            if (HasPower<ImprovedSprintmaster>(out _))
-                x += 3f;
-            return x;
-        });
-        cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.RUN_SPEED)));
-        cursor.EmitDelegate<Func<float, float>>(x =>
-        {
-            if (HasPower(out Charge charge) && charge.Active)
-                x *= 2f;
-            if (HasPower<EscapeArtist>(out _) && PDHelper.IsInvincible)
-                x += EnduranceLevel / 4f;
-            return x;
-        });
     }
 
     private void ModifyAttackSpeed(ILContext context)
@@ -865,18 +709,18 @@ public class CombatController : BaseController
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.ATTACK_COOLDOWN_TIME_CH)));
         cursor.EmitDelegate<Func<float, float>>(x =>
         {
-            if (HasPower(out Charge charge) && charge.Active)
+            if (PowerRef.HasPower(out Charge charge) && charge.Active)
                 x *= 0.8f;
-            if (HasPower(out MercilessPursuit pursuit))
+            if (PowerRef.HasPower(out MercilessPursuit pursuit))
                 x -= Math.Min(pursuit.Stacks, 10) * 0.01f;
             return x;
         });
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.ATTACK_COOLDOWN_TIME)));
         cursor.EmitDelegate<Func<float, float>>(x =>
         {
-            if (HasPower(out Charge charge) && charge.Active)
+            if (PowerRef.HasPower(out Charge charge) && charge.Active)
                 x *= 0.7f;
-            if (HasPower(out MercilessPursuit pursuit))
+            if (PowerRef.HasPower(out MercilessPursuit pursuit))
                 x -= Math.Min(pursuit.Stacks, 10) * 0.016f;
             return x;
         });
@@ -889,9 +733,9 @@ public class CombatController : BaseController
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>(nameof(HeroController.ATTACK_DURATION_CH)));
         cursor.EmitDelegate<Func<float, float>>(x =>
         {
-            if (HasPower(out Charge charge) && charge.Active)
+            if (PowerRef.HasPower(out Charge charge) && charge.Active)
                 x *= 0.8f;
-            if (HasPower(out MercilessPursuit pursuit))
+            if (PowerRef.HasPower(out MercilessPursuit pursuit))
                 x -= Math.Min(pursuit.Stacks, 10) * 0.0124f;
             return x;
         });
@@ -900,9 +744,9 @@ public class CombatController : BaseController
         // 10 stacks should match quick slash.
         cursor.EmitDelegate<Func<float, float>>(x =>
         {
-            if (HasPower(out Charge charge) && charge.Active)
+            if (PowerRef.HasPower(out Charge charge) && charge.Active)
                 x *= 0.8f;
-            if (HasPower(out MercilessPursuit pursuit))
+            if (PowerRef.HasPower(out MercilessPursuit pursuit))
                 x -= Math.Min(pursuit.Stacks, 10) * 0.015f;
             return x;
         });
@@ -915,8 +759,8 @@ public class CombatController : BaseController
         try
         {
             isNailArtModifier = self.IsCorrectContext("damages_enemy", null, "Send Event") && (self.Fsm.GameObject.name == "Great Slash" || self.Fsm.GameObject.name == "Dash Slash")
-                && HasPower<Recklessness>(out _);
-            if (self.IsCorrectContext("damages_enemy", null, "Send Event") && HasPower(out BurstingSoul soul))
+                && PowerRef.HasPower<Recklessness>(out _);
+            if (self.IsCorrectContext("damages_enemy", null, "Send Event") && PowerRef.HasPower(out BurstingSoul soul))
             {
                 string gameObjectName = self.Fsm.GameObjectName;
                 string parentName = self.Fsm.GameObject.transform.parent?.name;
@@ -928,7 +772,7 @@ public class CombatController : BaseController
             }
             else if (isNailArtModifier)
                 self.DamageDealt.Value *= 5;
-            else if (self.IsCorrectContext("damages_enemy", "SuperDash Damage", "Send Event") && HasPower<ImprovedCrystalDash>(out _))
+            else if (self.IsCorrectContext("damages_enemy", "SuperDash Damage", "Send Event") && PowerRef.HasPower<ImprovedCrystalDash>(out _))
                 self.DamageDealt.Value += 20 + CombatLevel * 5;
         }
         catch (Exception ex)
@@ -952,41 +796,6 @@ public class CombatController : BaseController
         }
     }
 
-    private int ModifySoulGain(int amount)
-    {
-        try
-        {
-            amount = Math.Max(1, amount - 8 + SpiritLevel);
-            if (HasPower(out Versatility versatility) && versatility.CastedSpell)
-                amount += 2 + (SpiritLevel + CombatLevel) / 8;
-            if (HasPower(out Powers.Common.Caching caching))
-            {
-                int excessiveAmount = (PDHelper.MaxMP + PDHelper.MPReserveMax - PDHelper.MPCharge - PDHelper.MPReserve - amount) * -1;
-                if (excessiveAmount > 0 && RngManager.GetRandom(0, 50) <= SpiritLevel)
-                {
-                    if (caching.ActiveSoulCache != null)
-                        caching.ActiveSoulCache.GetComponent<SoulCache>().SoulAmount += excessiveAmount;
-                    else
-                    {
-                        caching.ActiveSoulCache = UnityEngine.Object.Instantiate(Powers.Common.Caching.SoulCache);
-                        caching.ActiveSoulCache.transform.position = HeroController.instance.transform.position;
-                        BoxCollider2D collider = caching.ActiveSoulCache.AddComponent<BoxCollider2D>();
-                        collider.size = new(1.4f, 1.4f);
-                        collider.isTrigger = true;
-                        caching.ActiveSoulCache.layer = 18;
-                        caching.ActiveSoulCache.AddComponent<SoulCache>().SoulAmount = excessiveAmount;
-                        caching.ActiveSoulCache.SetActive(true);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            LogManager.Log("Failed to modify soul gain", ex);
-        }
-        return amount;
-    }
-
     private void OnTakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject sourceObject, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
     {
         int currentHealth = PDHelper.Health;
@@ -1001,7 +810,7 @@ public class CombatController : BaseController
                 if (enemyObject != null && enemyObject.GetComponent<WeakenedEffect>())
                     damageAmount += WeakenedDamageFlag;
             }
-            else if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))
+            else if (damageAmount == InstaKillDamage && PowerRef.HasPower(out CheatDeath cheatDeath))
                 cheatDeath.Cooldown = 10;
         }
         catch (Exception ex)
@@ -1013,10 +822,10 @@ public class CombatController : BaseController
         {
             if (currentHealth != PDHelper.Health)
             {
-                if (HasPower(out FragileGreed greed) && greed.GreedActive
-                    || HasPower(out FragileSpirit spirit) && spirit.SpiritActive
-                    || HasPower(out FragileStrength strength) && strength.StrengthActive
-                    || HasPower(out Damocles damocles) && !damocles.Triggered)
+                if (PowerRef.HasPower(out FragileGreed greed) && greed.GreedActive
+                    || PowerRef.HasPower(out FragileSpirit spirit) && spirit.SpiritActive
+                    || PowerRef.HasPower(out FragileStrength strength) && strength.StrengthActive
+                    || PowerRef.HasPower(out Damocles damocles) && !damocles.Triggered)
                     HeroController.instance.proxyFSM.GetState("Flower?").GetFirstAction<ActivateGameObject>().gameObject.GameObject.Value.SetActive(true);
                 TookDamage?.Invoke();
             }
@@ -1027,26 +836,9 @@ public class CombatController : BaseController
         }
     }
 
-    private void ModifyGeoAdd(On.HeroController.orig_AddGeo orig, HeroController self, int amount)
-    {
-        try
-        {
-            if (HasPower(out FragileGreed greed) && greed.GreedActive)
-                amount *= 3;
-            // Greed works differently and should overwrite Interest.
-            if (HasPower<Interest>(out _))
-                amount = Mathf.FloorToInt(amount * 1.2f);
-        }
-        catch (Exception ex)
-        {
-            LogManager.Log("Failed to modify geo gain.", ex);
-        }
-        orig(self, amount);
-    }
-
     private IEnumerator OnPlayerDeath(On.HeroController.orig_Die orig, HeroController self)
     {
-        if (!HasPower(out CheatDeath cheatDeath) || cheatDeath.Cooldown != 0 && RngManager.GetRandom(1, 21) >= EnduranceLevel + 1)
+        if (!PowerRef.HasPower(out CheatDeath cheatDeath) || cheatDeath.Cooldown != 0 && RngManager.GetRandom(1, 21) >= EnduranceLevel + 1)
             yield return orig(self);
         else
         {
@@ -1061,7 +853,7 @@ public class CombatController : BaseController
     {
         if (damageAmount != InstaKillDamage && damageAmount != 0)
         {
-            if (HasPower(out PaleShell shell) && shell.Shielded)
+            if (PowerRef.HasPower(out PaleShell shell) && shell.Shielded)
             {
                 shell.Shielded = false;
                 return 0;
@@ -1083,20 +875,20 @@ public class CombatController : BaseController
             {
                 // Hazard scaling
                 damageAmount += StageRef.CurrentRoomNumber / 10;
-                if (HasPower<ImprovedCaringShell>(out _))
+                if (PowerRef.HasPower<ImprovedCaringShell>(out _))
                 {
                     if (!InCombat)
                         damageAmount = 0;
                     else
                         damageAmount -= 2 + EnduranceLevel / 5;
                 }
-                else if (HasPower<CaringShell>(out _))
+                else if (PowerRef.HasPower<CaringShell>(out _))
                     damageAmount -= 1 + EnduranceLevel / 8;
                 if (damageAmount == 0)
                     return 0;
             }
 
-            if (HasPower<AchillesHeel>(out _))
+            if (PowerRef.HasPower<AchillesHeel>(out _))
             {
                 if (hazardType > 1 && hazardType < 5)
                     damageAmount = InstaKillDamage;
@@ -1106,21 +898,21 @@ public class CombatController : BaseController
 
             if (damageAmount != InstaKillDamage)
             {
-                if (HasPower<Sturdy>(out _))
+                if (PowerRef.HasPower<Sturdy>(out _))
                     damageAmount = damageAmount.LowerPositive(1);
 
-                if (HasPower<ShiningBound>(out _))
+                if (PowerRef.HasPower<ShiningBound>(out _))
                     damageAmount = Mathf.CeilToInt(damageAmount / 2f);
 
                 if (isWeakenedDamage)
-                    damageAmount = Mathf.FloorToInt(damageAmount * (DebuffsStronger ? 0.3f : 0.6f));
+                    damageAmount = Mathf.FloorToInt(damageAmount * (PowerRef.DebuffsStronger ? 0.3f : 0.6f));
             }
         }
         // Prevent cheat death from triggering on instant kill effects.
-        if (damageAmount == InstaKillDamage && HasPower(out CheatDeath cheatDeath))
+        if (damageAmount == InstaKillDamage && PowerRef.HasPower(out CheatDeath cheatDeath))
             cheatDeath.Cooldown = 10;
         return damageAmount;
-    }
+    } 
 
     #endregion
 
@@ -1129,10 +921,6 @@ public class CombatController : BaseController
         entry.FinalCombatLevel = CombatLevel;
         entry.FinalSpiritLevel = SpiritLevel;
         entry.FinalEnduranceLevel = EnduranceLevel;
-        entry.CommonPowerAmount = ObtainedPowers.Count(x => x.Tier == Rarity.Common);
-        entry.UncommonPowerAmount = ObtainedPowers.Count(x => x.Tier == Rarity.Uncommon);
-        entry.RarePowerAmount = ObtainedPowers.Count(x => x.Tier == Rarity.Rare);
-        entry.Powers = [.. ObtainedPowers.Select(x => x.Name)];
     }
 
     private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
@@ -1272,6 +1060,8 @@ public class CombatController : BaseController
             LogManager.Log("Failed to set spell damage.", ex);
         }
     }
+
+    #endregion
 
     private int GetSpellDamage(int damage, bool levelTwo)
     {

@@ -47,5 +47,10 @@ public static class ControllerShorthands
     /// </summary>
     public static InventoryController InventoryRef => PhaseManager.GetController<InventoryController>();
 
+    /// <summary>
+    /// Shorthand to <see cref="PowerController"/>.
+    /// </summary>
+    public static PowerController PowerRef => PhaseManager.GetController<PowerController>();
+
     #endregion
 }

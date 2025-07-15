@@ -15,7 +15,7 @@ internal class NailmastersGlory : Power
 
     public override DraftPool Pools => DraftPool.Charm | DraftPool.Combat | DraftPool.Upgrade | DraftPool.Ability;
 
-    public override bool CanAppear => !HasPower<ShiningBound>() && CombatRef.HasNailArt();
+    public override bool CanAppear => !HasPower<ShiningBound>() && PowerRef.HasNailArt();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

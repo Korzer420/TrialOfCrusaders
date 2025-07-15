@@ -16,7 +16,7 @@ internal class DreamWielder : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Upgrade | DraftPool.Charm | DraftPool.Ability;
 
-    public override bool CanAppear => CombatRef.HasPower<DreamNail>(out _) && !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => PowerRef.HasPower<DreamNail>(out _) && !PowerRef.HasPower<ShiningBound>(out _);
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

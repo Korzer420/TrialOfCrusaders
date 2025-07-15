@@ -8,7 +8,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class Desperation : Power
 {
-    public override bool CanAppear => !CombatRef.HasPower<InUtterDarkness>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<InUtterDarkness>(out _);
 
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 

@@ -11,7 +11,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class SoulCatcher : Power
 {
-    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
@@ -21,7 +21,7 @@ internal class SoulCatcher : Power
 
     protected override void Enable()
     {
-        if (!CombatRef.HasPower<SoulEater>(out _))
+        if (!PowerRef.HasPower<SoulEater>(out _))
             CharmHelper.EnsureEquipCharm(CharmRef.SoulCatcher);
     }
 

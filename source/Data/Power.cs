@@ -117,6 +117,8 @@ public abstract class Power : IEquatable<Power>
 
     protected static ScoreController ScoreRef => ControllerShorthands.ScoreRef;
 
+    protected static PowerController PowerRef => ControllerShorthands.PowerRef;
+
     #endregion
 
     #region Methods
@@ -181,7 +183,7 @@ public abstract class Power : IEquatable<Power>
     /// </summary>
     protected void StopRoutine(Coroutine coroutine) => TrialOfCrusaders.Holder.StopCoroutine(coroutine);
 
-    protected bool HasPower<T>() where T : Power => CombatRef.HasPower<T>(out _);
+    protected bool HasPower<T>() where T : Power => PowerRef.HasPower<T>(out _);
 
     #endregion
 

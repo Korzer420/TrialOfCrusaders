@@ -9,7 +9,7 @@ internal class SpellProdigy : Power
 {
     private bool _nailUsed;
 
-    public override bool CanAppear => CombatRef.HasSpell() && !CombatRef.SpiritCapped;
+    public override bool CanAppear => PowerRef.HasSpell() && !CombatRef.SpiritCapped;
 
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 

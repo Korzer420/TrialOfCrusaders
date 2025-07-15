@@ -16,6 +16,9 @@ using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
 using Caching = TrialOfCrusaders.Powers.Common.Caching;
 using static TrialOfCrusaders.ControllerShorthands;
+using MonoMod.Cil;
+using System;
+using Mono.Cecil.Cil;
 
 namespace TrialOfCrusaders;
 
@@ -86,10 +89,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
         SaveManager.CurrentSaveData = saveData;
-        SecretRef.UnlockedSecretArchive = saveData?.UnlockedSecretArchive ?? false;
-        SecretRef.UnlockedToughness = saveData?.UnlockedToughness ?? false;
-        SecretRef.UnlockedStashedContraband = saveData?.UnlockedContraband ?? false;
-        SecretRef.UnlockedHighRoller = saveData?.UnlockedHighRoller ?? false;
         if (PhaseManager.CurrentPhase == Enums.Phase.Listening)
         {
             if (saveData != null)
@@ -104,15 +103,6 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         if (PhaseManager.CurrentPhase == Enums.Phase.Inactive || PhaseManager.CurrentPhase == Enums.Phase.Listening)
             return null;
         PhaseManager.CollectSaveData(SaveManager.CurrentSaveData);
-        //LocalSaveData saveData = new() 
-        //{ 
-        //    OldRunData = HistoryRef.History,
-        //    Archive = HistoryRef.Archive,
-        //    UnlockedContraband = SecretRef.UnlockedStashedContraband,
-        //    UnlockedHighRoller = SecretRef.UnlockedHighRoller,
-        //    UnlockedToughness = SecretRef.UnlockedToughness,
-        //    UnlockedSecretArchive = SecretRef.UnlockedSecretArchive,
-        //};
         if (PhaseManager.CurrentPhase == Enums.Phase.WaitForSave)
             PhaseManager.TransitionTo(Enums.Phase.Inactive);
         return SaveManager.CurrentSaveData;

@@ -10,7 +10,7 @@ internal class ChannelledEnergy : Power
 {
     public override DraftPool Pools => DraftPool.Endurance | DraftPool.Instant;
     
-    public override bool CanAppear => !CombatRef.HasPower<InUtterDarkness>(out _) && (CombatRef.CombatLevel + CombatRef.SpiritLevel + CombatRef.EnduranceLevel) > 0;
+    public override bool CanAppear => !PowerRef.HasPower<InUtterDarkness>(out _) && (CombatRef.CombatLevel + CombatRef.SpiritLevel + CombatRef.EnduranceLevel) > 0;
 
     public bool Activated { get; set; }
 

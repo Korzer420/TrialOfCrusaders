@@ -9,7 +9,7 @@ internal class Cocoon : Power
 {
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    public override bool CanAppear => !CombatRef.HasPower<InUtterDarkness>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<InUtterDarkness>(out _);
 
     public override DraftPool Pools => (DraftPool)((int)DraftPool.Retain * 2 - 1); // All pools
 

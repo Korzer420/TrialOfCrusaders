@@ -11,7 +11,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class Longnail : Power
 {
-    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(7.5f, 0f, 2.5f);
 
@@ -21,7 +21,7 @@ internal class Longnail : Power
 
     protected override void Enable()
     { 
-        if (!CombatRef.HasPower<MarkOfPride>(out _))
+        if (!PowerRef.HasPower<MarkOfPride>(out _))
             CharmHelper.EnsureEquipCharm(CharmRef.Longnail);
     }
 

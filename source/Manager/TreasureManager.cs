@@ -187,6 +187,7 @@ public static class TreasureManager
         new ShiningBound(),
         new Mediocracy(),
         new WaywardCompass(),
+        new Banish(),
         new VoidHeart(),
     ];
 
@@ -398,7 +399,7 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Vengeful_Spirit_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_FIREBALL1";
                     Power fireball = Powers.First(x => x.GetType() == typeof(VengefulSpirit));
-                    CombatRef.ObtainedPowers.Add(fireball);
+                    PowerRef.ObtainedPowers.Add(fireball);
                     fireball.EnablePower();
                     StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
@@ -407,7 +408,7 @@ public static class TreasureManager
                     fsm.GetState("Trink 1").GetFirstAction<SetSpriteRendererSprite>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Icons.Desolate_Dive_Icon");
                     fsm.GetState("Trink 1").GetFirstAction<GetLanguageString>().convName.Value = "INV_NAME_SPELL_QUAKE1";
                     Power quake = Powers.First(x => x.GetType() == typeof(DesolateDive));
-                    CombatRef.ObtainedPowers.Add(quake);
+                    PowerRef.ObtainedPowers.Add(quake);
                     quake.EnablePower();
                     StageRef.EnableExit();
                     fsm.SendEvent("TRINKET");
@@ -471,7 +472,7 @@ public static class TreasureManager
             List<Power> selectedPowers = [];
             List<string> statBoni = [];
             List<string> availablePowerNames = [.. Powers.Where(x => x.CanAppear).Select(x => x.Name)];
-            List<string> obtainedPowerNames = [.. CombatRef.ObtainedPowers.Select(x => x.Name)];
+            List<string> obtainedPowerNames = [.. PowerRef.ObtainedPowers.Select(x => x.Name)];
             availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
             List<Power> availablePowers = [];
             foreach (string powerName in availablePowerNames)
@@ -506,18 +507,18 @@ public static class TreasureManager
                         continue;
                     }
                     // Force treasure test code.
-                    //if (i == 0)
-                    //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(DreamPortal)));
+                    if (i == 0)
+                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Banish)));
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
-                    //else
+                    else
                         selectedPowers.Add(powerPool[RngManager.GetRandom(0, powerPool.Count - 1)]);
                 }
                 availablePowers.Remove(selectedPowers.Last());
                 Power selectedPower = selectedPowers.Last();
                 (float, float, float) bonusChances = selectedPower.BonusRates;
                 int rolledBonus = RngManager.GetRandom(1, 100);
-                if (selectedPower.Tier != Rarity.Rare && CombatRef.HasPower<LuckyCharm>(out _))
+                if (selectedPower.Tier != Rarity.Rare && PowerRef.HasPower<LuckyCharm>(out _))
                     bonusChances = new(bonusChances.Item1 * 1.5f, bonusChances.Item2 * 1.5f, bonusChances.Item3 * 2);
                 if (rolledBonus <= bonusChances.Item1 && !CombatRef.CombatCapped)
                     statBoni.Add("Combat");
@@ -695,7 +696,7 @@ public static class TreasureManager
         descriptionObject.Item2.transform.SetParent(option.transform);
         UnityEngine.Object.Destroy(descriptionObject.Item1.gameObject);
         TextMeshPro description = descriptionObject.Item2;
-        description.textContainer.size = new(2.5f, 5f);
+        description.textContainer.size = new(3f, 5f);
         description.alignment = TextAlignmentOptions.Center;
         description.fontSize = 2f;
         description.enableWordWrapping = true;
@@ -944,7 +945,7 @@ public static class TreasureManager
                 }
             if (pickedPower != null)
             {
-                CombatRef.ObtainedPowers.Add(pickedPower);
+                PowerRef.ObtainedPowers.Add(pickedPower);
                 pickedPower.EnablePower();
                 PowerSelected?.Invoke(pickedPower);
             }

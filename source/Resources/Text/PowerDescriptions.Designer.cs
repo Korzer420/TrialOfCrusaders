@@ -1121,5 +1121,14 @@ namespace TrialOfCrusaders.Resources.Text {
                 return ResourceManager.GetString("Weaversong", resourceCulture);
             }
         }
+		
+		/// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spawns weavers that assist you in battle. ähnelt.
+        /// </summary>
+        internal static string Banish {
+            get {
+                return ResourceManager.GetString("Banish", resourceCulture);
+            }
+        }
     }
 }

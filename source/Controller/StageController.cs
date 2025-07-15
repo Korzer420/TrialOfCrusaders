@@ -272,8 +272,8 @@ public class StageController : BaseController
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-                        info.SceneName = "GG_Engine_Prime";
-                        QuietRoom = true;
+                        //info.SceneName = "GG_Engine_Prime";
+                        //QuietRoom = true;
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
@@ -307,9 +307,9 @@ public class StageController : BaseController
                                 treasureChance += 3f;
                             }
 
-                            if (CombatRef.HasPower<Damocles>(out _))
+                            if (PowerRef.HasPower<Damocles>(out _))
                                 treasureChance += 10f;
-                            if (CombatRef.HasPower<TreasureHunter>(out _))
+                            if (PowerRef.HasPower<TreasureHunter>(out _))
                                 treasureChance += 5f;
 
                             float rolled = RngManager.GetRandom(0f, 100f);
@@ -396,7 +396,7 @@ public class StageController : BaseController
             _roomCounter.text = GameManager.instance.sceneName == "GG_Engine" 
                 ? "Treasure room"
                 : "Shop";
-        if (!CombatRef.HasPower<DreamNail>(out _)
+        if (!PowerRef.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
     }

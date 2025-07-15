@@ -23,7 +23,7 @@ internal class BleedEffect : MonoBehaviour
             Destroy(this);
         if (_leftDuration != 5f && !_enemy.IsInvincible && ((int)_leftDuration != (int)(_leftDuration - Time.deltaTime) || _leftDuration - Time.deltaTime <= 0f)
             && _enemy != null && _enemy.hp > 0)
-            _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage / (CombatRef.DebuffsStronger ? 1 : 2)));
+            _enemy.ApplyExtraDamage(Mathf.Max(1, PDHelper.NailDamage / (PowerRef.DebuffsStronger ? 1 : 2)));
         _leftDuration -= Time.deltaTime;
         _animationTimer -= Time.deltaTime;
         if (_animationTimer <= 0f)

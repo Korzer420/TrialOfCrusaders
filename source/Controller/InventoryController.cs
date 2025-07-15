@@ -285,14 +285,14 @@ public class InventoryController : BaseController
             int index = fsm.FsmVariables.FindFsmInt("PowerIndex").Value;
             int powerIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
             ElementLookup[PowerListUp].Item1.gameObject.SetActive(powerIndex != 0);
-            ElementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < CombatRef.ObtainedPowers.Count);
+            ElementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < PowerRef.ObtainedPowers.Count);
             index = powerIndex + index;
-            if (index >= CombatRef.ObtainedPowers.Count)
+            if (index >= PowerRef.ObtainedPowers.Count)
                 LogManager.Log("Indexed power slot out of range.", KorzUtils.Enums.LogType.Error);
             else
             {
                 ElementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f - (index - powerIndex) * 1.5f);
-                Power selectedPower = CombatRef.ObtainedPowers[index];
+                Power selectedPower = PowerRef.ObtainedPowers[index];
                 ElementLookup[PowerName].Item2.text = selectedPower.Name;
                 ElementLookup[PowerDescription].Item2.text = selectedPower.Description;
                 ElementLookup[PowerRarity].Item2.text = selectedPower.Tier switch
@@ -357,7 +357,7 @@ public class InventoryController : BaseController
 
         fsm.AddState("Check from left", () =>
         {
-            if (CombatRef.ObtainedPowers.Count == 0)
+            if (PowerRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI RIGHT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
@@ -367,7 +367,7 @@ public class InventoryController : BaseController
 
         fsm.AddState("Check from right", () =>
         {
-            if (CombatRef.ObtainedPowers.Count == 0)
+            if (PowerRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI LEFT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
@@ -396,13 +396,13 @@ public class InventoryController : BaseController
             int currentFirstIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
             if (currentIndex < 3)
             {
-                if (currentIndex + 1 >= CombatRef.ObtainedPowers.Count)
+                if (currentIndex + 1 >= PowerRef.ObtainedPowers.Count)
                     return;
                 fsm.FsmVariables.FindFsmInt("PowerIndex").Value++;
             }
             else
             {
-                if (currentFirstIndex >= CombatRef.ObtainedPowers.Count - 4)
+                if (currentFirstIndex >= PowerRef.ObtainedPowers.Count - 4)
                     return;
                 currentFirstIndex++;
                 UpdateList(currentFirstIndex);
@@ -431,9 +431,9 @@ public class InventoryController : BaseController
         ];
         for (int i = 0; i < 4; i++)
         {
-            if (firstPowerIndex + i >= CombatRef.ObtainedPowers.Count)
+            if (firstPowerIndex + i >= PowerRef.ObtainedPowers.Count)
                 break;
-            ElementLookup[elementNames[i]].Item2.text = CombatRef.ObtainedPowers[firstPowerIndex + i].Name;
+            ElementLookup[elementNames[i]].Item2.text = PowerRef.ObtainedPowers[firstPowerIndex + i].Name;
         }
     }
 

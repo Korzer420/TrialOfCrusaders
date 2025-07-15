@@ -398,7 +398,7 @@ internal class ShopStock : MonoBehaviour
                 Power pickedPower = TreasureManager.Powers.First(x => x.GetType().Name == SelectedItemName);
                 if (pickedPower.CanAppear)
                 {
-                    CombatRef.ObtainedPowers.Add(pickedPower);
+                    PowerRef.ObtainedPowers.Add(pickedPower);
                     pickedPower.EnablePower();
                 }
             }
@@ -412,7 +412,7 @@ internal class ShopStock : MonoBehaviour
     private void GenerateStock(bool restock = false)
     {
         // Create a copy for availability purposes.
-        List<Power> obtainedPowers = [.. CombatRef.ObtainedPowers];
+        List<Power> obtainedPowers = [.. PowerRef.ObtainedPowers];
         try
         {
             List<Power> shopPowers = [];
@@ -458,12 +458,12 @@ internal class ShopStock : MonoBehaviour
                         // Are not reliant on another power in the shop.
                         if (shopPowers.Count > 0)
                         {
-                            CombatRef.ObtainedPowers.AddRange(shopPowers);
+                            PowerRef.ObtainedPowers.AddRange(shopPowers);
                             bool canAppear = power.CanAppear;
-                            CombatRef.ObtainedPowers.Add(power);
+                            PowerRef.ObtainedPowers.Add(power);
                             canAppear = shopPowers.All(x => x.CanAppear);
                             // Reset powers
-                            CombatRef.ObtainedPowers = [.. obtainedPowers];
+                            PowerRef.ObtainedPowers = [.. obtainedPowers];
                             if (!canAppear)
                                 continue;
                         }
@@ -568,7 +568,7 @@ internal class ShopStock : MonoBehaviour
         }
         finally
         {
-            CombatRef.ObtainedPowers = obtainedPowers;
+            PowerRef.ObtainedPowers = obtainedPowers;
         }
     }
 }

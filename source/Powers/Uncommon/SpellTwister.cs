@@ -16,7 +16,7 @@ internal class SpellTwister : Power
 
     public override DraftPool Pools => DraftPool.Upgrade | DraftPool.Charm | DraftPool.Spirit;
 
-    public override bool CanAppear => !HasPower<ShiningBound>() && CombatRef.HasSpell();
+    public override bool CanAppear => !HasPower<ShiningBound>() && PowerRef.HasSpell();
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

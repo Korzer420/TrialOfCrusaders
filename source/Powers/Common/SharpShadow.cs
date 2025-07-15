@@ -10,7 +10,7 @@ namespace TrialOfCrusaders.Powers.Common;
 
 internal class SharpShadow : Power
 {
-    public override bool CanAppear => PDHelper.HasShadowDash && !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => PDHelper.HasShadowDash && !PowerRef.HasPower<ShiningBound>(out _);
 
     public override (float, float, float) BonusRates => new(5f, 0f, 5f);
 

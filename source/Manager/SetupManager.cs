@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
+using TrialOfCrusaders.Powers.Rare;
 using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Manager;
@@ -174,7 +175,7 @@ internal static class SetupManager
     {
         // Add each normal room 5 times so each one has the same probability regardless of available entrances.
         // For bosses we only take two (although they only can appear once).
-        return [..StageRef.LoadRoomData()
+        List<RoomData> rooms = [..StageRef.LoadRoomData()
                 .SelectMany(x =>
         {
             if (x.BossRoom)
@@ -201,6 +202,18 @@ internal static class SetupManager
                     });
             return roomCopies;
         })];
+        // Special case: Remove all copies of the banished scene.
+        if (SaveManager.CurrentSaveData.RetainData.TryGetValue("Banish", out string banishedScene))
+            if (banishedScene != null)
+                for (int i = 0; i < rooms.Count; i++)
+                    if (rooms[i].Name == banishedScene)
+                    {
+                        rooms.RemoveAt(i);
+                        i--;
+                    }
+        foreach (var room in rooms)
+            LogManager.Log("Room name: " + room.Name);
+        return rooms;
     }
 
     private static Dictionary<int, Progress> RollAbilityRooms(GameMode gameMode)

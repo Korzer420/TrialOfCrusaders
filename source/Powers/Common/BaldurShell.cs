@@ -12,7 +12,7 @@ internal class BaldurShell : Power
 {
     public override (float, float, float) BonusRates => new(0f, 0f, 10f);
 
-    public override bool CanAppear => !CombatRef.HasPower<ShiningBound>(out _);
+    public override bool CanAppear => !PowerRef.HasPower<ShiningBound>(out _);
 
     public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 

@@ -23,7 +23,7 @@ internal class EchoingScream : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability | DraftPool.Upgrade;
 
-    public override bool CanAppear => CombatRef.HasPower<HowlingWraiths>(out _);
+    public override bool CanAppear => PowerRef.HasPower<HowlingWraiths>(out _);
 
     public GameObject Scream
     {

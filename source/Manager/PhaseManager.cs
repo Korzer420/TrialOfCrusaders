@@ -8,7 +8,6 @@ using System.Linq;
 using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.SaveData;
-using UnityEngine;
 using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Manager;
@@ -28,7 +27,8 @@ public static class PhaseManager
         new ScoreController(),
         new SecretController(),
         new SpawnController(),
-        new StageController()
+        new StageController(),
+        new PowerController()
     ];
 
     public delegate void PhaseChange(Phase currentPhase, Phase newPhase);
@@ -134,6 +134,7 @@ public static class PhaseManager
 
     private static IEnumerator UIManager_ReturnToMainMenu(On.UIManager.orig_ReturnToMainMenu orig, UIManager self)
     {
+        LogManager.Log("Return to menu");
         if (CurrentPhase != Phase.Inactive)
             TransitionTo(Phase.WaitForSave);
         yield return orig(self);

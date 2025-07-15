@@ -13,7 +13,7 @@ internal class WeakenedHusk : Power
 {
     public override (float, float, float) BonusRates => new(0f, 10f, 0f);
 
-    public override bool CanAppear => CombatRef.HasSpell();
+    public override bool CanAppear => PowerRef.HasSpell();
 
     public override StatScaling Scaling => StatScaling.Spirit;
 
