@@ -8,6 +8,7 @@ using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
+using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.Resources.Text;
 using UnityEngine;
 using static TrialOfCrusaders.ControllerShorthands;
@@ -430,7 +431,8 @@ internal class ShopStock : MonoBehaviour
             availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
             List<Power> availablePowers = [];
             foreach (string powerName in availablePowerNames)
-                availablePowers.Add(TreasureManager.Powers.First(x => x.Name == powerName));
+                if (powerName != "Discount") // Discount is not available in shops.
+                    availablePowers.Add(TreasureManager.Powers.First(x => x.Name == powerName));
 
             for (int i = 1; i <= stockAmount; i++)
             {
@@ -561,6 +563,9 @@ internal class ShopStock : MonoBehaviour
             if (restock)
                 for (int i = 1; i <= stockAmount; i++)
                     _elementLookup["Stock Price " + i].transform.parent.parent.GetComponent<SpriteRenderer>().sprite = GenerateSprite(i);
+            else if (PowerRef.HasPower<Discount>(out _))
+                for (int i = 0; i < stockAmount; i++)
+                    _stock[i] = new(_stock[i].Item1, Mathf.CeilToInt(_stock[i].Item2 * 0.7f), StockState.Cheaper);
         }
         catch (Exception ex)
         {

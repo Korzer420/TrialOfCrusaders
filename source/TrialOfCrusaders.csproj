@@ -103,6 +103,11 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>LobbyDialog.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Resources\Text\PowerDescriptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Text\SecretText.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -137,6 +142,15 @@
 	  <EmbeddedResource Update="Resources\Text\LobbyDialog.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>LobbyDialog.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>PowerDescriptions.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Text\SecretText.Designer.cs">
 	    <DesignTime>True</DesignTime>

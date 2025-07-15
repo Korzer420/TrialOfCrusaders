@@ -211,8 +211,6 @@ internal static class SetupManager
                         rooms.RemoveAt(i);
                         i--;
                     }
-        foreach (var room in rooms)
-            LogManager.Log("Room name: " + room.Name);
         return rooms;
     }
 

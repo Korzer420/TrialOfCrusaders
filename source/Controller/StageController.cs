@@ -255,7 +255,9 @@ public class StageController : BaseController
                 {
                     if (UpcomingTreasureRoom || UpcomingShop)
                     {
-                        info.SceneName = "GG_Engine";
+                        info.SceneName = UpcomingShop 
+                            ? "GG_Engine_Prime"
+                            : "GG_Engine";
                         QuietRoom = true;
                         UpcomingTreasureRoom = false;
                         UpcomingShop = false;
@@ -272,15 +274,15 @@ public class StageController : BaseController
                             info.SceneName = "GG_Engine";
                         else
                             info.SceneName = CurrentRoomData[CurrentRoomIndex].Name;
-                        //info.SceneName = "GG_Engine_Prime";
-                        //QuietRoom = true;
                     }
 
                     if (QuietRoom || CurrentRoomData[CurrentRoomIndex].BossRoom)
                         info.EntryGateName = "door_dreamEnter";
                     else
                         info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
-                    
+
+                    LogManager.Log("To Scene name: " + info.SceneName);
+
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom || CurrentRoom.BossRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom || CurrentRoom.BossRoom;
@@ -350,7 +352,7 @@ public class StageController : BaseController
                     gate.PlaceCollider();
             }, true);
         }
-        if (QuietRoom || UpcomingTreasureRoom || (CurrentRoomIndex - 1 < CurrentRoomData.Count - 2 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)))
+        if (QuietRoom || UpcomingTreasureRoom || UpcomingShop || (CurrentRoomIndex - 1 < CurrentRoomData.Count - 2 && (CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)))
         {
             if (self.isADoor)
                 return;
@@ -358,6 +360,16 @@ public class StageController : BaseController
             SpecialTransition transition = transitionObject.AddComponent<SpecialTransition>();
             transition.LoadIntoDream = CurrentRoomData[CurrentRoomIndex + 1].BossRoom || CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom;
             transition.VanillaTransition = self;
+
+            if (QuietRoom && self.gameObject.scene.name == "GG_Engine")
+            {
+                TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoom.Name);
+                if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0
+                    || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)
+                    transition.WaitForItem = false;
+                else
+                    transition.WaitForItem = true;
+            }
             _specialTransitions.Add(transition);
         }
     }
@@ -606,7 +618,7 @@ public class StageController : BaseController
     public void SceneAdjustments(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "GG_Engine")
-            TreasureManager.PrepareTreasureRoom(CurrentRoom, _specialTransitions.Last());
+            TreasureManager.PrepareTreasureRoom(CurrentRoom);
         else if (arg1.name == "GG_Engine_Prime")
             ShopManager.PrepareShopScene();
         else if (arg1.name == "Ruins1_05")

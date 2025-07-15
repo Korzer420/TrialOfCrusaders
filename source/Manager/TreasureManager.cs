@@ -188,6 +188,7 @@ public static class TreasureManager
         new Mediocracy(),
         new WaywardCompass(),
         new Banish(),
+        new Discount(),
         new VoidHeart(),
     ];
 
@@ -218,7 +219,7 @@ public static class TreasureManager
         GameObject.DontDestroyOnLoad(BigItemUI);
     }
 
-    internal static void PrepareTreasureRoom(RoomData currentRoom, SpecialTransition exitTransition)
+    internal static void PrepareTreasureRoom(RoomData currentRoom)
     {
         UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
         GameObject pedestal = new("Pedestal");
@@ -241,12 +242,9 @@ public static class TreasureManager
                     TreasureManager.SpawnShiny(TreasureType.RareOrb, new(94.23f, 16.4f), false);
                     return;
                 }
-                else
-                    exitTransition.WaitForItem = true;
             }
-            else
-                exitTransition.WaitForItem = true;
-            TreasureManager.SpawnShiny((TreasureType)Enum.Parse(typeof(TreasureType), currentRoom.Name), new(94.23f, 16.4f), false);
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Engine")
+                TreasureManager.SpawnShiny((TreasureType)Enum.Parse(typeof(TreasureType), currentRoom.Name), new(94.23f, 16.4f), false);
         }
     }
 
@@ -508,7 +506,7 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     if (i == 0)
-                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Banish)));
+                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Discount)));
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
                     else

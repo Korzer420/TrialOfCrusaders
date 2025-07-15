@@ -129,6 +129,9 @@
   <data name="BaldurShell" xml:space="preserve">
     <value>Grants a shield while focusing.</value>
   </data>
+  <data name="Banish" xml:space="preserve">
+    <value>Holding the quick map button for 5 seconds will PERMANENTLY remove the current room from the room selection. Can only be used once per run. Trying to banish a room while another is already banished will replace it instead.</value>
+  </data>
   <data name="BindingCircle" xml:space="preserve">
     <value>Hitting an enemy with the dream nail can root them shortly.</value>
   </data>
@@ -195,8 +198,8 @@
   <data name="Desperation" xml:space="preserve">
     <value>Focus speed increases with missing health.</value>
   </data>
-  <data name="IntimidatingShout" xml:space="preserve">
-    <value>Entering a room applies weakened to all enemies.</value>
+  <data name="Discount" xml:space="preserve">
+    <value>Shops prices are reduced by 30%.</value>
   </data>
   <data name="DreamNail" xml:space="preserve">
     <value>Unlocks the dream nail to gather soul from hit foes.</value>
@@ -339,6 +342,9 @@
   <data name="Interest" xml:space="preserve">
     <value>Geo value is slightly increased.</value>
   </data>
+  <data name="IntimidatingShout" xml:space="preserve">
+    <value>Entering a room applies weakened to all enemies.</value>
+  </data>
   <data name="InUtterDarkness" xml:space="preserve">
     <value>Fully heals you. You can no longer heal. Focus now spawns a shade which afflicts debuffs.</value>
   </data>
@@ -356,6 +362,9 @@
   </data>
   <data name="MarkOfPride" xml:space="preserve">
     <value>Increases the nail range significantly. Overwrites Longnail.</value>
+  </data>
+  <data name="Mediocracy" xml:space="preserve">
+    <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
   </data>
   <data name="MercilessPursuit" xml:space="preserve">
     <value>Attacks in the same direction within half a second grant stacking attack speed.</value>
@@ -468,19 +477,13 @@
   <data name="Versatility" xml:space="preserve">
     <value>The first nail hit after casting a spell grants bonus soul.</value>
   </data>
+  <data name="WaywardCompass" xml:space="preserve">
+    <value>While in combat, points to the nearest required enemy.</value>
+  </data>
   <data name="WeakenedHusk" xml:space="preserve">
     <value>Enemies hit by spells are sometimes inflicted with shattered mind.</value>
   </data>
   <data name="Weaversong" xml:space="preserve">
     <value>Spawns weavers that assist you in battle.</value>
-  </data>
-  <data name="Mediocracy" xml:space="preserve">
-    <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
-  </data>
-  <data name="WaywardCompass" xml:space="preserve">
-    <value>While in combat, points to the nearest required enemy.</value>
-  </data>
-  <data name="Banish" xml:space="preserve">
-    <value>Holding the quick map button for 5 seconds will PERMANENTLY remove the current room from the room selection. Can only be used once per run. Trying to banish a room while another is already banished will replace it instead.</value>
   </data>
 </root>
