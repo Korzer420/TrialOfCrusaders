@@ -162,6 +162,9 @@
   <data name="Cocoon" xml:space="preserve">
     <value>Grants 6 lifeblood. This power is in all draft pools.</value>
   </data>
+  <data name="Credit" xml:space="preserve">
+    <value>Instantly grants 1000 geo. The next 1000 geo you obtain will be used to pay off your debt. If you don't pay off your debt by the time you reach the final boss... you'll die instantly.</value>
+  </data>
   <data name="CullTheWeak" xml:space="preserve">
     <value>Status effects are stronger. Doesn't apply to shattered mind.</value>
   </data>
@@ -223,7 +226,7 @@
     <value>Increases your movement speed while recovering from a hit.</value>
   </data>
   <data name="Fade" xml:space="preserve">
-    <value>After standing still for 5 second you no longer take damage. Breaks on any action.</value>
+    <value>After standing still for 5 second you no longer take damage. Breaks on any action. Doesn't work in Boss rooms.</value>
   </data>
   <data name="FragileGreed" xml:space="preserve">
     <value>Geo is 200% more worth. No longer works upon taking damage.</value>
@@ -422,6 +425,9 @@
   </data>
   <data name="ShapeOfUnn" xml:space="preserve">
     <value>Focus can be casted while moving on the ground.</value>
+  </data>
+  <data name="SharedFood" xml:space="preserve">
+    <value>Entering a shop restores 5 masks.</value>
   </data>
   <data name="SharpShadow" xml:space="preserve">
     <value>Your shade dash is extended and deals damage.</value>

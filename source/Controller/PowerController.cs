@@ -224,9 +224,24 @@ public class PowerController : BaseController, ISaveData
         {
             if (HasPower(out FragileGreed greed) && greed.GreedActive)
                 amount *= 3;
-            // Greed works differently and should overwrite Interest.
             if (HasPower<Interest>(out _))
                 amount = Mathf.FloorToInt(amount * 1.2f);
+            if (HasPower(out Credit credit) && credit.LeftCredit > 0)
+            {
+                if (credit.LeftCredit - amount < 0)
+                {
+                    int excessiveAmount = credit.LeftCredit - amount;
+                    credit.LeftCredit = 0;
+                    // Since the amount is negative, addition is fine.
+                    amount += excessiveAmount;
+                    GameHelper.DisplayMessage("You're credit free!");
+                }
+                else
+                { 
+                    credit.LeftCredit -= amount;
+                    amount = 0;
+                }
+            }
         }
         catch (Exception ex)
         {

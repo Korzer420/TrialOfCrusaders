@@ -196,6 +196,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Instantly grants 1000 geo. The next 1000 geo you obtain will be used to pay off your debt. If you don&apos;t pay off your debt by the time you reach the final boss... you&apos;ll die instantly. ähnelt.
+        /// </summary>
+        internal static string Credit {
+            get {
+                return ResourceManager.GetString("Credit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Status effects are stronger. Doesn&apos;t apply to shattered mind. ähnelt.
         /// </summary>
         internal static string CullTheWeak {
@@ -376,7 +385,7 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die After standing still for 5 second you no longer take damage. Breaks on any action. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die After standing still for 5 second you no longer take damage. Breaks on any action. Doesn&apos;t work in Boss rooms. ähnelt.
         /// </summary>
         internal static string Fade {
             get {
@@ -975,6 +984,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string ShapeOfUnn {
             get {
                 return ResourceManager.GetString("ShapeOfUnn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Entering a shop restores 5 masks. ähnelt.
+        /// </summary>
+        internal static string SharedFood {
+            get {
+                return ResourceManager.GetString("SharedFood", resourceCulture);
             }
         }
         

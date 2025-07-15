@@ -190,6 +190,8 @@ public static class TreasureManager
         new Banish(),
         new Discount(),
         new RelicSeeker(),
+        new SharedFood(),
+        new Credit(),
         new VoidHeart(),
     ];
 
@@ -507,7 +509,7 @@ public static class TreasureManager
                     }
                     // Force treasure test code.
                     if (i == 0)
-                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Discount)));
+                        selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Credit)));
                     //else if (i == 1)
                     //    selectedPowers.Add(Powers.First(x => x.GetType() == typeof(Weaversong)));
                     else

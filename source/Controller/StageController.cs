@@ -269,6 +269,8 @@ public class StageController : BaseController
                         //    CurrentRoomIndex = 47;
 
                         CurrentRoomIndex++;
+                        if (CurrentRoomIndex == 2)
+                            CurrentRoomIndex = 48;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
                         if (QuietRoom)
                             info.SceneName = "GG_Engine";
@@ -281,12 +283,9 @@ public class StageController : BaseController
                     else
                         info.EntryGateName = CurrentRoomData[CurrentRoomIndex].SelectedTransition;
 
-                    LogManager.Log("To Scene name: " + info.SceneName);
-
                     info.Visualization = GameManager.SceneLoadVisualizations.Dream;
                     info.PreventCameraFadeOut = QuietRoom || CurrentRoom.BossRoom;
                     GameManager.instance.cameraCtrl.gameObject.LocateMyFSM("CameraFade").FsmVariables.FindFsmBool("No Fade").Value = QuietRoom || CurrentRoom.BossRoom;
-
 
                     if (_specialRoomCooldown == 0)
                     {
@@ -363,12 +362,14 @@ public class StageController : BaseController
 
             if (QuietRoom && self.gameObject.scene.name == "GG_Engine")
             {
-                TreasureType intendedSpell = (TreasureType)Enum.Parse(typeof(TreasureType), CurrentRoom.Name);
-                if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0
+                if (Enum.TryParse(CurrentRoom.Name, out TreasureType intendedSpell))
+                {
+                    if (intendedSpell == TreasureType.Fireball && PDHelper.FireballLevel != 0
                     || intendedSpell == TreasureType.Quake && PDHelper.QuakeLevel != 0)
-                    transition.WaitForItem = false;
-                else
-                    transition.WaitForItem = true;
+                        transition.WaitForItem = false;
+                    else
+                        transition.WaitForItem = true;
+                }
             }
             _specialTransitions.Add(transition);
         }

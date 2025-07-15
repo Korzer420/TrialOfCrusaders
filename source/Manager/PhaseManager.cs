@@ -152,7 +152,7 @@ public static class PhaseManager
         }
         LogManager.Log("Transition to phase: " + targetPhase);
         PhaseChanged?.Invoke(CurrentPhase, targetPhase);
-        if (targetPhase == Phase.Inactive)
+        if (targetPhase == Phase.Inactive || targetPhase == Phase.Lobby || targetPhase == Phase.Result)
             TrialOfCrusaders.Holder.StopAllCoroutines();
         try
         {

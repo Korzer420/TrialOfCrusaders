@@ -447,6 +447,14 @@ public class CombatController : BaseController
                         _ => 1
                     };
                 BeginCombat?.Invoke();
+                if (StageRef.CurrentRoomNumber == StageRef.CurrentRoomData.Count && PowerRef.HasPower(out Credit credit))
+                {
+                    if (credit.LeftCredit > 0)
+                    {
+                        GameHelper.DisplayMessage("Didn't you forget something?");
+                        TrialOfCrusaders.Holder.StartCoroutine(PayCredit());
+                    }
+                }
             }
         }
         catch (Exception ex)
@@ -1081,5 +1089,29 @@ public class CombatController : BaseController
         
         damage += SpiritLevel * multiplier;
         return damage;
+    }
+
+    private IEnumerator PayCredit()
+    {
+        float passedTime = 15f;
+        bool secondText = false;
+        bool thirdText = false;
+        while(passedTime > 0f)
+        {
+            passedTime -= Time.deltaTime;
+            if (passedTime < 10 && !secondText)
+            {
+                GameHelper.DisplayMessage("Well if you won't pay with geo...");
+                secondText = true;
+            }
+            else if (passedTime < 5 && !thirdText)
+            { 
+                GameHelper.DisplayMessage("There is another option...");
+                thirdText = true;
+            }
+            yield return null;
+        }
+        yield return new WaitUntil(() => !PDHelper.IsInvincible && HeroController.instance?.acceptingInput == true && !GameManager.instance.isPaused);
+        HeroController.instance.TakeDamage(HeroController.instance.gameObject, GlobalEnums.CollisionSide.bottom, CombatController.InstaKillDamage, 1);
     }
 }

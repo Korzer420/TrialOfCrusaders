@@ -47,7 +47,7 @@ internal static class SetupManager
                 foreach (RoomData room in availableRooms)
                     if (room.Available(false, currentProgress, currentRoom))
                     {
-                        if (room.BossRoom && ((currentRoom <= lastBossRoom + 2 && currentRoom % 13 != 0) || currentRoom < 13))
+                        if (room.BossRoom && ((currentRoom <= lastBossRoom + 2 && currentRoom % 13 != 0) || currentRoom < 13 || currentRoom == 49))
                             continue;
                         else if ((!room.BossRoom && currentRoom % 13 == 0 && currentRoom != 0) || lastRooms.Contains(room.Name))
                             continue;
