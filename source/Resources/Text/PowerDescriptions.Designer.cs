@@ -907,6 +907,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Powers are more common in shops, but ALL shop prices are increased by 50%. ähnelt.
+        /// </summary>
+        internal static string RelicSeeker {
+            get {
+                return ResourceManager.GetString("RelicSeeker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Killing an enemy that dealt damage to you recently restores a bit of health. ähnelt.
         /// </summary>
         internal static string Revenge {

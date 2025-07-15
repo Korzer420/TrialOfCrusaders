@@ -189,6 +189,7 @@ public static class TreasureManager
         new WaywardCompass(),
         new Banish(),
         new Discount(),
+        new RelicSeeker(),
         new VoidHeart(),
     ];
 

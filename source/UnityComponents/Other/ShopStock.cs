@@ -431,9 +431,16 @@ internal class ShopStock : MonoBehaviour
             availablePowerNames = [.. availablePowerNames.Except(obtainedPowerNames)];
             List<Power> availablePowers = [];
             foreach (string powerName in availablePowerNames)
-                if (powerName != "Discount") // Discount is not available in shops.
-                    availablePowers.Add(TreasureManager.Powers.First(x => x.Name == powerName));
+            {
+                Power power = TreasureManager.Powers.First(x => x.Name == powerName);
+                // Wealth power are not available in shops.
+                if (!power.Pools.HasFlag(DraftPool.Wealth))
+                    availablePowers.Add(power);
+            }
 
+            float powerChance = 10f;
+            if (PowerRef.HasPower<RelicSeeker>(out _))
+                powerChance *= 2;
             for (int i = 1; i <= stockAmount; i++)
             {
                 if (restock && (_stock[i - 1].Item2 == -1 || _stock[i - 1].Item2 > PDHelper.Geo))
@@ -441,15 +448,15 @@ internal class ShopStock : MonoBehaviour
                 float rolled = RngManager.GetRandom(0f, 100f);
                 int price = 0;
                 string itemName = null;
-                if (rolled < 10f && abilityCount < maxAbility || (i == stockAmount && abilityCount == 0))
+                if (rolled < powerChance && abilityCount < maxAbility || (i == stockAmount && abilityCount == 0))
                 {
                     int currentAbilityCount = abilityCount;
                     abilityCount++;
                     List<Power> powers = [];
                     Rarity selectedRarity = Rarity.Common;
-                    if (rolled <= 1)
+                    if (rolled <= powerChance / 10f)
                         selectedRarity = Rarity.Rare;
-                    else if (rolled <= 4f)
+                    else if (rolled <= powerChance / 2.5f)
                         selectedRarity = Rarity.Uncommon;
                     foreach (Power power in availablePowers)
                     {
@@ -563,9 +570,15 @@ internal class ShopStock : MonoBehaviour
             if (restock)
                 for (int i = 1; i <= stockAmount; i++)
                     _elementLookup["Stock Price " + i].transform.parent.parent.GetComponent<SpriteRenderer>().sprite = GenerateSprite(i);
-            else if (PowerRef.HasPower<Discount>(out _))
-                for (int i = 0; i < stockAmount; i++)
-                    _stock[i] = new(_stock[i].Item1, Mathf.CeilToInt(_stock[i].Item2 * 0.7f), StockState.Cheaper);
+            else
+            {
+                if (PowerRef.HasPower<Discount>(out _))
+                    for (int i = 0; i < stockAmount; i++)
+                        _stock[i] = new(_stock[i].Item1, Mathf.CeilToInt(_stock[i].Item2 * 0.7f), StockState.Cheaper);
+                if (PowerRef.HasPower<RelicSeeker>(out _))
+                    for (int i = 0; i < stockAmount; i++)
+                        _stock[i] = new(_stock[i].Item1, Mathf.CeilToInt(_stock[i].Item2 * 1.5f), StockState.Expensive);
+            }
         }
         catch (Exception ex)
         {

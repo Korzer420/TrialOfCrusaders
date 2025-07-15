@@ -399,6 +399,9 @@
   <data name="Recklessness" xml:space="preserve">
     <value>Great Slash and Dash Slash deal 400% increased damage, but you take damage if this doesn't kill the enemy.</value>
   </data>
+  <data name="RelicSeeker" xml:space="preserve">
+    <value>Powers are more common in shops, but ALL shop prices are increased by 50%.</value>
+  </data>
   <data name="Revenge" xml:space="preserve">
     <value>Killing an enemy that dealt damage to you recently restores a bit of health.</value>
   </data>
