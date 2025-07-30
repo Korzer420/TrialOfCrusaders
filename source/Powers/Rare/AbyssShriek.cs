@@ -1,9 +1,7 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -16,8 +14,6 @@ internal class AbyssShriek : Power
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Upgrade | DraftPool.Ability;
 
     public override bool CanAppear => PowerRef.HasPower<HowlingWraiths>(out _);
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {

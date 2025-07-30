@@ -46,8 +46,8 @@ public class StageController : BaseController
 
     public bool FinishedEnemies { get; set; }
 
-    public RoomData CurrentRoom => CurrentRoomIndex == -1 || CurrentRoomIndex >= CurrentRoomData.Count 
-        ? null 
+    public RoomData CurrentRoom => CurrentRoomIndex == -1 || CurrentRoomIndex >= CurrentRoomData.Count
+        ? null
         : CurrentRoomData[CurrentRoomIndex];
 
     #endregion
@@ -178,8 +178,6 @@ public class StageController : BaseController
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => UnityEngine.Object.Destroy(audioObject), () => source == null || !source.isPlaying));
     }
 
-    internal List<RoomData> LoadRoomData() => ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
-
     internal IEnumerator WaitForTransition()
     {
         HeroController.instance.RelinquishControl();
@@ -238,10 +236,11 @@ public class StageController : BaseController
                 }
 
                 FinishedEnemies = false;
+                bool finish = PhaseManager.CurrentGameMode.CheckForEnding();
                 // Check for ending.
-                if (CurrentRoomNumber == CurrentRoomData.Count)
+                if (finish)
                 {
-                    LogManager.Log("Trigger ending");
+                    PhaseManager.CurrentGameMode.OnEnd();
                     CurrentRoomIndex++;
                     QuietRoom = true;
                     info.EntryGateName = "left1";
@@ -255,7 +254,7 @@ public class StageController : BaseController
                 {
                     if (UpcomingTreasureRoom || UpcomingShop)
                     {
-                        info.SceneName = UpcomingShop 
+                        info.SceneName = UpcomingShop
                             ? "GG_Engine_Prime"
                             : "GG_Engine";
                         QuietRoom = true;
@@ -321,7 +320,7 @@ public class StageController : BaseController
                             if (UpcomingTreasureRoom || UpcomingShop)
                                 _specialRoomCooldown = 5;
                         }
-                    } 
+                    }
                     else
                         _specialRoomCooldown = _specialRoomCooldown.Lower(1);
                     _intendedDestination = new(info.SceneName, info.EntryGateName);
@@ -406,7 +405,7 @@ public class StageController : BaseController
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
         else if (QuietRoom && !CurrentRoom.IsQuietRoom)
-            _roomCounter.text = GameManager.instance.sceneName == "GG_Engine" 
+            _roomCounter.text = GameManager.instance.sceneName == "GG_Engine"
                 ? "Treasure room"
                 : "Shop";
         if (!PowerRef.HasPower<DreamNail>(out _)
@@ -598,7 +597,7 @@ public class StageController : BaseController
     private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == nameof(PlayerData.hasDreamNail) && (GameManager.instance.sceneName == "Mines_05"
-            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37" 
+            || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"
             || GameManager.instance.sceneName == "GG_Spa"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
@@ -645,5 +644,49 @@ public class StageController : BaseController
     {
         yield return new WaitForSeconds(0.5f);
         _roomCounter.text = $"Current room: {CurrentRoomNumber}";
+    }
+
+    public static List<RoomData> LoadRoomData()
+    {
+        List<RoomData> allRooms = ResourceHelper.LoadJsonResource<TrialOfCrusaders, List<RoomData>>("Data.RoomData.json");
+        // Add each normal room 5 times so each one has the same probability regardless of available entrances.
+        // For bosses we only take two (although they only can appear once).
+        List<RoomData> rooms = [..allRooms
+                .SelectMany(x =>
+        {
+            if (x.BossRoom)
+                return [x, x];
+            List<RoomData> roomCopies = [..x.AllowedEntrances.Select(y => new RoomData()
+            {
+                Name = x.Name,
+                ConditionalProgress = x.ConditionalProgress,
+                NeededProgress = x.NeededProgress,
+                EasyConditionalProgress = x.EasyConditionalProgress,
+                EasyNeededProgress = x.EasyNeededProgress,
+                SelectedTransition = y
+            })];
+            if (roomCopies.Count < 5)
+                for (int i = roomCopies.Count; i <= 5; i++)
+                    roomCopies.Add(new RoomData()
+                    {
+                        Name = x.Name,
+                        ConditionalProgress = x.ConditionalProgress,
+                        NeededProgress = x.NeededProgress,
+                        EasyConditionalProgress = x.EasyConditionalProgress,
+                        EasyNeededProgress = x.EasyNeededProgress,
+                        SelectedTransition = x.AllowedEntrances[RngManager.GetRandom(0, x.AllowedEntrances.Count - 1)]
+                    });
+            return roomCopies;
+        })];
+        // Special case: Remove all copies of the banished scene.
+        if (SaveManager.CurrentSaveData.RetainData.TryGetValue("Banish", out string banishedScene))
+            if (banishedScene != null)
+                for (int i = 0; i < rooms.Count; i++)
+                    if (rooms[i].Name == banishedScene)
+                    {
+                        rooms.RemoveAt(i);
+                        i--;
+                    }
+        return rooms;
     }
 }

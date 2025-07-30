@@ -362,7 +362,7 @@ public class ScoreController : BaseController
             HistoryRef.TempEntry.RunId = HistoryRef.TempEntry.GetRunId();
             HistoryRef.History ??= [];
             HistoryRef.History.Add(HistoryRef.TempEntry);
-            if (HistoryRef.History.Count > HistoryRef.HistorySettings.HistoryAmount)
+            if (HistoryRef.History.Count > HistoryRef.GlobalSettings.HistoryAmount)
                 HistoryRef.History.RemoveAt(0);
             HistoryRef.CheckArchiveUpdate();
             HistoryRef.TempEntry = null;

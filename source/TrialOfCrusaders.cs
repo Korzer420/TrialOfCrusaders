@@ -34,7 +34,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     public bool ToggleButtonInsideMenu => false;
 
-    public override string GetVersion() => "0.2.4.0-beta";
+    public override string GetVersion() => "0.3.0.0-beta";
 
     public override List<(string, string)> GetPreloadNames() =>
     [
@@ -86,6 +86,8 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
 
     #region Save management
 
+    public GlobalSaveData GlobalSettings { get; set; } = new() { HistoryAmount = 50 };
+
     void ILocalSettings<LocalSaveData>.OnLoadLocal(LocalSaveData saveData)
     {
         SaveManager.CurrentSaveData = saveData;
@@ -107,6 +109,10 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
             PhaseManager.TransitionTo(Enums.Phase.Inactive);
         return SaveManager.CurrentSaveData;
     }
+
+    public void OnLoadGlobal(GlobalSaveData saveData) => GlobalSettings = saveData;
+
+    public GlobalSaveData OnSaveGlobal() => GlobalSettings;
 
     #endregion
 
@@ -224,15 +230,15 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
         return new()
         {
             new(){ Name = "Track failed runs", Description = "If on, failed runs will appear in the history.", Values = ["On", "Off"],
-                Saver = x => HistoryRef.HistorySettings.TrackFailedRuns = x == 0,
-                Loader = () => HistoryRef.HistorySettings.TrackFailedRuns ? 0 : 1},
+                Saver = x => HistoryRef.GlobalSettings.TrackFailedRuns = x == 0,
+                Loader = () => HistoryRef.GlobalSettings.TrackFailedRuns ? 0 : 1},
             new(){ Name = "Track forfeited runs", Description = "If on, forfeited runs will appear in the history", Values = ["On", "Off"],
-                Saver = x => HistoryRef.HistorySettings.TrackForfeitedRuns = x == 0,
-                Loader = () => HistoryRef.HistorySettings.TrackForfeitedRuns ? 0 : 1},
+                Saver = x => HistoryRef.GlobalSettings.TrackForfeitedRuns = x == 0,
+                Loader = () => HistoryRef.GlobalSettings.TrackForfeitedRuns ? 0 : 1},
             new(){ Name = "History amount", Description = "Determine the amount of previous runs saved.", Values = ["1", "5", "10", "50", "100", "All"],
                 Saver = x =>
                     {
-                        HistoryRef.HistorySettings.HistoryAmount = x switch
+                        HistoryRef.GlobalSettings.HistoryAmount = x switch
                         {
                             0 => 1,
                             1 => 5,
@@ -243,7 +249,7 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
                         };
                     },
                 Loader = () =>
-                    HistoryRef.HistorySettings.HistoryAmount switch
+                    HistoryRef.GlobalSettings.HistoryAmount switch
                     {
                         1 => 0,
                         5 => 1,
@@ -252,10 +258,9 @@ public class TrialOfCrusaders : Mod, ILocalSettings<LocalSaveData>, IGlobalSetti
                         100 => 4,
                         _ => 6
                     }},
+            new() {Name = "Allow Custom Sprites", Description = "Loads sprite from the mod folder if present.", Values = ["Off", "On"],
+                Loader = () => GlobalSettings.UseCustomSprites ? 1 : 0,
+                Saver = x => { SpriteHelper.ClearCache(); GlobalSettings.UseCustomSprites = x == 1; } }
         };
     }
-
-    public void OnLoadGlobal(GlobalSaveData saveData) => HistoryRef.HistorySettings = saveData;
-
-    public GlobalSaveData OnSaveGlobal() => HistoryRef.HistorySettings;
 }

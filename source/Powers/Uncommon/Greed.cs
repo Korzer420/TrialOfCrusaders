@@ -4,7 +4,6 @@ using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Rare;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -17,8 +16,6 @@ internal class Greed : Power
     public override DraftPool Pools => DraftPool.Wealth | DraftPool.Charm;
 
     public override bool CanAppear => !HasPower<ShiningBound>() && HasPower<Interest>();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.FragileGreed);
 

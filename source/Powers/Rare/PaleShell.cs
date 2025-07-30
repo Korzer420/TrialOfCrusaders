@@ -16,7 +16,8 @@ internal class PaleShell : Power
 
     public override DraftPool Pools => DraftPool.Endurance;
 
-    public override bool CanAppear => !HasPower<FragileStrength>() && !HasPower<FragileSpirit>() && !HasPower<FragileGreed>() && !HasPower<Damocles>();
+    public override bool CanAppear => !HasPower<FragileStrength>() && !HasPower<FragileSpirit>() 
+        && !HasPower<FragileGreed>() && !HasPower<Damocles>() && !HasPower<BrittleShell>();
 
     protected override void Enable() => UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 

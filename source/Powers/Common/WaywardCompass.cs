@@ -1,6 +1,4 @@
-﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Data;
+﻿using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.UnityComponents.PowerElements;
 using UnityEngine;
@@ -14,8 +12,6 @@ internal class WaywardCompass : Power
     public override (float, float, float) BonusRates => new(0f, 0f, 0f);
 
     public override DraftPool Pools => DraftPool.Endurance;
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.WaywardCompass");
 
     protected override void Enable() => CombatRef.BeginCombat += CombatController_BeginCombat;
 

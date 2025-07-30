@@ -2,7 +2,6 @@
 using KorzUtils.Helper;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -15,8 +14,6 @@ internal class QuickSlash : Power
     public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
 
     public override bool CanAppear => !HasPower<ShiningBound>();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.QuickSlash);
 

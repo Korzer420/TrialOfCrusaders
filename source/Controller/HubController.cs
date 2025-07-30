@@ -2,6 +2,7 @@
 using Modding;
 using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Controller.GameController;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
@@ -146,16 +147,11 @@ public class HubController : BaseController
                 int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
                 RngManager.Seeded = finalSeed != _rolledSeed;
                 RngManager.Seed = finalSeed;
-                StageRef.CurrentRoomData = SetupManager.GenerateRun(SelectedGameMode);
+                StageRef.CurrentRoomData = PhaseManager.CurrentGameMode.GenerateRoomList(true);
                 StageRef.CurrentRoomIndex = -1;
                 PhaseManager.TransitionTo(Phase.Run);
-                // Grants mode specific items.
-                if (SelectedGameMode == GameMode.Crusader)
-                {
-                    PDHelper.HasLantern = true;
-                    PDHelper.HasSuperDash = true;
-                    PDHelper.HasAcidArmour = true;
-                }
+                PhaseManager.CurrentGameMode.SetupTreasurePool();
+                PhaseManager.CurrentGameMode.OnStart();
             }
             else if (info.SceneName == "Room_Colosseum_02")
             {
@@ -168,6 +164,12 @@ public class HubController : BaseController
                     SelectedGameMode = GameMode.Crusader;
                 else
                     SelectedGameMode = GameMode.GrandCrusader;
+                if (SelectedGameMode == GameMode.Crusader)
+                    PhaseManager.CurrentGameMode = new CrusaderController();
+                else if (SelectedGameMode == GameMode.GrandCrusader)
+                    PhaseManager.CurrentGameMode = new GrandCrusaderController();
+                else if (SelectedGameMode == GameMode.GoldRush)
+                    PhaseManager.CurrentGameMode = new GoldRushController();
                 PDHelper.HasDreamNail = false;
                 info.SceneName = "Deepnest_East_10";
                 info.EntryGateName = "left1";
@@ -271,12 +273,7 @@ public class HubController : BaseController
     private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "Explanation_Trial")
-        {
-            if (SelectedGameMode == GameMode.GrandCrusader)
-                return $"{LobbyDialog.ExplanationTrialGrandCrusader}<page>{LobbyDialog.SeededTutorial}";
-            else
-                return $"{LobbyDialog.ExplanationTrialCrusader}<page>{LobbyDialog.SeededTutorial}";
-        }
+            return $"{PhaseManager.CurrentGameMode.Explanation}<page>{LobbyDialog.SeededTutorial}";
         else if (key == "TRIAL_BOARD_SILVER")
             return "Begin Trial of the Crusader?";
         else if (key == "TRIAL_BOARD_GOLD")

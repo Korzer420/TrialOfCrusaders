@@ -1,9 +1,7 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -16,8 +14,6 @@ internal class ShamanStone : Power
     public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Spirit;
 
     public override bool CanAppear => !HasPower<ShiningBound>() && PowerRef.HasSpell();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.ShamanStone);
 

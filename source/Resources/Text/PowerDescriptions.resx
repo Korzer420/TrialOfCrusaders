@@ -135,6 +135,12 @@
   <data name="BindingCircle" xml:space="preserve">
     <value>Hitting an enemy with the dream nail can root them shortly.</value>
   </data>
+  <data name="BrighterFuture" xml:space="preserve">
+    <value>Each time you forfeit a power selection you gain 200 geo.</value>
+  </data>
+  <data name="BrittleShell" xml:space="preserve">
+    <value>All taken damage is set to 1. Increases by 1 each time you take damage.</value>
+  </data>
   <data name="BrutalStrikes" xml:space="preserve">
     <value>Nail arts ignore armor.</value>
   </data>
@@ -239,6 +245,9 @@
   </data>
   <data name="FuryOfTheFallen" xml:space="preserve">
     <value>While at 1 health, increase nail damage significantly.</value>
+  </data>
+  <data name="Gambling" xml:space="preserve">
+    <value>You may reroll a power selection up to 2 times, but each reroll has a high chance to yield just geo instead.</value>
   </data>
   <data name="GatheringSwarm" xml:space="preserve">
     <value>Pulls nearby geo towards you.</value>

@@ -115,6 +115,24 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Each time you forfeit a power selection you gain 200 geo. ähnelt.
+        /// </summary>
+        internal static string BrighterFuture {
+            get {
+                return ResourceManager.GetString("BrighterFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die All taken damage is set to 1. Increases by 1 each time you take damage. ähnelt.
+        /// </summary>
+        internal static string BrittleShell {
+            get {
+                return ResourceManager.GetString("BrittleShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Nail arts ignore armor. ähnelt.
         /// </summary>
         internal static string BrutalStrikes {
@@ -426,6 +444,15 @@ namespace TrialOfCrusaders.Resources.Text {
         internal static string FuryOfTheFallen {
             get {
                 return ResourceManager.GetString("FuryOfTheFallen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die You may reroll a power selection up to 2 times, but each reroll has a high chance to yield just geo instead. ähnelt.
+        /// </summary>
+        internal static string Gambling {
+            get {
+                return ResourceManager.GetString("Gambling", resourceCulture);
             }
         }
         

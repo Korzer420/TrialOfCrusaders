@@ -1,9 +1,6 @@
-﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Data;
+﻿using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -18,8 +15,6 @@ internal class FragileGreed : Power
     public bool GreedActive { get; set; } = true;
 
     public override bool CanAppear => !HasPower<PaleShell>();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable() => CombatRef.TookDamage += CombatController_TookDamage;
 

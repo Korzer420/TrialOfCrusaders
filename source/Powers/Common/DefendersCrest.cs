@@ -18,8 +18,6 @@ internal class DefendersCrest : Power
 
     public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
 
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
-
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DefendersCrest);
 
     protected override void Disable() => CharmHelper.UnequipCharm(CharmRef.DefendersCrest);

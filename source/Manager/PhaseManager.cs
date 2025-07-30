@@ -35,6 +35,8 @@ public static class PhaseManager
 
     public static Phase CurrentPhase { get; set; }
 
+    public static GameModeController CurrentGameMode { get; set; }
+
     internal static event PhaseChange PhaseChanged;
 
     /// <summary>
@@ -153,7 +155,11 @@ public static class PhaseManager
         LogManager.Log("Transition to phase: " + targetPhase);
         PhaseChanged?.Invoke(CurrentPhase, targetPhase);
         if (targetPhase == Phase.Inactive || targetPhase == Phase.Lobby || targetPhase == Phase.Result)
+        {
             TrialOfCrusaders.Holder.StopAllCoroutines();
+            if (targetPhase == Phase.Inactive || targetPhase == Phase.Lobby)
+                CurrentGameMode = null;
+        }
         try
         {
             foreach (BaseController controller in _controller)

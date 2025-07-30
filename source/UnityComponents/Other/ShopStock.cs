@@ -245,18 +245,18 @@ internal class ShopStock : MonoBehaviour
         try
         {
             if (_consumableGroup.Contains(item))
-                return SpriteHelper.CreateSprite<TrialOfCrusaders>($"Sprites.Consumables.{item}");
+                return SpriteManager.GetSprite($"Consumables.{item}");
             else if (_statGroup.Contains(item))
             {
                 string stat = item.Substring("Stat_".Length);
-                return SpriteHelper.CreateSprite<TrialOfCrusaders>($"Sprites.Icons.{stat}_Icon");
+                return SpriteManager.GetSprite($"Icons.{stat}_Icon");
             }
             else
                 return TreasureManager.Powers.First(x => x.GetType().Name == item).Sprite;
         }
         catch (Exception ex)
         {
-            LogManager.Log("The item is: " + item, ex);
+            LogManager.Log("Failed to generate sprite. The item is: " + item, ex);
             throw;
         }
     }

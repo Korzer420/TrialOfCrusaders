@@ -872,48 +872,56 @@ public class CombatController : BaseController
                 damageAmount -= WeakenedDamageFlag;
 
             // Enemy scaling
-            if (hazardType == 1)
+            if (PowerRef.HasPower(out BrittleShell brittle))
             {
-                if (StageRef.CurrentRoomNumber < 20 || damageAmount == 1)
-                    damageAmount += StageRef.CurrentRoomNumber / 20;
-                else if (damageAmount == 2)
-                    damageAmount += Mathf.CeilToInt(StageRef.CurrentRoomNumber / 20 * 1.5f);
+                damageAmount = 1 + brittle.Stacks;
+                brittle.Stacks++;
             }
             else
             {
-                // Hazard scaling
-                damageAmount += StageRef.CurrentRoomNumber / 10;
-                if (PowerRef.HasPower<ImprovedCaringShell>(out _))
+                if (hazardType == 1)
                 {
-                    if (!InCombat)
-                        damageAmount = 0;
-                    else
-                        damageAmount -= 2 + EnduranceLevel / 5;
+                    if (StageRef.CurrentRoomNumber < 20 || damageAmount == 1)
+                        damageAmount += StageRef.CurrentRoomNumber / 20;
+                    else if (damageAmount == 2)
+                        damageAmount += Mathf.CeilToInt(StageRef.CurrentRoomNumber / 20 * 1.5f);
                 }
-                else if (PowerRef.HasPower<CaringShell>(out _))
-                    damageAmount -= 1 + EnduranceLevel / 8;
-                if (damageAmount == 0)
-                    return 0;
-            }
-
-            if (PowerRef.HasPower<AchillesHeel>(out _))
-            {
-                if (hazardType > 1 && hazardType < 5)
-                    damageAmount = InstaKillDamage;
                 else
-                    damageAmount = damageAmount.LowerPositive(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
-            }
+                {
+                    // Hazard scaling
+                    damageAmount += StageRef.CurrentRoomNumber / 10;
+                    if (PowerRef.HasPower<ImprovedCaringShell>(out _))
+                    {
+                        if (!InCombat)
+                            damageAmount = 0;
+                        else
+                            damageAmount -= 2 + EnduranceLevel / 5;
+                    }
+                    else if (PowerRef.HasPower<CaringShell>(out _))
+                        damageAmount -= 1 + EnduranceLevel / 8;
+                    if (damageAmount == 0)
+                        return 0;
+                }
 
-            if (damageAmount != InstaKillDamage)
-            {
-                if (PowerRef.HasPower<Sturdy>(out _))
-                    damageAmount = damageAmount.LowerPositive(1);
+                if (PowerRef.HasPower<AchillesHeel>(out _))
+                {
+                    if (hazardType > 1 && hazardType < 5)
+                        damageAmount = InstaKillDamage;
+                    else
+                        damageAmount = damageAmount.LowerPositive(1 + Mathf.CeilToInt(EnduranceLevel / 8f));
+                }
 
-                if (PowerRef.HasPower<ShiningBound>(out _))
-                    damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+                if (damageAmount != InstaKillDamage)
+                {
+                    if (PowerRef.HasPower<Sturdy>(out _))
+                        damageAmount = damageAmount.LowerPositive(1);
 
-                if (isWeakenedDamage)
-                    damageAmount = Mathf.FloorToInt(damageAmount * (PowerRef.DebuffsStronger ? 0.3f : 0.6f));
+                    if (PowerRef.HasPower<ShiningBound>(out _))
+                        damageAmount = Mathf.CeilToInt(damageAmount / 2f);
+
+                    if (isWeakenedDamage)
+                        damageAmount = Mathf.FloorToInt(damageAmount * (PowerRef.DebuffsStronger ? 0.3f : 0.6f));
+                }
             }
         }
         // Prevent cheat death from triggering on instant kill effects.

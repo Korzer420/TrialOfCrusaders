@@ -73,6 +73,10 @@ public class ConsumableController : BaseController
         On.HutongGames.PlayMaker.Actions.IntCompare.OnEnter -= IntCompare_OnEnter;
         On.HutongGames.PlayMaker.Actions.SendMessage.OnEnter -= SendMessage_OnEnter;
         TeaSpell = 0;
+        UsedLifeblood = 0;
+        UsedEggs = 0;
+        EmpoweredHits = 0;
+        RerollSeals = 0;
     }
 
     private void HeroController_DoAttack(On.HeroController.orig_DoAttack orig, HeroController self)

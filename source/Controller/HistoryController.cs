@@ -104,7 +104,7 @@ public class HistoryController : BaseController, ISaveData
 
     internal List<HistoryData> History { get; set; } = [];
 
-    public GlobalSaveData HistorySettings { get; set; } = new() { HistoryAmount = 50 };
+    public GlobalSaveData GlobalSettings => TrialOfCrusaders.Instance.GlobalSettings;
 
     internal GameObject ArchiveSprite { get; set; }
 
@@ -644,12 +644,12 @@ public class HistoryController : BaseController, ISaveData
         // In the case of completed runs the result is written seperately (as the crowd still throws missable geo).
         if (result != RunResult.Completed)
         {
-            if ((result == RunResult.Failed && HistorySettings.TrackFailedRuns)
-                || (result == RunResult.Forfeited && HistorySettings.TrackForfeitedRuns))
+            if ((result == RunResult.Failed && GlobalSettings.TrackFailedRuns)
+                || (result == RunResult.Forfeited && GlobalSettings.TrackForfeitedRuns))
             {
                 TempEntry.RunId = TempEntry.GetRunId();
                 History.Add(TempEntry);
-                if (History.Count > HistorySettings.HistoryAmount)
+                if (History.Count > GlobalSettings.HistoryAmount)
                     History.RemoveAt(0);
             }
             TempEntry = null;

@@ -73,7 +73,14 @@ public abstract class Power : IEquatable<Power>
         }
     }
 
-    public virtual Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.Placeholder"); //SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
+    public Sprite Sprite
+    {
+        get
+        {
+            string spriteName = GetType().Name;
+            return SpriteManager.GetSprite($"Abilities.{spriteName}");
+        }
+    }
 
     /// <summary>
     /// Gets the stat scaling that apply to this ability.
@@ -88,7 +95,7 @@ public abstract class Power : IEquatable<Power>
         get
         {
             string name = Name + ((int)Scaling switch
-            { 
+            {
                 1 => " (C)",
                 2 => " (S)",
                 3 => " (C, S)",
@@ -160,7 +167,7 @@ public abstract class Power : IEquatable<Power>
         {
             LogManager.Log("Failed to disable power " + Name, ex);
         }
-        
+
     }
 
     /// <summary>

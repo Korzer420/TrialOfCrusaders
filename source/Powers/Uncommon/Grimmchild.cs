@@ -2,9 +2,7 @@
 using KorzUtils.Helper;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Rare;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -17,8 +15,6 @@ internal class Grimmchild : Power
     public override DraftPool Pools => DraftPool.Combat | DraftPool.Charm;
 
     public override bool CanAppear => !HasPower<CarefreeMelody>() && !HasPower<ShiningBound>();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {
