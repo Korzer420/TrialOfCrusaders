@@ -20,7 +20,7 @@ internal static class ShopManager
     internal static void PrepareShopScene()
     {
         UnityEngine.Object.Destroy(GameObject.Find("Godseeker EngineRoom NPC"));
-        var tuk = GameObject.Instantiate(ShopManager.Tuk);
+        var tuk = GameObject.Instantiate(Tuk);
         tuk.name = "Tuk Shop";
         tuk.transform.position = new(86.7f, 18.8f, 0.1f);
         tuk.SetActive(true);

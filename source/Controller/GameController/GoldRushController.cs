@@ -1,5 +1,7 @@
 ﻿using KorzUtils.Helper;
+using Modding;
 using System.Collections.Generic;
+using System.Linq;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
@@ -10,7 +12,7 @@ internal class GoldRushController : GameModeController
 {
     public override GameMode Mode => GameMode.GoldRush;
 
-    public override string Explanation => "Have 5000 geo in your pocket and exit the current room to win. You may spend geo in the shop, but that might delay your freedom. Enemies will become stronger the more rooms you progress.";
+    public override string Explanation => "Have 2000 geo in your pocket and exit the current room to win. You may spend geo in the shop, but that might delay your freedom. Enemies will become stronger the more rooms you progress.";
 
     public override List<RoomData> GenerateRoomList(bool atStart)
     {
@@ -43,9 +45,8 @@ internal class GoldRushController : GameModeController
         foreach (RoomData room in rooms)
             if (room.Available(false, progress))
             {
-                if (room.BossRoom && currentRoomIndex < 20)
-                    continue;
-                else if (!room.BossRoom && currentRoomIndex % 20 == 0 && currentRoomIndex > 0)
+                // Exclude bosses at the start and Gorgeous husk completely.
+                if ((room.BossRoom && currentRoomIndex < 20) || room.Name == "Ruins_House_02")
                     continue;
                 if (!addedRooms.Contains(room.Name))
                 {
@@ -54,16 +55,22 @@ internal class GoldRushController : GameModeController
                 }
             }
         List<RoomData> selectedRooms = [];
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++)
         {
-            selectedRooms.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
-            availableRooms.Remove(selectedRooms[selectedRooms.Count - 1]);
+            RoomData nextRoom = availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)];
+            if (nextRoom.BossRoom)
+                availableRooms.RemoveAll(x => x.BossRoom);
+            else
+                availableRooms.Remove(nextRoom);
+            selectedRooms.Add(nextRoom);
         }
 
         // Check if all items have been obtained.
         if ((int)progress != 511)
         {
             List<Progress> values = [..(System.Enum.GetValues(typeof(Progress)) as Progress[])];
+            if (!progress.HasFlag(Progress.Dash))
+                values.Remove(Progress.ShadeCloak);
             Progress selectedProgressItem = values[0];
             while (progress.HasFlag(selectedProgressItem))
             { 
@@ -81,11 +88,33 @@ internal class GoldRushController : GameModeController
 
     public override bool CheckForEnding()
     {
-        if (PDHelper.Geo >= 5000)
+        if (PDHelper.Geo > 2000)
             return true;
-        if (ControllerShorthands.StageRef.CurrentRoomData.Count == ControllerShorthands.StageRef.CurrentRoomIndex)
+        if (ControllerShorthands.StageRef.CurrentRoomData.Count - 1 == ControllerShorthands.StageRef.CurrentRoomNumber)
             ControllerShorthands.StageRef.CurrentRoomData.AddRange(GenerateRoomList(false));
         return false;
     }
 
+    public override void OnStart() => ModHooks.SetPlayerIntHook += ModHooks_SetPlayerIntHook;
+
+    public override void OnEnd() => ModHooks.SetPlayerIntHook -= ModHooks_SetPlayerIntHook;
+
+    public override void SetupTreasurePool()
+    {
+        List<string> treasures = [.. TreasureManager.Powers.Select(x => x.Name)];
+        // Credit would defeat the purpose of the mode.
+        treasures.Remove("Credit");
+        TreasureManager.TreasurePool = treasures;
+    }
+
+    private int ModHooks_SetPlayerIntHook(string name, int orig)
+    {
+        if (name == nameof(PlayerData.geo))
+        {
+            if (orig >= 2001)
+                TrialOfCrusaders.Holder.StartCoroutine(ControllerShorthands.StageRef.InitiateTransition());
+            return orig;
+        }
+        return orig;
+    }
 }

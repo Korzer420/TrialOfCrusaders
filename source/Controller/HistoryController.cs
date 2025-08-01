@@ -452,6 +452,7 @@ public class HistoryController : BaseController, ISaveData
             {
                 GameMode.Crusader => "Crusader",
                 GameMode.GrandCrusader => "Grand Crusader",
+                GameMode.GoldRush => "Gold Panner",
                 _ => "Unknown"
             };
             _elementLookUp["Version"].Item2.text = $"Version: {currentHistory.ModVersion} (Game Mode: {gameMode})";

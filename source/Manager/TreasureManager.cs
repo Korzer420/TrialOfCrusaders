@@ -186,6 +186,7 @@ public static class TreasureManager
         new ShiningBound(),
         new Mediocracy(),
         new WaywardCompass(),
+        // Shop update
         new Banish(),
         new Discount(),
         new RelicSeeker(),
@@ -194,6 +195,8 @@ public static class TreasureManager
         new BrittleShell(),
         new BrighterFuture(),
         new Gambling(),
+        new Regrets(),
+        // Special
         new VoidHeart(),
     ];
 
@@ -558,7 +561,7 @@ public static class TreasureManager
                     string selectionValue = string.IsNullOrEmpty(statBoni[i])
                                 ? selectedPowers[i].Name
                                 : $"{selectedPowers[i].Name}_{statBoni[i]}";
-                    if (!gambling && RngManager.GetRandom(0, 5) == 0)
+                    if (!gambling || RngManager.GetRandom(0, 5) == 0)
                         fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value = selectionValue;
                     else
                         fsm.FsmVariables.FindFsmString("Option " + (i + 1)).Value = "Geo";
@@ -637,9 +640,6 @@ public static class TreasureManager
         text.alignment = TextAlignmentOptions.Center;
         text.textContainer.size = new(5f, 1f);
         powerOverlay.SetActive(true);
-        //_powerSet++;
-        //if (_powerSet == 40)
-        //    LogManager.Log("Called last power set.");
         return powerOverlay;
     }
 
@@ -1012,7 +1012,23 @@ public static class TreasureManager
             if (pickedPower != null)
             {
                 PowerRef.ObtainedPowers.Add(pickedPower);
-                TreasurePool.RemoveAll(x => x == pickedPower.Name);
+                bool pickedRegrets = pickedPower.GetType() == typeof(Regrets);
+                if (pickedPower.GetType() != typeof(Cocoon) && !pickedRegrets)
+                    TreasurePool.RemoveAll(x => x == pickedPower.Name);
+
+                bool regretsOffered = false;
+                for (int i = 1; i < 3; i++)
+                {
+                    string powerName = shinyFsm.FsmVariables.FindFsmString("Option " + (powerSlot + 1))?.Value;
+                    if (!string.IsNullOrEmpty(powerName) && powerName == "Regrets")
+                    { 
+                        regretsOffered = true;
+                        break;
+                    }
+                }
+                if (!pickedRegrets && regretsOffered)
+                    TreasurePool.AddRange(["Regrets", "Regrets"]);
+
                 pickedPower.EnablePower();
                 PowerSelected?.Invoke(pickedPower);
             }
@@ -1044,7 +1060,7 @@ public static class TreasureManager
         InventoryController.UpdateStats();
         InventoryController.UpdateList(-1);
         if (StageRef.CurrentRoomNumber >= 1 && StageRef.CurrentRoom.BossRoom && !StageRef.QuietRoom)
-            TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
+            TrialOfCrusaders.Holder.StartCoroutine(StageRef.InitiateTransition());
     }
 
     #endregion

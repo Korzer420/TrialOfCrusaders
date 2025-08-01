@@ -113,9 +113,12 @@ internal class ShopStock : MonoBehaviour
                 _cooldown = 0.25f;
                 if (_itemIndex >= 0)
                 {
-                    _itemIndex = -1;
-                    _elementLookup["Selector"].transform.localPosition = new(-6f, -3.8f);
-                    _elementLookup["Selector"].transform.localScale = new(2.5f, 0.9f);
+                    if (SecretRef.ShopLevel == 4)
+                    {
+                        _itemIndex = -1;
+                        _elementLookup["Selector"].transform.localPosition = new(-6f, -3.8f);
+                        _elementLookup["Selector"].transform.localScale = new(2.5f, 0.9f);
+                    }
                 }
                 else
                 {
@@ -223,15 +226,18 @@ internal class ShopStock : MonoBehaviour
         description.gameObject.SetActive(false);
         _elementLookup.Add(SelectionSold, description.gameObject);
 
-        description = InventoryController.CreateTextElement();
-        description.gameObject.SetActive(true);
-        description.text = "RESTOCK (+20%)";
-        description.fontSize = 4;
-        description.fontStyle = FontStyles.Bold;
-        description.transform.SetParent(shopUI.transform);
-        description.alignment = TextAlignmentOptions.Top;
-        description.textContainer.size = new(8f, 10f);
-        description.transform.localPosition = new(-4.5f, -9.75f);
+        if (SecretRef.ShopLevel == 4)
+        {
+            description = InventoryController.CreateTextElement();
+            description.gameObject.SetActive(true);
+            description.text = "RESTOCK (+20%)";
+            description.fontSize = 4;
+            description.fontStyle = FontStyles.Bold;
+            description.transform.SetParent(shopUI.transform);
+            description.alignment = TextAlignmentOptions.Top;
+            description.textContainer.size = new(8f, 10f);
+            description.transform.localPosition = new(-4.5f, -9.75f);
+        }
 
         _shopUI = shopUI;
         UpdateSelection(0);

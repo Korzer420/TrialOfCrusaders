@@ -533,7 +533,7 @@ public class CombatController : BaseController
                 if (StageRef.CurrentRoomIndex == StageRef.CurrentRoomData.Count - 1)
                 {
                     if (GameManager.instance.sceneName == "GG_Hollow_Knight")
-                        TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
+                        TrialOfCrusaders.Holder.StartCoroutine(StageRef.InitiateTransition());
                 }
                 else
                 {
@@ -1007,7 +1007,7 @@ public class CombatController : BaseController
                         self.GetState("Send NPC Event").AddActions(() =>
                         {
                             if (StageRef.CurrentRoomNumber == StageRef.CurrentRoomData.Count)
-                                TrialOfCrusaders.Holder.StartCoroutine(StageRef.WaitForTransition());
+                                TrialOfCrusaders.Holder.StartCoroutine(StageRef.InitiateTransition());
                             else
                             {
                                 GameObject crowd = GameObject.Find("Godseeker Crowd");

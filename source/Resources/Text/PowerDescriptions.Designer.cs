@@ -943,6 +943,15 @@ namespace TrialOfCrusaders.Resources.Text {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die You lose half of your current geo. Each time you DO NOT pick this power if offered, shuffle 2 additional copies in the draft pool. ähnelt.
+        /// </summary>
+        internal static string Regrets {
+            get {
+                return ResourceManager.GetString("Regrets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Powers are more common in shops, but ALL shop prices are increased by 50%. ähnelt.
         /// </summary>
         internal static string RelicSeeker {

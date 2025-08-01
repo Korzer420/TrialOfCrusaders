@@ -508,10 +508,14 @@ public class InventoryController : BaseController
             {
                 "GG_Radiance" => "The brightest light shines at the end of the trial.",
                 "GG_Grimm_Nightmare" => "Will the crusader be engulfed by the scarlet flames?",
-                _ => "The cloud darken in the distance..."
+                _ => "The clouds darken in the distance..."
             };
             return text;
         }
+        else if (key == "TUK_INTRO")
+            orig = "Hm? Get lost! Those treasures are for me alone.<page>Although.. if you give me your geo I may share my food and treasure with you.<page>I've no interest in the trial of this elder guy, but I might as well profit a bit from the fools that embark on it. Let me show you what I've in store for you.";
+        else if (key == "TUK_DECLINE" || key == "TUK_NOTENOUGH")
+            orig = "In case you survive somehow, you may visit me again. My stock keeps changing every time. And don't forget to bring enough geo!";
         return orig;
     }
 }

@@ -17,6 +17,8 @@ public class LocalSaveData
 
     public bool UnlockedToughness { get; set; }
 
+    public bool EncounteredTuk { get; set; }
+
     /// <summary>
     /// A dictionary of data which can be used for "retain" effects.
     /// </summary>

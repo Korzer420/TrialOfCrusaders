@@ -178,8 +178,9 @@ public class StageController : BaseController
         TrialOfCrusaders.Holder.StartCoroutine(CoroutineHelper.WaitUntil(() => UnityEngine.Object.Destroy(audioObject), () => source == null || !source.isPlaying));
     }
 
-    internal IEnumerator WaitForTransition()
+    internal IEnumerator InitiateTransition()
     {
+        ModHooks.GetPlayerBoolHook += GrantInvinciblity;
         HeroController.instance.RelinquishControl();
         float passedTime = 0f;
         while (passedTime < 2)
@@ -194,7 +195,16 @@ public class StageController : BaseController
         specialTransition.LoadIntoDream = false;
         transition.transform.position = new(-5000, -5000f);
         specialTransition.StartGodhomeTransition();
+        ModHooks.GetPlayerBoolHook -= GrantInvinciblity;
     }
+
+    private bool GrantInvinciblity(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.isInvincible))
+            return true;
+        return orig;
+    }
+
 
     #endregion
 
@@ -268,8 +278,6 @@ public class StageController : BaseController
                         //    CurrentRoomIndex = 47;
 
                         CurrentRoomIndex++;
-                        if (CurrentRoomIndex == 2)
-                            CurrentRoomIndex = 48;
                         QuietRoom = CurrentRoomData[CurrentRoomIndex].IsQuietRoom;
                         if (QuietRoom)
                             info.SceneName = "GG_Engine";
@@ -295,7 +303,7 @@ public class StageController : BaseController
                             && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
                         {
                             float treasureChance = 5f;
-                            float shopChance = 5f;
+                            float shopChance = 75f;
                             if (CurrentRoomNumber % 10 == 7)
                             {
                                 shopChance += 3f;
@@ -407,7 +415,7 @@ public class StageController : BaseController
         else if (QuietRoom && !CurrentRoom.IsQuietRoom)
             _roomCounter.text = GameManager.instance.sceneName == "GG_Engine"
                 ? "Treasure room"
-                : "Shop";
+                : (SaveManager.CurrentSaveData.EncounteredTuk ? "Shop" : "???");
         if (!PowerRef.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
@@ -529,9 +537,26 @@ public class StageController : BaseController
             {
                 self.AddState("Show Shop", () =>
                 {
+                    SaveManager.CurrentSaveData.EncounteredTuk = true;
                     self.GetComponent<ShopStock>().GenerateShopUI();
                 }, FsmTransitionData.FromTargetState("Talk Finish").WithEventName("CONVO_FINISH"));
-                self.GetState("Title").AdjustTransitions("Show Shop");
+                if (SaveManager.CurrentSaveData.EncounteredTuk)
+                    self.GetState("Title").AdjustTransitions("Show Shop");
+                else
+                {
+                    self.AddState("Check Intro", () =>
+                    {
+                        if (SaveManager.CurrentSaveData.EncounteredTuk)
+                            self.SendEvent("FINISHED");
+                        else
+                            self.SendEvent("MEET");
+                    }, FsmTransitionData.FromTargetState("Box Up").WithEventName("MEET"),
+                    FsmTransitionData.FromTargetState("Show Shop").WithEventName("FINISHED"));
+                    self.GetState("Title").AdjustTransitions("Check Intro");
+                    self.GetState("Convo Choice").AdjustTransitions("Meet");
+                    self.GetState("Box Down 2").AdjustTransitions("Show Shop");
+                    self.GetState("Show Shop").AdjustTransitions("Box Up 2");
+                }
             }
             // 64.04, 113.4
         }
@@ -601,7 +626,9 @@ public class StageController : BaseController
             || GameManager.instance.sceneName == "GG_Spa"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
-            return CurrentRoomNumber >= CurrentRoomData.Count / 2;
+            return PhaseManager.CurrentGameMode.Mode != GameMode.GoldRush 
+                ? CurrentRoomNumber >= CurrentRoomData.Count / 2
+                : CurrentRoomNumber > 50;
         else if (name == nameof(PlayerData.spiderCapture))
             return false;
         return orig;

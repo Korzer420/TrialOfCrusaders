@@ -67,8 +67,6 @@ internal class CrusaderController : GameModeController
         }
         // This should only leave NKG, Pure Vessel and Radiance which we use as end bosses.
         availableRooms = [.. availableRooms.Where(x => x.BossRoom && !x.Available(false, currentProgress))];
-        if (availableRooms.Count != 3)
-            LogHelper.Write<TrialOfCrusaders>("Incorrect amount of final rooms.");
         roomList.Add(availableRooms[RngManager.GetRandom(0, availableRooms.Count - 1)]);
         //roomList.Add(availableRooms.First(x => x.Name == "GG_Radiance"));
 
@@ -76,13 +74,9 @@ internal class CrusaderController : GameModeController
         //var roomData = StageRef.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
         //roomList.Insert(1, roomData);
         //Test specific room.
-        //var selectedRoomData = StageRef.LoadRoomData().First(x => x.Name == "Tutorial_01");
+        //var selectedRoomData = StageController.LoadRoomData().Where(x => x.Name == "Mines_24");
         //Test room at start.
-        //roomList = [..selectedRoomData.AllowedEntrances.Select(x => new RoomData()
-        //{
-        //    Name = selectedRoomData.Name,
-        //    SelectedTransition = x
-        //}), .. roomList];
+        //roomList = [..selectedRoomData, ..roomList];
         // Test room insert
         //roomList.Insert(30, new RoomData()
         //{

@@ -44,6 +44,7 @@ public class HubController : BaseController
         On.GameManager.BeginSceneTransition += ModifySceneTransition;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory += BlockInventory;
+        ModHooks.GetPlayerBoolHook += OpenTrials;
     }
 
     protected override void Disable()
@@ -54,6 +55,7 @@ public class HubController : BaseController
         On.GameManager.BeginSceneTransition -= ModifySceneTransition;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory -= BlockInventory;
+        ModHooks.GetPlayerBoolHook -= OpenTrials;
     }
 
     #endregion
@@ -95,7 +97,10 @@ public class HubController : BaseController
                     .LocateMyFSM("Geo Counter")
                     .SendEvent("TO ZERO");
             }, true);
-            GameObject.Destroy(GameObject.Find("Bronze Trial Board"));
+            GameObject.Find("Bronze Trial Board").transform.position += new Vector3(10f, 0f);
+            GameObject.Find("Silver Trial Board").transform.position -= new Vector3(5f, 0f);
+            GameObject.Find("Gold Trial Board").transform.position -= new Vector3(5f, 0f);
+
         }
         catch (System.Exception ex)
         {
@@ -162,8 +167,11 @@ public class HubController : BaseController
             {
                 if (info.SceneName.Contains("Silver"))
                     SelectedGameMode = GameMode.Crusader;
-                else
+                else if (info.SceneName.Contains("Gold"))
                     SelectedGameMode = GameMode.GrandCrusader;
+                else
+                    SelectedGameMode = GameMode.GoldRush;
+
                 if (SelectedGameMode == GameMode.Crusader)
                     PhaseManager.CurrentGameMode = new CrusaderController();
                 else if (SelectedGameMode == GameMode.GrandCrusader)
@@ -278,6 +286,8 @@ public class HubController : BaseController
             return "Begin Trial of the Crusader?";
         else if (key == "TRIAL_BOARD_GOLD")
             return "Begin Trial of the Grand Crusader?";
+        else if (key == "TRIAL_BOARD_BRONZE")
+            return "Begin Trial of the Geo Panner?";
         else if (key == "LITTLE_FOOL_UNPAID")
             return "This trial is not available at the moment.";
         else if (key == "LITTLE_FOOL_DREAM")
@@ -320,6 +330,14 @@ public class HubController : BaseController
                 if (RngManager.Seed == 000001225)
                     TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(114f, 20.4f), false);
             }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+    }
+
+    private bool OpenTrials(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.colosseumBronzeOpened) || name == nameof(PlayerData.colosseumSilverOpened)
+            || name == nameof(PlayerData.colosseumGoldOpened))
+            return true;
+        return orig;
     }
 
     #endregion

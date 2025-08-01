@@ -411,6 +411,9 @@
   <data name="Recklessness" xml:space="preserve">
     <value>Great Slash and Dash Slash deal 400% increased damage, but you take damage if this doesn't kill the enemy.</value>
   </data>
+  <data name="Regrets" xml:space="preserve">
+    <value>You lose half of your current geo. Each time you DO NOT pick this power if offered, shuffle 2 additional copies in the draft pool.</value>
+  </data>
   <data name="RelicSeeker" xml:space="preserve">
     <value>Powers are more common in shops, but ALL shop prices are increased by 50%.</value>
   </data>

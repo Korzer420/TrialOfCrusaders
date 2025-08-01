@@ -88,7 +88,7 @@ public class ScoreController : BaseController
                     Score.HitlessFinalBoss = true;
             }
             if (traversed)
-            { 
+            {
                 Score.TraverseBonus++;
                 LogManager.Log("Left room through other exit. Increase traverse bonus");
             }
@@ -171,7 +171,7 @@ public class ScoreController : BaseController
         scoreboard.SetActive(true);
         scoreboard.GetComponent<Animator>().Play(0);
 
-        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(scoreboard.transform.Find("Panel/Score Text").gameObject, 
+        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(scoreboard.transform.Find("Panel/Score Text").gameObject,
             scoreboard.transform.Find("Button Prompts/Confirm Button").gameObject));
     }
 
@@ -303,11 +303,23 @@ public class ScoreController : BaseController
             }
             else if (self.FsmName == "Geo Pool")
             {
-                PDHelper.ColosseumSilverCompleted = true;
-                // Each power decreases the final value. 2 are ignored as spells are forced by certain rooms.
-                int baseGeoReward = HistoryRef.TempEntry.Score.Mode == GameMode.GrandCrusader
-                    ? 2500
-                    : 1500;
+                int baseGeoReward = 1500;
+                switch (HistoryRef.TempEntry.Score.Mode)
+                {
+                    case GameMode.GrandCrusader:
+                        PDHelper.ColosseumGoldCompleted = true;
+                        baseGeoReward = 2500;
+                        break;
+                    case GameMode.GoldRush:
+                        PDHelper.ColosseumBronzeCompleted = true;
+                        baseGeoReward = 5000;
+                        break;
+                    default:
+                        PDHelper.ColosseumSilverCompleted = true;
+                        baseGeoReward = 1500;
+                        break;
+                }
+
                 baseGeoReward = Math.Max(100, baseGeoReward - (HistoryRef.TempEntry.Powers.Count - 2) * 50);
                 if (HistoryRef.TempEntry.Powers.Contains(typeof(VoidHeart).Name))
                     baseGeoReward *= 2;
