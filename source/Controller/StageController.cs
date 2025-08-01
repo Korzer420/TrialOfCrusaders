@@ -303,7 +303,7 @@ public class StageController : BaseController
                             && !CurrentRoomData[CurrentRoomIndex + 1].IsQuietRoom)
                         {
                             float treasureChance = 5f;
-                            float shopChance = 75f;
+                            float shopChance = 5f;
                             if (CurrentRoomNumber % 10 == 7)
                             {
                                 shopChance += 3f;
