@@ -311,11 +311,11 @@ public class ScoreController : BaseController
                         baseGeoReward = 2500;
                         break;
                     case GameMode.GoldRush:
-                        PDHelper.ColosseumBronzeCompleted = true;
+                        PDHelper.ColosseumSilverCompleted = true;
                         baseGeoReward = 5000;
                         break;
                     default:
-                        PDHelper.ColosseumSilverCompleted = true;
+                        PDHelper.ColosseumBronzeCompleted = true;
                         baseGeoReward = 1500;
                         break;
                 }

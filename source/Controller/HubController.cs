@@ -1,4 +1,5 @@
-﻿using KorzUtils.Helper;
+﻿using HutongGames.PlayMaker.Actions;
+using KorzUtils.Helper;
 using Modding;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,8 +98,7 @@ public class HubController : BaseController
                     .LocateMyFSM("Geo Counter")
                     .SendEvent("TO ZERO");
             }, true);
-            GameObject.Find("Bronze Trial Board").transform.position += new Vector3(10f, 0f);
-            GameObject.Find("Silver Trial Board").transform.position -= new Vector3(5f, 0f);
+            GameObject.Find("Silver Trial Board").transform.position += new Vector3(5f, 0f);
             GameObject.Find("Gold Trial Board").transform.position -= new Vector3(5f, 0f);
 
         }
@@ -128,6 +128,8 @@ public class HubController : BaseController
                     GameHelper.OneTimeMessage("LITTLE_FOOL_CHALLENGE", LittleFoolDialog.Greeting, "Minor NPC");
                 });
             }
+            else if (self.gameObject.name == "Gold Trial Board" && self.FsmName == "Conversation Control")
+                self.GetState("State Check").GetFirstAction<PlayerDataBoolTest>().boolName.Value = nameof(PlayerData.colosseumBronzeCompleted);
         }
         catch (System.Exception ex)
         {
@@ -166,11 +168,11 @@ public class HubController : BaseController
             else if (info.SceneName.StartsWith("Room_Colosseum") && info.SceneName != "Room_Colosseum_01")
             {
                 if (info.SceneName.Contains("Silver"))
-                    SelectedGameMode = GameMode.Crusader;
+                    SelectedGameMode = GameMode.GoldRush;
                 else if (info.SceneName.Contains("Gold"))
                     SelectedGameMode = GameMode.GrandCrusader;
                 else
-                    SelectedGameMode = GameMode.GoldRush;
+                    SelectedGameMode = GameMode.Crusader;
 
                 if (SelectedGameMode == GameMode.Crusader)
                     PhaseManager.CurrentGameMode = new CrusaderController();
@@ -282,11 +284,11 @@ public class HubController : BaseController
     {
         if (key == "Explanation_Trial")
             return $"{PhaseManager.CurrentGameMode.Explanation}<page>{LobbyDialog.SeededTutorial}";
-        else if (key == "TRIAL_BOARD_SILVER")
+        else if (key == "TRIAL_BOARD_BRONZE")
             return "Begin Trial of the Crusader?";
         else if (key == "TRIAL_BOARD_GOLD")
             return "Begin Trial of the Grand Crusader?";
-        else if (key == "TRIAL_BOARD_BRONZE")
+        else if (key == "TRIAL_BOARD_SILVER")
             return "Begin Trial of the Geo Panner?";
         else if (key == "LITTLE_FOOL_UNPAID")
             return "This trial is not available at the moment.";

@@ -112,7 +112,6 @@ public static class PhaseManager
         {
             self.ContinueGame();
             PDHelper.CorniferAtHome = true;
-            PDHelper.ColosseumBronzeCompleted = true;
             PDHelper.ColosseumSilverOpened = true;
             PDHelper.ColosseumGoldOpened = true;
             PDHelper.GiantFlyDefeated = true;
