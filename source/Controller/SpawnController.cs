@@ -1,5 +1,6 @@
 ﻿using GlobalEnums;
 using KorzUtils.Helper;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using UnityEngine;
 
@@ -8,17 +9,16 @@ namespace TrialOfCrusaders.Controller;
 /// <summary>
 /// Controls the respawn in the starting room.
 /// </summary>
-internal static class SpawnController
+public class SpawnController : BaseController
 {
-    private static bool _enabled;
-    private static string _warpScene;
+    private string _warpScene;
 
-    //public static bool ContinueSpawn { get; set; }
+    //public bool ContinueSpawn { get; set; }
 
-    internal static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run, Phase.Result, Phase.Lobby];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enable Spawn Controller");
         PDHelper.RespawnMarkerName = "SpawnPoint";
         PDHelper.RespawnScene = "Room_Colosseum_01";
@@ -32,21 +32,17 @@ internal static class SpawnController
         On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint += HeroController_LocateSpawnPoint;
         On.GameManager.GetCurrentMapZone += PreventDreamRespawn;
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Spawn Controller");
         On.GameManager.BeginSceneTransition -= GameManager_BeginSceneTransition;
         On.HeroController.LocateSpawnPoint -= HeroController_LocateSpawnPoint;
         On.GameManager.GetCurrentMapZone -= PreventDreamRespawn;
-        _enabled = false;
     }
 
-    private static Transform HeroController_LocateSpawnPoint(On.HeroController.orig_LocateSpawnPoint orig, HeroController self)
+    private Transform HeroController_LocateSpawnPoint(On.HeroController.orig_LocateSpawnPoint orig, HeroController self)
     {
         Transform spawnPoint = orig(self);
         if (string.IsNullOrEmpty(_warpScene))
@@ -76,7 +72,7 @@ internal static class SpawnController
         return gameObject.transform;
     }
 
-    private static void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
+    private void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
         if (GameManager.instance?.RespawningHero == true)
         {
@@ -88,12 +84,12 @@ internal static class SpawnController
             info.EntryGateName = "left1";
             _warpScene = info.SceneName;
             //if (ContinueSpawn)
-            //    StageController.Initialize();
+            //    StageRef.Initialize();
         }
         orig(self, info);
     }
 
-    private static string PreventDreamRespawn(On.GameManager.orig_GetCurrentMapZone orig, GameManager self)
+    private string PreventDreamRespawn(On.GameManager.orig_GetCurrentMapZone orig, GameManager self)
     {
         string value = orig(self);
         if (value == "GODS_GLORY" || value == "WHITE_PALACE" || value == "DREAM_WORLD")

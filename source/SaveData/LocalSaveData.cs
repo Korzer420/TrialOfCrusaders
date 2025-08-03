@@ -5,8 +5,6 @@ namespace TrialOfCrusaders.SaveData;
 
 public class LocalSaveData
 {
-    #region Non-Run Data
-
     public List<HistoryData> OldRunData { get; set; } = [];
 
     public ArchiveData Archive { get; set; } = new();
@@ -19,7 +17,12 @@ public class LocalSaveData
 
     public bool UnlockedToughness { get; set; }
 
-    #endregion
+    public bool EncounteredTuk { get; set; }
+
+    /// <summary>
+    /// A dictionary of data which can be used for "retain" effects.
+    /// </summary>
+    public Dictionary<string, string> RetainData { get; set; } = [];
 
     // ToDo: Support save inside a run.
     //#region Stage Data
@@ -91,35 +94,35 @@ public class LocalSaveData
     //    Score = Score.Copy(),
     //    // All these values are updated even though the rest isn't.
     //    // This is to prevent cheese by resetting the game upon loosing one of these one time effects.
-    //    CocoonUsed = CombatController.HasPower<Cocoon>(out _),
-    //    DamoclesUsed = CombatController.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatController.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatController.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatController.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatController.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatController.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    CocoonUsed = PowerRef.HasPower<Cocoon>(out _),
+    //    DamoclesUsed = PowerRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = PowerRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = PowerRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !PowerRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !PowerRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !PowerRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //public LocalSaveData GetUpdatedData() => new()
     //{
     //    OldRunData = OldRunData,
-    //    CurrentRoomNumber = StageController.CurrentRoomNumber,
-    //    RoomList = [.. StageController.CurrentRoomData.Select(x => $"{x.Name}{x.SelectedTransition}")],
-    //    ObtainedPowers = [.. CombatController.ObtainedPowers.Select(x => x.Name)],
-    //    CombatLevel = CombatController.CombatLevel,
-    //    SpiritLevel = CombatController.SpiritLevel,
-    //    EnduranceLevel = CombatController.EnduranceLevel,
+    //    CurrentRoomNumber = StageRef.CurrentRoomNumber,
+    //    RoomList = [.. StageRef.CurrentRoomData.Select(x => $"{x.Name}{x.SelectedTransition}")],
+    //    ObtainedPowers = [.. PowerRef.ObtainedPowers.Select(x => x.Name)],
+    //    CombatLevel = CombatRef.CombatLevel,
+    //    SpiritLevel = CombatRef.SpiritLevel,
+    //    EnduranceLevel = CombatRef.EnduranceLevel,
     //    CurrentHealth = PDHelper.Health,
     //    RandomSeed = RngProvider.Seed,
     //    CurrentProgress = DetermineProgress(),
-    //    Score = ScoreController.Score.Copy(),
-    //    CocoonUsed = CombatController.HasPower(out Cocoon cocoon),
-    //    DamoclesUsed = CombatController.HasPower(out Damocles damocles) && damocles.Triggered,
-    //    FocusEnergyUsed = CombatController.HasPower<FocusedEnergy>(out _),
-    //    InUtterDarknessUsed = CombatController.HasPower<InUtterDarkness>(out _),
-    //    FragileGreedActive = !CombatController.HasPower(out FragileGreed greed) || greed.GreedActive,
-    //    FragileSpiritActive = !CombatController.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
-    //    FragileStrengthActive = !CombatController.HasPower(out FragileStrength strength) || strength.StrengthActive
+    //    Score = ScoreRef.Score.Copy(),
+    //    CocoonUsed = PowerRef.HasPower(out Cocoon cocoon),
+    //    DamoclesUsed = PowerRef.HasPower(out Damocles damocles) && damocles.Triggered,
+    //    FocusEnergyUsed = PowerRef.HasPower<FocusedEnergy>(out _),
+    //    InUtterDarknessUsed = PowerRef.HasPower<InUtterDarkness>(out _),
+    //    FragileGreedActive = !PowerRef.HasPower(out FragileGreed greed) || greed.GreedActive,
+    //    FragileSpiritActive = !PowerRef.HasPower(out FragileSpirit spirit) || spirit.SpiritActive,
+    //    FragileStrengthActive = !PowerRef.HasPower(out FragileStrength strength) || strength.StrengthActive
     //};
 
     //#endregion

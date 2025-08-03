@@ -34,6 +34,6 @@ internal class ImprovedStalwartShell : Power
         ILCursor cursor = new(context);
         cursor.Goto(0);
         cursor.GotoNext(MoveType.After, x => x.MatchLdfld<HeroController>("INVUL_TIME_STAL"));
-        cursor.EmitDelegate<Func<float, float>>(x => x * (1 + CombatController.EnduranceLevel / 20f));
+        cursor.EmitDelegate<Func<float, float>>(x => x * (1 + CombatRef.EnduranceLevel / 20f));
     }
 }

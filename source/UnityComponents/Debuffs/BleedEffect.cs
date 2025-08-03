@@ -1,7 +1,6 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
-using TrialOfCrusaders.Manager;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.Debuffs;
 

@@ -11,4 +11,9 @@ public enum GameMode
     /// 100 rooms.
     /// </summary>
     GrandCrusader,
+
+    /// <summary>
+    /// Needs 5000 geo for ending.
+    /// </summary>
+    GoldRush
 }

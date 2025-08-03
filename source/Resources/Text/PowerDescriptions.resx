@@ -129,8 +129,17 @@
   <data name="BaldurShell" xml:space="preserve">
     <value>Grants a shield while focusing.</value>
   </data>
+  <data name="Banish" xml:space="preserve">
+    <value>Holding the quick map button for 5 seconds will PERMANENTLY remove the current room from the room selection. Can only be used once per run. Trying to banish a room while another is already banished will replace it instead.</value>
+  </data>
   <data name="BindingCircle" xml:space="preserve">
     <value>Hitting an enemy with the dream nail can root them shortly.</value>
+  </data>
+  <data name="BrighterFuture" xml:space="preserve">
+    <value>Each time you forfeit a power selection you gain 200 geo.</value>
+  </data>
+  <data name="BrittleShell" xml:space="preserve">
+    <value>All taken damage is set to 1. Increases by 1 each time you take damage.</value>
   </data>
   <data name="BrutalStrikes" xml:space="preserve">
     <value>Nail arts ignore armor.</value>
@@ -158,6 +167,9 @@
   </data>
   <data name="Cocoon" xml:space="preserve">
     <value>Grants 6 lifeblood. This power is in all draft pools.</value>
+  </data>
+  <data name="Credit" xml:space="preserve">
+    <value>Instantly grants 1000 geo. The next 1000 geo you obtain will be used to pay off your debt. If you don't pay off your debt by the time you reach the final boss... you'll die instantly.</value>
   </data>
   <data name="CullTheWeak" xml:space="preserve">
     <value>Status effects are stronger. Doesn't apply to shattered mind.</value>
@@ -195,8 +207,8 @@
   <data name="Desperation" xml:space="preserve">
     <value>Focus speed increases with missing health.</value>
   </data>
-  <data name="IntimidatingShout" xml:space="preserve">
-    <value>Entering a room applies weakened to all enemies.</value>
+  <data name="Discount" xml:space="preserve">
+    <value>Shops prices are reduced by 30%.</value>
   </data>
   <data name="DreamNail" xml:space="preserve">
     <value>Unlocks the dream nail to gather soul from hit foes.</value>
@@ -220,7 +232,7 @@
     <value>Increases your movement speed while recovering from a hit.</value>
   </data>
   <data name="Fade" xml:space="preserve">
-    <value>After standing still for 5 second you no longer take damage. Breaks on any action.</value>
+    <value>After standing still for 5 second you no longer take damage. Breaks on any action. Doesn't work in Boss rooms.</value>
   </data>
   <data name="FragileGreed" xml:space="preserve">
     <value>Geo is 200% more worth. No longer works upon taking damage.</value>
@@ -233,6 +245,9 @@
   </data>
   <data name="FuryOfTheFallen" xml:space="preserve">
     <value>While at 1 health, increase nail damage significantly.</value>
+  </data>
+  <data name="Gambling" xml:space="preserve">
+    <value>You may reroll a power selection up to 2 times, but each reroll has a high chance to yield just geo instead.</value>
   </data>
   <data name="GatheringSwarm" xml:space="preserve">
     <value>Pulls nearby geo towards you.</value>
@@ -339,6 +354,9 @@
   <data name="Interest" xml:space="preserve">
     <value>Geo value is slightly increased.</value>
   </data>
+  <data name="IntimidatingShout" xml:space="preserve">
+    <value>Entering a room applies weakened to all enemies.</value>
+  </data>
   <data name="InUtterDarkness" xml:space="preserve">
     <value>Fully heals you. You can no longer heal. Focus now spawns a shade which afflicts debuffs.</value>
   </data>
@@ -356,6 +374,9 @@
   </data>
   <data name="MarkOfPride" xml:space="preserve">
     <value>Increases the nail range significantly. Overwrites Longnail.</value>
+  </data>
+  <data name="Mediocracy" xml:space="preserve">
+    <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
   </data>
   <data name="MercilessPursuit" xml:space="preserve">
     <value>Attacks in the same direction within half a second grant stacking attack speed.</value>
@@ -390,6 +411,12 @@
   <data name="Recklessness" xml:space="preserve">
     <value>Great Slash and Dash Slash deal 400% increased damage, but you take damage if this doesn't kill the enemy.</value>
   </data>
+  <data name="Regrets" xml:space="preserve">
+    <value>You lose half of your current geo. Each time you DO NOT pick this power if offered, shuffle 2 additional copies in the draft pool.</value>
+  </data>
+  <data name="RelicSeeker" xml:space="preserve">
+    <value>Powers are more common in shops, but ALL shop prices are increased by 50%.</value>
+  </data>
   <data name="Revenge" xml:space="preserve">
     <value>Killing an enemy that dealt damage to you recently restores a bit of health.</value>
   </data>
@@ -410,6 +437,9 @@
   </data>
   <data name="ShapeOfUnn" xml:space="preserve">
     <value>Focus can be casted while moving on the ground.</value>
+  </data>
+  <data name="SharedFood" xml:space="preserve">
+    <value>Entering a shop restores 5 masks.</value>
   </data>
   <data name="SharpShadow" xml:space="preserve">
     <value>Your shade dash is extended and deals damage.</value>
@@ -468,16 +498,13 @@
   <data name="Versatility" xml:space="preserve">
     <value>The first nail hit after casting a spell grants bonus soul.</value>
   </data>
+  <data name="WaywardCompass" xml:space="preserve">
+    <value>While in combat, points to the nearest required enemy.</value>
+  </data>
   <data name="WeakenedHusk" xml:space="preserve">
     <value>Enemies hit by spells are sometimes inflicted with shattered mind.</value>
   </data>
   <data name="Weaversong" xml:space="preserve">
     <value>Spawns weavers that assist you in battle.</value>
-  </data>
-  <data name="Mediocracy" xml:space="preserve">
-    <value>Each time you pick an uncommon power, there is a chance that an endurance orb will spawn. The chance increases for each uncommon power you pick in a row.</value>
-  </data>
-  <data name="WaywardCompass" xml:space="preserve">
-    <value>While in combat, points to the nearest required enemy.</value>
   </data>
 </root>

@@ -28,7 +28,7 @@ internal class Pyroblast : Power
     {
         orig(self);
         if (self.IsCorrectContext("damages_enemy", null, "Send Event") && (self.Fsm.GameObject.name.Contains("Fireball")))
-            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false && RngManager.GetRandom(0, 20) <= CombatController.SpiritLevel)
-                self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatController.SpiritLevel);
+            if (self.Target.Value.GetComponent<HealthManager>()?.isDead == false && RngManager.GetRandom(0, 20) <= CombatRef.SpiritLevel)
+                self.Target.Value.GetOrAddComponent<BurnEffect>().AddDamage(self.DamageDealt.Value / 2 + 5 + CombatRef.SpiritLevel);
     }
 }

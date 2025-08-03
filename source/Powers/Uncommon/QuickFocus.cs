@@ -3,7 +3,6 @@ using KorzUtils.Helper;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -14,8 +13,6 @@ internal class QuickFocus : Power
     public override Rarity Tier => Rarity.Uncommon;
 
     public override DraftPool Pools => DraftPool.Charm | DraftPool.Upgrade | DraftPool.Ability;
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     public override bool CanAppear => !HasPower<ShiningBound>();
 

@@ -10,5 +10,7 @@ public class GlobalSaveData
 
     public int HistoryAmount { get; set; } = 20;
 
+    public bool UseCustomSprites { get; set; }
+
     #endregion
 }

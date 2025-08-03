@@ -49,7 +49,7 @@ internal class ImprovedSporeshroom : Power
         {
             if (Cloud == null)
                 yield break;
-            yield return new WaitForSeconds(UnityEngine.Random.Range(Math.Max(8, 75 - (CombatController.EnduranceLevel * 3 + CombatController.CombatLevel)), 91));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(Math.Max(8, 75 - (CombatRef.EnduranceLevel * 3 + CombatRef.CombatLevel)), 91));
             GameObject newCloud = GameObject.Instantiate(Cloud, HeroController.instance.transform.position,
             Quaternion.identity);
             newCloud.SetActive(true);

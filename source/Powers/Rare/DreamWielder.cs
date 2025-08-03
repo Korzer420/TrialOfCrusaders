@@ -1,10 +1,8 @@
 ﻿using KorzUtils.Enums;
 using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Common;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -16,9 +14,7 @@ internal class DreamWielder : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Upgrade | DraftPool.Charm | DraftPool.Ability;
 
-    public override bool CanAppear => CombatController.HasPower<DreamNail>(out _) && !CombatController.HasPower<ShiningBound>(out _);
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
+    public override bool CanAppear => PowerRef.HasPower<DreamNail>(out _) && !PowerRef.HasPower<ShiningBound>(out _);
 
     protected override void Enable() => CharmHelper.EnsureEquipCharm(CharmRef.DreamWielder);
 

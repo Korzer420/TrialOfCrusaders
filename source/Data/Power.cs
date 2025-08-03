@@ -73,7 +73,14 @@ public abstract class Power : IEquatable<Power>
         }
     }
 
-    public virtual Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities.Placeholder"); //SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
+    public Sprite Sprite
+    {
+        get
+        {
+            string spriteName = GetType().Name;
+            return SpriteManager.GetSprite($"Abilities.{spriteName}");
+        }
+    }
 
     /// <summary>
     /// Gets the stat scaling that apply to this ability.
@@ -88,7 +95,7 @@ public abstract class Power : IEquatable<Power>
         get
         {
             string name = Name + ((int)Scaling switch
-            { 
+            {
                 1 => " (C)",
                 2 => " (S)",
                 3 => " (C, S)",
@@ -106,6 +113,18 @@ public abstract class Power : IEquatable<Power>
     /// Gets or sets the draft pools this power is in.
     /// </summary>
     public virtual DraftPool Pools => DraftPool.None;
+
+    #endregion
+
+    #region Shorthands
+
+    protected static CombatController CombatRef => ControllerShorthands.CombatRef;
+
+    protected static StageController StageRef => ControllerShorthands.StageRef;
+
+    protected static ScoreController ScoreRef => ControllerShorthands.ScoreRef;
+
+    protected static PowerController PowerRef => ControllerShorthands.PowerRef;
 
     #endregion
 
@@ -148,7 +167,7 @@ public abstract class Power : IEquatable<Power>
         {
             LogManager.Log("Failed to disable power " + Name, ex);
         }
-        
+
     }
 
     /// <summary>
@@ -171,7 +190,7 @@ public abstract class Power : IEquatable<Power>
     /// </summary>
     protected void StopRoutine(Coroutine coroutine) => TrialOfCrusaders.Holder.StopCoroutine(coroutine);
 
-    protected bool HasPower<T>() where T : Power => CombatController.HasPower<T>(out _);
+    protected bool HasPower<T>() where T : Power => PowerRef.HasPower<T>(out _);
 
     #endregion
 

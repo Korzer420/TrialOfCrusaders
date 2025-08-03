@@ -1,8 +1,7 @@
-﻿using KorzUtils.Helper;
-using Modding.Utils;
-using TrialOfCrusaders.Controller;
+﻿using Modding.Utils;
 using TrialOfCrusaders.UnityComponents.Debuffs;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.UnityComponents.PowerElements;
 
@@ -40,7 +39,7 @@ internal class BurningGround : MonoBehaviour
         if (_igniteCooldown > 0f)
             return;
         _igniteCooldown = 1.5f;
-        col.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(100 + CombatController.SpiritLevel * 2);
+        col.gameObject.GetOrAddComponent<BurnEffect>().AddDamage(100 + CombatRef.SpiritLevel * 2);
     }
 
     private void SpawnFlames(int count)

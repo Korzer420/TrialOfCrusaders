@@ -48,7 +48,7 @@ internal class ImprovedCrystalDash : Power
 
     private IEnumerator WaitInvincibilty(GameObject dummy)
     {
-        _invincibilityCooldown = 15f - (CombatController.EnduranceLevel / 4f);
+        _invincibilityCooldown = 15f - (CombatRef.EnduranceLevel / 4f);
         while(_invincibilityCooldown > 0f && HeroController.instance != null)
         {
             if (!HeroController.instance.acceptingInput)

@@ -20,7 +20,7 @@ internal class DeepBreath : Power
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
-        float soulToRestore = 5 + CombatController.SpiritLevel;
+        float soulToRestore = 5 + CombatRef.SpiritLevel;
         float missingHealth = PDHelper.MaxHealth / PDHelper.Health;
         soulToRestore *= missingHealth;
         HeroController.instance.AddMPCharge(Mathf.CeilToInt(soulToRestore));

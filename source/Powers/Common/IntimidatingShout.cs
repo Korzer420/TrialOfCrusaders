@@ -23,9 +23,9 @@ internal class IntimidatingShout : Power
         orig(self, setHazardMarker, preventRunBob);
         try
         {
-            for (int i = 0; i < CombatController.ActiveEnemies.Count; i++)
-                if (CombatController.ActiveEnemies[i] != null && CombatController.ActiveEnemies[i].gameObject.activeSelf)
-                    CombatController.ActiveEnemies[i].gameObject.AddComponent<WeakenedEffect>().Timer = 5 + CombatController.CombatLevel;
+            for (int i = 0; i < CombatRef.ActiveEnemies.Count; i++)
+                if (CombatRef.ActiveEnemies[i] != null && CombatRef.ActiveEnemies[i].gameObject.activeSelf)
+                    CombatRef.ActiveEnemies[i].gameObject.AddComponent<WeakenedEffect>().Timer = 5 + CombatRef.CombatLevel;
         }
         catch (System.Exception ex)
         {

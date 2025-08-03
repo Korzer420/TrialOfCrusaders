@@ -15,7 +15,7 @@ internal class ImprovedFuryOfTheFallen : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    public override bool CanAppear => CombatController.HasPower<FuryOfTheFallen>(out _);
+    public override bool CanAppear => PowerRef.HasPower<FuryOfTheFallen>(out _);
 
     public override DraftPool Pools => DraftPool.Risk | DraftPool.Combat | DraftPool.Upgrade | DraftPool.Charm;
 

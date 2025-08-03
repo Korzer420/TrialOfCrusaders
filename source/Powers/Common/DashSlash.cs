@@ -11,8 +11,6 @@ internal class DashSlash : Power
 
     public override DraftPool Pools => DraftPool.Combat | DraftPool.Ability;
 
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
-
     public override bool CanAppear => PDHelper.HasDash;
 
     protected override void Enable()

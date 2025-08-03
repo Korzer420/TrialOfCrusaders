@@ -2,14 +2,14 @@
 using MenuChanger;
 using MenuChanger.MenuElements;
 
-namespace TrialOfCrusaders.Controller;
+namespace TrialOfCrusaders.Manager;
 
 /// <summary>
 /// Handles the menu in the file selection.
 /// </summary>
-internal class MenuController : ModeMenuConstructor
+public class MenuManager : ModeMenuConstructor
 {
-    internal static void AddMode() => ModeMenu.AddMode(new MenuController());
+    internal static void AddMode() => ModeMenu.AddMode(new MenuManager());
 
     public override void OnEnterMainMenu(MenuPage modeMenu) { }
 
@@ -24,7 +24,7 @@ internal class MenuController : ModeMenuConstructor
 
     private void Button_OnClick()
     {
-        PhaseController.TransitionTo(Enums.Phase.Initialize);
+        PhaseManager.TransitionTo(Enums.Phase.Initialize);
         UIManager.instance.StartNewGame();
     }
 }

@@ -13,7 +13,7 @@ internal class ImprovedCarefreeMelody : Power
 
     public override Rarity Tier => Rarity.Rare;
 
-    public override bool CanAppear => CombatController.HasPower<CarefreeMelody>(out _);
+    public override bool CanAppear => PowerRef.HasPower<CarefreeMelody>(out _);
 
     public override DraftPool Pools => DraftPool.Endurance | DraftPool.Upgrade | DraftPool.Charm;
 

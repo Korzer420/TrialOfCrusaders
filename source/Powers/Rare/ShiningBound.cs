@@ -10,4 +10,6 @@ internal class ShiningBound : Power
     public override Rarity Tier => Rarity.Rare;
 
     public override DraftPool Pools => DraftPool.Treasure | DraftPool.Endurance;
+
+    public override bool CanAppear => !HasPower<BrittleShell>();
 }

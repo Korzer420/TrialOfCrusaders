@@ -1,64 +1,69 @@
-﻿using KorzUtils.Helper;
+﻿using HutongGames.PlayMaker.Actions;
+using KorzUtils.Helper;
 using Modding;
 using System.Collections.Generic;
 using System.Linq;
+using TrialOfCrusaders.Controller.GameController;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.UnityComponents.Other;
 using TrialOfCrusaders.UnityComponents.StageElements;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Controls everything outside the actual runs inside the lobby.
 /// </summary>
-internal static class HubController
+public class HubController : BaseController
 {
-    private static bool _enabled;
-    private static int _rolledSeed;
-    private static List<SeedTablet> _seedTablets = [];
+    private int _rolledSeed;
+    private List<SeedTablet> _seedTablets = [];
 
-    internal static GameObject Tink { get; set; }
+    internal GameObject Tink { get; set; }
 
-    internal static GameObject InspectPrefab { get; set; }
+    internal GameObject InspectPrefab { get; set; }
 
-    internal static GameMode SelectedGameMode { get; set; }
+    public GameMode SelectedGameMode { get; set; }
 
     #region Setup
 
-    internal static void Initialize()
+    public HubController()
     {
-        if (_enabled)
-            return;
+        PhaseManager.PhaseChanged += SetupStartRoom;
+    }
+
+    public override Phase[] GetActivePhases() => [Phase.Lobby];
+
+    protected override void Enable()
+    {
         LogManager.Log("Enable Hub Controller");
         On.PlayMakerFSM.OnEnable += FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneChanged;
         On.GameManager.BeginSceneTransition += ModifySceneTransition;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory += BlockInventory;
-        _enabled = true;
+        ModHooks.GetPlayerBoolHook += OpenTrials;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Hub Controller");
         On.PlayMakerFSM.OnEnable -= FsmEdits;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneChanged;
         On.GameManager.BeginSceneTransition -= ModifySceneTransition;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         On.HeroController.CanOpenInventory -= BlockInventory;
-        _enabled = false;
+        ModHooks.GetPlayerBoolHook -= OpenTrials;
     }
 
     #endregion
 
     #region Private Methods
 
-    private static void SetupTransitions()
+    private void SetupTransitions()
     {
         try
         {
@@ -93,13 +98,15 @@ internal static class HubController
                     .LocateMyFSM("Geo Counter")
                     .SendEvent("TO ZERO");
             }, true);
-            GameObject.Destroy(GameObject.Find("Bronze Trial Board"));
+            GameObject.Find("Silver Trial Board").transform.position += new Vector3(5f, 0f);
+            GameObject.Find("Gold Trial Board").transform.position -= new Vector3(5f, 0f);
+
         }
         catch (System.Exception ex)
         {
             LogManager.Log("Failed to setup hub transitions.", ex);
         }
-    } 
+    }
 
     #endregion
 
@@ -108,7 +115,7 @@ internal static class HubController
     /// <summary>
     /// Controls all FSM related modifications.
     /// </summary>
-    private static void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void FsmEdits(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         try
         {
@@ -121,6 +128,8 @@ internal static class HubController
                     GameHelper.OneTimeMessage("LITTLE_FOOL_CHALLENGE", LittleFoolDialog.Greeting, "Minor NPC");
                 });
             }
+            else if (self.gameObject.name == "Gold Trial Board" && self.FsmName == "Conversation Control")
+                self.GetState("State Check").GetFirstAction<PlayerDataBoolTest>().boolName.Value = nameof(PlayerData.colosseumBronzeCompleted);
         }
         catch (System.Exception ex)
         {
@@ -129,7 +138,7 @@ internal static class HubController
         orig(self);
     }
 
-    private static void ModifySceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
+    private void ModifySceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
     {
         try
         {
@@ -145,16 +154,11 @@ internal static class HubController
                 int finalSeed = int.Parse(string.Join("", _seedTablets.Select(x => x.Number.ToString())));
                 RngManager.Seeded = finalSeed != _rolledSeed;
                 RngManager.Seed = finalSeed;
-                StageController.CurrentRoomData = SetupManager.GenerateRun(SelectedGameMode);
-                StageController.CurrentRoomIndex = -1;
-                PhaseController.TransitionTo(Phase.Run);
-                // Grants mode specific items.
-                if (SelectedGameMode == GameMode.Crusader)
-                {
-                    PDHelper.HasLantern = true;
-                    PDHelper.HasSuperDash = true;
-                    PDHelper.HasAcidArmour = true;
-                }
+                StageRef.CurrentRoomData = PhaseManager.CurrentGameMode.GenerateRoomList(true);
+                StageRef.CurrentRoomIndex = -1;
+                PhaseManager.TransitionTo(Phase.Run);
+                PhaseManager.CurrentGameMode.SetupTreasurePool();
+                PhaseManager.CurrentGameMode.OnStart();
             }
             else if (info.SceneName == "Room_Colosseum_02")
             {
@@ -164,9 +168,18 @@ internal static class HubController
             else if (info.SceneName.StartsWith("Room_Colosseum") && info.SceneName != "Room_Colosseum_01")
             {
                 if (info.SceneName.Contains("Silver"))
-                    SelectedGameMode = GameMode.Crusader;
-                else
+                    SelectedGameMode = GameMode.GoldRush;
+                else if (info.SceneName.Contains("Gold"))
                     SelectedGameMode = GameMode.GrandCrusader;
+                else
+                    SelectedGameMode = GameMode.Crusader;
+
+                if (SelectedGameMode == GameMode.Crusader)
+                    PhaseManager.CurrentGameMode = new CrusaderController();
+                else if (SelectedGameMode == GameMode.GrandCrusader)
+                    PhaseManager.CurrentGameMode = new GrandCrusaderController();
+                else if (SelectedGameMode == GameMode.GoldRush)
+                    PhaseManager.CurrentGameMode = new GoldRushController();
                 PDHelper.HasDreamNail = false;
                 info.SceneName = "Deepnest_East_10";
                 info.EntryGateName = "left1";
@@ -179,14 +192,14 @@ internal static class HubController
         orig(self, info);
     }
 
-    private static void SceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    private void SceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         try
         {
             if (arg1.name == "Room_Colosseum_01")
-            { 
+            {
                 SetupTransitions();
-                CoroutineHelper.WaitForHero(GameManager.instance.SaveGame, true);
+                CoroutineHelper.WaitForHero(() => { GameManager.instance.SaveGame(); HeroController.instance.MaxHealth(); }, true);
             }
             else if (arg1.name == "Deepnest_East_10")
             {
@@ -202,7 +215,7 @@ internal static class HubController
                 Object.Destroy(GameObject.Find("ghost_shrines_0003_markoth_corpse_03 (2)"));
                 _rolledSeed = Random.Range(100000000, 1000000000);
                 // Prevent special seed from appearing.
-                while(_rolledSeed == 777777777)
+                while (_rolledSeed == 777777777)
                     _rolledSeed = Random.Range(100000000, 1000000000);
                 float xPosition = 18.2f;
                 float yPosition = 9.5f;
@@ -267,19 +280,16 @@ internal static class HubController
         }
     }
 
-    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "Explanation_Trial")
-        {
-            if (SelectedGameMode == GameMode.GrandCrusader)
-                return $"{LobbyDialog.ExplanationTrialGrandCrusader}<page>{LobbyDialog.SeededTutorial}";
-            else
-                return $"{LobbyDialog.ExplanationTrialCrusader}<page>{LobbyDialog.SeededTutorial}";
-        }
-        else if (key == "TRIAL_BOARD_SILVER")
+            return $"{PhaseManager.CurrentGameMode.Explanation}<page>{LobbyDialog.SeededTutorial}";
+        else if (key == "TRIAL_BOARD_BRONZE")
             return "Begin Trial of the Crusader?";
         else if (key == "TRIAL_BOARD_GOLD")
             return "Begin Trial of the Grand Crusader?";
+        else if (key == "TRIAL_BOARD_SILVER")
+            return "Begin Trial of the Geo Panner?";
         else if (key == "LITTLE_FOOL_UNPAID")
             return "This trial is not available at the moment.";
         else if (key == "LITTLE_FOOL_DREAM")
@@ -287,10 +297,49 @@ internal static class HubController
         return orig;
     }
 
-    private static bool BlockInventory(On.HeroController.orig_CanOpenInventory orig, HeroController self)
+    private bool BlockInventory(On.HeroController.orig_CanOpenInventory orig, HeroController self)
     {
         orig(self);
         return false;
+    }
+
+    private void SetupStartRoom(Phase currentPhase, Phase newPhase)
+    {
+        if (currentPhase == Phase.Lobby && newPhase == Phase.Run)
+            CoroutineHelper.WaitUntil(() =>
+            {
+                PDHelper.HasDreamNail = false;
+                GameObject pedestal = new("Pedestal");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                pedestal.transform.position = new(104.68f, 15.4f, 0);
+                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                pedestal.layer = 8; // Terrain layer
+                pedestal.SetActive(true);
+
+                pedestal = new("Pedestal2");
+                pedestal.AddComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Pedestal");
+                pedestal.transform.position = new(109f, 15.4f, 0);
+                pedestal.AddComponent<BoxCollider2D>().size = new(2f, 2.5f);
+                pedestal.layer = 8; // Terrain layer
+                pedestal.SetActive(true);
+                // Spawn two orbs at the start.
+                TreasureManager.SpawnShiny(TreasureType.PrismaticOrb, new(104.68f, 20.4f), false);
+                if (RngManager.Seed == 000000206)
+                    TreasureManager.SpawnShiny(TreasureType.RareOrb, new(109f, 20.4f), false);
+                else
+                    TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(109f, 20.4f), false);
+
+                if (RngManager.Seed == 000001225)
+                    TreasureManager.SpawnShiny(TreasureType.NormalOrb, new(114f, 20.4f), false);
+            }, () => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GG_Spa", true);
+    }
+
+    private bool OpenTrials(string name, bool orig)
+    {
+        if (name == nameof(PlayerData.colosseumBronzeOpened) || name == nameof(PlayerData.colosseumSilverOpened)
+            || name == nameof(PlayerData.colosseumGoldOpened))
+            return true;
+        return orig;
     }
 
     #endregion

@@ -1,4 +1,4 @@
-﻿using TrialOfCrusaders.Controller;
+using static TrialOfCrusaders.ControllerShorthands;
 using TrialOfCrusaders.Manager;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
@@ -43,9 +43,8 @@ internal class BurnEffect : MonoBehaviour
             {
                 int modifier = (int)_leftDuration + 1;
                 int damage = Mathf.CeilToInt(LeftDamage / modifier);
-                // Respect invinciblity
                 if (_enemy != null && _enemy.hp > 0)
-                    _enemy.ApplyExtraDamage(CombatController.DebuffsStronger ? Mathf.FloorToInt(damage * 1.5f) : damage);
+                    _enemy.ApplyExtraDamage(PowerRef.DebuffsStronger ? Mathf.FloorToInt(damage * 1.5f) : damage);
                 LeftDamage -= damage;
             }
             _leftDuration -= Time.deltaTime;

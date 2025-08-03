@@ -17,21 +17,21 @@ internal class SeethingLifeblood : Power
 
     protected override void Enable()
     {
-        StageController.RoomEnded += StageController_RoomCleared;
-        CombatController.TookDamage += CombatController_TookDamage;
+        StageRef.RoomEnded += StageController_RoomCleared;
+        CombatRef.TookDamage += CombatController_TookDamage;
     }
 
     private void StageController_RoomCleared(bool quietRoom, bool traversed)
     {
-        if (!quietRoom && !_takenDamage && RngManager.GetRandom(1, 40) <= CombatController.EnduranceLevel)
+        if (!quietRoom && !_takenDamage && RngManager.GetRandom(1, 40) <= CombatRef.EnduranceLevel)
             EventRegister.SendEvent("ADD BLUE HEALTH");
         _takenDamage = false;
     }
 
     protected override void Disable()
     {
-        StageController.RoomEnded -= StageController_RoomCleared;
-        CombatController.TookDamage -= CombatController_TookDamage;
+        StageRef.RoomEnded -= StageController_RoomCleared;
+        CombatRef.TookDamage -= CombatController_TookDamage;
     }
 
     private void CombatController_TookDamage() => _takenDamage = true;

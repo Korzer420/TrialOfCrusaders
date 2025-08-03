@@ -774,7 +774,8 @@
     "NeededProgress": 0,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
-    "EasyConditionalProgress": []
+    "EasyConditionalProgress": [],
+    "BigRoom": true
   },
   {
     "Name": "Ruins_House_01",
@@ -979,7 +980,7 @@
     "Name": "Abyss_15",
     "AllowedEntrances": [ "top1" ],
     "BossRoom": false,
-    "NeededProgress": 16,
+    "NeededProgress": 146,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
@@ -1184,25 +1185,25 @@
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": [ 4, 8 ]
   },
-  {
-    "Name": "Deepnest_17",
-    "AllowedEntrances": [ "top1", "left1", "bot1", "right1" ],
-    "BossRoom": false,
-    "NeededProgress": 2,
-    "ConditionalProgress": [],
-    "EasyNeededProgress": 1,
-    "EasyConditionalProgress": []
-  },
-  {
-    "Name": "Deepnest_01b",
-    "AllowedEntrances": [ "bot1", "top1", "right1", "right2", "top2" ],
-    "BossRoom": false,
-    "NeededProgress": 130,
-    "ConditionalProgress": [ 1, 128 ],
-    "EasyNeededProgress": 0,
-    "EasyConditionalProgress": [],
-    "BigRoom": true
-  },
+  //{
+  //  "Name": "Deepnest_17",
+  //  "AllowedEntrances": [ "top1", "left1", "bot1", "right1" ],
+  //  "BossRoom": false,
+  //  "NeededProgress": 2,
+  //  "ConditionalProgress": [],
+  //  "EasyNeededProgress": 1,
+  //  "EasyConditionalProgress": []
+  //},
+  //{
+  //  "Name": "Deepnest_01b",
+  //  "AllowedEntrances": [ "bot1", "top1", "right1", "right2", "top2" ],
+  //  "BossRoom": false,
+  //  "NeededProgress": 130,
+  //  "ConditionalProgress": [ 1, 128 ],
+  //  "EasyNeededProgress": 0,
+  //  "EasyConditionalProgress": [],
+  //  "BigRoom": true
+  //},
   {
     "Name": "Deepnest_02",
     "AllowedEntrances": [ "left1", "left2" ],
@@ -1212,16 +1213,16 @@
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
   },
-  {
-    "Name": "Deepnest_16",
-    "AllowedEntrances": [ "bot1" ],
-    "BossRoom": false,
-    "NeededProgress": 2,
-    "ConditionalProgress": [],
-    "EasyNeededProgress": 0,
-    "EasyConditionalProgress": [],
-    "BigRoom": true
-  },
+  //{
+  //  "Name": "Deepnest_16",
+  //  "AllowedEntrances": [ "bot1" ],
+  //  "BossRoom": false,
+  //  "NeededProgress": 2,
+  //  "ConditionalProgress": [],
+  //  "EasyNeededProgress": 0,
+  //  "EasyConditionalProgress": [],
+  //  "BigRoom": true
+  //},
   {
     "Name": "Deepnest_38",
     "AllowedEntrances": [ "bot1" ],
@@ -1556,15 +1557,15 @@
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": [ 1, 128 ]
   },
-  {
-    "Name": "Fungus3_05",
-    "AllowedEntrances": [ "right1", "left1" ],
-    "BossRoom": false,
-    "NeededProgress": 3,
-    "ConditionalProgress": [],
-    "EasyNeededProgress": 4,
-    "EasyConditionalProgress": []
-  },
+  //{
+  //  "Name": "Fungus3_05",
+  //  "AllowedEntrances": [ "right1", "left1" ],
+  //  "BossRoom": false,
+  //  "NeededProgress": 3,
+  //  "ConditionalProgress": [],
+  //  "EasyNeededProgress": 4,
+  //  "EasyConditionalProgress": []
+  //},
   {
     "Name": "Fungus3_11",
     "AllowedEntrances": [ "right1", "left1", "left2" ],

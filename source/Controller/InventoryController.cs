@@ -3,18 +3,18 @@ using HutongGames.PlayMaker.Actions;
 using KorzUtils.Data;
 using KorzUtils.Helper;
 using Modding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using TrialOfCrusaders.Data;
+using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
-using TrialOfCrusaders.Powers.Common;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class InventoryController
+public class InventoryController : BaseController
 {
     private const string CombatStat = "Combat Stat";
     private const string SpiritStat = "Spirit Stat";
@@ -23,7 +23,6 @@ internal static class InventoryController
     private const string SecondPowerSlot = "Second Power Slot";
     private const string ThirdPowerSlot = "Third Power Slot";
     private const string FourthPowerSlot = "Fourth Power Slot";
-    private const string Selector = "Selector";
     private const string MainSprite = "MainSprite";
     private const string PowerName = "Power Name";
     private const string PowerPool = "Power Pool";
@@ -32,6 +31,7 @@ internal static class InventoryController
     private const string PowerDescription = "Power Description";
     private const string PowerListDown = "Power List Down";
     private const string PowerListUp = "Power List Up";
+    public const string Selector = "Selector";
 
     #region Draft Pool Text Color
 
@@ -47,9 +47,8 @@ internal static class InventoryController
 
     #endregion
 
-    private static Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookup = [];
+    internal static Dictionary<string, (SpriteRenderer, TextMeshPro)> ElementLookup = [];
     private static PlayMakerFSM _inventoryFsm;
-    private static bool _enabled;
 
     #region Inventory setup
 
@@ -57,7 +56,7 @@ internal static class InventoryController
     {
         if (inventoryPage.transform.childCount > 1)
             return;
-        _elementLookup.Clear();
+        ElementLookup.Clear();
         CreateStatElements(inventoryPage.transform);
         CreatePowerList(inventoryPage.transform);
         CreateSeperators(inventoryPage.transform);
@@ -80,27 +79,27 @@ internal static class InventoryController
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, 1f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatController.CombatLevel}</color>";
+        currentElement.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatRef.CombatLevel}</color>";
         currentElement.fontSize = 3;
-        _elementLookup.Add(CombatStat, new(null, currentElement));
+        ElementLookup.Add(CombatStat, new(null, currentElement));
 
         currentElement = CreateTextElement(true);
         currentElement.name = SpiritStat;
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, 0f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatController.SpiritLevel}</color>";
+        currentElement.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatRef.SpiritLevel}</color>";
         currentElement.fontSize = 3;
-        _elementLookup.Add(SpiritStat, new(null, currentElement));
+        ElementLookup.Add(SpiritStat, new(null, currentElement));
 
         currentElement = CreateTextElement(true);
         currentElement.name = EnduranceStat;
         currentElement.transform.SetParent(statBox.transform);
         currentElement.transform.localPosition = new(0f, -1f);
         currentElement.alignment = TextAlignmentOptions.Left;
-        currentElement.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatController.EnduranceLevel}</color>";
+        currentElement.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatRef.EnduranceLevel}</color>";
         currentElement.fontSize = 3;
-        _elementLookup.Add(EnduranceStat, new(null, currentElement));
+        ElementLookup.Add(EnduranceStat, new(null, currentElement));
     }
 
     private static void CreatePowerList(Transform parent)
@@ -118,7 +117,7 @@ internal static class InventoryController
         currentElement.alignment = TextAlignmentOptions.Center;
         currentElement.text = $"-";
         currentElement.fontSize = 3;
-        _elementLookup.Add(FirstPowerSlot, new(null, currentElement));
+        ElementLookup.Add(FirstPowerSlot, new(null, currentElement));
 
         currentElement = CreateTextElement(true);
         currentElement.name = SecondPowerSlot;
@@ -127,7 +126,7 @@ internal static class InventoryController
         currentElement.alignment = TextAlignmentOptions.Center;
         currentElement.text = $"-";
         currentElement.fontSize = 3;
-        _elementLookup.Add(SecondPowerSlot, new(null, currentElement));
+        ElementLookup.Add(SecondPowerSlot, new(null, currentElement));
 
         currentElement = CreateTextElement(true);
         currentElement.name = ThirdPowerSlot;
@@ -136,7 +135,7 @@ internal static class InventoryController
         currentElement.alignment = TextAlignmentOptions.Center;
         currentElement.text = $"-";
         currentElement.fontSize = 3;
-        _elementLookup.Add(ThirdPowerSlot, new(null, currentElement));
+        ElementLookup.Add(ThirdPowerSlot, new(null, currentElement));
 
         currentElement = CreateTextElement(true);
         currentElement.name = FourthPowerSlot;
@@ -145,14 +144,14 @@ internal static class InventoryController
         currentElement.alignment = TextAlignmentOptions.Center;
         currentElement.text = $"-";
         currentElement.fontSize = 3;
-        _elementLookup.Add(FourthPowerSlot, new(null, currentElement));
+        ElementLookup.Add(FourthPowerSlot, new(null, currentElement));
 
         GameObject selectorPrefab = parent.parent.Find("Journal/selector").gameObject;
         GameObject selector = GameObject.Instantiate(selectorPrefab, powerList.transform);
         selector.name = Selector;
         selector.transform.localPosition = new(0f, 2.25f);
         selector.transform.localScale = new Vector3(2.7f, 1.6f, -0.1f);
-        _elementLookup.Add(Selector, new(selector.GetComponent<SpriteRenderer>(), null));
+        ElementLookup.Add(Selector, new(selector.GetComponent<SpriteRenderer>(), null));
 
         GameObject arrowObject = new(PowerListUp);
         arrowObject.layer = 5;
@@ -164,7 +163,7 @@ internal static class InventoryController
         spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         spriteRenderer.sortingLayerID = 629535577;
         spriteRenderer.sortingLayerName = "HUD";
-        _elementLookup.Add(PowerListUp, new(spriteRenderer, null));
+        ElementLookup.Add(PowerListUp, new(spriteRenderer, null));
 
         arrowObject = new(PowerListDown);
         arrowObject.layer = 5;
@@ -176,7 +175,7 @@ internal static class InventoryController
         spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Other.Arrow");
         spriteRenderer.sortingLayerID = 629535577;
         spriteRenderer.sortingLayerName = "HUD";
-        _elementLookup.Add(PowerListDown, new(spriteRenderer, null));
+        ElementLookup.Add(PowerListDown, new(spriteRenderer, null));
     }
 
     private static void CreateSeperators(Transform parent)
@@ -205,7 +204,7 @@ internal static class InventoryController
         spriteRenderer.sprite = null;
         spriteRenderer.sortingLayerID = 629535577;
         spriteRenderer.sortingLayerName = "HUD";
-        _elementLookup.Add(MainSprite, new(spriteRenderer, null));
+        ElementLookup.Add(MainSprite, new(spriteRenderer, null));
     }
 
     private static void CreatePowerDetails(Transform parent)
@@ -220,7 +219,7 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerDetails.transform);
         currentElement.transform.localPosition = new(0f, 0f);
         currentElement.text = "";
-        _elementLookup.Add(PowerName, new(null, currentElement));
+        ElementLookup.Add(PowerName, new(null, currentElement));
 
         GameObject seperatorPrefab = parent.parent.Find("Charms/Equipped Charms/Inv_0017_divider").gameObject;
         GameObject seperator = GameObject.Instantiate(seperatorPrefab, powerDetails.transform);
@@ -232,21 +231,21 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerDetails.transform);
         currentElement.transform.localPosition = new(0f, -1.7f);
         currentElement.text = $"";
-        _elementLookup.Add(PowerPool, new(null, currentElement));
+        ElementLookup.Add(PowerPool, new(null, currentElement));
 
         currentElement = CreateTextElement();
         currentElement.name = PowerScaling;
         currentElement.transform.SetParent(powerDetails.transform);
         currentElement.transform.localPosition = new(0f, -4f);
         currentElement.text = $"";
-        _elementLookup.Add(PowerScaling, new(null, currentElement));
+        ElementLookup.Add(PowerScaling, new(null, currentElement));
 
         currentElement = CreateTextElement();
         currentElement.name = PowerRarity;
         currentElement.transform.SetParent(powerDetails.transform);
         currentElement.transform.localPosition = new(0f, -4.7f);
         currentElement.text = $"";
-        _elementLookup.Add(PowerRarity, new(null, currentElement));
+        ElementLookup.Add(PowerRarity, new(null, currentElement));
 
         seperator = GameObject.Instantiate(seperatorPrefab, powerDetails.transform);
         seperator.transform.localPosition = new(0, -0.3f);
@@ -257,10 +256,10 @@ internal static class InventoryController
         currentElement.transform.SetParent(powerDetails.transform);
         currentElement.transform.localPosition = new(0f, -6f);
         currentElement.text = "";
-        _elementLookup.Add(PowerDescription, new(null, currentElement));
+        ElementLookup.Add(PowerDescription, new(null, currentElement));
     }
 
-    private static TextMeshPro CreateTextElement(bool isTitle = false)
+    internal static TextMeshPro CreateTextElement(bool isTitle = false)
     {
         GameObject textElement = isTitle
             ? GameObject.Instantiate(GameObject.Find("_GameCameras").transform.Find("HudCamera/Inventory/Charms/Text Name").gameObject)
@@ -285,18 +284,18 @@ internal static class InventoryController
         {
             int index = fsm.FsmVariables.FindFsmInt("PowerIndex").Value;
             int powerIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
-            _elementLookup[PowerListUp].Item1.gameObject.SetActive(powerIndex != 0);
-            _elementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < CombatController.ObtainedPowers.Count);
+            ElementLookup[PowerListUp].Item1.gameObject.SetActive(powerIndex != 0);
+            ElementLookup[PowerListDown].Item1.gameObject.SetActive(powerIndex + 3 < PowerRef.ObtainedPowers.Count);
             index = powerIndex + index;
-            if (index >= CombatController.ObtainedPowers.Count)
+            if (index >= PowerRef.ObtainedPowers.Count)
                 LogManager.Log("Indexed power slot out of range.", KorzUtils.Enums.LogType.Error);
             else
             {
-                _elementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f - (index - powerIndex) * 1.5f);
-                Power selectedPower = CombatController.ObtainedPowers[index];
-                _elementLookup[PowerName].Item2.text = selectedPower.Name;
-                _elementLookup[PowerDescription].Item2.text = selectedPower.Description;
-                _elementLookup[PowerRarity].Item2.text = selectedPower.Tier switch
+                ElementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f - (index - powerIndex) * 1.5f);
+                Power selectedPower = PowerRef.ObtainedPowers[index];
+                ElementLookup[PowerName].Item2.text = selectedPower.Name;
+                ElementLookup[PowerDescription].Item2.text = selectedPower.Description;
+                ElementLookup[PowerRarity].Item2.text = selectedPower.Tier switch
                 {
                     Enums.Rarity.Rare => $"Rarity: <color={TreasureManager.RareTextColor}>Rare</color>",
                     Enums.Rarity.Uncommon => $"Rarity: <color={TreasureManager.UncommonTextColor}>Uncommon</color>",
@@ -314,8 +313,8 @@ internal static class InventoryController
                     scalingText = "-";
                 else
                     scalingText = scalingText.TrimEnd(',').TrimStart('\0');
-                _elementLookup[PowerScaling].Item2.text = $"Scaling: {scalingText}";
-                _elementLookup[MainSprite].Item1.sprite = selectedPower.Sprite;
+                ElementLookup[PowerScaling].Item2.text = $"Scaling: {scalingText}";
+                ElementLookup[MainSprite].Item1.sprite = selectedPower.Sprite;
 
                 string pool = string.Empty;
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Combat))
@@ -343,7 +342,7 @@ internal static class InventoryController
                 if (selectedPower.Pools.HasFlag(Enums.DraftPool.Debuff))
                     pool += $" <color={DebuffTextColor}>Debuff</color>,";
                 pool = pool.Trim().Trim(',');
-                _elementLookup[PowerPool].Item2.text = $"Pools: {pool}";
+                ElementLookup[PowerPool].Item2.text = $"Pools: {pool}";
             }
         }, FsmTransitionData.FromTargetState("L Arrow").WithEventName("UI LEFT"),
             FsmTransitionData.FromTargetState("R Arrow").WithEventName("UI RIGHT"));
@@ -358,21 +357,21 @@ internal static class InventoryController
 
         fsm.AddState("Check from left", () =>
         {
-            if (CombatController.ObtainedPowers.Count == 0)
+            if (PowerRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI RIGHT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
-                    _elementLookup[FirstPowerSlot].Item2.transform.parent.gameObject;
+                    ElementLookup[FirstPowerSlot].Item2.transform.parent.gameObject;
         }, FsmTransitionData.FromTargetState("Move to selection").WithEventName("FINISHED"),
             FsmTransitionData.FromTargetState("R Arrow").WithEventName("UI RIGHT"));
 
         fsm.AddState("Check from right", () =>
         {
-            if (CombatController.ObtainedPowers.Count == 0)
+            if (PowerRef.ObtainedPowers.Count == 0)
                 fsm.SendEvent("UI LEFT");
             else
                 fsm.gameObject.LocateMyFSM("Update Cursor").FsmVariables.FindFsmGameObject("Item").Value =
-                    _elementLookup[FirstPowerSlot].Item2.transform.parent.gameObject;
+                    ElementLookup[FirstPowerSlot].Item2.transform.parent.gameObject;
         }, FsmTransitionData.FromTargetState("Move to selection").WithEventName("FINISHED"),
             FsmTransitionData.FromTargetState("L Arrow").WithEventName("UI LEFT"));
 
@@ -397,13 +396,13 @@ internal static class InventoryController
             int currentFirstIndex = fsm.FsmVariables.FindFsmInt("PowerIndexFirstSlot").Value;
             if (currentIndex < 3)
             {
-                if (currentIndex + 1 >= CombatController.ObtainedPowers.Count)
+                if (currentIndex + 1 >= PowerRef.ObtainedPowers.Count)
                     return;
                 fsm.FsmVariables.FindFsmInt("PowerIndex").Value++;
             }
             else
             {
-                if (currentFirstIndex >= CombatController.ObtainedPowers.Count - 4)
+                if (currentFirstIndex >= PowerRef.ObtainedPowers.Count - 4)
                     return;
                 currentFirstIndex++;
                 UpdateList(currentFirstIndex);
@@ -432,9 +431,9 @@ internal static class InventoryController
         ];
         for (int i = 0; i < 4; i++)
         {
-            if (firstPowerIndex + i >= CombatController.ObtainedPowers.Count)
+            if (firstPowerIndex + i >= PowerRef.ObtainedPowers.Count)
                 break;
-            _elementLookup[elementNames[i]].Item2.text = CombatController.ObtainedPowers[firstPowerIndex + i].Name;
+            ElementLookup[elementNames[i]].Item2.text = PowerRef.ObtainedPowers[firstPowerIndex + i].Name;
         }
     }
 
@@ -454,52 +453,48 @@ internal static class InventoryController
             PowerScaling
         ];
         foreach (string element in elements)
-            _elementLookup[element].Item2.text = "-";
-        _elementLookup[MainSprite].Item1.sprite = null;
-        _elementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f);
+            ElementLookup[element].Item2.text = "-";
+        ElementLookup[MainSprite].Item1.sprite = null;
+        ElementLookup[Selector].Item1.transform.localPosition = new(0f, 2.25f);
         UpdateStats();
     }
 
     public static void UpdateStats()
     {
-        _elementLookup[CombatStat].Item2.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatController.CombatLevel}</color>";
-        _elementLookup[SpiritStat].Item2.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatController.SpiritLevel}</color>";
-        _elementLookup[EnduranceStat].Item2.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatController.EnduranceLevel}</color>";
+        ElementLookup[CombatStat].Item2.text = $"<color={CombatController.CombatStatColor}>Combat Level: {CombatRef.CombatLevel}</color>";
+        ElementLookup[SpiritStat].Item2.text = $"<color={CombatController.SpiritStatColor}>Spirit Level: {CombatRef.SpiritLevel}</color>";
+        ElementLookup[EnduranceStat].Item2.text = $"<color={CombatController.EnduranceStatColor}>Endurance Level: {CombatRef.EnduranceLevel}</color>";
     }
 
     #endregion
 
-    internal static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enabled inventory controller");
         ModHooks.GetPlayerBoolHook += ModHooks_GetPlayerBoolHook;
         ModHooks.LanguageGetHook += ModHooks_LanguageGetHook;
         UpdateList(0);
         UpdateStats();
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disabled inventory controller");
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         ModHooks.LanguageGetHook -= ModHooks_LanguageGetHook;
         ResetList();
-        _enabled = false;
     }
 
-    private static bool ModHooks_GetPlayerBoolHook(string name, bool orig)
+    private bool ModHooks_GetPlayerBoolHook(string name, bool orig)
     {
         if (name == "ToCInventoryAvailable")
-            return true;//return PhaseController.CurrentPhase == Enums.Phase.Run;
+            return true;
         return orig;
     }
 
-    private static string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
+    private string ModHooks_LanguageGetHook(string key, string sheetTitle, string orig)
     {
         if (key == "ToCPowers")
             return "Trial Powers";
@@ -507,16 +502,24 @@ internal static class InventoryController
             return string.Join(", ", Enumerable.Range(0, 9).Select(x => "MOTHWING CLOAK"));
         else if (key == "DREAM_DUMMY")
             return "All arrows point towards me. Not once, not twice, but thrice.";
-        else if (key == "ATRIUM_NPC_DREAM_1" && (ScoreController.Score.Mode == Enums.GameMode.Crusader || ScoreController.Score.Mode == Enums.GameMode.GrandCrusader))
+        else if (key == "ATRIUM_NPC_DREAM_1" && (ScoreRef.Score.Mode == Enums.GameMode.Crusader || ScoreRef.Score.Mode == Enums.GameMode.GrandCrusader))
         {
-            string text = StageController.CurrentRoomData.Last().Name switch
+            string text = StageRef.CurrentRoomData.Last().Name switch
             {
                 "GG_Radiance" => "The brightest light shines at the end of the trial.",
                 "GG_Grimm_Nightmare" => "Will the crusader be engulfed by the scarlet flames?",
-                _ => "The cloud darken in the distance..."
+                _ => "The clouds darken in the distance..."
             };
             return text;
         }
+        else if (key == "TUK_INTRO")
+            orig = "Hm? Get lost! Those treasures are for me alone.<page>Although.. if you give me your geo I may share my food and treasure with you.<page>I've no interest in the trial of this elder guy, but I might as well profit a bit from the fools that embark on it. Let me show you what I've in store for you.";
+        else if (key == "TUK_DECLINE" || key == "TUK_NOTENOUGH")
+            orig = "In case you survive somehow, you may visit me again. My stock keeps changing every time. And don't forget to bring enough geo!";
+        else if (key == "TUK_Upgrade")
+            orig = "Ah you're back! With the amount of geo you've given to me I've expanded my stock a bit. Take a look.";
+        else if (key == "TUK_Final_Upgrade")
+            orig = "Hehe, you provided me a significant amount of geo over our lasts encounters. I've been able to expand my stock one final time. As a sign of appreciation I'll now allow you to look at my hidden goods as well, though gated behind an additional cost obviously.";
         return orig;
     }
 }

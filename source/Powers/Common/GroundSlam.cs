@@ -39,7 +39,7 @@ internal class GroundSlam : Power
             {
                 Source = self.Fsm.GameObject,
                 AttackType = AttackTypes.Generic,
-                DamageDealt = CombatController.CombatLevel * 3,
+                DamageDealt = CombatRef.CombatLevel * 3,
                 Multiplier = 1,
                 MagnitudeMultiplier = 1.1f
             };

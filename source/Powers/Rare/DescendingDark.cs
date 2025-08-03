@@ -1,9 +1,7 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Uncommon;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -15,9 +13,7 @@ internal class DescendingDark : Power
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability | DraftPool.Upgrade;
 
-    public override bool CanAppear => CombatController.HasPower<DesolateDive>(out _);
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
+    public override bool CanAppear => PowerRef.HasPower<DesolateDive>(out _);
 
     protected override void Enable()
     {

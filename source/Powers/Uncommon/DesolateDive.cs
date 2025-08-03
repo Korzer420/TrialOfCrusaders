@@ -2,7 +2,6 @@
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Powers.Rare;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Uncommon;
 
@@ -13,8 +12,6 @@ internal class DesolateDive : Power
     public override Rarity Tier => Rarity.Uncommon;
 
     public override DraftPool Pools => DraftPool.Spirit | DraftPool.Ability;
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {

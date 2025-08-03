@@ -1,8 +1,6 @@
 ﻿using KorzUtils.Helper;
-using TrialOfCrusaders.Controller;
 using TrialOfCrusaders.Data;
 using TrialOfCrusaders.Enums;
-using UnityEngine;
 
 namespace TrialOfCrusaders.Powers.Rare;
 
@@ -17,8 +15,6 @@ internal class ImprovedGrimmchild : Power
     public override DraftPool Pools => DraftPool.Combat | DraftPool.Upgrade | DraftPool.Charm;
 
     public override bool CanAppear => HasPower<ImprovedGrimmchild>();
-
-    public override Sprite Sprite => SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + GetType().Name);
 
     protected override void Enable()
     {
@@ -37,7 +33,7 @@ internal class ImprovedGrimmchild : Power
         int normalDamage = self.Fsm.Variables.FindFsmInt("Damage").Value;
         bool correctContext = self.IsCorrectContext("Attack", "Enemy Damager", "Hit") && self.Fsm.GetState("Send Impact") != null;
         if (correctContext)
-            self.Fsm.Variables.FindFsmInt("Damage").Value = 15 + (CombatController.CombatLevel * 10);
+            self.Fsm.Variables.FindFsmInt("Damage").Value = 15 + (CombatRef.CombatLevel * 10);
         orig(self);
         if (correctContext)
             self.Fsm.Variables.FindFsmInt("Damage").Value = normalDamage;

@@ -103,10 +103,20 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>LobbyDialog.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Resources\Text\PowerDescriptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Text\SecretText.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>SecretText.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Text\ShopText.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ShopText.resx</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -133,6 +143,15 @@
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>LobbyDialog.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>PowerDescriptions.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\PowerDescriptions.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>PowerDescriptions.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Text\SecretText.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -141,6 +160,15 @@
 	  <EmbeddedResource Update="Resources\Text\SecretText.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>SecretText.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\ShopText.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ShopText.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Text\ShopText.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>ShopText.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 

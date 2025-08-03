@@ -14,85 +14,81 @@ using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Rare;
 using UnityEngine;
 using UnityEngine.UI;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
 /// <summary>
 /// Handles everything related to the score.
 /// </summary>
-public static class ScoreController
+public class ScoreController : BaseController
 {
-    private static bool _enabled;
-    private static Coroutine _timer;
-    private static int _finishedScores = 0;
-    private static bool _tookDamage = false;
+    private Coroutine _timer;
+    private int _finishedScores = 0;
+    private bool _tookDamage = false;
 
     #region Properties
 
-    public static GameObject ScoreboardPrefab { get; set; }
+    public GameObject ScoreboardPrefab { get; set; }
 
-    public static GameObject ResultSequencePrefab { get; set; }
+    public GameObject ResultSequencePrefab { get; set; }
 
-    public static ScoreData Score { get; set; } = new();
+    public ScoreData Score { get; set; } = new();
 
     #endregion
 
-    public static void Initialize()
+    public override Phase[] GetActivePhases() => [Phase.Run, Phase.Result];
+
+    protected override void Enable()
     {
-        if (_enabled)
-            return;
         LogManager.Log("Enable Score Controller");
-        CombatController.TookDamage += CombatController_TookDamage;
-        CombatController.EnemyKilled += CombatController_EnemyKilled;
-        StageController.RoomEnded += StageController_RoomEnded;
+        CombatRef.TookDamage += CombatController_TookDamage;
+        CombatRef.EnemyKilled += CombatController_EnemyKilled;
+        StageRef.RoomEnded += StageController_RoomEnded;
         On.HeroController.FinishedEnteringScene += HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable += SetupResultElements;
-        HistoryController.CreateEntry += PassHistoryData;
+        HistoryRef.CreateEntry += PassHistoryData;
         ModHooks.GetPlayerBoolHook += BlockPause;
         On.PlayerData.IncrementInt += CountGrubs;
         Score = new()
-        { 
-            Mode = HubController.SelectedGameMode
+        {
+            Mode = HubRef.SelectedGameMode
         };
         StartTimer();
-        _enabled = true;
     }
 
-    public static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disable Score Controller");
-        CombatController.TookDamage -= CombatController_TookDamage;
-        CombatController.EnemyKilled -= CombatController_EnemyKilled;
-        StageController.RoomEnded -= StageController_RoomEnded;
+        CombatRef.TookDamage -= CombatController_TookDamage;
+        CombatRef.EnemyKilled -= CombatController_EnemyKilled;
+        StageRef.RoomEnded -= StageController_RoomEnded;
         On.HeroController.FinishedEnteringScene -= HeroController_FinishedEnteringScene;
         On.PlayMakerFSM.OnEnable -= SetupResultElements;
-        HistoryController.CreateEntry -= PassHistoryData;
+        HistoryRef.CreateEntry -= PassHistoryData;
         ModHooks.GetPlayerBoolHook -= BlockPause;
         On.PlayerData.IncrementInt -= CountGrubs;
         StopTimer();
         Score = null;
-        _enabled = false;
     }
 
     #region Score Tracking
 
-    private static void CombatController_EnemyKilled(HealthManager enemy) => Score.CurrentKillStreak++;
+    private void CombatController_EnemyKilled(HealthManager enemy) => Score.CurrentKillStreak++;
 
-    private static void StageController_RoomEnded(bool quietRoom, bool traversed)
+    private void StageController_RoomEnded(bool quietRoom, bool traversed)
     {
         if (!quietRoom)
         {
             if (!_tookDamage)
             {
-                if (StageController.CurrentRoom.BossRoom)
+                if (StageRef.CurrentRoom.BossRoom)
                     Score.PerfectBossesBonus++;
-                if (StageController.CurrentRoomNumber == StageController.CurrentRoomData.Count)
+                if (StageRef.CurrentRoomNumber == StageRef.CurrentRoomData.Count)
                     Score.HitlessFinalBoss = true;
             }
             if (traversed)
-            { 
+            {
                 Score.TraverseBonus++;
                 LogManager.Log("Left room through other exit. Increase traverse bonus");
             }
@@ -100,7 +96,7 @@ public static class ScoreController
         _tookDamage = false;
     }
 
-    private static void CombatController_TookDamage()
+    private void CombatController_TookDamage()
     {
         _tookDamage = true;
         Score.CurrentKillStreak = 0;
@@ -109,7 +105,7 @@ public static class ScoreController
 
     #endregion
 
-    private static void PassHistoryData(HistoryData entry, Enums.RunResult result)
+    private void PassHistoryData(HistoryData entry, Enums.RunResult result)
     {
         entry.Score = Score.Copy();
         if (result == RunResult.Failed)
@@ -119,14 +115,14 @@ public static class ScoreController
         entry.Score.EssenceBonus = PDHelper.DreamOrbs;
     }
 
-    private static bool BlockPause(string name, bool orig)
+    private bool BlockPause(string name, bool orig)
     {
         if (name == nameof(PlayerData.disablePause))
-            return orig || PhaseController.CurrentPhase == Phase.Result;
+            return orig || PhaseManager.CurrentPhase == Phase.Result;
         return orig;
     }
 
-    private static void CountGrubs(On.PlayerData.orig_IncrementInt orig, PlayerData self, string intName)
+    private void CountGrubs(On.PlayerData.orig_IncrementInt orig, PlayerData self, string intName)
     {
         orig(self, intName);
         if (intName == nameof(PlayerData.grubsCollected))
@@ -138,7 +134,7 @@ public static class ScoreController
 
     #region Result show
 
-    internal static void SetupScoreboard(GameObject prefab)
+    internal void SetupScoreboard(GameObject prefab)
     {
         GameObject scoreObject = GameObject.Instantiate(prefab.LocateMyFSM("Challenge UI").GetState("Open UI").GetFirstAction<ShowBossDoorChallengeUI>().prefab.Value);
         scoreObject.name = "Scoreboard";
@@ -163,23 +159,23 @@ public static class ScoreController
         GameObject.DontDestroyOnLoad(ScoreboardPrefab);
     }
 
-    internal static void SetupResultInspect(GameObject prefab)
+    internal void SetupResultInspect(GameObject prefab)
     {
         ResultSequencePrefab = GameObject.Instantiate(prefab);
     }
 
-    internal static void DisplayScore()
+    internal void DisplayScore()
     {
         GameObject scoreboard = UnityEngine.Object.Instantiate(ScoreboardPrefab);
         scoreboard.transform.position = Vector3.zero;
         scoreboard.SetActive(true);
         scoreboard.GetComponent<Animator>().Play(0);
 
-        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(scoreboard.transform.Find("Panel/Score Text").gameObject, 
+        TrialOfCrusaders.Holder.StartCoroutine(ScoreTally(scoreboard.transform.Find("Panel/Score Text").gameObject,
             scoreboard.transform.Find("Button Prompts/Confirm Button").gameObject));
     }
 
-    private static IEnumerator ScoreTally(GameObject textObject, GameObject confirmButton)
+    private IEnumerator ScoreTally(GameObject textObject, GameObject confirmButton)
     {
         textObject.SetActive(false);
         confirmButton.SetActive(false);
@@ -236,7 +232,7 @@ public static class ScoreController
         PlayMakerFSM.BroadcastEvent("GG TRANSITION END");
     }
 
-    private static IEnumerator FadeInText(GameObject textObject, (string, int) value)
+    private IEnumerator FadeInText(GameObject textObject, (string, int) value)
     {
         textObject.SetActive(true);
         Text label = textObject.GetComponent<Text>();
@@ -287,7 +283,7 @@ public static class ScoreController
         _finishedScores++;
     }
 
-    private static void SetupResultElements(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void SetupResultElements(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         if (self.gameObject.name == "Colosseum Manager")
         {
@@ -307,13 +303,25 @@ public static class ScoreController
             }
             else if (self.FsmName == "Geo Pool")
             {
-                PDHelper.ColosseumSilverCompleted = true;
-                // Each power decreases the final value. 2 are ignored as spells are forced by certain rooms.
-                int baseGeoReward = HistoryController.TempEntry.Score.Mode == GameMode.GrandCrusader
-                    ? 2500
-                    : 1500;
-                baseGeoReward = Math.Max(100, baseGeoReward - (HistoryController.TempEntry.Powers.Count - 2) * 50);
-                if (HistoryController.TempEntry.Powers.Contains(typeof(VoidHeart).Name))
+                int baseGeoReward = 1500;
+                switch (HistoryRef.TempEntry.Score.Mode)
+                {
+                    case GameMode.GrandCrusader:
+                        PDHelper.ColosseumGoldCompleted = true;
+                        baseGeoReward = 2500;
+                        break;
+                    case GameMode.GoldRush:
+                        PDHelper.ColosseumSilverCompleted = true;
+                        baseGeoReward = 5000;
+                        break;
+                    default:
+                        PDHelper.ColosseumBronzeCompleted = true;
+                        baseGeoReward = 1500;
+                        break;
+                }
+
+                baseGeoReward = Math.Max(100, baseGeoReward - (HistoryRef.TempEntry.Powers.Count - 2) * 50);
+                if (HistoryRef.TempEntry.Powers.Contains(typeof(VoidHeart).Name))
                     baseGeoReward *= 2;
 
                 self.FsmVariables.FindFsmInt("Starting Pool").Value = baseGeoReward;
@@ -330,7 +338,7 @@ public static class ScoreController
         orig(self);
     }
 
-    private static void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
+    private void HeroController_FinishedEnteringScene(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
     {
         orig(self, setHazardMarker, preventRunBob);
         if (GameManager.instance.sceneName.Contains("Bronze"))
@@ -347,7 +355,7 @@ public static class ScoreController
         }
     }
 
-    private static GameObject CreateInspect()
+    private GameObject CreateInspect()
     {
         GameObject inspect = GameObject.Instantiate(ResultSequencePrefab);
         inspect.name = "Result inspect";
@@ -362,23 +370,23 @@ public static class ScoreController
             HeroController.instance.RegainControl();
             HeroController.instance.StartAnimationControl();
             PlayMakerFSM.BroadcastEvent("SHINY PICKED UP");
-            HistoryController.TempEntry.Score.Score = PDHelper.Geo;
-            HistoryController.TempEntry.RunId = HistoryController.TempEntry.GetRunId();
-            HistoryController.History ??= [];
-            HistoryController.History.Add(HistoryController.TempEntry);
-            if (HistoryController.History.Count > HistoryController.HistorySettings.HistoryAmount)
-                HistoryController.History.RemoveAt(0);
-            HistoryController.CheckArchiveUpdate();
-            HistoryController.TempEntry = null;
+            HistoryRef.TempEntry.Score.Score = PDHelper.Geo;
+            HistoryRef.TempEntry.RunId = HistoryRef.TempEntry.GetRunId();
+            HistoryRef.History ??= [];
+            HistoryRef.History.Add(HistoryRef.TempEntry);
+            if (HistoryRef.History.Count > HistoryRef.GlobalSettings.HistoryAmount)
+                HistoryRef.History.RemoveAt(0);
+            HistoryRef.CheckArchiveUpdate();
+            HistoryRef.TempEntry = null;
             GameManager.instance.SaveGame();
-            PhaseController.TransitionTo(Phase.Lobby);
+            PhaseManager.TransitionTo(Phase.Lobby);
             GameCameras.instance.hudCanvas.LocateMyFSM("Slide Out").SendEvent("IN");
             UnityEngine.Object.Destroy(inspect);
         });
         fsm.AddState("Display Score", () =>
         {
             PlayMakerFSM.BroadcastEvent("CROWD CHEER");
-            StageController.PlayClearSound(false);
+            StageRef.PlayClearSound(false);
             DisplayScore();
             PlayMakerFSM.BroadcastEvent("CROWD IDLE");
         }, FsmTransitionData.FromTargetState("Return Control").WithEventName("GG TRANSITION END"));
@@ -402,20 +410,20 @@ public static class ScoreController
 
     #region Timer Handling
 
-    public static void StartTimer()
+    public void StartTimer()
     {
         if (_timer != null)
             TrialOfCrusaders.Holder.StopCoroutine(_timer);
         _timer = TrialOfCrusaders.Holder.StartCoroutine(Timer());
     }
 
-    public static void StopTimer()
+    public void StopTimer()
     {
         if (_timer != null)
             TrialOfCrusaders.Holder.StopCoroutine(_timer);
     }
 
-    private static IEnumerator Timer()
+    private IEnumerator Timer()
     {
         while (true)
         {

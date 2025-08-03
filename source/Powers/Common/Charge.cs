@@ -28,7 +28,7 @@ internal class Charge : Power
     {
         Active = true;
         float passedTime = 0f;
-        while(passedTime <= 5 + CombatController.CombatLevel / 2)
+        while(passedTime <= 5 + CombatRef.CombatLevel / 2)
         {
             passedTime+= Time.deltaTime;
             yield return null;

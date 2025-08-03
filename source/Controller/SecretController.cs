@@ -6,18 +6,18 @@ using TrialOfCrusaders.Enums;
 using TrialOfCrusaders.Manager;
 using TrialOfCrusaders.Powers.Rare;
 using TrialOfCrusaders.Resources.Text;
+using TrialOfCrusaders.SaveData;
 using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
+using static TrialOfCrusaders.ControllerShorthands;
 
 namespace TrialOfCrusaders.Controller;
 
-internal static class SecretController
+public class SecretController : BaseController, ISaveData
 {
-    private static bool _enabled;
+    private readonly float[] _dummySequence = [0, 0, 0, 0, 0, 0, 270, 270, 270, 90, 90, 90, 90, 90, 90, 90, 90, 90, 180, 180, 180];
 
-    private static readonly float[] _dummySequence = [ 0, 0, 0, 0, 0, 0, 270, 270, 270, 90, 90, 90, 90, 90, 90, 90, 90, 90, 180, 180, 180];
-
-    private static readonly Dictionary<int, string> _stageHints = new()
+    private readonly Dictionary<int, string> _stageHints = new()
     {
         {4, "Skip" },
         {13, "One" },
@@ -31,46 +31,57 @@ internal static class SecretController
 
     #region Properties
 
-    public static bool UnlockedToughness { get; set; }
+    public bool UnlockedToughness { get; set; }
 
-    public static bool UnlockedHighRoller { get; set; }
+    public bool UnlockedHighRoller { get; set; }
 
-    public static bool UnlockedStashedContraband { get; set; }
+    public bool UnlockedStashedContraband { get; set; }
 
-    public static bool UnlockedSecretArchive { get; set; }
+    public bool UnlockedSecretArchive { get; set; }
 
-    public static int LeftRolls { get; set; } = 3;
+    public int SpendGeo { get; set; }
 
-    public static bool[] SkippedOrbs { get; set; } = [false, false, false];
+    public int ShopLevel { get; set; }
 
-    public static List<float> DummyHitSequence { get; set; } = [];
+    public int LeftRolls { get; set; }
+
+    public bool[] SkippedOrbs { get; set; } = [false, false, false];
+
+    public List<float> DummyHitSequence { get; set; } = [];
 
     #endregion
 
-    internal static void Initialize()
+    public SecretController()
     {
-        if (_enabled) 
-            return;
+        PhaseManager.PhaseChanged += CheckForReset;
+    }
+
+    private void CheckForReset(Phase currentPhase, Phase newPhase)
+    {
+        if (newPhase == Phase.Run)
+            SkippedOrbs = [false, false, false];
+    }
+
+    public override Phase[] GetActivePhases() => [Phase.Run, Phase.Result, Phase.Lobby];
+
+    protected override void Enable()
+    {
         LogManager.Log("Enabled secret controller");
         SkippedOrbs = [false, false, false];
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         LeftShinyFlag.LeftShinyBehind += LeftShinyFlag_LeftShinyBehind;
         On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
-        _enabled = true;
     }
 
-    internal static void Unload()
+    protected override void Disable()
     {
-        if (!_enabled)
-            return;
         LogManager.Log("Disabled secret controller");
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
         LeftShinyFlag.LeftShinyBehind -= LeftShinyFlag_LeftShinyBehind;
         On.PlayMakerFSM.OnEnable -= PlayMakerFSM_OnEnable;
-        _enabled = false;
     }
 
-    internal static void SetupItemScreen(PlayMakerFSM fsm, TreasureType treasure)
+    internal void SetupItemScreen(PlayMakerFSM fsm, TreasureType treasure)
     {
         string itemName, description;
         switch (treasure)
@@ -113,19 +124,49 @@ internal static class SecretController
         fsm.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>($"Sprites.Icons.{treasure}_Icon");
     }
 
-    internal static string CheckForStageHints()
+    internal string CheckForStageHints()
     {
-        if (_stageHints.ContainsKey(StageController.CurrentRoomNumber))
-            return $" ({_stageHints[StageController.CurrentRoomNumber]})";
+        if (_stageHints.ContainsKey(StageRef.CurrentRoomNumber))
+            return $" ({_stageHints[StageRef.CurrentRoomNumber]})";
         return "";
+    }
+
+    public void ReceiveSaveData(LocalSaveData saveData)
+    {
+        UnlockedHighRoller = saveData.UnlockedHighRoller;
+        UnlockedSecretArchive = saveData.UnlockedSecretArchive;
+        UnlockedStashedContraband = saveData.UnlockedContraband;
+        UnlockedToughness = saveData.UnlockedToughness;
+    }
+
+    public void UpdateSaveData(LocalSaveData saveData)
+    {
+        saveData.UnlockedHighRoller = UnlockedHighRoller;
+        saveData.UnlockedSecretArchive = UnlockedSecretArchive;
+        saveData.UnlockedContraband = UnlockedStashedContraband;
+        saveData.UnlockedToughness = UnlockedToughness;
+    }
+
+    internal bool TriggerShopUpgrade()
+    {
+        if (ShopLevel == 4)
+            return false;
+        bool upgrade = (ShopLevel == 0 && SpendGeo > 500) || (ShopLevel == 1 && SpendGeo > 1000)
+            || (ShopLevel == 2 && SpendGeo > 2000) || (ShopLevel == 3 && SpendGeo > 5000);
+        if (upgrade)
+        {
+            SpendGeo = 0;
+            ShopLevel++;
+        }
+        return upgrade;
     }
 
     #region Eventhandler
 
-    private static void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
+    private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "Room_Colosseum_Bronze")
-        { 
+        {
             if (!UnlockedStashedContraband && RngManager.Seed == 777777777)
                 TreasureManager.SpawnShiny(Enums.TreasureType.StashedContraband, new(60.1f, 6.4f), false);
             if (!UnlockedToughness && SkippedOrbs.All(x => x))
@@ -133,13 +174,13 @@ internal static class SecretController
         }
         else if (arg1.name == "Dream_Room_Believer_Shrine")
         {
-            if (!UnlockedSecretArchive && HistoryController.History.Count > 0 && HistoryController.History.Last().Result == RunResult.Completed
-                && HistoryController.History.Last().Powers.Contains(TreasureManager.GetPower<VoidHeart>().Name))
+            if (!UnlockedSecretArchive && HistoryRef.History.Count > 0 && HistoryRef.History.Last().Result == RunResult.Completed
+                && HistoryRef.History.Last().Powers.Contains(TreasureManager.GetPower<VoidHeart>().Name))
                 TreasureManager.SpawnShiny(TreasureType.Archive, new(26.15f, 47.4f), false);
         }
     }
 
-    private static void LeftShinyFlag_LeftShinyBehind(TreasureType treasure)
+    private void LeftShinyFlag_LeftShinyBehind(TreasureType treasure)
     {
         if (treasure == TreasureType.CombatOrb)
             SkippedOrbs[0] = true;
@@ -149,7 +190,7 @@ internal static class SecretController
             SkippedOrbs[2] = true;
     }
 
-    private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
+    private void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
     {
         if (self.FsmName == "Hit" && self.gameObject.name == "Training Dummy")
         {
