@@ -35,12 +35,16 @@ internal class CrusaderController : GameModeController
         int lastBossRoom = -1;
         for (int currentRoom = 0; currentRoom < 50; currentRoom++)
         {
+            // Claw is added later to logic to delay hard rooms.
+            if (currentRoom == 20)
+                currentProgress |= Progress.Claw;
             // Ability rooms/treasure rooms are not part of the normal routine.
             // The latter will be generated on the spot, but since the abilities open more rooms, we calculate them before hand.
             if (progressItemRooms.ContainsKey(currentRoom))
             {
                 roomList.Add(new() { Name = progressItemRooms[currentRoom].ToString(), SelectedTransition = "Warp" });
-                currentProgress |= progressItemRooms[currentRoom];
+                if (progressItemRooms[currentRoom] != Progress.Claw)
+                    currentProgress |= progressItemRooms[currentRoom];
                 continue;
             }
             List<RoomData> reachableRooms = [];
@@ -74,7 +78,7 @@ internal class CrusaderController : GameModeController
         //var roomData = StageRef.LoadRoomData().First(x => x.Name == "GG_Ghost_Gorb");
         //roomList.Insert(1, roomData);
         //Test specific room.
-        //var selectedRoomData = StageController.LoadRoomData().Where(x => x.Name == "Mines_24");
+        //var selectedRoomData = StageController.LoadRoomData().Where(x => x.Name == "Waterways_02");
         //Test room at start.
         //roomList = [..selectedRoomData, ..roomList];
         // Test room insert

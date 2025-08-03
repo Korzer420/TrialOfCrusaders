@@ -980,7 +980,7 @@
     "Name": "Abyss_15",
     "AllowedEntrances": [ "top1" ],
     "BossRoom": false,
-    "NeededProgress": 16,
+    "NeededProgress": 146,
     "ConditionalProgress": [],
     "EasyNeededProgress": 0,
     "EasyConditionalProgress": []
