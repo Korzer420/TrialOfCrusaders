@@ -57,6 +57,11 @@ Known Quirks:
 You might've seen the few... dozens placeholder sprites for powers. As I don't have any artistic skills, I can't provide good images. But if YOU want to donate a sprite for an ability, I'd gladly implement it and credit you (obviously).
 Keep in mind, that I'm not capable of paying you for your service, but I'd deeply appreciate any help in that department <3
 
+## Custom Sprites
+- You may also enable custom sprites in the mod menu. If this is enabled the mod will try to search for the appropriate sprite in the mod folder (only supports abilities/powers). To use your own sprite, enable this option, create a folder named "Sprites" in the mod directory and then a "Abilities" folder in that folder. This should create the folder path similiar to this "C:\Program Files\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\TrialOfCrusaders\Sprites\Abilities" (might differ based on your setup). In that folder you may place any image files which can be used as alternative art for an ability. For the images to take effect you've to name them like the ability with no spaces in between. It is important to note that this refers not to the display name, but the internal ability name. You may see their names in the three folders found here https://github.com/Korzer420/TrialOfCrusaders/tree/main/source/Powers . For most abilities you can just remove spaces in between word and capitalize the first letter of any new word. For example "Improved Fury of the Fallen" -> "ImprovedFuryOfTheFallen". (This is just mentioned since abilities like "CHAAAAARRRGGEE!!!" just use "Charge"). **All images have to be in the .png format!**
+
+**It is recommended that sprites may not exceed 200x200 pixels to still fit in the UI.**
+
 ## Credits
 Special thanks to:
 - Kadala - for the amazing tablet sprites
