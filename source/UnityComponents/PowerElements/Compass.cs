@@ -25,7 +25,7 @@ internal class Compass : MonoBehaviour
     {
         try
         {
-            if (!CombatController.InCombat || StageController.CurrentRoom?.BossRoom != false)
+            if (!CombatRef.InCombat || StageRef.CurrentRoom?.BossRoom != false)
                 GameObject.Destroy(gameObject);
             else
             {
