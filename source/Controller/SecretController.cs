@@ -15,7 +15,7 @@ namespace TrialOfCrusaders.Controller;
 
 public class SecretController : BaseController, ISaveData
 {
-    private readonly float[] _dummySequence = [ 0, 0, 0, 0, 0, 0, 270, 270, 270, 90, 90, 90, 90, 90, 90, 90, 90, 90, 180, 180, 180];
+    private readonly float[] _dummySequence = [0, 0, 0, 0, 0, 0, 270, 270, 270, 90, 90, 90, 90, 90, 90, 90, 90, 90, 180, 180, 180];
 
     private readonly Dictionary<int, string> _stageHints = new()
     {
@@ -39,9 +39,11 @@ public class SecretController : BaseController, ISaveData
 
     public bool UnlockedSecretArchive { get; set; }
 
-    public int ShopLevel { get; set; } = 4;
+    public int SpendGeo { get; set; }
 
-    public int LeftRolls { get; set; } = 3;
+    public int ShopLevel { get; set; }
+
+    public int LeftRolls { get; set; }
 
     public bool[] SkippedOrbs { get; set; } = [false, false, false];
 
@@ -145,12 +147,26 @@ public class SecretController : BaseController, ISaveData
         saveData.UnlockedToughness = UnlockedToughness;
     }
 
+    internal bool TriggerShopUpgrade()
+    {
+        if (ShopLevel == 4)
+            return false;
+        bool upgrade = (ShopLevel == 0 && SpendGeo > 500) || (ShopLevel == 1 && SpendGeo > 1000)
+            || (ShopLevel == 2 && SpendGeo > 2000) || (ShopLevel == 3 && SpendGeo > 5000);
+        if (upgrade)
+        {
+            SpendGeo = 0;
+            ShopLevel++;
+        }
+        return upgrade;
+    }
+
     #region Eventhandler
 
     private void SceneManager_activeSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene arg1)
     {
         if (arg1.name == "Room_Colosseum_Bronze")
-        { 
+        {
             if (!UnlockedStashedContraband && RngManager.Seed == 777777777)
                 TreasureManager.SpawnShiny(Enums.TreasureType.StashedContraband, new(60.1f, 6.4f), false);
             if (!UnlockedToughness && SkippedOrbs.All(x => x))

@@ -361,6 +361,9 @@ internal class ShopStock : MonoBehaviour
         else
         {
             HeroController.instance.TakeGeo(SelectedItemCost);
+            if (SecretRef.ShopLevel < 4)
+                SecretRef.SpendGeo += SelectedItemCost;
+
             _stock[_itemIndex] = new(SelectedItemName, -1, StockState.Normal);
             _elementLookup["Stock Price " + (_itemIndex + 1)].GetComponent<TextMeshPro>().text = "-";
 
@@ -424,7 +427,6 @@ internal class ShopStock : MonoBehaviour
         {
             List<Power> shopPowers = [];
             int abilityCount = 0;
-            SecretRef.ShopLevel = 4;
             int maxAbility = 1 + SecretRef.ShopLevel / 2;
             int stockAmount = 3 + SecretRef.ShopLevel;
 
@@ -549,7 +551,7 @@ internal class ShopStock : MonoBehaviour
                             4 => TeaStock,
                             _ => SealStock
                         };
-                        
+
                         price = restock
                             ? Mathf.RoundToInt(_stock[i - 1].Item2 * 1.2f)
                             : RngManager.GetRandom(50, 200);
@@ -560,7 +562,7 @@ internal class ShopStock : MonoBehaviour
                 }
 
                 price -= (price % 10);
-                
+
                 if (!restock)
                     _stock.Add(new(itemName, price, StockState.Normal));
                 else

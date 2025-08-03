@@ -308,11 +308,13 @@ public class StageController : BaseController
                             {
                                 shopChance += 3f;
                                 treasureChance -= 3f;
+                                if (PDHelper.Geo >= 1000)
+                                    shopChance += 15f;
                             }
                             else if (CurrentRoomNumber % 10 == 4)
                             {
                                 shopChance -= 3f;
-                                treasureChance += 3f;
+                                treasureChance += 10f;
                             }
 
                             if (PowerRef.HasPower<Damocles>(out _))
@@ -410,12 +412,13 @@ public class StageController : BaseController
                 TrialOfCrusaders.Holder.StartCoroutine(CorrectCounter());
             }
         }
+        // Treasure room text taucht nicht auf?
         if (!QuietRoom)
             PlayMakerFSM.BroadcastEvent("DREAM GATE CLOSE");
         else if (QuietRoom && !CurrentRoom.IsQuietRoom)
             _roomCounter.text = GameManager.instance.sceneName == "GG_Engine"
                 ? "Treasure room"
-                : (SaveManager.CurrentSaveData.EncounteredTuk ? "Shop" : "???");
+                : (SaveManager.CurrentSaveData.EncounteredTuk || SecretRef.ShopLevel > 0 ? "Shop" : "???");
         if (!PowerRef.HasPower<DreamNail>(out _)
             && (GameManager.instance.sceneName == "Mines_05" || GameManager.instance.sceneName == "Mines_11" || GameManager.instance.sceneName == "Mines_37"))
             GameHelper.DisplayMessage("You can use your dream nail... temporarly.");
@@ -534,30 +537,7 @@ public class StageController : BaseController
                 });
             }
             else if (self.FsmName == "Conversation Control" && self.gameObject.name == "Tuk Shop")
-            {
-                self.AddState("Show Shop", () =>
-                {
-                    SaveManager.CurrentSaveData.EncounteredTuk = true;
-                    self.GetComponent<ShopStock>().GenerateShopUI();
-                }, FsmTransitionData.FromTargetState("Talk Finish").WithEventName("CONVO_FINISH"));
-                if (SaveManager.CurrentSaveData.EncounteredTuk)
-                    self.GetState("Title").AdjustTransitions("Show Shop");
-                else
-                {
-                    self.AddState("Check Intro", () =>
-                    {
-                        if (SaveManager.CurrentSaveData.EncounteredTuk)
-                            self.SendEvent("FINISHED");
-                        else
-                            self.SendEvent("MEET");
-                    }, FsmTransitionData.FromTargetState("Box Up").WithEventName("MEET"),
-                    FsmTransitionData.FromTargetState("Show Shop").WithEventName("FINISHED"));
-                    self.GetState("Title").AdjustTransitions("Check Intro");
-                    self.GetState("Convo Choice").AdjustTransitions("Meet");
-                    self.GetState("Box Down 2").AdjustTransitions("Show Shop");
-                    self.GetState("Show Shop").AdjustTransitions("Box Up 2");
-                }
-            }
+                ShopManager.ModifyTuk(self);
             // 64.04, 113.4
         }
         catch (Exception ex)
@@ -626,7 +606,7 @@ public class StageController : BaseController
             || GameManager.instance.sceneName == "GG_Spa"))
             return true;
         else if (name == nameof(PlayerData.crossroadsInfected))
-            return PhaseManager.CurrentGameMode.Mode != GameMode.GoldRush 
+            return PhaseManager.CurrentGameMode.Mode != GameMode.GoldRush
                 ? CurrentRoomNumber >= CurrentRoomData.Count / 2
                 : CurrentRoomNumber > 50;
         else if (name == nameof(PlayerData.spiderCapture))
@@ -670,7 +650,12 @@ public class StageController : BaseController
     private IEnumerator CorrectCounter()
     {
         yield return new WaitForSeconds(0.5f);
-        _roomCounter.text = $"Current room: {CurrentRoomNumber}";
+        if (QuietRoom && !CurrentRoom.IsQuietRoom)
+            _roomCounter.text = GameManager.instance.sceneName == "GG_Engine"
+                ? "Treasure room"
+                : (SaveManager.CurrentSaveData.EncounteredTuk || SecretRef.ShopLevel > 0 ? "Shop" : "???");
+        else
+            _roomCounter.text = $"Current room: {CurrentRoomNumber}";
     }
 
     public static List<RoomData> LoadRoomData()

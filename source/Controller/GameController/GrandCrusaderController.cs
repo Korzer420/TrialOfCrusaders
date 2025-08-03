@@ -40,7 +40,7 @@ public class GrandCrusaderController : GameModeController
                     {
                         if (!room.BossRoom && (lastRooms.Contains(room.Name) || (currentRoom > 0 && currentRoom % 20 == 0)))
                             continue;
-                        else if (room.BossRoom && (currentRoom < 30 || (currentRoom <= lastBossRoom + 2 && currentRoom % 20 != 0)))
+                        else if (room.BossRoom && (currentRoom < 20 || (currentRoom <= lastBossRoom + 2 && currentRoom % 20 != 0)))
                             continue;
                         reachableRooms.Add(room);
                     }
@@ -127,5 +127,5 @@ public class GrandCrusaderController : GameModeController
         };
     }
 
-    public override bool CheckForEnding() => ControllerShorthands.StageRef.CurrentRoomData.Count == ControllerShorthands.StageRef.CurrentRoomIndex;
+    public override bool CheckForEnding() => ControllerShorthands.StageRef.CurrentRoomData.Count - 1 == ControllerShorthands.StageRef.CurrentRoomIndex;
 }

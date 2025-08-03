@@ -516,6 +516,10 @@ public class InventoryController : BaseController
             orig = "Hm? Get lost! Those treasures are for me alone.<page>Although.. if you give me your geo I may share my food and treasure with you.<page>I've no interest in the trial of this elder guy, but I might as well profit a bit from the fools that embark on it. Let me show you what I've in store for you.";
         else if (key == "TUK_DECLINE" || key == "TUK_NOTENOUGH")
             orig = "In case you survive somehow, you may visit me again. My stock keeps changing every time. And don't forget to bring enough geo!";
+        else if (key == "TUK_Upgrade")
+            orig = "Ah you're back! With the amount of geo you've given to me I've expanded my stock a bit. Take a look.";
+        else if (key == "TUK_Final_Upgrade")
+            orig = "Hehe, you provided me a significant amount of geo over our lasts encounters. I've been able to expand my stock one final time. As a sign of appreciation I'll now allow you to look at my hidden goods as well, though gated behind an additional cost obviously.";
         return orig;
     }
 }

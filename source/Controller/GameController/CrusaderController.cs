@@ -93,5 +93,5 @@ internal class CrusaderController : GameModeController
         PDHelper.HasAcidArmour = true;
     }
 
-    public override bool CheckForEnding() => ControllerShorthands.StageRef.CurrentRoomData.Count == ControllerShorthands.StageRef.CurrentRoomIndex;
+    public override bool CheckForEnding() => ControllerShorthands.StageRef.CurrentRoomData.Count - 1 == ControllerShorthands.StageRef.CurrentRoomIndex;
 }

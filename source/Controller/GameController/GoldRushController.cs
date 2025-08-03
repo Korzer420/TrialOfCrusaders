@@ -12,7 +12,7 @@ internal class GoldRushController : GameModeController
 {
     public override GameMode Mode => GameMode.GoldRush;
 
-    public override string Explanation => "Have 2000 geo in your pocket and exit the current room to win. You may spend geo in the shop, but that might delay your freedom. Enemies will become stronger the more rooms you progress.";
+    public override string Explanation => "Have 2500 or more geo in your pocket and exit the current room to win. You may spend geo in the shop, but that might delay your freedom. Enemies will become stronger the more rooms you progress.";
 
     public override List<RoomData> GenerateRoomList(bool atStart)
     {
@@ -88,7 +88,7 @@ internal class GoldRushController : GameModeController
 
     public override bool CheckForEnding()
     {
-        if (PDHelper.Geo > 2000)
+        if (PDHelper.Geo >= 2500)
             return true;
         if (ControllerShorthands.StageRef.CurrentRoomData.Count - 1 == ControllerShorthands.StageRef.CurrentRoomNumber)
             ControllerShorthands.StageRef.CurrentRoomData.AddRange(GenerateRoomList(false));
@@ -111,7 +111,7 @@ internal class GoldRushController : GameModeController
     {
         if (name == nameof(PlayerData.geo))
         {
-            if (orig >= 2001)
+            if (orig >= 2500)
                 TrialOfCrusaders.Holder.StartCoroutine(ControllerShorthands.StageRef.InitiateTransition());
             return orig;
         }

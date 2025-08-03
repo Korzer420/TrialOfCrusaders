@@ -56,7 +56,7 @@ public class ConsumableController : BaseController
 
     public int EggHeal => Math.Max(5, 25 - 5 * UsedEggs);
 
-    public int LifebloodHeal => Math.Min(3, 3 + UsedLifeblood * 2);
+    public int LifebloodHeal => 3 + UsedLifeblood * 2;
 
     public override Phase[] GetActivePhases() => [Phase.Run];
 

@@ -488,6 +488,7 @@ public static class TreasureManager
             List<Power> selectedPowers = [];
             List<string> statBoni = [];
             List<Power> availablePowers = [];
+            List<string> removeFromTreasurePool = [];
             foreach (string powerName in TreasurePool)
             {
                 Power selectedPower = null;
@@ -498,8 +499,19 @@ public static class TreasureManager
                         break;
                     }
                 if (selectedPower?.CanAppear == true)
-                    availablePowers.Add(selectedPower);
+                {
+                    if (!PowerRef.ObtainedPowers.Contains(selectedPower) || powerName == "Cocoon"
+                        || powerName == "Regret")
+                        availablePowers.Add(selectedPower);
+                    else
+                        removeFromTreasurePool.Add(powerName);
+                }
+                else
+                    removeFromTreasurePool.Add(powerName);
             }
+            // Remove unobtainable powers from the pool.
+            if (removeFromTreasurePool.Count > 0)
+                TreasurePool.RemoveAll(x => removeFromTreasurePool.Contains(x));
 
             for (int i = 0; i < 3; i++)
             {

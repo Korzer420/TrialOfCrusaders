@@ -197,7 +197,7 @@ public class HubController : BaseController
             if (arg1.name == "Room_Colosseum_01")
             {
                 SetupTransitions();
-                CoroutineHelper.WaitForHero(GameManager.instance.SaveGame, true);
+                CoroutineHelper.WaitForHero(() => { GameManager.instance.SaveGame(); HeroController.instance.MaxHealth(); }, true);
             }
             else if (arg1.name == "Deepnest_East_10")
             {
