@@ -24,8 +24,8 @@ internal class CrusaderController : GameModeController
         Dictionary<int, Progress> progressItemRooms = new()
             {
                 { 4, Progress.Dash },
-                { 9, fireballFirst ? Progress.Fireball : Progress.Quake },
-                { 14, Progress.Claw },
+                { 9, Progress.Claw },
+                { 14, fireballFirst ? Progress.Fireball : Progress.Quake },
                 { 19, Progress.Wings },
                 { 29, fireballFirst ? Progress.Quake : Progress.Fireball },
                 { 39, Progress.ShadeCloak },
