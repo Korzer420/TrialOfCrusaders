@@ -1,6 +1,7 @@
 ﻿using KorzUtils.Helper;
 using Modding;
 using System.Collections;
+using TrialOfCrusaders.Manager;
 using UnityEngine;
 
 namespace TrialOfCrusaders.UnityComponents.StageElements;
@@ -63,6 +64,7 @@ public class Lift : MonoBehaviour
         HeroController.instance.RegainControl();
         PDHelper.DisablePause = false;
         Partner.Cooldown = 3f;
+        HeroController.instance.StartCoroutine((IEnumerator)TreasureManager.InvulnerableCall.Invoke(HeroController.instance, [1.5f]));
         ModHooks.GetPlayerBoolHook -= ModHooks_GetPlayerBoolHook;
         foreach (var cameraLock in locks)
             cameraLock.gameObject.SetActive(true);

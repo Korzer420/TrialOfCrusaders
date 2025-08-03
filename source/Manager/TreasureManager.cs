@@ -26,7 +26,7 @@ public static class TreasureManager
     internal static string UncommonTextColor = "#33cc33";
     internal static string RareTextColor = "#00ffff";
 
-    private static MethodInfo _invulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
+    internal static MethodInfo InvulnerableCall = typeof(HeroController).GetMethod("Invulnerable", BindingFlags.NonPublic | BindingFlags.Instance);
 
     private static Sprite _backgroundSprite;
 
@@ -450,7 +450,7 @@ public static class TreasureManager
             SelectionActive = false;
             // To prevent situation where the player takes unavoidable damage, we grant 2 seconds of invincibility.
             if (!StageRef.QuietRoom)
-                HeroController.instance.StartCoroutine((IEnumerator)_invulnerableCall.Invoke(HeroController.instance, [2f]));
+                HeroController.instance.StartCoroutine((IEnumerator)InvulnerableCall.Invoke(HeroController.instance, [2f]));
         });
         fsm.GetState("Destroy").RemoveAllActions();
         fsm.GetState("Destroy").AddTransition("FINISHED", "Fling?");

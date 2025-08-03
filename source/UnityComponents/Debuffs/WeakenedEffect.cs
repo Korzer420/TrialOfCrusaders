@@ -6,6 +6,7 @@ internal class WeakenedEffect : MonoBehaviour
 {
     private float _passedTime = 0f;
     private GameObject _effectObject;
+    private HealthManager _healthManager;
 
     public static GameObject Prefab { get; set; }
 
@@ -21,15 +22,25 @@ internal class WeakenedEffect : MonoBehaviour
         _effectObject.transform.localPosition = Vector3.zero - new Vector3(0f,0f, 0.01f);
         _effectObject.GetComponent<Animator>().StartPlayback();
         _effectObject.SetActive(true);
+        _healthManager = GetComponent<HealthManager>();
     }
 
     void FixedUpdate()
     {
         _passedTime += Time.deltaTime;
-        if (_passedTime >= Timer)
+        try
+        {
+            if (_passedTime >= Timer || _healthManager?.isDead != false)
+            {
+                GameObject.Destroy(_effectObject);
+                Destroy(this);
+            }
+        }
+        catch (System.Exception)
         {
             GameObject.Destroy(_effectObject);
             Destroy(this);
+            throw;
         }
     }
 

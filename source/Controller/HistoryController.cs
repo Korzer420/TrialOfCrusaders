@@ -51,52 +51,8 @@ public class HistoryController : BaseController, ISaveData
         "BELIEVE_TAB_06",
         "BELIEVE_TAB_09",
         "BELIEVE_TAB_02",
-        "BELIEVE_TAB_10"
+        "BELIEVE_TAB_11"
     ];
-
-    private Vector3[] _tabletPositions = new Vector3[]
-    {
-        // Big platform bottom left.
-        new(34.405f, 14.41f),
-        new(40.7125f, 14.41f),
-        new(47.02f, 14.41f),
-        // Big platform bottom right
-        new(63.18f, 14.41f),
-        new(69,82f, 14.41f),
-        new(76.46f, 14.41f),
-        // Small right
-        new(101.56f, 25.08f),
-        // Second level left
-        new(16.8f, 30.41f),
-        new(24.435f, 30.41f),
-        new(32.07f, 30.41f),
-        // Second level right
-        new(76.135f, 30.41f),
-        new(82.135f, 30.41f),
-        new(89.135f, 30.41f),
-        // Small left
-        new(26.13f, 47.41f),
-        // Third level left
-        new(34.8f, 45.08f),
-        new(42.515f, 45.08f),
-        new(50.23f, 45.08f),
-        // Small middle
-        new(57.34f, 40.34f),
-        // Third level right
-        new(65.72f, 45.08f),
-        new(73.77f, 45.08f),
-        new(81.82f, 45.08f),
-        // Small top
-        new(87.88f, 56.09f),
-        // Fourth level left
-        new(32.12f, 61.41f),
-        new(39.86f, 61.41f),
-        new(47.6f, 61.41f),
-        // Fourth level right
-        new(62.8f, 61.41f),
-        new(70.52f, 61.41f),
-        new(78.24f, 61.41f)
-    };
 
     internal event Action<HistoryData, RunResult> CreateEntry;
 
@@ -607,11 +563,8 @@ public class HistoryController : BaseController, ISaveData
                 else
                 {
                     orig(self);
-                    if (self.transform.parent.parent.name.StartsWith("Plaque_statue_03")
-                        || !_tabletKeys.Contains(self.FsmVariables.FindFsmString("Game Text Convo").Value))
+                    if (!_tabletKeys.Contains(self.FsmVariables.FindFsmString("Game Text Convo").Value))
                         GameObject.Destroy(self.transform.parent.parent.gameObject);
-                    else
-                        self.transform.parent.parent.position = _tabletPositions[Array.IndexOf(_tabletKeys, self.FsmVariables.FindFsmString("Game Text Convo").Value)] + new Vector3(0f, 1.3f, 0.1f);
                     return;
                 }
             }
@@ -683,7 +636,7 @@ public class HistoryController : BaseController, ISaveData
                     unlocked = Archive.HighestTrialScore >= 10000 | Archive.HighestGrandTrialScore >= 10000;
                     break;
                 case "BELIEVE_TAB_05":
-                    unlocked = (Archive.FastestGrandTrial < 3600 && Archive.FastestGrandTrial > 0) | (Archive.FastestTrial < 3600 && Archive.FastestTrial > 0);
+                    unlocked = (Archive.FastestGrandTrial < 3600 && Archive.FastestGrandTrial > 0) || (Archive.FastestTrial < 3600 && Archive.FastestTrial > 0);
                     break;
                 case "BELIEVE_TAB_01":
                     unlocked = Archive.CommonOnlyRun;
@@ -706,8 +659,10 @@ public class HistoryController : BaseController, ISaveData
                 case "BELIEVE_TAB_02":
                     unlocked = Archive.PerfectFinalBoss;
                     break;
-                case "BELIEVE_TAB_10":
+                case "BELIEVE_TAB_11":
                     unlocked = Archive.DebuffsSeen.Count == 6;
+                    break;
+                default:
                     break;
             }
 
