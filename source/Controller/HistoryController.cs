@@ -14,6 +14,7 @@ using TrialOfCrusaders.Powers.Common;
 using TrialOfCrusaders.Powers.Uncommon;
 using TrialOfCrusaders.Resources.Text;
 using TrialOfCrusaders.SaveData;
+using TrialOfCrusaders.UnityComponents.Other;
 using UnityEngine;
 using static TrialOfCrusaders.ControllerShorthands;
 
@@ -24,19 +25,6 @@ public class HistoryController : BaseController, ISaveData
     private int _pageIndex = 0;
     private int _powerPageIndex = 0;
     private Dictionary<string, (SpriteRenderer, TextMeshPro)> _elementLookUp = [];
-    private readonly List<string> _seedSprites =
-    [
-        "CrystalDash",
-        "CycloneSlash",
-        "DesolateDive",
-        "GreatSlash",
-        "HowlingWraiths",
-        "IsmasTear",
-        "MantisClaw",
-        "MonarchWings",
-        "MothwingCloak",
-        "VengefulSpirit"
-    ];
     private readonly string[] _tabletKeys =
     [
         "BELIEVE_TAB_07",
@@ -309,7 +297,7 @@ public class HistoryController : BaseController, ISaveData
             currentElement = TextManager.CreateUIObject("Seeded");
             _elementLookUp.Add("Seeded", currentElement);
             currentElement.Item1.transform.SetParent(board.transform);
-            currentElement.Item1.transform.localPosition = new(-8.9f, 6f);
+            currentElement.Item1.transform.localPosition = new(-8.1f, 5.3f);
             currentElement.Item2.text = "(Seeded)";
             currentElement.Item2.fontSize--;
             Component.Destroy(currentElement.Item1);
@@ -383,7 +371,7 @@ public class HistoryController : BaseController, ISaveData
             {
                 // You might be tempted to think "Would it not be easier if the string was just saved as a string?". Yeah... but I'm stubborn and this was the first version.
                 int spriteNumber = int.Parse("" + currentHistory.Seed.ToString()[i - 1]);
-                _elementLookUp["SeedSprite" + i].Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + _seedSprites[spriteNumber]);
+                _elementLookUp["SeedSprite" + i].Item1.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + SeedTablet.SeedSprites[spriteNumber]);
             }
             _elementLookUp["TakenTime"].Item2.text = "Final time: " + (currentHistory.Score.PassedTime >= 3600
                 ? new DateTime(TimeSpan.FromSeconds(currentHistory.Score.PassedTime).Ticks).ToString("HH:mm:ss.ff")

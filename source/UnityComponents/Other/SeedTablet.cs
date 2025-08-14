@@ -10,7 +10,7 @@ internal class SeedTablet : MonoBehaviour
     private float _cooldown = 0.25f;
     private SpriteRenderer _spriteRenderer;
     private SpriteRenderer _tabletSprite;
-    private static readonly List<string> _seedSprites =
+    internal static readonly List<string> SeedSprites =
     [
         "CrystalDash",
         "CycloneSlash",
@@ -34,7 +34,7 @@ internal class SeedTablet : MonoBehaviour
     {
         _tabletSprite = GetComponent<SpriteRenderer>();
         _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        _spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + _seedSprites[Number]);
+        _spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + SeedSprites[Number]);
     }
 
     void Update() => _cooldown = Math.Max(0, _cooldown - Time.deltaTime);
@@ -47,7 +47,7 @@ internal class SeedTablet : MonoBehaviour
         Number++;
         if (Number == 10)
             Number = 0;
-        _spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + _seedSprites[Number]);
+        _spriteRenderer.sprite = SpriteHelper.CreateSprite<TrialOfCrusaders>("Sprites.Abilities." + SeedSprites[Number]);
         if (Number != InitialNumber)
             _tabletSprite.color = Color.red;
         else

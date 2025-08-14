@@ -156,6 +156,7 @@ public class HubController : BaseController
                 RngManager.Seed = finalSeed;
                 StageRef.CurrentRoomData = PhaseManager.CurrentGameMode.GenerateRoomList(true);
                 StageRef.CurrentRoomIndex = -1;
+                LogHelper.Write<TrialOfCrusaders>("Start run. Seed: " + finalSeed + ". Mode: " + PhaseManager.CurrentGameMode.Mode, includeScene: false);
                 PhaseManager.TransitionTo(Phase.Run);
                 PhaseManager.CurrentGameMode.SetupTreasurePool();
                 PhaseManager.CurrentGameMode.OnStart();

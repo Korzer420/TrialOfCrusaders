@@ -51,7 +51,7 @@ internal class CrusaderController : GameModeController
             foreach (RoomData room in availableRooms)
                 if (room.Available(false, currentProgress))
                 {
-                    if (room.BossRoom && currentRoom > 20 && ((currentRoom <= lastBossRoom + 2 && currentRoom % 13 != 0) || currentRoom < 13 || currentRoom == 49))
+                    if (room.BossRoom && ((currentRoom <= lastBossRoom + 2 && currentRoom % 13 != 0) || currentRoom < 13 || currentRoom == 49))
                         continue;
                     else if ((!room.BossRoom && currentRoom % 13 == 0 && currentRoom != 0) || lastRooms.Contains(room.Name))
                         continue;
